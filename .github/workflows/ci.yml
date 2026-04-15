@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  TestLintBuild:
+    runs-on: ubuntu-latest
+    container: vitasdk/vitasdk:latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Test
+        run: echo TODO
+
+      - name: Lint
+        run: echo TODO
+
+      - name: Build release
+        run: |
+          set -eux
+          cmake -B build-release -DCMAKE_BUILD_TYPE=Release .
+          cmake --build build-release
+
+      - name: Build debug
+        run: |
+          set -eux
+          cmake -B build-debug -DCMAKE_BUILD_TYPE=Debug .
+          cmake --build build-debug
+
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: deplayenabler-release
+          path: build-release/deplayenabler.suprx
+          if-no-files-found: error
+
+      - name: Upload debug artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: deplayenabler-debug
+          path: build-debug/deplayenabler.suprx
+          if-no-files-found: error
