@@ -1,3 +1,4 @@
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5)  # Silences "Compatibility with CMake < 3.5 has been removed from CMake"
 cmake_minimum_required(VERSION 2.8)
 
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
