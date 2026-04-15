@@ -11,7 +11,7 @@ endif()
 project(deplayenabler)
 include("${VITASDK}/share/vita.cmake" REQUIRED)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,-q -Wall -O3 -nostdlib")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,-q -Wall -nostdlib")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -fno-exceptions")
 
 add_executable(deplayenabler
@@ -20,6 +20,8 @@ add_executable(deplayenabler
 
 target_link_libraries(deplayenabler
   k
+  gcc
+  SceLibc_stub
   taihen_stub
   SceLibKernel_stub
   SceIofilemgr_stub
