@@ -20,6 +20,10 @@ add_executable(deplayenabler
   src/main.c
 )
 
+target_include_directories(deplayenabler PRIVATE
+  "$ENV{VITASDK}/arm-vita-eabi/include"
+)
+
 target_link_libraries(deplayenabler
   k
   gcc
@@ -33,4 +37,4 @@ target_link_libraries(deplayenabler
 
 vita_create_self(deplayenabler.suprx deplayenabler CONFIG exports.yml UNSAFE)
 
-vita_create_stubs(stubs deplayenabler ${CMAKE_SOURCE_DIR}/exports.yml)
+vita_create_stubs(stubs deplayenabler "${CMAKE_SOURCE_DIR}/exports.yml")
