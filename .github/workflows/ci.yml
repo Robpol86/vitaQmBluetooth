@@ -22,13 +22,13 @@ jobs:
       - name: Build release
         run: |
           set -eux
-          cmake -B build-release -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="${VITASDK}/share/vita.toolchain.cmake" -DCMAKE_POLICY_VERSION_MINIMUM=3.5 .
+          cmake -B build-release -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5 .
           cmake --build build-release
 
       - name: Build debug
         run: |
           set -eux
-          cmake -B build-debug -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE="${VITASDK}/share/vita.toolchain.cmake" -DCMAKE_POLICY_VERSION_MINIMUM=3.5 .
+          cmake -B build-debug -DCMAKE_BUILD_TYPE=Debug -DCMAKE_POLICY_VERSION_MINIMUM=3.5 .
           cmake --build build-debug
 
       - name: Upload release artifact
