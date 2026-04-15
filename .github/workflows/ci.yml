@@ -34,13 +34,13 @@ jobs:
       - name: Upload release artifact
         uses: actions/upload-artifact@v7
         with:
-          name: release
-          path: build-release/*.suprx
+          name: deplayenabler-release
+          path: build-release/deplayenabler.suprx
           if-no-files-found: error
 
       - name: Upload debug artifact
         uses: actions/upload-artifact@v7
         with:
-          name: debug
-          path: build-debug/*.suprx
+          name: deplayenabler-debug
+          path: build-debug/deplayenabler.suprx
           if-no-files-found: error
