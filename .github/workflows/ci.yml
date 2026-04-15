@@ -17,7 +17,10 @@ jobs:
         run: echo TODO
 
       - name: Lint
-        run: echo TODO
+        run: |
+          set -eux
+          cmake -B build-lint -DCMAKE_BUILD_TYPE=Debug .
+          clang-tidy -p build-lint main.c
 
       - name: Build release
         run: |

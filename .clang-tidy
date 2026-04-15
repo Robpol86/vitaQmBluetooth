@@ -1,0 +1,8 @@
+Checks: >
+  -*,
+  bugprone-*,
+  clang-analyzer-*,
+  portability-*,
+  readability-*,
+  -readability-magic-numbers
+WarningsAsErrors: '*'
