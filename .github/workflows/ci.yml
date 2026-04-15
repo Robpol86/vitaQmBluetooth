@@ -23,7 +23,7 @@ jobs:
         run: |
           set -eux
           cmake -B build-lint -DCMAKE_BUILD_TYPE=Debug .
-          clang-tidy -p build-lint main.c
+          clang-tidy -p build-lint main.c -- -I${VITASDK}/arm-vita-eabi/include
 
       - name: Build release
         run: |
