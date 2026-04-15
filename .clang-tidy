@@ -16,3 +16,4 @@ Checks: >
   -readability-magic-numbers,
   -readability-non-const-parameter
 WarningsAsErrors: '*'
+HeaderFilterRegex: '.*'
