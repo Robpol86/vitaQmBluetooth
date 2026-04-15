@@ -39,3 +39,8 @@
 
 # debug information files
 *.dwo
+
+# Robpol86
+CMakeCache.txt
+CMakeFiles/
+build-*/

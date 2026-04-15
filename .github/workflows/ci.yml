@@ -19,12 +19,19 @@ jobs:
       - name: Lint
         run: echo TODO
 
-      - name: Build
-        run: echo TODO
+      - name: Build release
+        run: |
+          set -eux
+          cmake -B build-release -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="${VITASDK}/share/vita.toolchain.cmake" -DCMAKE_POLICY_VERSION_MINIMUM=3.5 .
+          cmake --build build-release
 
-      # - name: Upload artifact
-      #   uses: actions/upload-artifact@v7
-      #   with:
-      #     name: dist
-      #     path: dist
-      #     if-no-files-found: error
+      # - name: Build Debug
+
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: release
+          path: build-release/deplayenabler.suprx
+          if-no-files-found: error
+
+      # - name: Upload debug artifact
