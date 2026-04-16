@@ -14,22 +14,13 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Test
-        run: echo TODO
+        run: make test
 
       - name: Lint
-        run: echo TODO
+        run: make lint
 
-      - name: Build release
-        run: |
-          set -eux
-          cmake -B build-release -DCMAKE_BUILD_TYPE=Release .
-          cmake --build build-release
-
-      - name: Build debug
-        run: |
-          set -eux
-          cmake -B build-debug -DCMAKE_BUILD_TYPE=Debug .
-          cmake --build build-debug
+      - name: Build
+        run: make build
 
       - name: Upload release artifact
         uses: actions/upload-artifact@v7
