@@ -1,22 +1,5 @@
 .DEFAULT_GOAL = help
 
-## Testing
-
-.PHONY: lint
-lint: _HELP = Run linters
-lint:
-	echo TODO
-
-.PHONY: format
-format: _HELP = Apply format/lint fixes
-format:
-	echo TODO
-
-.PHONY: test
-test: _HELP = Run unit tests
-test:
-	echo TODO
-
 ## Build
 
 BUILD_TARGETS =
@@ -34,6 +17,23 @@ $(BUILD_TARGETS): CMakeLists.txt exports.yml $(wildcard src/* src/*/* src/*/*/* 
 .PHONY: build
 build: _HELP = Build debug and release plugins (alias)
 build: $(BUILD_TARGETS)
+
+## Testing
+
+.PHONY: lint
+lint: _HELP = Run linters
+lint:
+	echo TODO
+
+.PHONY: format
+format: _HELP = Apply format/lint fixes
+format:
+	echo TODO
+
+.PHONY: test
+test: _HELP = Run unit tests
+test:
+	echo TODO
 
 ## Misc
 
