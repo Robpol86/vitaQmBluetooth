@@ -1,9 +1,9 @@
+AlignAfterOpenBracket: Align
+AllowAllArgumentsOnNextLine: true
+AllowAllParametersOfDeclarationOnNextLine: true
 BasedOnStyle: LLVM
-BreakBeforeBraces: Custom
-ColumnLimit: 126
-IndentWidth: 4
-TabWidth: 4
-UseTab: Always
+BinPackArguments: true
+BinPackParameters: false
 BraceWrapping:
   AfterFunction: true
   AfterControlStatement: Never
@@ -17,18 +17,21 @@ BraceWrapping:
   BeforeElse: true
   BeforeLambdaBody: false
   BeforeWhile: false
-AlignAfterOpenBracket: Align
-AllowAllArgumentsOnNextLine: true
-AllowAllParametersOfDeclarationOnNextLine: true
-BinPackArguments: true
-BinPackParameters: false
+AccessModifierOffset: -8
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+AlignConsecutiveMacros: false
+AlignOperands: Align
+AllowShortBlocksOnASingleLine: Always
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakAfterReturnType: All
+BreakBeforeBraces: Custom
+ColumnLimit: 126
 ContinuationIndentWidth: 0
+DerivePointerAlignment: false
 IncludeBlocks: Regroup
-IndentWrappedFunctionNames: false
-PointerAlignment: Right
-ReferenceAlignment: Right
-RemoveBracesLLVM: true
-SortIncludes: true
 IncludeCategories:
   - Regex: '^<fcntl\.h>|^<signal\.h>|^<stdio\.h>|^<unistd\.h>|^<sys/.*\.h>'
     Priority: 1
@@ -42,19 +45,16 @@ IncludeCategories:
     Priority: 5
   - Regex: '^".*"'
     Priority: 6
-AccessModifierOffset: -8
-AlignConsecutiveAssignments: false
-AlignConsecutiveDeclarations: false
-AlignConsecutiveMacros: false
-AlignOperands: Align
-AllowShortBlocksOnASingleLine: Always
-AllowShortFunctionsOnASingleLine: None
-AllowShortIfStatementsOnASingleLine: Never
-AllowShortLoopsOnASingleLine: false
-AlwaysBreakAfterReturnType: All
-DerivePointerAlignment: false
 IndentCaseLabels: false
+IndentWidth: 4
+IndentWrappedFunctionNames: false
 InsertBraces: false
+PointerAlignment: Right
+ReferenceAlignment: Right
+RemoveBracesLLVM: true
+SortIncludes: true
 SpaceAfterCStyleCast: false
 SpaceBeforeParens: ControlStatements
 Standard: Latest
+TabWidth: 4
+UseTab: Always
