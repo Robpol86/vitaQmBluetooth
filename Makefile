@@ -24,11 +24,12 @@ build: $(BUILD_TARGETS)
 lint: _HELP = Run linters
 lint: build-debug/deplayenabler.suprx
 	find src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' \) -exec clang-tidy -p $(<D) {} +
+	find src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' \) -exec clang-format --dry-run --Werror {} +
 
 .PHONY: format
 format: _HELP = Apply format/lint fixes
 format:
-	echo TODO
+	find src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' \) -exec clang-format -i {} +
 
 .PHONY: test
 test: _HELP = Run unit tests
