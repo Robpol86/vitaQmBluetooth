@@ -5,10 +5,10 @@
 BUILD_TARGETS =
 
 build-debug/deplayenabler.suprx: _HELP = Build debug plugin
-build-debug/deplayenabler.suprx: CMAKE_BUILD_TYPE = Debug
+build-debug/deplayenabler.suprx: export CMAKE_BUILD_TYPE = Debug
 BUILD_TARGETS += build-debug/deplayenabler.suprx
 build-release/deplayenabler.suprx: _HELP = Build release plugin
-build-release/deplayenabler.suprx: CMAKE_BUILD_TYPE = Release
+build-release/deplayenabler.suprx: export CMAKE_BUILD_TYPE = Release
 BUILD_TARGETS += build-release/deplayenabler.suprx
 $(BUILD_TARGETS): CMakeLists.txt exports.yml $(wildcard src/* src/*/* src/*/*/* src/*/*/*/*)
 	cmake -B $(@D) .
