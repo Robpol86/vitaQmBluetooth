@@ -1,9 +1,9 @@
 BasedOnStyle: LLVM
+BreakBeforeBraces: Custom
+ColumnLimit: 126
 IndentWidth: 4
 TabWidth: 4
 UseTab: Always
-ColumnLimit: 126
-BreakBeforeBraces: Custom
 BraceWrapping:
   AfterFunction: true
   AfterControlStatement: Never
@@ -17,18 +17,18 @@ BraceWrapping:
   BeforeElse: true
   BeforeLambdaBody: false
   BeforeWhile: false
-RemoveBracesLLVM: true
-PointerAlignment: Right
-ReferenceAlignment: Right
 AlignAfterOpenBracket: Align
+AllowAllArgumentsOnNextLine: true
+AllowAllParametersOfDeclarationOnNextLine: true
 BinPackArguments: true
 BinPackParameters: false
-AllowAllArgumentsOnNextLine: true
 ContinuationIndentWidth: 0
-IndentWrappedFunctionNames: false
-AllowAllParametersOfDeclarationOnNextLine: true
-SortIncludes: true
 IncludeBlocks: Regroup
+IndentWrappedFunctionNames: false
+PointerAlignment: Right
+ReferenceAlignment: Right
+RemoveBracesLLVM: true
+SortIncludes: true
 IncludeCategories:
   - Regex: '^<fcntl\.h>|^<signal\.h>|^<stdio\.h>|^<unistd\.h>|^<sys/.*\.h>'
     Priority: 1
@@ -42,19 +42,19 @@ IncludeCategories:
     Priority: 5
   - Regex: '^".*"'
     Priority: 6
+AccessModifierOffset: -8
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+AlignConsecutiveMacros: false
+AlignOperands: Align
 AllowShortBlocksOnASingleLine: Always
 AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: Never
 AllowShortLoopsOnASingleLine: false
-InsertBraces: false
-IndentCaseLabels: false
-AccessModifierOffset: -8
-Standard: Latest
 AlwaysBreakAfterReturnType: All
+DerivePointerAlignment: false
+IndentCaseLabels: false
+InsertBraces: false
 SpaceAfterCStyleCast: false
 SpaceBeforeParens: ControlStatements
-AlignOperands: Align
-AlignConsecutiveDeclarations: false
-AlignConsecutiveAssignments: false
-AlignConsecutiveMacros: false
-DerivePointerAlignment: false
+Standard: Latest
