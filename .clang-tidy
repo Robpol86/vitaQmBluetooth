@@ -14,5 +14,7 @@ Checks: >
   -readability-identifier-length,
   -readability-isolate-declaration,
   -readability-magic-numbers,
-  -readability-non-const-parameter
+  -readability-use-concise-preprocessor-directives,
+  -bugprone-macro-parentheses,
+  -readability-non-const-parameter,
 WarningsAsErrors: '*'
