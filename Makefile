@@ -19,25 +19,30 @@ test:
 
 ## Build
 
+BUILD_TARGETS =
+
+build-debug/deplayenabler.suprx: _HELP = Build debug plugin
 build-debug/deplayenabler.suprx: CMAKE_BUILD_TYPE = Debug
+BUILD_TARGETS += build-debug/deplayenabler.suprx
+build-release/deplayenabler.suprx: _HELP = Build release plugin
 build-release/deplayenabler.suprx: CMAKE_BUILD_TYPE = Release
-build-debug/deplayenabler.suprx build-release/deplayenabler.suprx: _HELP = Build plugin
-build-debug/deplayenabler.suprx build-release/deplayenabler.suprx: CMakeLists.txt exports.yml $(wildcard src/* src/*/* src/*/*/* src/*/*/*/*)
+BUILD_TARGETS += build-release/deplayenabler.suprx
+$(BUILD_TARGETS): CMakeLists.txt exports.yml $(wildcard src/* src/*/* src/*/*/* src/*/*/*/*)
 	cmake -B $(@D) .
 	cmake --build $(@D)
 
 .PHONY: build
-build: _HELP = Build plugin (alias)
-build: build-debug/deplayenabler.suprx build-release/deplayenabler.suprx
+build: _HELP = Build debug and release plugins (alias)
+build: $(BUILD_TARGETS)
 
 ## Misc
 
 .PHONY: all
 all: _HELP = Run linters and unit tests and then build
-all: test lint build
+all: test lint $(BUILD_TARGETS)
 
 .PHONY: clean
-clean: _HELP = Remove compiled and temporary files
+clean: _HELP = Remove build and temporary files
 clean:
 	rm -rfv build-debug/ build-release/
 
