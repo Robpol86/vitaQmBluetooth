@@ -18,5 +18,4 @@ Checks: >
   -bugprone-macro-parentheses,
   -readability-non-const-parameter,
 HeaderFilterRegex: '.*'
-SystemHeaders: true
 WarningsAsErrors: '*'
