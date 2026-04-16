@@ -23,7 +23,7 @@ build: $(BUILD_TARGETS)
 .PHONY: lint
 lint: _HELP = Run linters
 lint: build-debug/deplayenabler.suprx
-	find src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' \) -exec clang-tidy -header-filter='.*' -system-headers -p $(<D) {} +
+	find src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' \) -exec clang-tidy -p $(<D) {} +
 
 .PHONY: format
 format: _HELP = Apply format/lint fixes
