@@ -20,10 +20,7 @@ jobs:
         run: make test
 
       - name: Lint
-        run: |
-          set -eux
-          cmake -B build-lint -DCMAKE_BUILD_TYPE=Debug .
-          find src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' \) -exec clang-tidy -p build-lint {} +
+        run: make lint
 
       - name: Build
         run: make build
