@@ -17,7 +17,7 @@ jobs:
         run: apk add --no-cache clang-extra-tools
 
       - name: Test
-        run: echo TODO
+        run: make test
 
       - name: Lint
         run: |
@@ -25,17 +25,8 @@ jobs:
           cmake -B build-lint -DCMAKE_BUILD_TYPE=Debug .
           find src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' \) -exec clang-tidy -p build-lint {} +
 
-      - name: Build release
-        run: |
-          set -eux
-          cmake -B build-release -DCMAKE_BUILD_TYPE=Release .
-          cmake --build build-release
-
-      - name: Build debug
-        run: |
-          set -eux
-          cmake -B build-debug -DCMAKE_BUILD_TYPE=Debug .
-          cmake --build build-debug
+      - name: Build
+        run: make build
 
       - name: Upload release artifact
         uses: actions/upload-artifact@v7
