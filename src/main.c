@@ -118,11 +118,11 @@ loadConfig(const char *path)
 		if (strlen(token_trimed) > 0) {
 			if (token_trimed[0] != '#') {
 				if (checkName(token_trimed, "USE"))
-					sceClibSnprintf(enabled, sizeof(enabled), getValue(token));
+					sceClibSnprintf(enabled, sizeof(enabled), "%s", getValue(token));
 				else if (checkName(token_trimed, "SD0"))
-					sceClibSnprintf(sd0_path, sizeof(sd0_path), getValue(token));
+					sceClibSnprintf(sd0_path, sizeof(sd0_path), "%s", getValue(token));
 				else if (checkName(token_trimed, "UX0"))
-					sceClibSnprintf(ux0_path, sizeof(ux0_path), getValue(token));
+					sceClibSnprintf(ux0_path, sizeof(ux0_path), "%s", getValue(token));
 			}
 		}
 		token = strtok(NULL, "\r\n");
