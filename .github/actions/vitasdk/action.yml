@@ -30,5 +30,5 @@ runs:
         set -euxo pipefail
         git -C "$RUNNER_TEMP" clone --depth 1 https://github.com/vitasdk/vdpm
         cd "$RUNNER_TEMP/vdpm"
-        time ./bootstrap-vitasdk.sh
-        time ./install-all.sh
+        ./bootstrap-vitasdk.sh
+        ./install-all.sh
