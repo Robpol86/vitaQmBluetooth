@@ -17,7 +17,7 @@ runs:
       shell: bash
       run: sudo apt-get update && sudo apt-get install -y cmake
 
-    - name: Add environment variables to ENV and PATH
+    - name: Add persistent VITASDK to ENV and PATH
       shell: bash
       run: |
         set -euxo pipefail
@@ -28,7 +28,7 @@ runs:
       shell: bash
       run: |
         set -euxo pipefail
-        git -C "$RUNNER_TEMP" clone --depth 1 https://github.com/vitasdk/vdpm
+        git -C "$RUNNER_TEMP" clone --depth 1 "https://github.com/vitasdk/vdpm"
         cd "$RUNNER_TEMP/vdpm"
         ./bootstrap-vitasdk.sh
         ./install-all.sh
