@@ -1,0 +1,60 @@
+AccessModifierOffset: -8
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+AlignConsecutiveMacros: false
+AlignOperands: Align
+AllowAllArgumentsOnNextLine: true
+AllowAllParametersOfDeclarationOnNextLine: true
+AllowShortBlocksOnASingleLine: Always
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakAfterReturnType: All
+BasedOnStyle: LLVM
+BinPackArguments: true
+BinPackParameters: false
+BraceWrapping:
+  AfterFunction: true
+  AfterControlStatement: Never
+  AfterCaseLabel: false
+  AfterClass: false
+  AfterEnum: false
+  AfterNamespace: false
+  AfterStruct: false
+  AfterUnion: false
+  BeforeCatch: true
+  BeforeElse: true
+  BeforeLambdaBody: false
+  BeforeWhile: false
+BreakBeforeBraces: Custom
+ColumnLimit: 126
+ContinuationIndentWidth: 0
+DerivePointerAlignment: false
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex: '^<fcntl\.h>|^<signal\.h>|^<stdio\.h>|^<unistd\.h>|^<sys/.*\.h>'
+    Priority: 1
+  - Regex: '^<[a-z_]+\.h>'
+    Priority: 2
+  - Regex: '^<[a-z_]+>|^<chrono>|^<cstring>|^<fstream>|^<iostream>|^<thread>'
+    Priority: 3
+  - Regex: '^<boost/.*>'
+    Priority: 4
+  - Regex: '^<clickhouse/.*>|^<spdlog/.*>'
+    Priority: 5
+  - Regex: '^".*"'
+    Priority: 6
+IndentCaseLabels: false
+IndentWidth: 4
+IndentWrappedFunctionNames: false
+InsertBraces: false
+PointerAlignment: Right
+ReferenceAlignment: Right
+RemoveBracesLLVM: true
+SortIncludes: true
+SpaceAfterCStyleCast: false
+SpaceBeforeParens: ControlStatements
+Standard: Latest
+TabWidth: 4
+UseTab: Always

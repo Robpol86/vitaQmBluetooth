@@ -5,7 +5,7 @@ on:
   push:
 
 jobs:
-  TestLintBuild:
+  BuildTestLint:
     runs-on: ubuntu-latest
     container: vitasdk/vitasdk:latest
     steps:
@@ -13,14 +13,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Install dependencies
+        run: apk add --no-cache clang-extra-tools
+
+      - name: Build
+        run: make build
+
       - name: Test
         run: make test
 
       - name: Lint
         run: make lint
-
-      - name: Build
-        run: make build
 
       - name: Upload release artifact
         uses: actions/upload-artifact@v7
