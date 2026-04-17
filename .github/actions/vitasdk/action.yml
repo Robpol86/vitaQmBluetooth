@@ -1,0 +1,24 @@
+name: Install Vita SDK
+description: Install the Vita SDK and its dependencies.
+
+
+runs:
+  using: composite
+  steps:
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        apt-get update && apt-get install -y --no-install-recommends \
+          cmake \
+          git \
+          make \
+          python3-pip \
+          unzip \
+          wget
+
+
+outputs:
+  cache-hit:
+    description: Poetry cache hit boolean
+    value: ${{ steps.python.outputs.cache-hit }}
