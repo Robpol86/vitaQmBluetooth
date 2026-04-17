@@ -2,6 +2,13 @@ name: Install Vita SDK
 description: Install the Vita SDK and its dependencies.
 
 
+inputs:
+  install-path:
+    description: Destination directory for the Vita SDK installation.
+    required: false
+    default: /usr/local/vitasdk
+
+
 runs:
   using: composite
   steps:
@@ -9,16 +16,33 @@ runs:
     - name: Install dependencies
       shell: bash
       run: |
-        apt-get update && apt-get install -y --no-install-recommends \
+        set -euxo pipefail
+        apt-get update
+        apt-get install -y --no-install-recommends \
+          ca-certificates \
           cmake \
           git \
           make \
-          python3-pip \
-          unzip \
-          wget
+          patch \
+          python3 \
+          tar \
+          wget \
+          xz-utils
 
+    - name: Configure Vita SDK environment
+      shell: bash
+      run: |
+        set -euxo pipefail
+        echo "VITASDK=${{ inputs.install-path }}" >> "$GITHUB_ENV"
+        echo "${{ inputs.install-path }}/bin" >> "$GITHUB_PATH"
 
-outputs:
-  cache-hit:
-    description: Poetry cache hit boolean
-    value: ${{ steps.python.outputs.cache-hit }}
+    - name: Install Vita SDK toolchain
+      shell: bash
+      env:
+        VITASDK: ${{ inputs.install-path }}
+      run: |
+        set -euxo pipefail
+        git clone --depth 1 https://github.com/vitasdk/vdpm "$RUNNER_TEMP/vdpm"
+        cd "$RUNNER_TEMP/vdpm"
+        ./bootstrap-vitasdk.sh
+        ./install-all.sh
