@@ -15,19 +15,7 @@ runs:
 
     - name: Install dependencies
       shell: bash
-      run: |
-        set -euxo pipefail
-        sudo apt-get update
-        sudo apt-get install -y --no-install-recommends \
-          ca-certificates \
-          cmake \
-          git \
-          make \
-          patch \
-          python3 \
-          tar \
-          wget \
-          xz-utils
+      run: sudo apt-get update && sudo apt-get install -y cmake
 
     - name: Add environment variables to ENV and PATH
       shell: bash
@@ -42,5 +30,5 @@ runs:
         set -euxo pipefail
         git -C "$RUNNER_TEMP" clone --depth 1 https://github.com/vitasdk/vdpm
         cd "$RUNNER_TEMP/vdpm"
-        ./bootstrap-vitasdk.sh
-        ./install-all.sh
+        time ./bootstrap-vitasdk.sh
+        time ./install-all.sh
