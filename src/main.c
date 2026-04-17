@@ -77,7 +77,9 @@ removeSpaces(char *str)
 
 int
 checkName(const char *token, const char *name)
+// clang-format off
 { return (sceClibStrncmp(token, name, strlen(name)) == 0); }
+// clang-format on
 
 char *
 getValue(char *token)
