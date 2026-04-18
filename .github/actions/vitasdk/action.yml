@@ -32,3 +32,4 @@ runs:
         cd "$RUNNER_TEMP/vdpm"
         ./bootstrap-vitasdk.sh
         ./install-all.sh
+        cd .. && rm -rf vdpm
