@@ -22,7 +22,9 @@ jobs:
           set -euxo pipefail
           sudo apt-get update
           sudo apt-get install -y curl gnupg lsb-release software-properties-common wget
-          curl -LSSf https://apt.llvm.org/llvm.sh |sudo bash -s -- "$LLVM_VERSION" clang-format clang-tidy
+          curl -LSSf https://apt.llvm.org/llvm.sh |sudo bash -s -- "$LLVM_VERSION" all
+          sudo update-alternatives --install /usr/bin/clang-format clang-format "/usr/bin/clang-format-$LLVM_VERSION" 100
+          sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy "/usr/bin/clang-tidy-$LLVM_VERSION" 100
 
       - name: Build
         run: make build
