@@ -25,6 +25,8 @@ jobs:
           curl -LSSf https://apt.llvm.org/llvm.sh |sudo bash -s -- "$LLVM_VERSION" all
           sudo update-alternatives --install /usr/bin/clang-format clang-format "/usr/bin/clang-format-$LLVM_VERSION" 100
           sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy "/usr/bin/clang-tidy-$LLVM_VERSION" 100
+          clang-format --version
+          clang-tidy --version
 
       - name: Build
         run: make build
