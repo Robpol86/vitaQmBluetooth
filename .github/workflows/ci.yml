@@ -15,18 +15,10 @@ jobs:
       - name: Install Vita SDK
         uses: ./.github/actions/vitasdk
 
-      - name: Install dependencies
-        env:
-          LLVM_VERSION: "22"
-        run: |
-          set -euxo pipefail
-          sudo apt-get update
-          sudo apt-get install -y curl gnupg lsb-release software-properties-common wget
-          curl -LSSf https://apt.llvm.org/llvm.sh |sudo bash -s -- "$LLVM_VERSION" all
-          sudo update-alternatives --install /usr/bin/clang-format clang-format "/usr/bin/clang-format-$LLVM_VERSION" 999
-          sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy "/usr/bin/clang-tidy-$LLVM_VERSION" 999
-          clang-format --version
-          clang-tidy --version
+      - name: Install clang tools
+        uses: ./.github/actions/clang
+        with:
+          version: "22"
 
       - name: Build
         run: make build
