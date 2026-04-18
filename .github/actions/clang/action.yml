@@ -1,0 +1,27 @@
+name: Install clang-format and clang-tidy
+description: Install all clang tools.
+
+
+inputs:
+  version:
+    description: The version of clang tools to install.
+    required: true
+
+runs:
+  using: composite
+  steps:
+
+    - name: Install clang tools
+      shell: bash
+      run: |
+        set -euxo pipefail
+        curl -LSSf https://apt.llvm.org/llvm.sh |sudo bash -s -- "${{ inputs.version }}" all
+
+    - name: Set versioned clang tools as default
+      shell: bash
+      run: |
+        set -euxo pipefail
+        sudo update-alternatives --install /usr/bin/clang-format clang-format "/usr/bin/clang-format-${{ inputs.version }}" 999
+        clang-format --version
+        sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy "/usr/bin/clang-tidy-${{ inputs.version }}" 999
+        clang-tidy --version

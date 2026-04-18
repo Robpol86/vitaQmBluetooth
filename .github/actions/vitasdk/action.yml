@@ -1,0 +1,35 @@
+name: Install Vita SDK
+description: Install the Vita SDK and its dependencies.
+
+
+inputs:
+  install-path:
+    description: Destination directory where the Vita SDK will be installed.
+    required: false
+    default: /usr/local/vitasdk
+
+
+runs:
+  using: composite
+  steps:
+
+    - name: Install dependencies
+      shell: bash
+      run: sudo apt-get update && sudo apt-get install -y cmake
+
+    - name: Add persistent VITASDK to ENV and PATH
+      shell: bash
+      run: |
+        set -euxo pipefail
+        echo "VITASDK=${{ inputs.install-path }}" >> "$GITHUB_ENV"
+        echo "${{ inputs.install-path }}/bin" >> "$GITHUB_PATH"
+
+    - name: Install the Vita SDK
+      shell: bash
+      run: |
+        set -euxo pipefail
+        git -C "$RUNNER_TEMP" clone --depth 1 "https://github.com/vitasdk/vdpm"
+        cd "$RUNNER_TEMP/vdpm"
+        ./bootstrap-vitasdk.sh
+        ./install-all.sh
+        cd .. && rm -rf vdpm

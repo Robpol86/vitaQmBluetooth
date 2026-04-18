@@ -7,14 +7,18 @@ on:
 jobs:
   BuildTestLint:
     runs-on: ubuntu-latest
-    container: vitasdk/vitasdk:latest
     steps:
 
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Install dependencies
-        run: apk add --no-cache clang-extra-tools
+      - name: Install Vita SDK
+        uses: ./.github/actions/vitasdk
+
+      - name: Install clang tools
+        uses: ./.github/actions/clang
+        with:
+          version: "22"
 
       - name: Build
         run: make build
