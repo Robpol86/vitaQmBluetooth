@@ -43,18 +43,17 @@ tai_hook_ref_t hook_ref[N_HOOKS];
 static int hook_uid[N_HOOKS];
 
 static char *devices[] = {
-"host0:", "imc0:", "sd0:", "uma0:", "ur0:", "ux0:", "xmc0:", "vd0:",
+	"host0:", "imc0:", "sd0:", "uma0:", "ur0:", "ux0:", "xmc0:", "vd0:",
 };
 
 #define N_DEVICES (sizeof(devices) / sizeof(char **))
 
-unsigned char browse[19] = {0x42, 0x00, 0x72, 0x00, 0x6F, 0x00, 0x77, 0x00, 0x73, 0x00,
-							0x65, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+unsigned char browse[19] = { 0x42, 0x00, 0x72, 0x00, 0x6F, 0x00, 0x77, 0x00, 0x73, 0x00,
+			     0x65, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
 char enabled[5] = "true", sd0_path[65] = DEFAULT_SD0_PATH, ux0_path[65] = DEFAULT_UX0_PATH;
 
-char *
-getRoot(char *path)
+char *getRoot(char *path)
 {
 	static char root[7];
 	sceClibStrncpy(root, path, 7);
@@ -65,8 +64,7 @@ getRoot(char *path)
 	return root;
 }
 
-void
-removeSpaces(char *str)
+void removeSpaces(char *str)
 {
 	int count = 0;
 	for (int i = 0; str[i]; i++)
@@ -75,22 +73,19 @@ removeSpaces(char *str)
 	str[count] = '\0';
 }
 
-int
-checkName(const char *token, const char *name)
+int checkName(const char *token, const char *name)
 // clang-format off
 { return (sceClibStrncmp(token, name, strlen(name)) == 0); }
 // clang-format on
 
-char *
-getValue(char *token)
+char *getValue(char *token)
 {
 	char *cfgvalue = (char *)calloc(1, sizeof(token));
 	cfgvalue = (strchr(token, '=')) + 1;
 	return cfgvalue;
 }
 
-void
-saveConfig(const char *path)
+void saveConfig(const char *path)
 {
 	SceUID fd;
 	fd = sceIoOpen(path, SCE_O_CREAT | SCE_O_WRONLY, 6);
@@ -100,8 +95,7 @@ saveConfig(const char *path)
 	}
 }
 
-int
-loadConfig(const char *path)
+int loadConfig(const char *path)
 {
 	SceUID fd = sceIoOpen(path, SCE_O_RDONLY, 0);
 	if (fd < 0) {
@@ -144,8 +138,7 @@ loadConfig(const char *path)
 	return 0;
 }
 
-static int
-sceRegMgrGetKeyInt_patched(const char *category, const char *name, int *buf)
+static int sceRegMgrGetKeyInt_patched(const char *category, const char *name, int *buf)
 {
 	int ret = TAI_CONTINUE(int, hook_ref[2], category, name, buf);
 	if (sceClibStrcmp(name, "debug_videoplayer") == 0) {
@@ -155,8 +148,7 @@ sceRegMgrGetKeyInt_patched(const char *category, const char *name, int *buf)
 	return ret;
 }
 
-SceUID
-scePafMisc_B3B5DF38_patched(int *a1, char *path, int a2, int a3, int a4)
+SceUID scePafMisc_B3B5DF38_patched(int *a1, char *path, int a2, int a3, int a4)
 {
 	SceUID ret = TAI_CONTINUE(SceUID, hook_ref[1], a1, path, a2, a3, a4);
 	if (sceClibStrcmp(path, "vs0:vsh/common/libvideoprofiler.suprx") == 0) {
@@ -167,31 +159,28 @@ scePafMisc_B3B5DF38_patched(int *a1, char *path, int a2, int a3, int a4)
 	return ret;
 }
 
-int
-sce_paf_private_strcmp_patched(const char *str1, const char *str2)
+int sce_paf_private_strcmp_patched(const char *str1, const char *str2)
 {
 	if (sceClibStrncmp(str2, "ux0:", 4) == 0)
 		return 0;
 	return TAI_CONTINUE(int, hook_ref[3], str1, str2);
 }
 
-int
-sceSysmoduleLoadModuleInternalWithArg_patched(SceSysmoduleInternalModuleId id, SceSize args, void *argp, void *unk)
+int sceSysmoduleLoadModuleInternalWithArg_patched(SceSysmoduleInternalModuleId id, SceSize args, void *argp, void *unk)
 {
 	int res = TAI_CONTINUE(int, hook_ref[0], id, args, argp, unk);
 	if (res >= 0 && id == 0x80000008) {
-		hook_uid[1] =
-		taiHookFunctionImport(&hook_ref[1], "SceVideoPlayer", 0x3D643CE8, 0xB3B5DF38, scePafMisc_B3B5DF38_patched);
-		hook_uid[3] =
-		taiHookFunctionImport(&hook_ref[3], TAI_MAIN_MODULE, 0xA7D28DAE, 0x5CD08A47, sce_paf_private_strcmp_patched);
+		hook_uid[1] = taiHookFunctionImport(&hook_ref[1], "SceVideoPlayer", 0x3D643CE8, 0xB3B5DF38,
+						    scePafMisc_B3B5DF38_patched);
+		hook_uid[3] = taiHookFunctionImport(&hook_ref[3], TAI_MAIN_MODULE, 0xA7D28DAE, 0x5CD08A47,
+						    sce_paf_private_strcmp_patched);
 	}
 	return res;
 }
 
 uint32_t text_addr, text_size, data_addr, data_size;
 
-void
-hook_8102df10_patched()
+void hook_8102df10_patched()
 {
 	uint32_t *ptr_sd0 = (uint32_t *)(data_addr + (0x81185150 - 0x81185000) + 4);
 	uint32_t *ptr_ux0 = (uint32_t *)(data_addr + (0x81185150 - 0x81185000) + 0xC);
@@ -199,18 +188,14 @@ hook_8102df10_patched()
 	*ptr_ux0 = (unsigned)ux0_path;
 }
 
-void
-_start() __attribute__((weak, alias("module_start")));
+void _start() __attribute__((weak, alias("module_start")));
 
-int
-module_start(SceSize args, void *argp)
+int module_start(SceSize args, void *argp)
 {
-
 	tai_module_info_t tai_info;
 	tai_info.size = sizeof(tai_info);
 
 	if (taiGetModuleInfo("SceVideoPlayer", &tai_info) >= 0) {
-
 		SceKernelModuleInfo mod_info;
 		mod_info.size = sizeof(SceKernelModuleInfo);
 		int ret = sceKernelGetModuleInfo(tai_info.modid, &mod_info);
@@ -230,21 +215,21 @@ module_start(SceSize args, void *argp)
 
 		// inject uma0, ur0, ux0 etc. root to sd0 library
 		hook_uid[0] = taiHookFunctionImport(&hook_ref[0], TAI_MAIN_MODULE, TAI_ANY_LIBRARY, 0xC3C26339,
-											sceSysmoduleLoadModuleInternalWithArg_patched);
+						    sceSysmoduleLoadModuleInternalWithArg_patched);
 
 		// enable debug mode
-		hook_uid[2] =
-		taiHookFunctionImport(&hook_ref[2], TAI_MAIN_MODULE, TAI_ANY_LIBRARY, 0x16DDF3DC, sceRegMgrGetKeyInt_patched);
+		hook_uid[2] = taiHookFunctionImport(&hook_ref[2], TAI_MAIN_MODULE, TAI_ANY_LIBRARY, 0x16DDF3DC,
+						    sceRegMgrGetKeyInt_patched);
 
 		// redirect sd0 and ux0 path to uma0, ur0, ux0 etc.
 		hook_uid[4] = taiHookFunctionOffset(&hook_ref[4], tai_info.modid, 0, 0x2df10, 1, hook_8102df10_patched);
 
 		// disable refreshing db
-		uint8_t disable_refresh_db[2] = {0x00, 0xf0};
+		uint8_t disable_refresh_db[2] = { 0x00, 0xf0 };
 		inject_uid[n_uids++] =
-		taiInjectData(tai_info.modid, 0, 0x22ca0, &disable_refresh_db[0], sizeof(disable_refresh_db[0]));
+			taiInjectData(tai_info.modid, 0, 0x22ca0, &disable_refresh_db[0], sizeof(disable_refresh_db[0]));
 		inject_uid[n_uids++] =
-		taiInjectData(tai_info.modid, 0, 0x22c9d, &disable_refresh_db[1], sizeof(disable_refresh_db[1]));
+			taiInjectData(tai_info.modid, 0, 0x22c9d, &disable_refresh_db[1], sizeof(disable_refresh_db[1]));
 
 		// change TestFolder to Browse
 		inject_uid[n_uids++] = taiInjectData(tai_info.modid, 0, 0x1656c4, &browse, sizeof(browse));
@@ -258,8 +243,7 @@ module_start(SceSize args, void *argp)
 	return SCE_KERNEL_START_SUCCESS;
 }
 
-int
-module_stop(SceSize args, void *argp)
+int module_stop(SceSize args, void *argp)
 {
 	int i;
 	for (i = 0; i < N_HOOKS; i++)
