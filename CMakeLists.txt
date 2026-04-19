@@ -22,6 +22,11 @@ add_executable(deplayenabler
   src/main.c
 )
 
+target_compile_options(deplayenabler PRIVATE
+  -Wformat=2
+  -Werror=format-security
+)
+
 target_include_directories(deplayenabler PRIVATE
   "$ENV{VITASDK}/arm-vita-eabi/include"
 )
