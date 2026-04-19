@@ -1,10 +1,9 @@
 /*
   DePlayEnabler plugin by Alpakeno.
-  Enable video debug play mode with the ability to change sd0 and ux0 folder
-  path from configuration file. RegMgrGetKeyInt patch by SilicaAndPina. Plugin
-  made with help from folks at the CBPS discord: https://discord.cbps.xyz
-  Specially @Princess of TB, @Goddess of Sleeping and others folks too, @Queen
-  Devbot for the plugin's name idea.
+  Enable video debug play mode with the ability to change sd0 and ux0 folder path from configuration file.
+  RegMgrGetKeyInt patch by SilicaAndPina.
+  Plugin made with help from folks at the CBPS discord: https://discord.cbps.xyz
+  Specially @Princess of TB, @Goddess of Sleeping and others folks too, @Queen Devbot for the plugin's name idea.
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -103,12 +102,13 @@ int loadConfig(const char* path) {
         removeSpaces(token_trimed);
         if (strlen(token_trimed) > 0) {
             if (token_trimed[0] != '#') {
-                if (checkName(token_trimed, "USE"))
-                    sceClibSnprintf(enabled, sizeof(enabled), "%s", getValue(token));
-                else if (checkName(token_trimed, "SD0"))
-                    sceClibSnprintf(sd0_path, sizeof(sd0_path), "%s", getValue(token));
-                else if (checkName(token_trimed, "UX0"))
-                    sceClibSnprintf(ux0_path, sizeof(ux0_path), "%s", getValue(token));
+                if (checkName(token_trimed, "USE")) {
+                    sceClibSnprintf(enabled, sizeof(enabled), getValue(token));
+                } else if (checkName(token_trimed, "SD0")) {
+                    sceClibSnprintf(sd0_path, sizeof(sd0_path), getValue(token));
+                } else if (checkName(token_trimed, "UX0")) {
+                    sceClibSnprintf(ux0_path, sizeof(ux0_path), getValue(token));
+                }
             }
         }
         token = strtok(NULL, "\r\n");
@@ -222,10 +222,12 @@ int module_start(SceSize args, void* argp) {
 
 int module_stop(SceSize args, void* argp) {
     int i;
-    for (i = 0; i < N_HOOKS; i++)
+    for (i = 0; i < N_HOOKS; i++) {
         if (hook_uid[i] >= 0) taiHookRelease(hook_uid[i], hook_ref[i]);
+    }
     i = 0;
-    for (i = n_uids - 1; i >= 0; i++)
+    for (i = n_uids - 1; i >= 0; i++) {
         if (inject_uid[i] >= 0) taiInjectRelease(inject_uid[i]);
+    }
     return SCE_KERNEL_STOP_SUCCESS;
 }
