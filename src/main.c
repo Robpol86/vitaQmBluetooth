@@ -49,7 +49,7 @@ static char *devices[] = {
 #define N_DEVICES (sizeof(devices) / sizeof(char **))
 
 unsigned char browse[19] = { 0x42, 0x00, 0x72, 0x00, 0x6F, 0x00, 0x77, 0x00, 0x73, 0x00,
-			     0x65, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+							 0x65, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
 char enabled[5] = "true", sd0_path[65] = DEFAULT_SD0_PATH, ux0_path[65] = DEFAULT_UX0_PATH;
 
@@ -170,10 +170,10 @@ int sceSysmoduleLoadModuleInternalWithArg_patched(SceSysmoduleInternalModuleId i
 {
 	int res = TAI_CONTINUE(int, hook_ref[0], id, args, argp, unk);
 	if (res >= 0 && id == 0x80000008) {
-		hook_uid[1] = taiHookFunctionImport(&hook_ref[1], "SceVideoPlayer", 0x3D643CE8, 0xB3B5DF38,
-						    scePafMisc_B3B5DF38_patched);
-		hook_uid[3] = taiHookFunctionImport(&hook_ref[3], TAI_MAIN_MODULE, 0xA7D28DAE, 0x5CD08A47,
-						    sce_paf_private_strcmp_patched);
+		hook_uid[1] =
+			taiHookFunctionImport(&hook_ref[1], "SceVideoPlayer", 0x3D643CE8, 0xB3B5DF38, scePafMisc_B3B5DF38_patched);
+		hook_uid[3] =
+			taiHookFunctionImport(&hook_ref[3], TAI_MAIN_MODULE, 0xA7D28DAE, 0x5CD08A47, sce_paf_private_strcmp_patched);
 	}
 	return res;
 }
@@ -215,11 +215,11 @@ int module_start(SceSize args, void *argp)
 
 		// inject uma0, ur0, ux0 etc. root to sd0 library
 		hook_uid[0] = taiHookFunctionImport(&hook_ref[0], TAI_MAIN_MODULE, TAI_ANY_LIBRARY, 0xC3C26339,
-						    sceSysmoduleLoadModuleInternalWithArg_patched);
+											sceSysmoduleLoadModuleInternalWithArg_patched);
 
 		// enable debug mode
-		hook_uid[2] = taiHookFunctionImport(&hook_ref[2], TAI_MAIN_MODULE, TAI_ANY_LIBRARY, 0x16DDF3DC,
-						    sceRegMgrGetKeyInt_patched);
+		hook_uid[2] =
+			taiHookFunctionImport(&hook_ref[2], TAI_MAIN_MODULE, TAI_ANY_LIBRARY, 0x16DDF3DC, sceRegMgrGetKeyInt_patched);
 
 		// redirect sd0 and ux0 path to uma0, ur0, ux0 etc.
 		hook_uid[4] = taiHookFunctionOffset(&hook_ref[4], tai_info.modid, 0, 0x2df10, 1, hook_8102df10_patched);
