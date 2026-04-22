@@ -14,18 +14,23 @@ runs:
   using: composite
   steps:
 
-    - name: Install clang tools
+    - name: Install clang tools (macOS)
+      if: inputs.os == 'macos-latest'
       shell: bash
-      run: |
-        set -euxo pipefail
-        curl -LSSf https://apt.llvm.org/llvm.sh |sudo bash -s -- "${{ inputs.version }}" all
+      run: brew install llvm@${{ inputs.version }}
 
-    - name: Set versioned clang tools as default (Ubuntu)
+    - name: Install clang tools (Ubuntu)
       if: inputs.os == 'ubuntu-latest'
       shell: bash
       run: |
         set -euxo pipefail
+        curl -LSSf https://apt.llvm.org/llvm.sh |sudo bash -s -- "${{ inputs.version }}" all
         sudo update-alternatives --install /usr/bin/clang-format clang-format "/usr/bin/clang-format-${{ inputs.version }}" 999
-        clang-format --version
         sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy "/usr/bin/clang-tidy-${{ inputs.version }}" 999
+
+    - name: Confirm installed
+      shell: bash
+      run: |
+        set -euxo pipefail
+        clang-format --version
         clang-tidy --version
