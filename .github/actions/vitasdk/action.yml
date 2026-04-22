@@ -16,6 +16,11 @@ runs:
   using: composite
   steps:
 
+    - name: Install dependencies (macOS)
+      if: inputs.os == 'macos-latest'
+      shell: bash
+      run: brew install zstd
+
     - name: Install dependencies (Ubuntu)
       if: inputs.os == 'ubuntu-latest'
       shell: bash
@@ -30,8 +35,6 @@ runs:
 
     - name: Install the Vita SDK
       shell: bash
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
       run: |
         set -euxo pipefail
         git -C "$RUNNER_TEMP" clone --depth 1 "https://github.com/vitasdk/vdpm"
