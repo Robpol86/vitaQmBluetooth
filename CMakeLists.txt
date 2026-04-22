@@ -18,20 +18,20 @@ include("${VITASDK}/share/vita.cmake" REQUIRED)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,-q -Wall -nostdlib")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -fno-exceptions")
 
-add_executable(deplayenabler
+add_executable("${PROJECT_NAME}"
   src/main.c
 )
 
-target_compile_options(deplayenabler PRIVATE
+target_compile_options("${PROJECT_NAME}" PRIVATE
   -Wformat=2
   -Werror=format-security
 )
 
-target_include_directories(deplayenabler PRIVATE
+target_include_directories("${PROJECT_NAME}" PRIVATE
   "$ENV{VITASDK}/arm-vita-eabi/include"
 )
 
-target_link_libraries(deplayenabler
+target_link_libraries("${PROJECT_NAME}"
   k
   gcc
   SceLibc_stub
@@ -42,6 +42,6 @@ target_link_libraries(deplayenabler
   SceKernelModulemgr_stub
 )
 
-vita_create_self(deplayenabler.suprx deplayenabler CONFIG exports.yml UNSAFE)
+vita_create_self("${PROJECT_NAME}.suprx" "${PROJECT_NAME}" CONFIG exports.yml UNSAFE)
 
-vita_create_stubs(stubs deplayenabler "${CMAKE_SOURCE_DIR}/exports.yml")
+vita_create_stubs(stubs "${PROJECT_NAME}" "${CMAKE_SOURCE_DIR}/exports.yml")
