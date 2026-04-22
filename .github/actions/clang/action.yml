@@ -3,6 +3,9 @@ description: Install all clang tools.
 
 
 inputs:
+  os:
+    description: Runner OS (e.g. ubuntu-latest or macos-latest).
+    required: true
   version:
     description: The version of clang tools to install.
     required: true
@@ -17,7 +20,8 @@ runs:
         set -euxo pipefail
         curl -LSSf https://apt.llvm.org/llvm.sh |sudo bash -s -- "${{ inputs.version }}" all
 
-    - name: Set versioned clang tools as default
+    - name: Set versioned clang tools as default (Ubuntu)
+      if: inputs.os == 'ubuntu-latest'
       shell: bash
       run: |
         set -euxo pipefail

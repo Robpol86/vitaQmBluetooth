@@ -3,6 +3,9 @@ description: Install the Vita SDK and its dependencies.
 
 
 inputs:
+  os:
+    description: Runner OS (e.g. ubuntu-latest or macos-latest).
+    required: true
   install-path:
     description: Destination directory where the Vita SDK will be installed.
     required: false
@@ -13,7 +16,8 @@ runs:
   using: composite
   steps:
 
-    - name: Install dependencies
+    - name: Install dependencies (Ubuntu)
+      if: inputs.os == 'ubuntu-latest'
       shell: bash
       run: sudo apt-get update && sudo apt-get install -y cmake
 

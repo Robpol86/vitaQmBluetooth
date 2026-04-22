@@ -17,10 +17,13 @@ jobs:
 
       - name: Install Vita SDK
         uses: ./.github/actions/vitasdk
+        with:
+          os: ${{ matrix.os }}
 
       - name: Install clang tools
         uses: ./.github/actions/clang
         with:
+          os: ${{ matrix.os }}
           version: "22"
 
       - name: Build
