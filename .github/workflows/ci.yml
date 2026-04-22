@@ -6,7 +6,10 @@ on:
 
 jobs:
   BuildTestLint:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-lates]
+    runs-on: ${{ matrix.os }}
     steps:
 
       - name: Checkout
