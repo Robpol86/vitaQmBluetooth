@@ -8,7 +8,7 @@ jobs:
   BuildTestLint:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-lates]
+        os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
 
