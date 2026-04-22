@@ -16,6 +16,20 @@ runs:
   using: composite
   steps:
 
+    - name: Install dependencies (macOS)
+      if: inputs.os == 'macos-latest'
+      shell: bash
+      run: |
+        set -euxo pipefail
+        mkdir "$RUNNER_TEMP/zstd" && cd "$_"
+        wget https://github.com/facebook/zstd/releases/download/v1.5.7/zstd-1.5.7.tar.gz
+        tar -xzf zstd-1.5.7.tar.gz
+        cd zstd-1.5.7
+        CFLAGS="-arch x86_64" LDFLAGS="-arch x86_64" arch -x86_64 make lib
+        sudo mkdir -p /usr/local/opt/zstd/lib
+        sudo cp lib/libzstd.1.5.7.dylib /usr/local/opt/zstd/lib/
+        sudo ln -s libzstd.1.5.7.dylib /usr/local/opt/zstd/lib/libzstd.1.dylib
+
     - name: Install dependencies (Ubuntu)
       if: inputs.os == 'ubuntu-latest'
       shell: bash
@@ -37,17 +51,3 @@ runs:
         until bash -exo pipefail ./bootstrap-vitasdk.sh; do sleep 10; rm -rv "$VITASDK"; done
         ./install-all.sh
         cd .. && rm -rf vdpm
-
-    - name: Post-install workarounds (macOS)
-      if: inputs.os == 'macos-latest'
-      shell: bash
-      run: |
-        set -euxo pipefail
-        mkdir "$RUNNER_TEMP/zstd" && cd "$_"
-        wget https://github.com/facebook/zstd/releases/download/v1.5.7/zstd-1.5.7.tar.gz
-        tar -xzf zstd-1.5.7.tar.gz
-        cd zstd-1.5.7
-        CFLAGS="-arch x86_64" LDFLAGS="-arch x86_64" arch -x86_64 make lib
-        sudo mkdir -p /usr/local/opt/zstd/lib
-        sudo cp lib/libzstd.1.5.7.dylib /usr/local/opt/zstd/lib/
-        sudo ln -s libzstd.1.5.7.dylib /usr/local/opt/zstd/lib/libzstd.1.dylib
