@@ -30,11 +30,6 @@ runs:
         sudo cp lib/libzstd.1.5.7.dylib /usr/local/opt/zstd/lib/
         sudo ln -s libzstd.1.5.7.dylib /usr/local/opt/zstd/lib/libzstd.1.dylib
 
-    - name: Install dependencies (Ubuntu)
-      if: inputs.os == 'ubuntu-latest'
-      shell: bash
-      run: sudo apt-get update && sudo apt-get install -y cmake
-
     - name: Add persistent VITASDK to ENV and PATH
       shell: bash
       run: |
