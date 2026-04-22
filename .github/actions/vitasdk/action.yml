@@ -35,7 +35,7 @@ runs:
         git -C "$RUNNER_TEMP" clone --depth 1 "https://github.com/vitasdk/vdpm"
         cd "$RUNNER_TEMP/vdpm"
         until bash -exo pipefail ./bootstrap-vitasdk.sh; do sleep 10; rm -rv "$VITASDK"; done
-        until bash -exo pipefail ./install-all.sh; do sleep 10; done
+        ./install-all.sh
         cd .. && rm -rf vdpm
 
     - name: Post-install workarounds (macOS)
@@ -43,5 +43,11 @@ runs:
       shell: bash
       run: |
         set -euxo pipefail
+        mkdir "$RUNNER_TEMP/zstd" && cd "$_"
+        wget https://github.com/facebook/zstd/releases/download/v1.5.7/zstd-1.5.7.tar.gz
+        tar -xzf zstd-1.5.7.tar.gz
+        cd zstd-1.5.7
+        CFLAGS="-arch x86_64" LDFLAGS="-arch x86_64" arch -x86_64 make lib
         sudo mkdir -p /usr/local/opt/zstd/lib
-        sudo ln -s /opt/homebrew/opt/zstd/lib/libzstd.1.dylib /usr/local/opt/zstd/lib/libzstd.1.dylib
+        sudo cp lib/libzstd.1.5.7.dylib /usr/local/opt/zstd/lib/
+        sudo ln -s libzstd.1.5.7.dylib /usr/local/opt/zstd/lib/libzstd.1.dylib
