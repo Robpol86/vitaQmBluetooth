@@ -6,7 +6,7 @@ inputs:
   os:
     description: Runner OS (e.g. ubuntu-latest or macos-latest).
     required: true
-  install-path:
+  vitasdk-path:
     description: Destination directory where the Vita SDK will be installed.
     required: false
     default: /usr/local/vitasdk
@@ -25,8 +25,8 @@ runs:
       shell: bash
       run: |
         set -euxo pipefail
-        echo "VITASDK=${{ inputs.install-path }}" >> "$GITHUB_ENV"
-        echo "${{ inputs.install-path }}/bin" >> "$GITHUB_PATH"
+        echo "VITASDK=${{ inputs.vitasdk-path }}" >> "$GITHUB_ENV"
+        echo "${{ inputs.vitasdk-path }}/bin" >> "$GITHUB_PATH"
 
     - name: Install the Vita SDK
       shell: bash
