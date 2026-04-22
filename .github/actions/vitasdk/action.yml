@@ -30,6 +30,8 @@ runs:
 
     - name: Install the Vita SDK
       shell: bash
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
       run: |
         set -euxo pipefail
         git -C "$RUNNER_TEMP" clone --depth 1 "https://github.com/vitasdk/vdpm"
