@@ -24,8 +24,7 @@ runs:
       run: |
         set -euxo pipefail
         mkdir "$RUNNER_TEMP/zstd" && cd "$_"
-        wget "https://github.com/facebook/zstd/releases/download/v$ZSTD_VERSION/zstd-$ZSTD_VERSION.tar.gz"
-        tar -xzf "zstd-$ZSTD_VERSION.tar.gz"
+        curl -sSL "https://github.com/facebook/zstd/releases/download/v$ZSTD_VERSION/zstd-$ZSTD_VERSION.tar.gz" |tar -xz
         cd "zstd-$ZSTD_VERSION"
         CFLAGS="-arch x86_64" LDFLAGS="-arch x86_64" arch -x86_64 make lib
         sudo mkdir -p /usr/local/opt/zstd/lib
@@ -41,10 +40,13 @@ runs:
 
     - name: Install the Vita SDK
       shell: bash
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
       run: |
         set -euxo pipefail
+        install -m0600 /dev/stdin ~/.wgetrc <<< "header = Authorization: Bearer $GITHUB_TOKEN"
         git -C "$RUNNER_TEMP" clone --depth 1 "https://github.com/vitasdk/vdpm"
         cd "$RUNNER_TEMP/vdpm"
-        until bash -exo pipefail ./bootstrap-vitasdk.sh; do sleep 3; rm -rv "$VITASDK"; done
-        ./install-all.sh
+        bash -exo pipefail ./bootstrap-vitasdk.sh
+        bash -exo pipefail ./install-all.sh
         cd .. && rm -rf vdpm
