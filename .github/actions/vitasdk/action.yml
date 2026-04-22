@@ -39,3 +39,10 @@ runs:
         bash -x ./bootstrap-vitasdk.sh
         bash -x ./install-all.sh
         cd .. && rm -rf vdpm
+
+    - name: Post-install workarounds (macOS)
+      if: inputs.os == 'macos-latest'
+      shell: bash
+      run: |
+        set -euxo pipefail
+        ln -s /opt/homebrew/opt/zstd/lib/libzstd.1.dylib /usr/local/opt/zstd/lib/libzstd.1.dylib
