@@ -19,6 +19,7 @@ jobs:
         uses: ./.github/actions/vitasdk
         with:
           os: ${{ matrix.os }}
+        timeout-minutes: 5
 
       - name: Install clang tools
         uses: ./.github/actions/clang
