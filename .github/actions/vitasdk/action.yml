@@ -39,8 +39,8 @@ runs:
         set -euxo pipefail
         git -C "$RUNNER_TEMP" clone --depth 1 "https://github.com/vitasdk/vdpm"
         cd "$RUNNER_TEMP/vdpm"
-        until bash -euxo pipefail ./bootstrap-vitasdk.sh; do sleep 10; done
-        until bash -euxo pipefail ./install-all.sh; do sleep 10; done
+        until bash -exo pipefail ./bootstrap-vitasdk.sh; do sleep 10; done
+        until bash -exo pipefail ./install-all.sh; do sleep 10; done
         cd .. && rm -rf vdpm
 
     - name: Post-install workarounds (macOS)
