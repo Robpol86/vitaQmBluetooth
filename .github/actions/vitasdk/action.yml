@@ -38,6 +38,16 @@ runs:
         echo "VITASDK=${{ inputs.vitasdk-path }}" >> "$GITHUB_ENV"
         echo "${{ inputs.vitasdk-path }}/bin" >> "$GITHUB_PATH"
 
+    - name: INVESTIGATE
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      run: |
+        set -euxo pipefail
+        wget -d -S -O - "https://github.com/vitasdk/vita-headers/raw/master/.travis.d/last_built_toolchain.py" || true
+        install -m0600 /dev/stdin ~/.wgetrc <<< "header = Authorization: Bearer $GITHUB_TOKEN"
+        wget -d -S -O - "https://github.com/vitasdk/vita-headers/raw/master/.travis.d/last_built_toolchain.py"
+
     - name: Install the Vita SDK
       shell: bash
       env:
