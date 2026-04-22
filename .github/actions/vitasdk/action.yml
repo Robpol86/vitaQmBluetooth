@@ -16,6 +16,11 @@ runs:
   using: composite
   steps:
 
+    - name: Install dependencies (macOS)
+      if: inputs.os == 'macos-latest'
+      shell: bash
+      run: brew install cmake wget
+
     - name: Install dependencies (Ubuntu)
       if: inputs.os == 'ubuntu-latest'
       shell: bash
@@ -34,6 +39,6 @@ runs:
         set -euxo pipefail
         git -C "$RUNNER_TEMP" clone --depth 1 "https://github.com/vitasdk/vdpm"
         cd "$RUNNER_TEMP/vdpm"
-        bash -e ./bootstrap-vitasdk.sh
-        bash -e ./install-all.sh
+        ./bootstrap-vitasdk.sh
+        ./install-all.sh
         cd .. && rm -rf vdpm
