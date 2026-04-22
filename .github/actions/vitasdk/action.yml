@@ -9,7 +9,7 @@ inputs:
   vitasdk-path:
     description: Destination directory where the Vita SDK will be installed.
     required: false
-    default: /usr/local/vitasdk
+    default: ${{ runner.tool_cache }}/vitasdk
 
 
 runs:
