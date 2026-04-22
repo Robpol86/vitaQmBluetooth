@@ -16,11 +16,6 @@ runs:
   using: composite
   steps:
 
-    - name: Install dependencies (macOS)
-      if: inputs.os == 'macos-latest'
-      shell: bash
-      run: brew install zstd
-
     - name: Install dependencies (Ubuntu)
       if: inputs.os == 'ubuntu-latest'
       shell: bash
@@ -48,4 +43,5 @@ runs:
       shell: bash
       run: |
         set -euxo pipefail
+        mkdir -p /usr/local/opt/zstd/lib
         ln -s /opt/homebrew/opt/zstd/lib/libzstd.1.dylib /usr/local/opt/zstd/lib/libzstd.1.dylib
