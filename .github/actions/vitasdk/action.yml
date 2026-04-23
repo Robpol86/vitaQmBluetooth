@@ -16,16 +16,6 @@ runs:
   using: composite
   steps:
 
-    - name: INVESTIGATE
-      shell: bash
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-      run: |
-        set -euxo pipefail
-        wget -d -S -O - "https://github.com/vitasdk/vita-headers/raw/master/.travis.d/last_built_toolchain.py" || true
-        install -m0600 /dev/stdin ~/.wgetrc <<< "header = Authorization: Bearer $GITHUB_TOKEN"
-        wget -d -S -O - "https://github.com/vitasdk/vita-headers/raw/master/.travis.d/last_built_toolchain.py"
-
     - name: Install dependencies (macOS)
       if: inputs.os == 'macos-latest'
       shell: bash
@@ -50,13 +40,10 @@ runs:
 
     - name: Install the Vita SDK
       shell: bash
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
       run: |
         set -euxo pipefail
-        install -m0600 /dev/stdin ~/.wgetrc <<< "header = Authorization: Bearer $GITHUB_TOKEN"
         git -C "$RUNNER_TEMP" clone --depth 1 "https://github.com/vitasdk/vdpm"
         cd "$RUNNER_TEMP/vdpm"
-        bash -exo pipefail ./bootstrap-vitasdk.sh
-        bash -exo pipefail ./install-all.sh
+        until bash -exo pipefail ./bootstrap-vitasdk.sh; do sleep 10; rm -rv "$VITASDK"; done
+        ./install-all.sh
         cd .. && rm -rf vdpm
