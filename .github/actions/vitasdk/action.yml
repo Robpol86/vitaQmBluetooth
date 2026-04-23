@@ -52,7 +52,15 @@ runs:
         echo "VITASDK=${{ inputs.vitasdk-path }}" >> "$GITHUB_ENV"
         echo "${{ inputs.vitasdk-path }}/bin" >> "$GITHUB_PATH"
 
+    - name: Cache vitasdk
+      id: cache-vitasdk
+      uses: actions/cache@v5
+      with:
+        path: ${{ inputs.vitasdk-path }}
+        key: ${{ inputs.os }}-${{ hashFiles('.github/**') }}-vitasdk
+
     - name: Install the Vita SDK
+      if: steps.cache-vitasdk.outputs.cache-hit != 'true'
       shell: bash
       run: |
         set -euxo pipefail
