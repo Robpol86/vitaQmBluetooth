@@ -16,15 +16,15 @@ runs:
   using: composite
   steps:
 
-    - name: Cache zstd (macOS)
+    - name: Restore zstd cache (macOS)
       id: cache-zstd
       if: inputs.os == 'macos-latest'
-      uses: actions/cache@v5
+      uses: actions/cache/restore@v5
       with:
         path: ${{ runner.temp }}/zstd
         key: ${{ inputs.os }}-${{ hashFiles('.github/**') }}-zstd
 
-    - name: Download zstd (macOS)
+    - name: Download and build zstd (macOS)
       if: inputs.os == 'macos-latest' && steps.cache-zstd.outputs.cache-hit != 'true'
       shell: bash
       env:
@@ -35,6 +35,13 @@ runs:
         curl -sSL "https://github.com/facebook/zstd/releases/download/v$ZSTD_VERSION/zstd-$ZSTD_VERSION.tar.gz" |tar -xz
         mv "zstd-$ZSTD_VERSION" zstd && cd "$_"
         CFLAGS="-arch x86_64" LDFLAGS="-arch x86_64" arch -x86_64 make lib
+
+    - name: Save zstd cache (macOS)
+      if: inputs.os == 'macos-latest' && steps.cache-zstd.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v5
+      with:
+        path: ${{ runner.temp }}/zstd
+        key: ${{ steps.cache-zstd.outputs.cache-primary-key }}
 
     - name: Install zstd (macOS)
       if: inputs.os == 'macos-latest'
@@ -52,9 +59,9 @@ runs:
         echo "VITASDK=${{ inputs.vitasdk-path }}" >> "$GITHUB_ENV"
         echo "${{ inputs.vitasdk-path }}/bin" >> "$GITHUB_PATH"
 
-    - name: Cache vitasdk
+    - name: Restore vitasdk cache
       id: cache-vitasdk
-      uses: actions/cache@v5
+      uses: actions/cache/restore@v5
       with:
         path: ${{ inputs.vitasdk-path }}
         key: ${{ inputs.os }}-${{ hashFiles('.github/**') }}-vitasdk
@@ -69,3 +76,10 @@ runs:
         until bash -exo pipefail ./bootstrap-vitasdk.sh; do sleep 10; rm -rv "$VITASDK"; done
         ./install-all.sh
         cd .. && rm -rf vdpm
+
+    - name: Save vitasdk cache
+      if: steps.cache-vitasdk.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v5
+      with:
+        path: ${{ inputs.vitasdk-path }}
+        key: ${{ steps.cache-vitasdk.outputs.cache-primary-key }}
