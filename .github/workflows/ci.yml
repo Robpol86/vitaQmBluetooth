@@ -12,6 +12,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Install dependencies (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get update && sudo apt-get install -y cmake
+
       - name: Install Vita SDK
         uses: ./.github/actions/vitasdk
 
@@ -32,13 +36,13 @@ jobs:
       - name: Upload release artifact
         uses: actions/upload-artifact@v7
         with:
-          name: deplayenabler-release
-          path: build-release/deplayenabler.suprx
+          name: release
+          path: build-release/*.s?prx
           if-no-files-found: error
 
       - name: Upload debug artifact
         uses: actions/upload-artifact@v7
         with:
-          name: deplayenabler-debug
-          path: build-debug/deplayenabler.suprx
+          name: debug
+          path: build-debug/*.s?prx
           if-no-files-found: error
