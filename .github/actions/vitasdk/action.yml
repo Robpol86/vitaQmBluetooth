@@ -44,7 +44,6 @@ runs:
         cd "$RUNNER_TEMP/zstd/zstd/lib"
         sudo mkdir -p /usr/local/opt/zstd/lib
         sudo cp -v libzstd.*.dylib /usr/local/opt/zstd/lib/
-        sudo ln -vs libzstd.*.dylib /usr/local/opt/zstd/lib/libzstd.1.dylib
 
     - name: Add persistent VITASDK to ENV and PATH
       shell: bash
