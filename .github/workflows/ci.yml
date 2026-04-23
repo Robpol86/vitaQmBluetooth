@@ -6,17 +6,22 @@ on:
 
 jobs:
   BuildTestLint:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [&artifact_os ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
 
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Install dependencies
+      - name: Install dependencies (Linux)
+        if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get update && sudo apt-get install -y cmake
 
       - name: Install Vita SDK
         uses: ./.github/actions/vitasdk
+        timeout-minutes: 10
 
       - name: Install clang tools
         uses: ./.github/actions/clang
@@ -33,6 +38,9 @@ jobs:
         run: make lint
 
       - name: Upload release artifact
+        env:
+          artifact_os: *artifact_os
+        if: matrix.os == env.artifact_os
         uses: actions/upload-artifact@v7
         with:
           name: release
@@ -40,6 +48,9 @@ jobs:
           if-no-files-found: error
 
       - name: Upload debug artifact
+        env:
+          artifact_os: *artifact_os
+        if: matrix.os == env.artifact_os
         uses: actions/upload-artifact@v7
         with:
           name: debug
