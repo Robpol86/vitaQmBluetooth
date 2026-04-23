@@ -16,8 +16,16 @@ runs:
   using: composite
   steps:
 
-    - name: Install dependencies (macOS)
+    - name: Cache zstd (macOS)
+      id: cache-zstd
       if: inputs.os == 'macos-latest'
+      uses: actions/cache@v5
+      with:
+        path: ${{ runner.temp }}/zstd
+        key: ${{ inputs.os }}-${{ hashFiles('.github/**') }}-zstd
+
+    - name: Download zstd (macOS)
+      if: inputs.os == 'macos-latest' && steps.cache-zstd.outputs.cache-hit != 'true'
       shell: bash
       env:
         ZSTD_VERSION: 1.5.7
@@ -25,8 +33,15 @@ runs:
         set -euxo pipefail
         mkdir "$RUNNER_TEMP/zstd" && cd "$_"
         curl -sSL "https://github.com/facebook/zstd/releases/download/v$ZSTD_VERSION/zstd-$ZSTD_VERSION.tar.gz" |tar -xz
-        cd "zstd-$ZSTD_VERSION"
+        mv "zstd-$ZSTD_VERSION" zstd && cd "$_"
         CFLAGS="-arch x86_64" LDFLAGS="-arch x86_64" arch -x86_64 make lib
+
+    - name: Install zstd (macOS)
+      if: inputs.os == 'macos-latest'
+      shell: bash
+      run: |
+        set -euxo pipefail
+        cd "$RUNNER_TEMP/zstd/zstd"
         sudo mkdir -p /usr/local/opt/zstd/lib
         sudo cp "lib/libzstd.$ZSTD_VERSION.dylib" /usr/local/opt/zstd/lib/
         sudo ln -s "libzstd.$ZSTD_VERSION.dylib" /usr/local/opt/zstd/lib/libzstd.1.dylib
