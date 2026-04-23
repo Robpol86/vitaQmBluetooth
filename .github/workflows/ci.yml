@@ -12,8 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Install dependencies (Linux)
-        if: matrix.os == 'ubuntu-latest'
+      - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y cmake
 
       - name: Install Vita SDK
