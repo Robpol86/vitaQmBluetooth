@@ -3,9 +3,6 @@ description: Install all clang tools.
 
 
 inputs:
-  os:
-    description: Runner OS (e.g. ubuntu-latest or macos-latest).
-    required: true
   version:
     description: The version of clang tools to install.
     required: true
@@ -15,7 +12,7 @@ runs:
   steps:
 
     - name: Install clang tools (macOS)
-      if: inputs.os == 'macos-latest'
+      if: runner.os == 'macOS'
       shell: bash
       run: |
         set -euxo pipefail
@@ -23,7 +20,7 @@ runs:
         brew link --force llvm@${{ inputs.version }}
 
     - name: Install clang tools (Ubuntu)
-      if: inputs.os == 'ubuntu-latest'
+      if: runner.os == 'Linux'
       shell: bash
       run: |
         set -euxo pipefail

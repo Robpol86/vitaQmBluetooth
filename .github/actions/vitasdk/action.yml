@@ -3,9 +3,6 @@ description: Install the Vita SDK and its dependencies.
 
 
 inputs:
-  os:
-    description: Runner OS (e.g. ubuntu-latest or macos-latest).
-    required: true
   vitasdk-path:
     description: Destination directory where the Vita SDK will be installed.
     required: false
@@ -18,14 +15,14 @@ runs:
 
     - name: Restore zstd cache (macOS)
       id: cache-zstd
-      if: inputs.os == 'macos-latest'
+      if: runner.os == 'macOS'
       uses: actions/cache/restore@v5
       with:
         path: ${{ runner.temp }}/zstd
-        key: ${{ inputs.os }}-${{ hashFiles('.github/**') }}-zstd
+        key: ${{ runner.os }}-${{ hashFiles('.github/**') }}-zstd
 
     - name: Download and build zstd (macOS)
-      if: inputs.os == 'macos-latest' && steps.cache-zstd.outputs.cache-hit != 'true'
+      if: runner.os == 'macOS' && steps.cache-zstd.outputs.cache-hit != 'true'
       shell: bash
       env:
         ZSTD_VERSION: 1.5.7
@@ -37,14 +34,14 @@ runs:
         CFLAGS="-arch x86_64" LDFLAGS="-arch x86_64" arch -x86_64 make lib
 
     - name: Save zstd cache (macOS)
-      if: inputs.os == 'macos-latest' && steps.cache-zstd.outputs.cache-hit != 'true'
+      if: runner.os == 'macOS' && steps.cache-zstd.outputs.cache-hit != 'true'
       uses: actions/cache/save@v5
       with:
         path: ${{ runner.temp }}/zstd
         key: ${{ steps.cache-zstd.outputs.cache-primary-key }}
 
     - name: Install zstd (macOS)
-      if: inputs.os == 'macos-latest'
+      if: runner.os == 'macOS'
       shell: bash
       run: |
         set -euxo pipefail
@@ -64,7 +61,7 @@ runs:
       uses: actions/cache/restore@v5
       with:
         path: ${{ inputs.vitasdk-path }}
-        key: ${{ inputs.os }}-${{ hashFiles('.github/**') }}-vitasdk
+        key: ${{ runner.os }}-${{ hashFiles('.github/**') }}-vitasdk
 
     - name: Install the Vita SDK
       if: steps.cache-vitasdk.outputs.cache-hit != 'true'
