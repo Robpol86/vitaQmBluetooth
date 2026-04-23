@@ -41,10 +41,10 @@ runs:
       shell: bash
       run: |
         set -euxo pipefail
-        cd "$RUNNER_TEMP/zstd/zstd"
+        cd "$RUNNER_TEMP/zstd/zstd/lib"
         sudo mkdir -p /usr/local/opt/zstd/lib
-        sudo cp "lib/libzstd.$ZSTD_VERSION.dylib" /usr/local/opt/zstd/lib/
-        sudo ln -s "libzstd.$ZSTD_VERSION.dylib" /usr/local/opt/zstd/lib/libzstd.1.dylib
+        sudo cp -v libzstd.*.dylib /usr/local/opt/zstd/lib/
+        sudo ln -vs libzstd.*.dylib /usr/local/opt/zstd/lib/libzstd.1.dylib
 
     - name: Add persistent VITASDK to ENV and PATH
       shell: bash
