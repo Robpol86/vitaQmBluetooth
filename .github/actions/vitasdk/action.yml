@@ -19,7 +19,7 @@ runs:
       uses: actions/cache/restore@v5
       with:
         path: ${{ runner.temp }}/zstd
-        key: ${{ runner.os }}-${{ hashFiles('.github/**') }}-zstd
+        key: ${{ runner.os }}-${{ hashFiles('.github/actions/vitasdk/**') }}-zstd
 
     - name: Download and build zstd (macOS)
       if: runner.os == 'macOS' && steps.cache-zstd.outputs.cache-hit != 'true'
@@ -61,7 +61,7 @@ runs:
       uses: actions/cache/restore@v5
       with:
         path: ${{ inputs.vitasdk-path }}
-        key: ${{ runner.os }}-${{ hashFiles('.github/**') }}-vitasdk
+        key: ${{ runner.os }}-${{ hashFiles('.github/actions/vitasdk/**') }}-vitasdk
 
     - name: Install the Vita SDK
       if: steps.cache-vitasdk.outputs.cache-hit != 'true'
