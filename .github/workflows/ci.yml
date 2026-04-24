@@ -28,6 +28,15 @@ jobs:
         with:
           version: "22"
 
+      - name: Copy TODO
+        run: |
+          set -euxo pipefail
+          cp -vr vendor/quickmenureborn/dev_pkg/quickmenureborn "$VITASDK/include/"
+          cp -vr vendor/quickmenureborn/dev_pkg/quickmenureborn "$VITASDK/arm-vita-eabi/include/"
+          cp -vr vendor/quickmenureborn/dev_pkg/vitasdk_stubs/* "$VITASDK/lib/"
+          cp -vr vendor/quickmenureborn/dev_pkg/vitasdk_stubs/* "$VITASDK/arm-vita-eabi/lib/"
+          find "$VITASDK" -type f
+
       - name: Build
         run: make build
 
