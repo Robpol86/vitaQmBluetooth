@@ -33,11 +33,11 @@ target_compile_options("${PROJECT_NAME}" PRIVATE
 
 target_include_directories("${PROJECT_NAME}" PRIVATE
   "$ENV{VITASDK}/arm-vita-eabi/include"
-  "${VENDOR_DIR}/quickmenureborn/include"
+  "${VENDOR_DIR}/quickmenureborn/dev_pkg/quickmenureborn"
 )
 
 target_link_directories("${PROJECT_NAME}" PRIVATE
-  "${VENDOR_DIR}/quickmenureborn/lib"
+  "${VENDOR_DIR}/quickmenureborn/dev_pkg/vitasdk_stubs"
 )
 
 target_link_libraries("${PROJECT_NAME}"
