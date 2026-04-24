@@ -27,7 +27,7 @@
 #include <string.h>
 #include <taihen.h>
 
-#define CONFIG_PATH "ur0:/tai/deplayenabler.txt"
+#define CONFIG_PATH "ur0:/tai/vitaQmBluetooth.txt"
 #define CONFIG_CONT "USE=true\r\nSD0=uma0:/video/\r\nUX0=ux0:/video/"
 
 #define DEFAULT_SD0_PATH "uma0:/video/"
