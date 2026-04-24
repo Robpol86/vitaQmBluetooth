@@ -32,7 +32,6 @@ jobs:
         run: |
           set -euxo pipefail
           cp -vr vendor/quickmenureborn/quickmenureborn "$VITASDK/arm-vita-eabi/include/"
-          cp -vr vendor/quickmenureborn/vitasdk_stubs/* "$VITASDK/arm-vita-eabi/lib/"
           find "$VITASDK" -type f
 
       - name: Build
