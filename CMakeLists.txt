@@ -1,6 +1,6 @@
 set(CMAKE_POLICY_VERSION_MINIMUM 3.5)  # Silences "Compatibility with CMake < 3.5 has been removed from CMake"
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.13)
 
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   if(DEFINED ENV{VITASDK})
@@ -18,6 +18,10 @@ include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,-q -Wall -nostdlib")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -fno-exceptions")
 
+# Vendored dependencies — each subdirectory under vendor/ has its own README.md
+# documenting upstream source, version, license, and update procedure.
+set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
+
 add_executable("${PROJECT_NAME}"
   src/main.c
 )
@@ -29,6 +33,11 @@ target_compile_options("${PROJECT_NAME}" PRIVATE
 
 target_include_directories("${PROJECT_NAME}" PRIVATE
   "$ENV{VITASDK}/arm-vita-eabi/include"
+  "${VENDOR_DIR}/quickmenureborn/include"
+)
+
+target_link_directories("${PROJECT_NAME}" PRIVATE
+  "${VENDOR_DIR}/quickmenureborn/lib"
 )
 
 target_link_libraries("${PROJECT_NAME}"
