@@ -1,0 +1,23 @@
+{
+    "configurations": [
+        {
+            "name": "VITASDK",
+            "includePath": [
+                "${VITASDK}/arm-vita-eabi/include",
+                "${workspaceFolder}/src/**"
+            ],
+            "defines": [],
+            "intelliSenseMode": "macos-clang-arm64",
+            "compilerPath": "${VITASDK}/bin/arm-vita-eabi-gcc",
+            "compilerArgs": [
+                "-Wl,-q",
+                "-Wall",
+                "-nostartfiles",
+                "-fno-lto"
+            ],
+            "cStandard": "c11",
+            "cppStandard": "c++11"
+        }
+    ],
+    "version": 4
+}
