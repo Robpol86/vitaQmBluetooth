@@ -40,6 +40,7 @@ target_link_libraries("${PROJECT_NAME}"
   SceIofilemgr_stub
   SceSysmodule_stub
   SceKernelModulemgr_stub
+  QuickMenuReborn_stub_weak
 )
 
 vita_create_self("${PROJECT_NAME}.suprx" "${PROJECT_NAME}" CONFIG exports.yml UNSAFE)
