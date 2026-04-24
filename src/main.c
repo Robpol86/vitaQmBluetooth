@@ -66,7 +66,7 @@ BUTTON_HANDLER(on_toggle_checkbox) {
     (void)eventId;
     (void)userDat;
 
-    reset_on_exit = QuickMenuRebornGetCheckboxValue(CHECKBOX_REF_ID);
+    reset_on_exit = (QuickMenuRebornGetCheckboxValue(CHECKBOX_REF_ID) != 0);
 }
 
 int module_start(SceSize args, const void* argp) {
@@ -78,7 +78,11 @@ int module_start(SceSize args, const void* argp) {
     // Restore checkbox's saved state. If no saved value exists, default to
     // false rather than treating the error code as a truthy int.
     int ret = QuickMenuRebornGetCheckboxValue(CHECKBOX_REF_ID);
-    reset_on_exit = (ret == QMR_CONFIG_MGR_ERROR_NOT_EXIST) ? false : (bool)ret;
+    if (ret == QMR_CONFIG_MGR_ERROR_NOT_EXIST) {
+        reset_on_exit = false;
+    } else {
+        reset_on_exit = (ret != 0);
+    }
 
     QuickMenuRebornRegisterWidget(TEXT_ID, NULL, text);
     QuickMenuRebornSetWidgetSize(TEXT_ID, SCE_PLANE_WIDTH, 50, 0, 0);
