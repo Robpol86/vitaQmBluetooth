@@ -1,15 +1,16 @@
 .DEFAULT_GOAL = help
+PROJECT_NAME = deplayenabler
 
 ## Build
 
 BUILD_TARGETS =
 
-build-debug/deplayenabler.suprx: _HELP = Build debug plugin
-build-debug/deplayenabler.suprx: export CMAKE_BUILD_TYPE = Debug
-BUILD_TARGETS += build-debug/deplayenabler.suprx
-build-release/deplayenabler.suprx: _HELP = Build release plugin
-build-release/deplayenabler.suprx: export CMAKE_BUILD_TYPE = Release
-BUILD_TARGETS += build-release/deplayenabler.suprx
+build-debug/$(PROJECT_NAME).suprx: _HELP = Build debug plugin
+build-debug/$(PROJECT_NAME).suprx: export CMAKE_BUILD_TYPE = Debug
+BUILD_TARGETS += build-debug/$(PROJECT_NAME).suprx
+build-release/$(PROJECT_NAME).suprx: _HELP = Build release plugin
+build-release/$(PROJECT_NAME).suprx: export CMAKE_BUILD_TYPE = Release
+BUILD_TARGETS += build-release/$(PROJECT_NAME).suprx
 $(BUILD_TARGETS): CMakeLists.txt exports.yml $(wildcard src/* src/*/* src/*/*/* src/*/*/*/*)
 	cmake -B $(@D) .
 	cmake --build $(@D)
@@ -22,7 +23,7 @@ build: $(BUILD_TARGETS)
 
 .PHONY: lint
 lint: _HELP = Run linters
-lint: build-debug/deplayenabler.suprx
+lint: build-debug/$(PROJECT_NAME).suprx
 	find src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' \) -exec clang-tidy -p $(<D) {} +
 	find src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' \) -exec clang-format --dry-run --Werror {} +
 
