@@ -27,7 +27,7 @@ target_compile_options("${PROJECT_NAME}" PRIVATE
   -Werror=format-security
 )
 
-target_include_directories("${PROJECT_NAME}" PRIVATE
+target_include_directories("${PROJECT_NAME}" SYSTEM PRIVATE
   "$ENV{VITASDK}/arm-vita-eabi/include"
 )
 
