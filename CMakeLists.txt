@@ -18,8 +18,6 @@ include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,-q -Wall -nostdlib")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -fno-exceptions")
 
-# Vendored dependencies — each subdirectory under vendor/ has its own README.md
-# documenting upstream source, version, license, and update procedure.
 set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
 
 add_executable("${PROJECT_NAME}"
