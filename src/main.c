@@ -1,4 +1,4 @@
-// vitaQmBluetooth — minimal QMR sample port (foundation commit).
+// vitaQmBluetooth — minimal QMR sample port (AI port of VDSuite sample).
 // Direct port of the upstream QuickMenuReborn "Tapper" sample plugin from
 // VDSuite headers to VitaSDK headers. No feature changes; this is a
 // scaffold to prove the build pipeline end-to-end. Bluetooth toggle
