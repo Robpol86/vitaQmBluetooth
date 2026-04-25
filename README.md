@@ -17,11 +17,12 @@ Unmount, then in VitaShell:
 
 1. Copy to `ur0:tai/`
     1. `ux0:downloads/QuickMenuReborn.suprx`
-    1. `ux0:downloads/vitaQmBluetooth.suprx`
 1. Copy to `ur0:tai/QuickMenuReborn/`
     1. `ux0:downloads/qmr_plugin.rco`
+    1. `ux0:downloads/vitaQmBluetooth.suprx`
 1. Append to `ur0:tai/config.txt`
     1.  ```
         *main
         ur0:tai/QuickMenuReborn.suprx
         ```
+1. Reboot
