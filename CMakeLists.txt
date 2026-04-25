@@ -1,6 +1,6 @@
 set(CMAKE_POLICY_VERSION_MINIMUM 3.5)  # Silences "Compatibility with CMake < 3.5 has been removed from CMake"
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.13)
 
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   if(DEFINED ENV{VITASDK})
@@ -10,13 +10,15 @@ if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   endif()
 endif()
 
-project(deplayenabler)
+project(vitaQmBluetooth)
 list(REMOVE_ITEM CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-eabi/include")
 list(REMOVE_ITEM CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-eabi/include")
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,-q -Wall -nostdlib")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -fno-exceptions")
+
+set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
 
 add_executable("${PROJECT_NAME}"
   src/main.c
@@ -29,6 +31,11 @@ target_compile_options("${PROJECT_NAME}" PRIVATE
 
 target_include_directories("${PROJECT_NAME}" SYSTEM PRIVATE
   "$ENV{VITASDK}/arm-vita-eabi/include"
+  "${VENDOR_DIR}/quickmenureborn"
+)
+
+target_link_directories("${PROJECT_NAME}" PRIVATE
+  "${VENDOR_DIR}/quickmenureborn/vitasdk_stubs"
 )
 
 target_link_libraries("${PROJECT_NAME}"
@@ -40,6 +47,7 @@ target_link_libraries("${PROJECT_NAME}"
   SceIofilemgr_stub
   SceSysmodule_stub
   SceKernelModulemgr_stub
+  QuickMenuReborn_stub_weak
 )
 
 vita_create_self("${PROJECT_NAME}.suprx" "${PROJECT_NAME}" CONFIG exports.yml UNSAFE)

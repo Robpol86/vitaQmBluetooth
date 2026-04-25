@@ -1,233 +1,144 @@
-/*
-  DePlayEnabler plugin by Alpakeno.
-  Enable video debug play mode with the ability to change sd0 and ux0 folder path from configuration file.
-  RegMgrGetKeyInt patch by SilicaAndPina.
-  Plugin made with help from folks at the CBPS discord: https://discord.cbps.xyz
-  Specially @Princess of TB, @Goddess of Sleeping and others folks too, @Queen Devbot for the plugin's name idea.
+// vitaQmBluetooth — minimal QMR sample port (AI port of VDSuite sample).
+// Direct port of the upstream QuickMenuReborn "Tapper" sample plugin from
+// VDSuite headers to VitaSDK headers. No feature changes; this is a
+// scaffold to prove the build pipeline end-to-end. Bluetooth toggle
+// logic will replace this body in a follow-up commit.
 
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-#include <psp2/io/fcntl.h>
+#include <psp2/io/stat.h>
 #include <psp2/kernel/clib.h>
 #include <psp2/kernel/modulemgr.h>
-#include <psp2/sysmodule.h>
+#include <quickmenureborn/qm_reborn.h>
+#include <stdbool.h>
 #include <stdlib.h>
-#include <string.h>
-#include <taihen.h>
 
-#define CONFIG_PATH "ur0:/tai/deplayenabler.txt"
-#define CONFIG_CONT "USE=true\r\nSD0=uma0:/video/\r\nUX0=ux0:/video/"
+// Reference ids for each widget. Must be unique within the quick menu
+// across all loaded QMR plugins, so they are namespaced with a plugin-
+// specific prefix rather than using the upstream sample's bare names.
+#define REF_PREFIX "vita_qm_bt_sample_"
+#define BUTTON_REF_ID REF_PREFIX "button"
+#define CHECKBOX_REF_ID REF_PREFIX "checkbox"
+#define PLANE_ID REF_PREFIX "plane"
+#define TEXT_ID REF_PREFIX "text"
+#define CHECKBOX_TEXT_ID REF_PREFIX "checkbox_text"
+#define SEPARATOR_ID REF_PREFIX "separator"
+#define TEX_PLANE_ID REF_PREFIX "plane_for_tex"
+#define TEXTURE_REF_ID REF_PREFIX "texture"
 
-#define DEFAULT_SD0_PATH "uma0:/video/"
-#define DEFAULT_UX0_PATH "ux0:/video/"
+// Test texture path matches the upstream sample; users without VitaShell
+// installed will simply not see the textured plane.
+#define TEST_TEXTURE_PATH "ux0:app/VITASHELL/sce_sys/icon0.png"
 
-#define N_INJECTS 8
-static SceUID inject_uid[N_INJECTS];
-static int n_uids = 0;
+static int count = 0;
+static bool reset_on_exit = false;
 
-#define N_HOOKS 5
-tai_hook_ref_t hook_ref[N_HOOKS];
-static int hook_uid[N_HOOKS];
+BUTTON_HANDLER(on_press) {
+    (void)id;
+    (void)hash;
+    (void)eventId;
+    (void)userDat;
 
-static char* devices[] = {
-    "host0:", "imc0:", "sd0:", "uma0:", "ur0:", "ux0:", "xmc0:", "vd0:",
-};
+    count++;
 
-#define N_DEVICES (sizeof(devices) / sizeof(char**))
+    char new_text[0x100];  // 0x400 is the max label size per QMR
+    sceClibSnprintf(new_text, sizeof(new_text), "You Pressed Me %d Times", count);
 
-unsigned char browse[19] = {0x42, 0x00, 0x72, 0x00, 0x6F, 0x00, 0x77, 0x00, 0x73, 0x00,
-                            0x65, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    float x = 400;
+    if (count >= 100) x += 50;
+    if (count >= 1000) x += 50;
 
-char enabled[5] = "true", sd0_path[65] = DEFAULT_SD0_PATH, ux0_path[65] = DEFAULT_UX0_PATH;
-
-char* getRoot(char* path) {
-    static char root[7];
-    sceClibStrncpy(root, path, 7);
-    char* colon = sceClibStrrchr(root, ':') + 1;
-    if (colon == NULL) return root;
-    colon[0] = (char)0;
-    return root;
+    QuickMenuRebornSetWidgetSize(BUTTON_REF_ID, x, 75, 0, 0);
+    QuickMenuRebornSetWidgetLabel(BUTTON_REF_ID, new_text);
 }
 
-void removeSpaces(char* str) {
-    int count = 0;
-    for (int i = 0; str[i]; i++)
-        if (str[i] != ' ') str[count++] = str[i];
-    str[count] = '\0';
-}
+ONLOAD_HANDLER(on_button_load) {
+    (void)id;
 
-int checkName(const char* token, const char* name) { return (sceClibStrncmp(token, name, strlen(name)) == 0); }
-
-char* getValue(char* token) {
-    char* cfgvalue = (char*)calloc(1, sizeof(token));
-    cfgvalue = (strchr(token, '=')) + 1;
-    return cfgvalue;
-}
-
-void saveConfig(const char* path) {
-    SceUID fd;
-    fd = sceIoOpen(path, SCE_O_CREAT | SCE_O_WRONLY, 6);
-    if (fd >= 0) {
-        sceIoWrite(fd, CONFIG_CONT, strlen(CONFIG_CONT));
-        sceIoClose(fd);
+    if (reset_on_exit) {
+        count = 0;
+        QuickMenuRebornSetWidgetSize(BUTTON_REF_ID, 200, 75, 0, 0);
+        QuickMenuRebornSetWidgetLabel(BUTTON_REF_ID, "Press Me!");
     }
 }
 
-int loadConfig(const char* path) {
-    SceUID fd = sceIoOpen(path, SCE_O_RDONLY, 0);
-    if (fd < 0) {
-        sceIoClose(fd);
-        saveConfig(path);
-        return fd;
-    }
-    char conf_buff[256];
-    sceClibMemset(conf_buff, 0, 256);
-    sceIoRead(fd, conf_buff, 256);
-    sceIoClose(fd);
-    char* token = strtok(conf_buff, "\r\n");
-    char* token_trimed = token;
-    while (token != NULL) {
-        removeSpaces(token_trimed);
-        if (strlen(token_trimed) > 0) {
-            if (token_trimed[0] != '#') {
-                if (checkName(token_trimed, "USE")) {
-                    sceClibSnprintf(enabled, sizeof(enabled), "%s", getValue(token));
-                } else if (checkName(token_trimed, "SD0")) {
-                    sceClibSnprintf(sd0_path, sizeof(sd0_path), "%s", getValue(token));
-                } else if (checkName(token_trimed, "UX0")) {
-                    sceClibSnprintf(ux0_path, sizeof(ux0_path), "%s", getValue(token));
-                }
-            }
-        }
-        token = strtok(NULL, "\r\n");
-        token_trimed = token;
-    }
-    int i = 0, found_sd0 = -1, found_ux0 = -1;
-    for (i = 0; i < N_DEVICES; i++) {
-        if (sceClibStrcmp(devices[i], getRoot((char*)sd0_path)) == 0) found_sd0 = 1;
-        if (sceClibStrcmp(devices[i], getRoot((char*)ux0_path)) == 0) found_ux0 = 1;
-    }
-    if (found_sd0 < 1) sceClibSnprintf(sd0_path, sizeof(sd0_path), DEFAULT_SD0_PATH);
-    if (found_ux0 < 1) sceClibSnprintf(ux0_path, sizeof(ux0_path), DEFAULT_UX0_PATH);
-    return 0;
+BUTTON_HANDLER(on_toggle_checkbox) {
+    (void)id;
+    (void)hash;
+    (void)eventId;
+    (void)userDat;
+
+    reset_on_exit = (QuickMenuRebornGetCheckboxValue(CHECKBOX_REF_ID) != 0);
 }
 
-static int sceRegMgrGetKeyInt_patched(const char* category, const char* name, int* buf) {
-    int ret = TAI_CONTINUE(int, hook_ref[2], category, name, buf);
-    if (sceClibStrcmp(name, "debug_videoplayer") == 0) {
-        *buf = 3;
-        return 0;
+int module_start(SceSize args, const void* argp) {
+    (void)args;
+    (void)argp;
+
+    QuickMenuRebornSeparator(SEPARATOR_ID, SCE_SEPARATOR_HEIGHT);
+
+    // Restore checkbox's saved state. If no saved value exists, default to
+    // false rather than treating the error code as a truthy int.
+    int ret = QuickMenuRebornGetCheckboxValue(CHECKBOX_REF_ID);
+    if (ret == QMR_CONFIG_MGR_ERROR_NOT_EXIST) {
+        reset_on_exit = false;
+    } else {
+        reset_on_exit = (ret != 0);
     }
-    return ret;
-}
 
-SceUID scePafMisc_B3B5DF38_patched(int* a1, char* path, int a2, int a3, int a4) {
-    SceUID ret = TAI_CONTINUE(SceUID, hook_ref[1], a1, path, a2, a3, a4);
-    if (sceClibStrcmp(path, "vs0:vsh/common/libvideoprofiler.suprx") == 0) {
-        uint32_t* ptr = (uint32_t*)*a1;
-        SceUID modid = ptr[3];
-        inject_uid[n_uids++] = taiInjectData(modid, 0, 0x1e810, getRoot((char*)sd0_path), 7);
-    }
-    return ret;
-}
+    QuickMenuRebornRegisterWidget(TEXT_ID, NULL, text);
+    QuickMenuRebornSetWidgetSize(TEXT_ID, SCE_PLANE_WIDTH, 50, 0, 0);
+    QuickMenuRebornSetWidgetColor(TEXT_ID, 1, 1, 1, 1);
+    QuickMenuRebornSetWidgetPosition(TEXT_ID, 0, 0, 0, 0);
+    QuickMenuRebornSetWidgetLabel(TEXT_ID, "Tapper");
 
-int sce_paf_private_strcmp_patched(const char* str1, const char* str2) {
-    if (sceClibStrncmp(str2, "ux0:", 4) == 0) return 0;
-    return TAI_CONTINUE(int, hook_ref[3], str1, str2);
-}
+    QuickMenuRebornRegisterWidget(PLANE_ID, NULL, plane);
+    QuickMenuRebornSetWidgetSize(PLANE_ID, SCE_PLANE_WIDTH, 100, 0, 0);
+    QuickMenuRebornSetWidgetColor(PLANE_ID, 1, 1, 1, 0);
 
-int sceSysmoduleLoadModuleInternalWithArg_patched(SceSysmoduleInternalModuleId id, SceSize args, void* argp, void* unk) {
-    int res = TAI_CONTINUE(int, hook_ref[0], id, args, argp, unk);
-    if (res >= 0 && id == 0x80000008) {
-        hook_uid[1] =
-            taiHookFunctionImport(&hook_ref[1], "SceVideoPlayer", 0x3D643CE8, 0xB3B5DF38, scePafMisc_B3B5DF38_patched);
-        hook_uid[3] =
-            taiHookFunctionImport(&hook_ref[3], TAI_MAIN_MODULE, 0xA7D28DAE, 0x5CD08A47, sce_paf_private_strcmp_patched);
-    }
-    return res;
-}
+    QuickMenuRebornRegisterWidget(CHECKBOX_REF_ID, PLANE_ID, check_box);
+    QuickMenuRebornSetWidgetSize(CHECKBOX_REF_ID, 48, 48, 0, 0);
+    QuickMenuRebornSetWidgetColor(CHECKBOX_REF_ID, 1, 1, 1, 1);
+    QuickMenuRebornSetWidgetPosition(CHECKBOX_REF_ID, 350, 0, 0, 0);
+    QuickMenuRebornAssignDefaultCheckBoxRecall(CHECKBOX_REF_ID);
+    QuickMenuRebornAssignDefaultCheckBoxSave(CHECKBOX_REF_ID);
+    QuickMenuRebornRegisterEventHanlder(CHECKBOX_REF_ID, QMR_BUTTON_RELEASE_ID, on_toggle_checkbox, NULL);
 
-uint32_t text_addr, text_size, data_addr, data_size;
+    QuickMenuRebornRegisterWidget(CHECKBOX_TEXT_ID, PLANE_ID, text);
+    QuickMenuRebornSetWidgetColor(CHECKBOX_TEXT_ID, 1, 1, 1, 1);
+    QuickMenuRebornSetWidgetSize(CHECKBOX_TEXT_ID, 500, 75, 0, 0);
+    QuickMenuRebornSetWidgetPosition(CHECKBOX_TEXT_ID, -255, 0, 0, 0);
+    QuickMenuRebornSetWidgetLabel(CHECKBOX_TEXT_ID, "Reset On Exit");
 
-void hook_8102df10_patched() {
-    uint32_t* ptr_sd0 = (uint32_t*)(data_addr + (0x81185150 - 0x81185000) + 4);
-    uint32_t* ptr_ux0 = (uint32_t*)(data_addr + (0x81185150 - 0x81185000) + 0xC);
-    *ptr_sd0 = (unsigned)sd0_path;
-    *ptr_ux0 = (unsigned)ux0_path;
-}
+    QuickMenuRebornRegisterWidget(BUTTON_REF_ID, NULL, button);
+    QuickMenuRebornSetWidgetSize(BUTTON_REF_ID, 200, 75, 0, 0);
+    QuickMenuRebornSetWidgetColor(BUTTON_REF_ID, 1, 1, 1, 1);
+    QuickMenuRebornRegisterEventHanlder(BUTTON_REF_ID, QMR_BUTTON_RELEASE_ID, on_press, NULL);
+    QuickMenuRebornSetWidgetLabel(BUTTON_REF_ID, "Press Me!");
+    QuickMenuRebornAssignOnLoadHandler(on_button_load, BUTTON_REF_ID);
 
-void _start() __attribute__((weak, alias("module_start")));
-
-int module_start(SceSize args, void* argp) {
-    tai_module_info_t tai_info;
-    tai_info.size = sizeof(tai_info);
-
-    if (taiGetModuleInfo("SceVideoPlayer", &tai_info) >= 0) {
-        SceKernelModuleInfo mod_info;
-        mod_info.size = sizeof(SceKernelModuleInfo);
-        int ret = sceKernelGetModuleInfo(tai_info.modid, &mod_info);
-        if (ret < 0) return SCE_KERNEL_START_FAILED;
-        text_addr = (uint32_t)mod_info.segments[0].vaddr;
-        text_size = (uint32_t)mod_info.segments[0].memsz;
-        data_addr = (uint32_t)mod_info.segments[1].vaddr;
-        data_size = (uint32_t)mod_info.segments[1].memsz;
-
-        // load configuration
-        loadConfig(CONFIG_PATH);
-
-        // check plugin state
-        if (sceClibStrncmp(enabled, "false", 5) == 0) return SCE_KERNEL_START_SUCCESS;
-
-        // inject uma0, ur0, ux0 etc. root to sd0 library
-        hook_uid[0] = taiHookFunctionImport(&hook_ref[0], TAI_MAIN_MODULE, TAI_ANY_LIBRARY, 0xC3C26339,
-                                            sceSysmoduleLoadModuleInternalWithArg_patched);
-
-        // enable debug mode
-        hook_uid[2] =
-            taiHookFunctionImport(&hook_ref[2], TAI_MAIN_MODULE, TAI_ANY_LIBRARY, 0x16DDF3DC, sceRegMgrGetKeyInt_patched);
-
-        // redirect sd0 and ux0 path to uma0, ur0, ux0 etc.
-        hook_uid[4] = taiHookFunctionOffset(&hook_ref[4], tai_info.modid, 0, 0x2df10, 1, hook_8102df10_patched);
-
-        // disable refreshing db
-        uint8_t disable_refresh_db[2] = {0x00, 0xf0};
-        inject_uid[n_uids++] =
-            taiInjectData(tai_info.modid, 0, 0x22ca0, &disable_refresh_db[0], sizeof(disable_refresh_db[0]));
-        inject_uid[n_uids++] =
-            taiInjectData(tai_info.modid, 0, 0x22c9d, &disable_refresh_db[1], sizeof(disable_refresh_db[1]));
-
-        // change TestFolder to Browse
-        inject_uid[n_uids++] = taiInjectData(tai_info.modid, 0, 0x1656c4, &browse, sizeof(browse));
-        inject_uid[n_uids++] = taiInjectData(tai_info.modid, 0, 0x1657e4, "Browse", 10);
-
-        // extra patch to prevent the deletion of unsupported files
-        uint8_t value = 0x0D;
-        inject_uid[n_uids++] = taiInjectData(tai_info.modid, 0, 0x22b6e, &value, sizeof(value));
+    SceIoStat s;
+    if (sceIoGetstat(TEST_TEXTURE_PATH, &s) >= 0) {
+        QuickMenuRebornRegisterWidget(TEX_PLANE_ID, NULL, plane);
+        QuickMenuRebornRegisterTexture(TEXTURE_REF_ID, TEST_TEXTURE_PATH);
+        QuickMenuRebornSetWidgetSize(TEX_PLANE_ID, 128, 128, 0, 0);
+        QuickMenuRebornSetWidgetColor(TEX_PLANE_ID, 1, 1, 1, 1);
+        QuickMenuRebornSetWidgetTexture(TEX_PLANE_ID, TEXTURE_REF_ID);
     }
 
     return SCE_KERNEL_START_SUCCESS;
 }
 
-int module_stop(SceSize args, void* argp) {
-    int i;
-    for (i = 0; i < N_HOOKS; i++) {
-        if (hook_uid[i] >= 0) taiHookRelease(hook_uid[i], hook_ref[i]);
-    }
-    i = 0;
-    for (i = n_uids - 1; i >= 0; i++) {
-        if (inject_uid[i] >= 0) taiInjectRelease(inject_uid[i]);
-    }
+int module_stop(SceSize args, const void* argp) {
+    (void)args;
+    (void)argp;
+
+    QuickMenuRebornUnregisterWidget(BUTTON_REF_ID);
+    QuickMenuRebornUnregisterWidget(CHECKBOX_REF_ID);
+    QuickMenuRebornUnregisterWidget(TEXT_ID);
+    QuickMenuRebornUnregisterWidget(CHECKBOX_TEXT_ID);
+    QuickMenuRebornUnregisterWidget(PLANE_ID);
+    QuickMenuRebornUnregisterWidget(TEX_PLANE_ID);
+    QuickMenuRebornUnregisterTexture(TEXTURE_REF_ID);
+    QuickMenuRebornRemoveSeparator(SEPARATOR_ID);
+
     return SCE_KERNEL_STOP_SUCCESS;
 }

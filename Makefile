@@ -1,5 +1,5 @@
 .DEFAULT_GOAL = help
-PROJECT_NAME = deplayenabler
+PROJECT_NAME = vitaQmBluetooth
 
 ## Build
 
