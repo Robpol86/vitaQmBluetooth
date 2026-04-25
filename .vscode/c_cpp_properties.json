@@ -12,8 +12,8 @@
             "compilerArgs": [
                 "-Wl,-q",
                 "-Wall",
-                "-nostartfiles",
-                "-fno-lto"
+                "-nostdlib",
+                "-fno-rtti"
             ],
             "cStandard": "c11",
             "cppStandard": "c++11"
