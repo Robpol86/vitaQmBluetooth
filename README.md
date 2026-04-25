@@ -26,3 +26,9 @@ Unmount, then in VitaShell:
         ur0:tai/QuickMenuReborn.suprx
         ```
 1. Reboot
+
+## Usage
+
+Hold down the PS button and scroll to the bottom of the quick menu.
+
+![Screenshot](example.png?raw=true "Screenshot")
