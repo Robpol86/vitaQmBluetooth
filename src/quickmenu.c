@@ -40,7 +40,7 @@ void quickmenu_start() {
 
     // TODO add Bluetooth icon for section header.
 
-    // TODO Add "no paired devices" text.
+    // TODO Add "Loading..." text.
 
     // TODO style: alignment and spacing.
 
