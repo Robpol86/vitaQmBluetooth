@@ -36,7 +36,15 @@ void quickmenu_start() {
     QuickMenuRebornSetWidgetSize(SECTION_TEXT_ID, SCE_PLANE_WIDTH, 50, 0, 0);
     QuickMenuRebornSetWidgetColor(SECTION_TEXT_ID, 1, 1, 1, 1);
     QuickMenuRebornSetWidgetPosition(SECTION_TEXT_ID, 0, 0, 0, 0);
-    QuickMenuRebornSetWidgetLabel(SECTION_TEXT_ID, "Bluetooth Devices 3");  // TODO
+    QuickMenuRebornSetWidgetLabel(SECTION_TEXT_ID, "Bluetooth Devices 3");  // TODO remove integer.
+
+    // TODO add Bluetooth icon for section header.
+
+    // TODO Add "no paired devices" text.
+
+    // TODO style: alignment and spacing.
+
+    // TODO PR and then convert to C++ in the next branch.
 }
 
 /**
