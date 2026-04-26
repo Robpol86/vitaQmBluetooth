@@ -44,6 +44,8 @@ void quickmenu_start() {
 
     // TODO style: alignment and spacing.
 
+    // TODO exports.yml versioning? Project versioning?
+
     // TODO PR and then convert to C++ in the next branch.
 }
 
