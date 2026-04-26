@@ -44,7 +44,8 @@ void quickmenu_start() {
 
     // TODO style: alignment and spacing.
 
-    // TODO exports.yml versioning? Project versioning? Maybe "Bluetooth Devices v1.0.2604261359" for debug and just v1.0 for release?
+    // TODO exports.yml versioning? Project versioning? Maybe "Bluetooth Devices v1.0.2604261359" for debug and just v1.0 for
+    // release?
 
     // TODO PR and then convert to C++ in the next branch.
 }
