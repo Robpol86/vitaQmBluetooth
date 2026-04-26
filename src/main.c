@@ -11,27 +11,10 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-// Reference ids for each widget. Must be unique within the quick menu
-// across all loaded QMR plugins, so they are namespaced with a plugin-
-// specific prefix rather than using the upstream sample's bare names.
+// Widget IDs (prefixed because they must be unique across all plugins)
 #define PROJECT_NAME "vitaQmBluetooth"
+#define SEPARATOR_ID PROJECT_NAME "Separator"
 #define SECTION_TEXT_ID PROJECT_NAME "SectionText"
-#define CHECKBOX_REF_ID PROJECT_NAME "checkbox"
-#define PLANE_ID PROJECT_NAME "plane"
-#define CHECKBOX_TEXT_ID PROJECT_NAME "checkbox_text"
-#define SEPARATOR_ID PROJECT_NAME "separator"
-#define TEX_PLANE_ID PROJECT_NAME "plane_for_tex"
-
-static bool reset_on_exit = false;
-
-BUTTON_HANDLER(on_toggle_checkbox) {
-    (void)id;
-    (void)hash;
-    (void)eventId;
-    (void)userDat;
-
-    reset_on_exit = (QuickMenuRebornGetCheckboxValue(CHECKBOX_REF_ID) != 0);
-}
 
 int module_start(SceSize args, const void* argp) {
     (void)args;
@@ -39,38 +22,11 @@ int module_start(SceSize args, const void* argp) {
 
     QuickMenuRebornSeparator(SEPARATOR_ID, SCE_SEPARATOR_HEIGHT);
 
-    // Restore checkbox's saved state. If no saved value exists, default to
-    // false rather than treating the error code as a truthy int.
-    int ret = QuickMenuRebornGetCheckboxValue(CHECKBOX_REF_ID);
-    if (ret == QMR_CONFIG_MGR_ERROR_NOT_EXIST) {
-        reset_on_exit = false;
-    } else {
-        reset_on_exit = (ret != 0);
-    }
-
     QuickMenuRebornRegisterWidget(SECTION_TEXT_ID, NULL, text);
     QuickMenuRebornSetWidgetSize(SECTION_TEXT_ID, SCE_PLANE_WIDTH, 50, 0, 0);
     QuickMenuRebornSetWidgetColor(SECTION_TEXT_ID, 1, 1, 1, 1);
     QuickMenuRebornSetWidgetPosition(SECTION_TEXT_ID, 0, 0, 0, 0);
     QuickMenuRebornSetWidgetLabel(SECTION_TEXT_ID, "Bluetooth Devices");
-
-    QuickMenuRebornRegisterWidget(PLANE_ID, NULL, plane);
-    QuickMenuRebornSetWidgetSize(PLANE_ID, SCE_PLANE_WIDTH, 100, 0, 0);
-    QuickMenuRebornSetWidgetColor(PLANE_ID, 1, 1, 1, 0);
-
-    QuickMenuRebornRegisterWidget(CHECKBOX_REF_ID, PLANE_ID, check_box);
-    QuickMenuRebornSetWidgetSize(CHECKBOX_REF_ID, 48, 48, 0, 0);
-    QuickMenuRebornSetWidgetColor(CHECKBOX_REF_ID, 1, 1, 1, 1);
-    QuickMenuRebornSetWidgetPosition(CHECKBOX_REF_ID, 350, 0, 0, 0);
-    QuickMenuRebornAssignDefaultCheckBoxRecall(CHECKBOX_REF_ID);
-    QuickMenuRebornAssignDefaultCheckBoxSave(CHECKBOX_REF_ID);
-    QuickMenuRebornRegisterEventHanlder(CHECKBOX_REF_ID, QMR_BUTTON_RELEASE_ID, on_toggle_checkbox, NULL);
-
-    QuickMenuRebornRegisterWidget(CHECKBOX_TEXT_ID, PLANE_ID, text);
-    QuickMenuRebornSetWidgetColor(CHECKBOX_TEXT_ID, 1, 1, 1, 1);
-    QuickMenuRebornSetWidgetSize(CHECKBOX_TEXT_ID, 500, 75, 0, 0);
-    QuickMenuRebornSetWidgetPosition(CHECKBOX_TEXT_ID, -255, 0, 0, 0);
-    QuickMenuRebornSetWidgetLabel(CHECKBOX_TEXT_ID, "Reset On Exit");
 
     return SCE_KERNEL_START_SUCCESS;
 }
@@ -79,11 +35,7 @@ int module_stop(SceSize args, const void* argp) {
     (void)args;
     (void)argp;
 
-    QuickMenuRebornUnregisterWidget(CHECKBOX_REF_ID);
     QuickMenuRebornUnregisterWidget(SECTION_TEXT_ID);
-    QuickMenuRebornUnregisterWidget(CHECKBOX_TEXT_ID);
-    QuickMenuRebornUnregisterWidget(PLANE_ID);
-    QuickMenuRebornUnregisterWidget(TEX_PLANE_ID);
     QuickMenuRebornRemoveSeparator(SEPARATOR_ID);
 
     return SCE_KERNEL_STOP_SUCCESS;
