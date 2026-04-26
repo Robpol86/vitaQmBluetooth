@@ -14,15 +14,15 @@
 // Reference ids for each widget. Must be unique within the quick menu
 // across all loaded QMR plugins, so they are namespaced with a plugin-
 // specific prefix rather than using the upstream sample's bare names.
-#define REF_PREFIX "vita_qm_bt_sample_"
-#define BUTTON_REF_ID REF_PREFIX "button"
-#define CHECKBOX_REF_ID REF_PREFIX "checkbox"
-#define PLANE_ID REF_PREFIX "plane"
-#define TEXT_ID REF_PREFIX "text"
-#define CHECKBOX_TEXT_ID REF_PREFIX "checkbox_text"
-#define SEPARATOR_ID REF_PREFIX "separator"
-#define TEX_PLANE_ID REF_PREFIX "plane_for_tex"
-#define TEXTURE_REF_ID REF_PREFIX "texture"
+#define PROJECT_NAME "vitaQmBluetooth"
+#define BUTTON_REF_ID PROJECT_NAME "button"
+#define CHECKBOX_REF_ID PROJECT_NAME "checkbox"
+#define PLANE_ID PROJECT_NAME "plane"
+#define SECTION_TEXT_ID PROJECT_NAME "text"
+#define CHECKBOX_TEXT_ID PROJECT_NAME "checkbox_text"
+#define SEPARATOR_ID PROJECT_NAME "separator"
+#define TEX_PLANE_ID PROJECT_NAME "plane_for_tex"
+#define TEXTURE_REF_ID PROJECT_NAME "texture"
 
 // Test texture path matches the upstream sample; users without VitaShell
 // installed will simply not see the textured plane.
@@ -84,11 +84,11 @@ int module_start(SceSize args, const void* argp) {
         reset_on_exit = (ret != 0);
     }
 
-    QuickMenuRebornRegisterWidget(TEXT_ID, NULL, text);
-    QuickMenuRebornSetWidgetSize(TEXT_ID, SCE_PLANE_WIDTH, 50, 0, 0);
-    QuickMenuRebornSetWidgetColor(TEXT_ID, 1, 1, 1, 1);
-    QuickMenuRebornSetWidgetPosition(TEXT_ID, 0, 0, 0, 0);
-    QuickMenuRebornSetWidgetLabel(TEXT_ID, "Tapper");
+    QuickMenuRebornRegisterWidget(SECTION_TEXT_ID, NULL, text);
+    QuickMenuRebornSetWidgetSize(SECTION_TEXT_ID, SCE_PLANE_WIDTH, 50, 0, 0);
+    QuickMenuRebornSetWidgetColor(SECTION_TEXT_ID, 1, 1, 1, 1);
+    QuickMenuRebornSetWidgetPosition(SECTION_TEXT_ID, -250, 0, 0, 0);
+    QuickMenuRebornSetWidgetLabel(SECTION_TEXT_ID, "Bluetooth Devices");
 
     QuickMenuRebornRegisterWidget(PLANE_ID, NULL, plane);
     QuickMenuRebornSetWidgetSize(PLANE_ID, SCE_PLANE_WIDTH, 100, 0, 0);
@@ -133,7 +133,7 @@ int module_stop(SceSize args, const void* argp) {
 
     QuickMenuRebornUnregisterWidget(BUTTON_REF_ID);
     QuickMenuRebornUnregisterWidget(CHECKBOX_REF_ID);
-    QuickMenuRebornUnregisterWidget(TEXT_ID);
+    QuickMenuRebornUnregisterWidget(SECTION_TEXT_ID);
     QuickMenuRebornUnregisterWidget(CHECKBOX_TEXT_ID);
     QuickMenuRebornUnregisterWidget(PLANE_ID);
     QuickMenuRebornUnregisterWidget(TEX_PLANE_ID);
