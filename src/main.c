@@ -15,11 +15,11 @@
 // across all loaded QMR plugins, so they are namespaced with a plugin-
 // specific prefix rather than using the upstream sample's bare names.
 #define PROJECT_NAME "vitaQmBluetooth"
+#define SECTION_TEXT_ID PROJECT_NAME "SectionText"
+#define NO_DEVICES_TEXT_ID PROJECT_NAME "NoDevicesText"
 #define BUTTON_REF_ID PROJECT_NAME "button"
 #define CHECKBOX_REF_ID PROJECT_NAME "checkbox"
 #define PLANE_ID PROJECT_NAME "plane"
-#define SECTION_TEXT_ID PROJECT_NAME "text"
-#define CHECKBOX_TEXT_ID PROJECT_NAME "checkbox_text"
 #define SEPARATOR_ID PROJECT_NAME "separator"
 #define TEX_PLANE_ID PROJECT_NAME "plane_for_tex"
 #define TEXTURE_REF_ID PROJECT_NAME "texture"
@@ -102,11 +102,11 @@ int module_start(SceSize args, const void* argp) {
     QuickMenuRebornAssignDefaultCheckBoxSave(CHECKBOX_REF_ID);
     QuickMenuRebornRegisterEventHanlder(CHECKBOX_REF_ID, QMR_BUTTON_RELEASE_ID, on_toggle_checkbox, NULL);
 
-    QuickMenuRebornRegisterWidget(CHECKBOX_TEXT_ID, PLANE_ID, text);
-    QuickMenuRebornSetWidgetColor(CHECKBOX_TEXT_ID, 1, 1, 1, 1);
-    QuickMenuRebornSetWidgetSize(CHECKBOX_TEXT_ID, 500, 75, 0, 0);
-    QuickMenuRebornSetWidgetPosition(CHECKBOX_TEXT_ID, -255, 0, 0, 0);
-    QuickMenuRebornSetWidgetLabel(CHECKBOX_TEXT_ID, "Reset On Exit");
+    QuickMenuRebornRegisterWidget(NO_DEVICES_TEXT_ID, PLANE_ID, text);
+    QuickMenuRebornSetWidgetColor(NO_DEVICES_TEXT_ID, 1, 1, 1, 1);
+    QuickMenuRebornSetWidgetSize(NO_DEVICES_TEXT_ID, 500, 75, 0, 0);
+    QuickMenuRebornSetWidgetPosition(NO_DEVICES_TEXT_ID, -200, 0, 0, 0);
+    QuickMenuRebornSetWidgetLabel(NO_DEVICES_TEXT_ID, "No Bluetooth devices paired");
 
     QuickMenuRebornRegisterWidget(BUTTON_REF_ID, NULL, button);
     QuickMenuRebornSetWidgetSize(BUTTON_REF_ID, 200, 75, 0, 0);
@@ -134,7 +134,7 @@ int module_stop(SceSize args, const void* argp) {
     QuickMenuRebornUnregisterWidget(BUTTON_REF_ID);
     QuickMenuRebornUnregisterWidget(CHECKBOX_REF_ID);
     QuickMenuRebornUnregisterWidget(SECTION_TEXT_ID);
-    QuickMenuRebornUnregisterWidget(CHECKBOX_TEXT_ID);
+    QuickMenuRebornUnregisterWidget(NO_DEVICES_TEXT_ID);
     QuickMenuRebornUnregisterWidget(PLANE_ID);
     QuickMenuRebornUnregisterWidget(TEX_PLANE_ID);
     QuickMenuRebornUnregisterTexture(TEXTURE_REF_ID);
