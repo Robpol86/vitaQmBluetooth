@@ -47,6 +47,9 @@ void quickmenu_start() {
     // TODO exports.yml versioning? Project versioning? Maybe "Bluetooth Devices v1.0.2604261359" for debug and just v1.0 for
     // release?
 
+    // TODO version.c.in with PROJECT_NAME exportd by CMake, as well as VERSION_MAJOR and VERSON_MINOR. Also use
+    // exports.yml.in.
+
     // TODO PR and then convert to C++ in the next branch.
 }
 
