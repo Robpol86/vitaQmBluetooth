@@ -22,6 +22,7 @@ set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
 
 add_executable("${PROJECT_NAME}"
   src/main.c
+  src/quickmenu.c
 )
 
 target_compile_options("${PROJECT_NAME}" PRIVATE
