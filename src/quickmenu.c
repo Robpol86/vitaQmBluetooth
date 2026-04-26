@@ -14,6 +14,10 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
+/**
+ * Interface for the Quick Menu on the PS Vita.
+ */
+
 #include <psp2/kernel/modulemgr.h>
 #include <quickmenureborn/qm_reborn.h>
 
@@ -22,6 +26,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define SEPARATOR_ID PROJECT_NAME "Separator"
 #define SECTION_TEXT_ID PROJECT_NAME "SectionText"
 
+/**
+ * Loads the plugin's quick menu items.
+ */
 void quickmenu_start() {
     QuickMenuRebornSeparator(SEPARATOR_ID, SCE_SEPARATOR_HEIGHT);
 
@@ -29,9 +36,12 @@ void quickmenu_start() {
     QuickMenuRebornSetWidgetSize(SECTION_TEXT_ID, SCE_PLANE_WIDTH, 50, 0, 0);
     QuickMenuRebornSetWidgetColor(SECTION_TEXT_ID, 1, 1, 1, 1);
     QuickMenuRebornSetWidgetPosition(SECTION_TEXT_ID, 0, 0, 0, 0);
-    QuickMenuRebornSetWidgetLabel(SECTION_TEXT_ID, "Bluetooth Devices 2");  // TODO
+    QuickMenuRebornSetWidgetLabel(SECTION_TEXT_ID, "Bluetooth Devices 3");  // TODO
 }
 
+/**
+ * Unloads the plugin's quick menu items.
+ */
 void quickmenu_stop() {
     QuickMenuRebornUnregisterWidget(SECTION_TEXT_ID);
     QuickMenuRebornRemoveSeparator(SEPARATOR_ID);
