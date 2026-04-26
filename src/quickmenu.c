@@ -29,7 +29,7 @@ void quickmenu_start() {
     QuickMenuRebornSetWidgetSize(SECTION_TEXT_ID, SCE_PLANE_WIDTH, 50, 0, 0);
     QuickMenuRebornSetWidgetColor(SECTION_TEXT_ID, 1, 1, 1, 1);
     QuickMenuRebornSetWidgetPosition(SECTION_TEXT_ID, 0, 0, 0, 0);
-    QuickMenuRebornSetWidgetLabel(SECTION_TEXT_ID, "Bluetooth Devices 2"); // TODO
+    QuickMenuRebornSetWidgetLabel(SECTION_TEXT_ID, "Bluetooth Devices 2");  // TODO
 }
 
 void quickmenu_stop() {
