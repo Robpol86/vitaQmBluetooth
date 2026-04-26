@@ -16,44 +16,13 @@
 // specific prefix rather than using the upstream sample's bare names.
 #define PROJECT_NAME "vitaQmBluetooth"
 #define SECTION_TEXT_ID PROJECT_NAME "SectionText"
-#define BUTTON_REF_ID PROJECT_NAME "button"
 #define CHECKBOX_REF_ID PROJECT_NAME "checkbox"
 #define PLANE_ID PROJECT_NAME "plane"
 #define CHECKBOX_TEXT_ID PROJECT_NAME "checkbox_text"
 #define SEPARATOR_ID PROJECT_NAME "separator"
 #define TEX_PLANE_ID PROJECT_NAME "plane_for_tex"
 
-static int count = 0;
 static bool reset_on_exit = false;
-
-BUTTON_HANDLER(on_press) {
-    (void)id;
-    (void)hash;
-    (void)eventId;
-    (void)userDat;
-
-    count++;
-
-    char new_text[0x100];  // 0x400 is the max label size per QMR
-    sceClibSnprintf(new_text, sizeof(new_text), "You Pressed Me %d Times", count);
-
-    float x = 400;
-    if (count >= 100) x += 50;
-    if (count >= 1000) x += 50;
-
-    QuickMenuRebornSetWidgetSize(BUTTON_REF_ID, x, 75, 0, 0);
-    QuickMenuRebornSetWidgetLabel(BUTTON_REF_ID, new_text);
-}
-
-ONLOAD_HANDLER(on_button_load) {
-    (void)id;
-
-    if (reset_on_exit) {
-        count = 0;
-        QuickMenuRebornSetWidgetSize(BUTTON_REF_ID, 200, 75, 0, 0);
-        QuickMenuRebornSetWidgetLabel(BUTTON_REF_ID, "Press Me!");
-    }
-}
 
 BUTTON_HANDLER(on_toggle_checkbox) {
     (void)id;
@@ -103,13 +72,6 @@ int module_start(SceSize args, const void* argp) {
     QuickMenuRebornSetWidgetPosition(CHECKBOX_TEXT_ID, -255, 0, 0, 0);
     QuickMenuRebornSetWidgetLabel(CHECKBOX_TEXT_ID, "Reset On Exit");
 
-    QuickMenuRebornRegisterWidget(BUTTON_REF_ID, NULL, button);
-    QuickMenuRebornSetWidgetSize(BUTTON_REF_ID, 200, 75, 0, 0);
-    QuickMenuRebornSetWidgetColor(BUTTON_REF_ID, 1, 1, 1, 1);
-    QuickMenuRebornRegisterEventHanlder(BUTTON_REF_ID, QMR_BUTTON_RELEASE_ID, on_press, NULL);
-    QuickMenuRebornSetWidgetLabel(BUTTON_REF_ID, "Press Me!");
-    QuickMenuRebornAssignOnLoadHandler(on_button_load, BUTTON_REF_ID);
-
     return SCE_KERNEL_START_SUCCESS;
 }
 
@@ -117,7 +79,6 @@ int module_stop(SceSize args, const void* argp) {
     (void)args;
     (void)argp;
 
-    QuickMenuRebornUnregisterWidget(BUTTON_REF_ID);
     QuickMenuRebornUnregisterWidget(CHECKBOX_REF_ID);
     QuickMenuRebornUnregisterWidget(SECTION_TEXT_ID);
     QuickMenuRebornUnregisterWidget(CHECKBOX_TEXT_ID);
