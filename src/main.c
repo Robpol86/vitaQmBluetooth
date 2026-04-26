@@ -4,14 +4,10 @@
 // scaffold to prove the build pipeline end-to-end. Bluetooth toggle
 // logic will replace this body in a follow-up commit.
 
-#include <psp2/io/stat.h>
-#include <psp2/kernel/clib.h>
 #include <psp2/kernel/modulemgr.h>
 #include <quickmenureborn/qm_reborn.h>
-#include <stdbool.h>
-#include <stdlib.h>
 
-// Widget IDs (prefixed because they must be unique across all plugins)
+// Widget IDs (prefixed because they must be unique across all plugins).
 #define PROJECT_NAME "vitaQmBluetooth"
 #define SEPARATOR_ID PROJECT_NAME "Separator"
 #define SECTION_TEXT_ID PROJECT_NAME "SectionText"
