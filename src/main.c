@@ -22,11 +22,6 @@
 #define CHECKBOX_TEXT_ID PROJECT_NAME "checkbox_text"
 #define SEPARATOR_ID PROJECT_NAME "separator"
 #define TEX_PLANE_ID PROJECT_NAME "plane_for_tex"
-#define TEXTURE_REF_ID PROJECT_NAME "texture"
-
-// Test texture path matches the upstream sample; users without VitaShell
-// installed will simply not see the textured plane.
-#define TEST_TEXTURE_PATH "ux0:app/VITASHELL/sce_sys/icon0.png"
 
 static int count = 0;
 static bool reset_on_exit = false;
@@ -115,15 +110,6 @@ int module_start(SceSize args, const void* argp) {
     QuickMenuRebornSetWidgetLabel(BUTTON_REF_ID, "Press Me!");
     QuickMenuRebornAssignOnLoadHandler(on_button_load, BUTTON_REF_ID);
 
-    SceIoStat s;
-    if (sceIoGetstat(TEST_TEXTURE_PATH, &s) >= 0) {
-        QuickMenuRebornRegisterWidget(TEX_PLANE_ID, NULL, plane);
-        QuickMenuRebornRegisterTexture(TEXTURE_REF_ID, TEST_TEXTURE_PATH);
-        QuickMenuRebornSetWidgetSize(TEX_PLANE_ID, 128, 128, 0, 0);
-        QuickMenuRebornSetWidgetColor(TEX_PLANE_ID, 1, 1, 1, 1);
-        QuickMenuRebornSetWidgetTexture(TEX_PLANE_ID, TEXTURE_REF_ID);
-    }
-
     return SCE_KERNEL_START_SUCCESS;
 }
 
@@ -137,7 +123,6 @@ int module_stop(SceSize args, const void* argp) {
     QuickMenuRebornUnregisterWidget(CHECKBOX_TEXT_ID);
     QuickMenuRebornUnregisterWidget(PLANE_ID);
     QuickMenuRebornUnregisterWidget(TEX_PLANE_ID);
-    QuickMenuRebornUnregisterTexture(TEXTURE_REF_ID);
     QuickMenuRebornRemoveSeparator(SEPARATOR_ID);
 
     return SCE_KERNEL_STOP_SUCCESS;
