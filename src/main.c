@@ -24,7 +24,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * Main entrypoint. Called when the module is started.
-
+ *
  * @param args The size of the arguments passed to the module.
  * @param argp A pointer to the arguments passed to the module.
  * @return SCE_KERNEL_START_SUCCESS on success, or an error code on failure.
