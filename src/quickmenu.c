@@ -24,6 +24,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 // Widget IDs (prefixed because they must be unique across all plugins).
 #define PROJECT_NAME "vitaQmBluetooth"
 #define ID_SEPARATOR PROJECT_NAME "Separator"
+#define ID_PLANE_ROOT PROJECT_NAME "PlaneRoot"
 #define ID_SECTION_TEXT PROJECT_NAME "SectionText"
 #define ID_LOADING_TEXT PROJECT_NAME "LoadingText"
 
@@ -34,8 +35,13 @@ void quickmenu_start() {
     // Add horizontal line separator.
     QuickMenuRebornSeparator(ID_SEPARATOR, SCE_SEPARATOR_HEIGHT);
 
+    // Add the root plane that holds all other items.
+    QuickMenuRebornRegisterWidget(ID_PLANE_ROOT, NULL, plane);
+    QuickMenuRebornSetWidgetSize(ID_PLANE_ROOT, SCE_PLANE_WIDTH, 100, 0, 0);
+    QuickMenuRebornSetWidgetColor(ID_PLANE_ROOT, 1, 1, 1, 0);
+
     // Add section heading text.
-    QuickMenuRebornRegisterWidget(ID_SECTION_TEXT, NULL, text);
+    QuickMenuRebornRegisterWidget(ID_SECTION_TEXT, ID_PLANE_ROOT, text);
     QuickMenuRebornSetWidgetSize(ID_SECTION_TEXT, SCE_PLANE_WIDTH, 50, 0, 0);
     QuickMenuRebornSetWidgetPosition(ID_SECTION_TEXT, 0, 0, 0, 0);
     QuickMenuRebornSetWidgetColor(ID_SECTION_TEXT, 1, 1, 1, 1);
@@ -46,7 +52,7 @@ void quickmenu_start() {
     // TODO add ? or Info button that shows the version, build date, commit sha, github link. Like [Party].
 
     // Add placeholder "Loading" text.
-    QuickMenuRebornRegisterWidget(ID_LOADING_TEXT, NULL, text);
+    QuickMenuRebornRegisterWidget(ID_LOADING_TEXT, ID_PLANE_ROOT, text);
     QuickMenuRebornSetWidgetSize(ID_LOADING_TEXT, SCE_PLANE_WIDTH, 75, 0, 0);
     QuickMenuRebornSetWidgetPosition(ID_LOADING_TEXT, 0, 0, 0, 0);
     QuickMenuRebornSetWidgetColor(ID_LOADING_TEXT, 1, 1, 1, 1);
@@ -70,5 +76,6 @@ void quickmenu_start() {
 void quickmenu_stop() {
     QuickMenuRebornUnregisterWidget(ID_LOADING_TEXT);
     QuickMenuRebornUnregisterWidget(ID_SECTION_TEXT);
+    QuickMenuRebornUnregisterWidget(ID_PLANE_ROOT);
     QuickMenuRebornRemoveSeparator(ID_SEPARATOR);
 }
