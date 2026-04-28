@@ -14,9 +14,12 @@ TODO
 
 TODO
 
-TODO install vitacompanion.
-
-TODO curl commands to deploy and kill shell (undocumented new feature). Or put in Makefile.
+```bash
+# https://github.com/Robpol86/vitacompanion/tree/sdk-fix
+#   rm -rf build && cmake -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -B build . && cmake --build build
+curl -T build-debug/vitaQmBluetooth.suprx ftp://192.168.9.109:1337/ur0:/QuickMenuReborn/
+echo reboot |nc -v 192.168.9.109 1338
+```
 
 ## Releases
 
