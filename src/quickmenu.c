@@ -25,22 +25,32 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define PROJECT_NAME "vitaQmBluetooth"
 #define SEPARATOR_ID PROJECT_NAME "Separator"
 #define SECTION_TEXT_ID PROJECT_NAME "SectionText"
+#define LOADING_TEXT_ID PROJECT_NAME "LoadingText"
 
 /**
  * Loads the plugin's quick menu items.
  */
 void quickmenu_start() {
+    // Add horizontal line separator.
     QuickMenuRebornSeparator(SEPARATOR_ID, SCE_SEPARATOR_HEIGHT);
 
+    // Add section heading text.
     QuickMenuRebornRegisterWidget(SECTION_TEXT_ID, NULL, text);
     QuickMenuRebornSetWidgetSize(SECTION_TEXT_ID, SCE_PLANE_WIDTH, 50, 0, 0);
     QuickMenuRebornSetWidgetColor(SECTION_TEXT_ID, 1, 1, 1, 1);
     QuickMenuRebornSetWidgetPosition(SECTION_TEXT_ID, 0, 0, 0, 0);
-    QuickMenuRebornSetWidgetLabel(SECTION_TEXT_ID, "Bluetooth Devices v0.1.2604271343");  // TODO hook & font
+    QuickMenuRebornSetWidgetLabel(SECTION_TEXT_ID, "Bluetooth Devices");
 
     // TODO add Bluetooth icon for section header.
 
-    // TODO Add "Loading..." text.
+    // TODO add ? or Info button that shows the version, build date, commit sha, github link. Like [Party].
+
+    // Add placeholder "Loading" text.
+    QuickMenuRebornRegisterWidget(LOADING_TEXT_ID, NULL, text);
+    QuickMenuRebornSetWidgetColor(LOADING_TEXT_ID, 1, 1, 1, 1);
+    QuickMenuRebornSetWidgetSize(LOADING_TEXT_ID, 500, 75, 0, 0);
+    QuickMenuRebornSetWidgetPosition(LOADING_TEXT_ID, -255, 0, 0, 0);
+    QuickMenuRebornSetWidgetLabel(LOADING_TEXT_ID, "Loading...");
 
     // TODO style: alignment and spacing. Then PR.
 
