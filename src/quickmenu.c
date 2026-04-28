@@ -23,34 +23,34 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 // Widget IDs (prefixed because they must be unique across all plugins).
 #define PROJECT_NAME "vitaQmBluetooth"
-#define SEPARATOR_ID PROJECT_NAME "Separator"
-#define SECTION_TEXT_ID PROJECT_NAME "SectionText"
-#define LOADING_TEXT_ID PROJECT_NAME "LoadingText"
+#define ID_SEPARATOR PROJECT_NAME "Separator"
+#define ID_SECTION_TEXT PROJECT_NAME "SectionText"
+#define ID_LOADING_TEXT PROJECT_NAME "LoadingText"
 
 /**
  * Loads the plugin's quick menu items.
  */
 void quickmenu_start() {
     // Add horizontal line separator.
-    QuickMenuRebornSeparator(SEPARATOR_ID, SCE_SEPARATOR_HEIGHT);
+    QuickMenuRebornSeparator(ID_SEPARATOR, SCE_SEPARATOR_HEIGHT);
 
     // Add section heading text.
-    QuickMenuRebornRegisterWidget(SECTION_TEXT_ID, NULL, text);
-    QuickMenuRebornSetWidgetSize(SECTION_TEXT_ID, SCE_PLANE_WIDTH, 50, 0, 0);
-    QuickMenuRebornSetWidgetPosition(SECTION_TEXT_ID, 0, 0, 0, 0);
-    QuickMenuRebornSetWidgetColor(SECTION_TEXT_ID, 1, 1, 1, 1);
-    QuickMenuRebornSetWidgetLabel(SECTION_TEXT_ID, "Bluetooth Devices");
+    QuickMenuRebornRegisterWidget(ID_SECTION_TEXT, NULL, text);
+    QuickMenuRebornSetWidgetSize(ID_SECTION_TEXT, SCE_PLANE_WIDTH, 50, 0, 0);
+    QuickMenuRebornSetWidgetPosition(ID_SECTION_TEXT, 0, 0, 0, 0);
+    QuickMenuRebornSetWidgetColor(ID_SECTION_TEXT, 1, 1, 1, 1);
+    QuickMenuRebornSetWidgetLabel(ID_SECTION_TEXT, "Bluetooth Devices");
 
     // TODO add Bluetooth icon for section header.
 
     // TODO add ? or Info button that shows the version, build date, commit sha, github link. Like [Party].
 
     // Add placeholder "Loading" text.
-    QuickMenuRebornRegisterWidget(LOADING_TEXT_ID, NULL, text);
-    QuickMenuRebornSetWidgetSize(LOADING_TEXT_ID, SCE_PLANE_WIDTH, 75, 0, 0);
-    QuickMenuRebornSetWidgetPosition(LOADING_TEXT_ID, 0, 0, 0, 0);
-    QuickMenuRebornSetWidgetColor(LOADING_TEXT_ID, 1, 1, 1, 1);
-    QuickMenuRebornSetWidgetLabel(LOADING_TEXT_ID, "Loading...");
+    QuickMenuRebornRegisterWidget(ID_LOADING_TEXT, NULL, text);
+    QuickMenuRebornSetWidgetSize(ID_LOADING_TEXT, SCE_PLANE_WIDTH, 75, 0, 0);
+    QuickMenuRebornSetWidgetPosition(ID_LOADING_TEXT, 0, 0, 0, 0);
+    QuickMenuRebornSetWidgetColor(ID_LOADING_TEXT, 1, 1, 1, 1);
+    QuickMenuRebornSetWidgetLabel(ID_LOADING_TEXT, "Loading...");
 
     // TODO style: alignment and spacing. Then PR.
 
@@ -68,7 +68,7 @@ void quickmenu_start() {
  * Unloads the plugin's quick menu items.
  */
 void quickmenu_stop() {
-    QuickMenuRebornUnregisterWidget(LOADING_TEXT_ID);
-    QuickMenuRebornUnregisterWidget(SECTION_TEXT_ID);
-    QuickMenuRebornRemoveSeparator(SEPARATOR_ID);
+    QuickMenuRebornUnregisterWidget(ID_LOADING_TEXT);
+    QuickMenuRebornUnregisterWidget(ID_SECTION_TEXT);
+    QuickMenuRebornRemoveSeparator(ID_SEPARATOR);
 }
