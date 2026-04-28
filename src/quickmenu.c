@@ -68,6 +68,7 @@ void quickmenu_start() {
  * Unloads the plugin's quick menu items.
  */
 void quickmenu_stop() {
+    QuickMenuRebornUnregisterWidget(LOADING_TEXT_ID);
     QuickMenuRebornUnregisterWidget(SECTION_TEXT_ID);
     QuickMenuRebornRemoveSeparator(SEPARATOR_ID);
 }
