@@ -37,13 +37,13 @@ void quickmenu_start() {
 
     // Add the root plane that holds all other items.
     QuickMenuRebornRegisterWidget(ID_PLANE_ROOT, NULL, plane);
-    QuickMenuRebornSetWidgetSize(ID_PLANE_ROOT, SCE_PLANE_WIDTH, 100, 0, 0);
+    QuickMenuRebornSetWidgetSize(ID_PLANE_ROOT, SCE_PLANE_WIDTH, 200, 0, 0);
     QuickMenuRebornSetWidgetColor(ID_PLANE_ROOT, 1, 1, 1, 0);
 
     // Add section heading text.
     QuickMenuRebornRegisterWidget(ID_SECTION_TEXT, ID_PLANE_ROOT, text);
     QuickMenuRebornSetWidgetSize(ID_SECTION_TEXT, SCE_PLANE_WIDTH, 50, 0, 0);
-    QuickMenuRebornSetWidgetPosition(ID_SECTION_TEXT, 0, 0, 0, 0);
+    QuickMenuRebornSetWidgetPosition(ID_SECTION_TEXT, 0, -25, 0, 0);
     QuickMenuRebornSetWidgetColor(ID_SECTION_TEXT, 1, 1, 1, 1);
     QuickMenuRebornSetWidgetLabel(ID_SECTION_TEXT, "Bluetooth Devices");
 
@@ -54,7 +54,7 @@ void quickmenu_start() {
     // Add placeholder "Loading" text.
     QuickMenuRebornRegisterWidget(ID_LOADING_TEXT, ID_PLANE_ROOT, text);
     QuickMenuRebornSetWidgetSize(ID_LOADING_TEXT, SCE_PLANE_WIDTH, 75, 0, 0);
-    QuickMenuRebornSetWidgetPosition(ID_LOADING_TEXT, 0, 0, 0, 0);
+    QuickMenuRebornSetWidgetPosition(ID_LOADING_TEXT, 0, 25, 0, 0);
     QuickMenuRebornSetWidgetColor(ID_LOADING_TEXT, 1, 1, 1, 1);
     QuickMenuRebornSetWidgetLabel(ID_LOADING_TEXT, "Loading...");
 
