@@ -66,8 +66,6 @@ void quickmenu_start() {
 
     // TODO version.c.in with PROJECT_NAME exportd by CMake, as well as VERSION_MAJOR and VERSON_MINOR. Also use
     // exports.yml.in.
-
-    // TODO PR and then convert to C++ in the next branch.
 }
 
 /**
