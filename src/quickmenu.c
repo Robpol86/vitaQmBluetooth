@@ -37,8 +37,8 @@ void quickmenu_start() {
     // Add section heading text.
     QuickMenuRebornRegisterWidget(SECTION_TEXT_ID, NULL, text);
     QuickMenuRebornSetWidgetSize(SECTION_TEXT_ID, SCE_PLANE_WIDTH, 50, 0, 0);
-    QuickMenuRebornSetWidgetColor(SECTION_TEXT_ID, 1, 1, 1, 1);
     QuickMenuRebornSetWidgetPosition(SECTION_TEXT_ID, 0, 0, 0, 0);
+    QuickMenuRebornSetWidgetColor(SECTION_TEXT_ID, 1, 1, 1, 1);
     QuickMenuRebornSetWidgetLabel(SECTION_TEXT_ID, "Bluetooth Devices");
 
     // TODO add Bluetooth icon for section header.
@@ -47,9 +47,9 @@ void quickmenu_start() {
 
     // Add placeholder "Loading" text.
     QuickMenuRebornRegisterWidget(LOADING_TEXT_ID, NULL, text);
+    QuickMenuRebornSetWidgetSize(LOADING_TEXT_ID, SCE_PLANE_WIDTH, 75, 0, 0);
+    QuickMenuRebornSetWidgetPosition(LOADING_TEXT_ID, 0, 0, 0, 0);
     QuickMenuRebornSetWidgetColor(LOADING_TEXT_ID, 1, 1, 1, 1);
-    QuickMenuRebornSetWidgetSize(LOADING_TEXT_ID, 500, 75, 0, 0);
-    QuickMenuRebornSetWidgetPosition(LOADING_TEXT_ID, -255, 0, 0, 0);
     QuickMenuRebornSetWidgetLabel(LOADING_TEXT_ID, "Loading...");
 
     // TODO style: alignment and spacing. Then PR.
