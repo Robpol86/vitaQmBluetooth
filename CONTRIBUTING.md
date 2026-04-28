@@ -14,6 +14,10 @@ TODO
 
 TODO
 
+TODO install vitacompanion.
+
+TODO curl commands to deploy and kill shell (undocumented new feature). Or put in Makefile.
+
 ## Releases
 
 TODO
