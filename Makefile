@@ -22,7 +22,7 @@ build: $(BUILD_TARGETS)
 ## PS Vita
 
 .PHONY: deploy
-deploy: _HELP = Deploy to PS Vita (requires vitacompanion)
+deploy: _HELP = Deploy to the PS Vita (requires vitacompanion)
 deploy: build-debug/$(PROJECT_NAME).suprx
 ifndef PSVITA_IP
 	$(error PSVITA_IP is not set. Install https://github.com/devnoname120/vitacompanion on the Vita and set PSVITA_IP.")
@@ -39,6 +39,14 @@ endif
 	@echo "Rebooting in 3 seconds..."
 	@sleep 3
 	echo reboot |nc -v "$(PSVITA_IP)" 1338
+
+.PHONY: build-screenshots
+build-screenshots: _HELP = Download all screenshots from the PS Vita (requires vitacompanion)
+build-screenshots:
+ifndef PSVITA_IP
+	$(error PSVITA_IP is not set. Install https://github.com/devnoname120/vitacompanion on the Vita and set PSVITA_IP.")
+endif
+	wget -P $(@) --mirror "ftp://$(PSVITA_IP):1337/ux0:/picture/SCREENSHOT/"
 
 ## Testing
 
