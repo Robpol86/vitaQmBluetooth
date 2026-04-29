@@ -55,13 +55,6 @@ void quickmenu_start() {
     QuickMenuRebornSetWidgetLabel(ID_LOADING_TEXT, "Loading...");
 
     // TODO style: alignment and spacing. Then PR.
-
-    // TODO exports.yml versioning? Project versioning? Maybe "Bluetooth Devices v1.0.2604261359" for debug and just v1.0 for
-    // release? ACTUALLY keep version 1.0. Add build commit sha via cmake and expose in UI. Or use version x.x.x like
-    // QuickMenuReborn does, but also keep sha.
-
-    // TODO version.c.in with PROJECT_NAME exportd by CMake, as well as VERSION_MAJOR and VERSON_MINOR. Also use
-    // exports.yml.in.
 }
 
 /**
