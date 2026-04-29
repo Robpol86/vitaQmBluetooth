@@ -46,6 +46,7 @@ build-screenshots:
 ifndef PSVITA_IP
 	$(error PSVITA_IP is not set. Install https://github.com/devnoname120/vitacompanion on the Vita and set PSVITA_IP.")
 endif
+	lftp -p 1337 "$(PSVITA_IP)" -e "debug 5; set ftp:list-empty-ok yes; cd /ux0:/picture/SCREENSHOT/ && mmv */*.png .; bye"
 	wget -P $(@) --mirror "ftp://$(PSVITA_IP):1337/ux0:/picture/SCREENSHOT/"
 
 ## Testing
@@ -75,7 +76,7 @@ all: test lint $(BUILD_TARGETS)
 .PHONY: clean
 clean: _HELP = Remove build and temporary files
 clean:
-	rm -rfv build-debug/ build-release/
+	rm -rfv build-debug/ build-release/ build-screenshots/
 
 define MAKEFILE_HELP_AWK
 BEGIN {
