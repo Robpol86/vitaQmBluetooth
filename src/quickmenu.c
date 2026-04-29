@@ -47,8 +47,6 @@ void quickmenu_start() {
     QuickMenuRebornSetWidgetColor(ID_SECTION_TEXT, 1, 1, 1, 1);
     QuickMenuRebornSetWidgetLabel(ID_SECTION_TEXT, "Bluetooth Devices");
 
-    // TODO add Bluetooth icon for section header.
-
     // Add placeholder "Loading" text.
     QuickMenuRebornRegisterWidget(ID_LOADING_TEXT, ID_PLANE_ROOT, text);
     QuickMenuRebornSetWidgetSize(ID_LOADING_TEXT, SCE_PLANE_WIDTH, 75, 0, 0);
