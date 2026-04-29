@@ -49,8 +49,6 @@ void quickmenu_start() {
 
     // TODO add Bluetooth icon for section header.
 
-    // TODO add ? or Info button that shows the version, build date, commit sha, github link. Like [Party].
-
     // Add placeholder "Loading" text.
     QuickMenuRebornRegisterWidget(ID_LOADING_TEXT, ID_PLANE_ROOT, text);
     QuickMenuRebornSetWidgetSize(ID_LOADING_TEXT, SCE_PLANE_WIDTH, 75, 0, 0);
