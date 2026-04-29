@@ -47,7 +47,7 @@ ifndef PSVITA_IP
 	$(error PSVITA_IP is not set. Install https://github.com/devnoname120/vitacompanion on the Vita and set PSVITA_IP.")
 endif
 	lftp -p 1337 "$(PSVITA_IP)" -e "set ftp:list-empty-ok yes; cd /ux0:/picture/SCREENSHOT/ && mmv */*.png .; bye"
-	wget --quiet -P $(@) -nH --cut-dirs=3 --mirror "ftp://$(PSVITA_IP):1337/ux0:/picture/SCREENSHOT/"
+	wget --quiet -P $(@) -nH --cut-dirs=3 --mirror "ftp://$(PSVITA_IP):1337/ux0:/picture/SCREENSHOT/*.png"
 
 ## Testing
 
