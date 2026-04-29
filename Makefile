@@ -19,10 +19,10 @@ $(BUILD_TARGETS): CMakeLists.txt exports.yml $(wildcard src/* src/*/* src/*/*/* 
 build: _HELP = Build debug and release plugins (alias)
 build: $(BUILD_TARGETS)
 
-## PS Vita
+## PS Vita (requires vitacompanion)
 
 .PHONY: deploy
-deploy: _HELP = Deploy to the PS Vita (requires vitacompanion)
+deploy: _HELP = Deploy plugin to the PS Vita
 deploy: build-debug/$(PROJECT_NAME).suprx
 ifndef PSVITA_IP
 	$(error PSVITA_IP is not set. Install https://github.com/devnoname120/vitacompanion on the Vita and set PSVITA_IP.")
@@ -31,7 +31,7 @@ endif
 	echo screen on |nc -v "$(PSVITA_IP)" 1338
 
 .PHONY: reboot
-reboot: _HELP = Reboot the PS Vita (requires vitacompanion)
+reboot: _HELP = Reboot the PS Vita
 reboot:
 ifndef PSVITA_IP
 	$(error PSVITA_IP is not set. Install https://github.com/devnoname120/vitacompanion on the Vita and set PSVITA_IP.")
@@ -41,7 +41,7 @@ endif
 	echo reboot |nc -v "$(PSVITA_IP)" 1338
 
 .PHONY: build-screenshots
-build-screenshots: _HELP = Download all screenshots from the PS Vita (requires vitacompanion)
+build-screenshots: _HELP = Remotely flatten screenshots dir structure and download
 build-screenshots:
 ifndef PSVITA_IP
 	$(error PSVITA_IP is not set. Install https://github.com/devnoname120/vitacompanion on the Vita and set PSVITA_IP.")
