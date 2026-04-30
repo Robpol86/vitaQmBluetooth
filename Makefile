@@ -19,6 +19,36 @@ $(BUILD_TARGETS): CMakeLists.txt exports.yml $(wildcard src/* src/*/* src/*/*/* 
 build: _HELP = Build debug and release plugins (alias)
 build: $(BUILD_TARGETS)
 
+## PS Vita (requires vitacompanion)
+
+.PHONY: deploy
+deploy: _HELP = Deploy plugin to the PS Vita
+deploy: build-debug/$(PROJECT_NAME).suprx
+ifndef PSVITA_IP
+	$(error PSVITA_IP is not set. Install https://github.com/devnoname120/vitacompanion on the Vita and set PSVITA_IP.")
+endif
+	curl -T $(<) "ftp://$(PSVITA_IP):1337/ur0:/QuickMenuReborn/"
+	echo screen on |nc -v "$(PSVITA_IP)" 1338
+
+.PHONY: reboot
+reboot: _HELP = Reboot the PS Vita
+reboot:
+ifndef PSVITA_IP
+	$(error PSVITA_IP is not set. Install https://github.com/devnoname120/vitacompanion on the Vita and set PSVITA_IP.")
+endif
+	@echo "Rebooting in 3 seconds..."
+	@sleep 3
+	echo reboot |nc -v "$(PSVITA_IP)" 1338
+
+.PHONY: build-screenshots
+build-screenshots: _HELP = Remotely flatten screenshots dir structure and download
+build-screenshots:
+ifndef PSVITA_IP
+	$(error PSVITA_IP is not set. Install https://github.com/devnoname120/vitacompanion on the Vita and set PSVITA_IP.")
+endif
+	lftp -p 1337 "$(PSVITA_IP)" -e "set ftp:list-empty-ok yes; cd /ux0:/picture/SCREENSHOT/ && mmv */*.png .; bye"
+	wget --quiet -P $(@) -nH --cut-dirs=3 --mirror "ftp://$(PSVITA_IP):1337/ux0:/picture/SCREENSHOT/*.png"
+
 ## Testing
 
 .PHONY: lint
@@ -46,7 +76,7 @@ all: test lint $(BUILD_TARGETS)
 .PHONY: clean
 clean: _HELP = Remove build and temporary files
 clean:
-	rm -rfv build-debug/ build-release/
+	rm -rfv build-debug/ build-release/ build-screenshots/
 
 define MAKEFILE_HELP_AWK
 BEGIN {
