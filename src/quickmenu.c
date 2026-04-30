@@ -30,6 +30,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * Loads the plugin's quick menu items.
+ *
+ * TODOs:
+ * - Add function to calculate position from top left instead of center.
+ * - Pixel perfect alignment.
  */
 void quickmenu_start() {
     // Add horizontal line separator.
@@ -37,22 +41,22 @@ void quickmenu_start() {
 
     // Add the root plane that holds all other items.
     QuickMenuRebornRegisterWidget(ID_PLANE_ROOT, NULL, plane);
-    QuickMenuRebornSetWidgetSize(ID_PLANE_ROOT, SCE_PLANE_WIDTH, 200, 0, 0);
+    QuickMenuRebornSetWidgetSize(ID_PLANE_ROOT, SCE_PLANE_WIDTH, 125, 0, 0);
     QuickMenuRebornSetWidgetColor(ID_PLANE_ROOT, 1, 1, 1, 0);
 
     // Add section heading text.
     QuickMenuRebornRegisterWidget(ID_SECTION_TEXT, ID_PLANE_ROOT, text);
     QuickMenuRebornSetWidgetSize(ID_SECTION_TEXT, SCE_PLANE_WIDTH, 50, 0, 0);
-    QuickMenuRebornSetWidgetPosition(ID_SECTION_TEXT, 0, 25, 0, 0);
+    QuickMenuRebornSetWidgetPosition(ID_SECTION_TEXT, -100, 25, 0, 0);
     QuickMenuRebornSetWidgetColor(ID_SECTION_TEXT, 1, 1, 1, 1);
     QuickMenuRebornSetWidgetLabel(ID_SECTION_TEXT, "Accessibility RP");  // TODO Bluetooth Devices
 
     // Add placeholder "Loading" text.
     QuickMenuRebornRegisterWidget(ID_LOADING_TEXT, ID_PLANE_ROOT, text);
-    QuickMenuRebornSetWidgetSize(ID_LOADING_TEXT, SCE_PLANE_WIDTH, 75, 0, 0);
-    QuickMenuRebornSetWidgetPosition(ID_LOADING_TEXT, 0, -25, 0, 0);
+    QuickMenuRebornSetWidgetSize(ID_LOADING_TEXT, SCE_PLANE_WIDTH, 50, 0, 0);
+    QuickMenuRebornSetWidgetPosition(ID_LOADING_TEXT, -100, -25, 0, 0);
     QuickMenuRebornSetWidgetColor(ID_LOADING_TEXT, 1, 1, 1, 1);
-    QuickMenuRebornSetWidgetLabel(ID_LOADING_TEXT, "Invert Colors RP");  // TODO Loading...
+    QuickMenuRebornSetWidgetLabel(ID_LOADING_TEXT, "Invert Colors    Button RP");  // TODO Loading...
 
     // TODO style: alignment and spacing. Then PR.
 }
