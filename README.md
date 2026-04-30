@@ -2,9 +2,8 @@
 
 Reconnect bluetooth devices from the quick menu without needing to open the Settings app
 
-> ⚠️ ⚠️ ⚠️ [NOTICE] ⚠️ ⚠️ ⚠️
->
-> The project is currently under development.
+> [!CAUTION]
+> ⚠️ ⚠️ ⚠️ The project is currently under development. ⚠️ ⚠️ ⚠️
 
 ## Install
 
