@@ -57,8 +57,6 @@ void quickmenu_start() {
     QuickMenuRebornSetWidgetPosition(ID_LOADING_TEXT, -220, -40, 0, 0);
     QuickMenuRebornSetWidgetColor(ID_LOADING_TEXT, 1, 1, 1, 1);
     QuickMenuRebornSetWidgetLabel(ID_LOADING_TEXT, "Loading...");
-
-    // TODO style: alignment and spacing. Then PR.
 }
 
 /**
