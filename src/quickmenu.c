@@ -42,10 +42,10 @@ BUTTON_HANDLER(on_press) {
     (void)userDat;
 
     LOG_DEBUG("Example string only.");
+    LOG_DEBUG("Example with argument: %s:%d", "ARGUMENT", 86);
     /*
-    todo
+    TODO
 
-    log_debug macro etc
     remove or noop in release builds. confirm with strings command
     change button label to Do Nothing in release? Maybe just static
     Emit if Debug?

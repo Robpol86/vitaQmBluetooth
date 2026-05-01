@@ -24,12 +24,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 // todo noop log debug and helpers on release
 // TODO fix new lint warnings
-#define LOG_DEBUG(fmtMsg, ...)                                                                                   \
-    do {                                                                                                         \
-        SceDateTime _time;                                                                                       \
-        sceRtcGetCurrentClockLocalTime(&_time);                                                                  \
-        sceClibPrintf("[%02d:%02d:%02d.%03d] [" PROJECT_NAME "] [DEBUG] " fmtMsg "\n", _time.hour, _time.minute, \
-                      _time.second, _time.microsecond / 1000, ##__VA_ARGS__);                                    \
+#define LOG_DEBUG(fmtMsg, ...)                                                                                              \
+    do {                                                                                                                    \
+        SceDateTime _time;                                                                                                  \
+        sceRtcGetCurrentClockLocalTime(&_time);                                                                             \
+        sceClibPrintf("[%02d:%02d:%02d.%03d] [" PROJECT_NAME "] [%s:%d:%s] [DEBUG] " fmtMsg "\n", _time.hour, _time.minute, \
+                      _time.second, _time.microsecond / 1000, __FILE__, __LINE__, __func__, ##__VA_ARGS__);                 \
     } while (0)
 
 #endif  // LOG_H
