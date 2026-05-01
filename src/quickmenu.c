@@ -28,6 +28,19 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define ID_PLANE_ROOT PROJECT_NAME "PlaneRoot"
 #define ID_SECTION_TEXT PROJECT_NAME "SectionText"
 #define ID_LOADING_TEXT PROJECT_NAME "LoadingText"
+#define ID_BUTTON PROJECT_NAME "Button"
+
+/**
+ * TODO
+ */
+BUTTON_HANDLER(on_press) {
+    (void)id;
+    (void)hash;
+    (void)eventId;
+    (void)userDat;
+
+    sceClibPrintf("[" PROJECT_NAME "][I] %s\n", "HELLO WORLD RP");
+}
 
 /**
  * Loads the plugin's quick menu items.
@@ -42,7 +55,7 @@ void quickmenu_start() {
 
     // Add the root plane that holds all other items.
     QuickMenuRebornRegisterWidget(ID_PLANE_ROOT, NULL, plane);
-    QuickMenuRebornSetWidgetSize(ID_PLANE_ROOT, SCE_PLANE_WIDTH, 125, 0, 0);
+    QuickMenuRebornSetWidgetSize(ID_PLANE_ROOT, SCE_PLANE_WIDTH, 200, 0, 0);
     QuickMenuRebornSetWidgetColor(ID_PLANE_ROOT, 1, 1, 1, 0);
 
     // Add section heading text.
@@ -59,15 +72,20 @@ void quickmenu_start() {
     QuickMenuRebornSetWidgetColor(ID_LOADING_TEXT, 1, 1, 1, 1);
     QuickMenuRebornSetWidgetLabel(ID_LOADING_TEXT, "Loading...");
 
-    // TODO
-    // TODO bring back button, log onclick
-    sceClibPrintf("[" PROJECT_NAME "][I] %s\n", "HELLO WORLD RP");
+    // Add button.
+    QuickMenuRebornRegisterWidget(ID_BUTTON, ID_PLANE_ROOT, button);
+    QuickMenuRebornSetWidgetSize(ID_BUTTON, 200, 75, 0, 0);
+    QuickMenuRebornSetWidgetPosition(ID_BUTTON, -220, -120, 0, 0);
+    QuickMenuRebornSetWidgetColor(ID_BUTTON, 1, 1, 1, 1);
+    QuickMenuRebornSetWidgetLabel(ID_BUTTON, "Emit Log");
+    QuickMenuRebornRegisterEventHanlder(ID_BUTTON, QMR_BUTTON_RELEASE_ID, on_press, NULL);
 }
 
 /**
  * Unloads the plugin's quick menu items.
  */
 void quickmenu_stop() {
+    QuickMenuRebornUnregisterWidget(ID_BUTTON);
     QuickMenuRebornUnregisterWidget(ID_LOADING_TEXT);
     QuickMenuRebornUnregisterWidget(ID_SECTION_TEXT);
     QuickMenuRebornUnregisterWidget(ID_PLANE_ROOT);

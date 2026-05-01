@@ -34,6 +34,9 @@ Install Cat-A-Log on a PS Vita:
 #   rm -rf build && cmake -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -B build . && cmake --build build
 #   for f in build/*_module/catlog.s?prx; do curl -T "$f" ftp://192.168.9.109:1337/ur0:/tai/; done
 # Edit ur0:tai/config.txt
+# Add firewall rule to router.
+# Local: nc -kl 10224
+# Reboot vita to get a lot of kernel log statements.
 ```
 
 ## Releases
