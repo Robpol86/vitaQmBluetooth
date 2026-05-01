@@ -61,21 +61,21 @@ void quickmenu_start() {
     // Add section heading text.
     QuickMenuRebornRegisterWidget(ID_SECTION_TEXT, ID_PLANE_ROOT, text);
     QuickMenuRebornSetWidgetSize(ID_SECTION_TEXT, SCE_PLANE_WIDTH, 50, 0, 0);
-    QuickMenuRebornSetWidgetPosition(ID_SECTION_TEXT, -206, 25, 0, 0);
+    QuickMenuRebornSetWidgetPosition(ID_SECTION_TEXT, -206, 25+37, 0, 0);
     QuickMenuRebornSetWidgetColor(ID_SECTION_TEXT, 1, 1, 1, 1);
     QuickMenuRebornSetWidgetLabel(ID_SECTION_TEXT, "Bluetooth Devices");
 
     // Add placeholder "Loading" text.
     QuickMenuRebornRegisterWidget(ID_LOADING_TEXT, ID_PLANE_ROOT, text);
     QuickMenuRebornSetWidgetSize(ID_LOADING_TEXT, SCE_PLANE_WIDTH, 50, 0, 0);
-    QuickMenuRebornSetWidgetPosition(ID_LOADING_TEXT, -220, -40, 0, 0);
+    QuickMenuRebornSetWidgetPosition(ID_LOADING_TEXT, -220, -40+37, 0, 0);
     QuickMenuRebornSetWidgetColor(ID_LOADING_TEXT, 1, 1, 1, 1);
     QuickMenuRebornSetWidgetLabel(ID_LOADING_TEXT, "Loading...");
 
     // Add button.
     QuickMenuRebornRegisterWidget(ID_BUTTON, ID_PLANE_ROOT, button);
     QuickMenuRebornSetWidgetSize(ID_BUTTON, 200, 75, 0, 0);
-    QuickMenuRebornSetWidgetPosition(ID_BUTTON, -220, -120, 0, 0);
+    QuickMenuRebornSetWidgetPosition(ID_BUTTON, -220, -120+37, 0, 0);
     QuickMenuRebornSetWidgetColor(ID_BUTTON, 1, 1, 1, 1);
     QuickMenuRebornSetWidgetLabel(ID_BUTTON, "Emit Log");
     QuickMenuRebornRegisterEventHanlder(ID_BUTTON, QMR_BUTTON_RELEASE_ID, on_press, NULL);
