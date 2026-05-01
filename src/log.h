@@ -18,14 +18,18 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define LOG_H
 
 #include <psp2/kernel/clib.h>
-#include <psp2/kernel/processmgr.h>
+#include <psp2/rtc.h>
 
 #include "config.h"
 
-// TODO improve timestamp
 // todo noop log debug and helpers on release
-#define LOG_DEBUG(fmtMsg, ...)                                                                                         \
-    sceClibPrintf("[%llu] [" PROJECT_NAME "] [DEBUG] " fmtMsg "\n", (unsigned long long)sceKernelGetProcessTimeWide(), \
-                  ##__VA_ARGS__)
+// TODO fix new lint warnings
+#define LOG_DEBUG(fmtMsg, ...)                                                                                   \
+    do {                                                                                                         \
+        SceDateTime _time;                                                                                       \
+        sceRtcGetCurrentClockLocalTime(&_time);                                                                  \
+        sceClibPrintf("[%02d:%02d:%02d.%03d] [" PROJECT_NAME "] [DEBUG] " fmtMsg "\n", _time.hour, _time.minute, \
+                      _time.second, _time.microsecond / 1000, ##__VA_ARGS__);                                    \
+    } while (0)
 
 #endif  // LOG_H
