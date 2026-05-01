@@ -22,8 +22,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2/kernel/modulemgr.h>
 #include <quickmenureborn/qm_reborn.h>
 
+#include "config.h"
+#include "log.h"
+
 // Widget IDs (prefixed because they must be unique across all plugins).
-#define PROJECT_NAME "vitaQmBluetooth"
 #define ID_SEPARATOR PROJECT_NAME "Separator"
 #define ID_PLANE_ROOT PROJECT_NAME "PlaneRoot"
 #define ID_SECTION_TEXT PROJECT_NAME "SectionText"
@@ -39,15 +41,15 @@ BUTTON_HANDLER(on_press) {
     (void)eventId;
     (void)userDat;
 
-    sceClibPrintf("[" PROJECT_NAME "][I] %s\n", "HELLO WORLD RP");
-/*
-todo
+    LOG_DEBUG("Example string only.");
+    /*
+    todo
 
-log_debug macro etc
-remove or noop in release builds. confirm with strings command
-change button label to Do Nothing in release? Maybe just static
-Emit if Debug?
-*/
+    log_debug macro etc
+    remove or noop in release builds. confirm with strings command
+    change button label to Do Nothing in release? Maybe just static
+    Emit if Debug?
+    */
 }
 
 /**
