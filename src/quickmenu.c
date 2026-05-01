@@ -18,6 +18,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * Interface for the Quick Menu on the PS Vita.
  */
 
+#include <psp2/kernel/clib.h>
 #include <psp2/kernel/modulemgr.h>
 #include <quickmenureborn/qm_reborn.h>
 
@@ -57,6 +58,10 @@ void quickmenu_start() {
     QuickMenuRebornSetWidgetPosition(ID_LOADING_TEXT, -220, -40, 0, 0);
     QuickMenuRebornSetWidgetColor(ID_LOADING_TEXT, 1, 1, 1, 1);
     QuickMenuRebornSetWidgetLabel(ID_LOADING_TEXT, "Loading...");
+
+    // TODO
+    // TODO bring back button, log onclick
+    sceClibPrintf("[" PROJECT_NAME "][I] %s\n", "HELLO WORLD RP");
 }
 
 /**
