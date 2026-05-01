@@ -40,6 +40,14 @@ BUTTON_HANDLER(on_press) {
     (void)userDat;
 
     sceClibPrintf("[" PROJECT_NAME "][I] %s\n", "HELLO WORLD RP");
+/*
+todo
+
+log_debug macro etc
+remove or noop in release builds. confirm with strings command
+change button label to Do Nothing in release? Maybe just static
+Emit if Debug?
+*/
 }
 
 /**
