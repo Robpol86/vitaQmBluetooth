@@ -23,6 +23,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "config.h"
 
 // TODO improve timestamp
+// todo noop log debug and helpers on release
 #define LOG_DEBUG(fmtMsg, ...)                                                                                         \
     sceClibPrintf("[%llu] [" PROJECT_NAME "] [DEBUG] " fmtMsg "\n", (unsigned long long)sceKernelGetProcessTimeWide(), \
                   ##__VA_ARGS__)
