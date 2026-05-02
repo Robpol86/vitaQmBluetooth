@@ -9,17 +9,19 @@ if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
 endif()
 
 project(vitaQmBluetooth)
-list(REMOVE_ITEM CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-eabi/include")
-list(REMOVE_ITEM CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-eabi/include")
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
-# Set or update CMAKE flags.
+# Explicit includes for clang-tidy.
+list(REMOVE_ITEM CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-eabi/include")
+list(REMOVE_ITEM CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-eabi/include")
+
+# Set cmake options.
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -fno-exceptions")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,-q -Wall -nostdlib")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_POLICY_VERSION_MINIMUM 3.5)  # Silences "Compatibility with CMake < 3.5 has been removed from CMake"
 
-# Set custom variables.
+# Set variables.
 set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
 
 add_executable("${PROJECT_NAME}"
@@ -37,7 +39,11 @@ target_include_directories("${PROJECT_NAME}" SYSTEM PRIVATE
   "${VENDOR_DIR}/quickmenureborn"
 )
 
-target_link_libraries("${PROJECT_NAME}"
+target_link_directories("${PROJECT_NAME}" PRIVATE
+  "${VENDOR_DIR}/quickmenureborn/vitasdk_stubs"
+)
+
+target_link_libraries("${PROJECT_NAME}" PRIVATE
   k
   gcc
   SceLibc_stub
@@ -47,10 +53,6 @@ target_link_libraries("${PROJECT_NAME}"
   SceSysmodule_stub
   SceKernelModulemgr_stub
   QuickMenuReborn_stub_weak
-)
-
-target_link_directories("${PROJECT_NAME}" PRIVATE
-  "${VENDOR_DIR}/quickmenureborn/vitasdk_stubs"
 )
 
 vita_create_self("${PROJECT_NAME}.suprx"
