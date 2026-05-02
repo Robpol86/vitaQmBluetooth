@@ -15,17 +15,10 @@ include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 list(REMOVE_ITEM CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-eabi/include")
 list(REMOVE_ITEM CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-eabi/include")
 
-# TODO remove?
+# TODO prune
 set(CMAKE_POLICY_VERSION_MINIMUM 3.5)  # Silences "Compatibility with CMake < 3.5 has been removed from CMake"
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-# TODO prune
-set(ELF catlog.elf)
-set(SELF catlog.skprx)
-set(LIB CatLog_stub)
-set(LIB_FILE "lib${LIB}.a")
 set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
-
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,-q -Wall -nostdlib -Wl,-e,module_start")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -fno-exceptions")
 
@@ -70,12 +63,4 @@ vita_create_self("${PROJECT_NAME}.suprx"
 vita_create_stubs(stubs
   "${PROJECT_NAME}"
   "${CMAKE_SOURCE_DIR}/exports.yml"
-)
-
-add_library("${LIB}" STATIC IMPORTED GLOBAL)
-
-add_dependencies("${LIB}" stubs)
-
-set_target_properties("${LIB}" PROPERTIES
-  IMPORTED_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/stubs/${LIB_FILE}"
 )
