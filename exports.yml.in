@@ -1,4 +1,4 @@
-vitaQmBluetooth:
+@PROJECT_NAME@:
   attributes: 0
   version:
     major: @PROJECT_VERSION_MAJOR@
