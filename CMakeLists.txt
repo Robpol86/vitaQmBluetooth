@@ -11,6 +11,9 @@ endif()
 project(vitaQmBluetooth VERSION 0.1.0 LANGUAGES C)
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
+# Explicit includes for cmake-tidy.
+list(REMOVE_ITEM CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-eabi/include")
+
 # Set or update CMAKE flags.
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,-q -Wall -nostdlib -Wl,-e,module_start")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -37,7 +40,7 @@ target_include_directories("${PROJECT_NAME}" SYSTEM PRIVATE
   "${VENDOR_DIR}/quickmenureborn"
 )
 target_include_directories("${PROJECT_NAME}" PRIVATE
-    "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen"
+  "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen"
 )
 
 target_link_directories("${PROJECT_NAME}" PRIVATE
