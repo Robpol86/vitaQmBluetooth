@@ -11,10 +11,6 @@ endif()
 project(vitaQmBluetooth LANGUAGES C)
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
-# TODO remove?
-list(REMOVE_ITEM CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-eabi/include")
-list(REMOVE_ITEM CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-eabi/include")
-
 # TODO prune
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
