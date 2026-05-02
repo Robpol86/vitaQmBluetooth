@@ -50,7 +50,7 @@ endif
 	wget --quiet -P $(@) -nH --cut-dirs=3 --mirror "ftp://$(PSVITA_IP):1337/ux0:/picture/SCREENSHOT/*.png"
 
 .PHONY: recv-logs
-recv-logs: _HELP = Listen for logs sent from the PS Vita (use with Cat-A-Log)
+recv-logs: _HELP = Listen for logs sent from the PS Vita, print to stdout (use with Cat-A-Log)
 recv-logs:
 	nc -kl 10224
 
