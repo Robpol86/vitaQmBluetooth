@@ -12,7 +12,6 @@ project(vitaQmBluetooth VERSION 0.1.0 LANGUAGES C)
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
 # Set or update CMAKE flags.
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -fno-exceptions")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,-q -Wall -nostdlib -Wl,-e,module_start")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -41,16 +40,10 @@ target_include_directories("${PROJECT_NAME}" PRIVATE
     "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen"
 )
 
-# TODO prune
 target_link_libraries("${PROJECT_NAME}"
-  k
-  gcc
   SceLibc_stub
   taihen_stub
   SceLibKernel_stub
-  SceIofilemgr_stub
-  SceSysmodule_stub
-  SceKernelModulemgr_stub
   QuickMenuReborn_stub_weak
 )
 
