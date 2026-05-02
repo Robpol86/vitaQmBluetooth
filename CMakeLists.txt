@@ -28,6 +28,11 @@ add_executable("${PROJECT_NAME}"
   src/quickmenu.c
 )
 
+target_compile_options("${PROJECT_NAME}" PRIVATE
+  -Wformat=2
+  -Werror=format-security
+)
+
 target_include_directories("${PROJECT_NAME}" SYSTEM PRIVATE
   "${VENDOR_DIR}/quickmenureborn"
 )
@@ -50,11 +55,6 @@ target_link_libraries("${PROJECT_NAME}"
 
 target_link_directories("${PROJECT_NAME}" PRIVATE
   "${VENDOR_DIR}/quickmenureborn/vitasdk_stubs"
-)
-
-target_compile_options("${PROJECT_NAME}" PRIVATE
-  -Wformat=2
-  -Werror=format-security
 )
 
 vita_create_self("${PROJECT_NAME}.suprx"
