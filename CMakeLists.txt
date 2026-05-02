@@ -37,10 +37,6 @@ target_include_directories("${PROJECT_NAME}" SYSTEM PRIVATE
   "${VENDOR_DIR}/quickmenureborn"
 )
 
-target_link_directories("${PROJECT_NAME}" PRIVATE
-  "${VENDOR_DIR}/quickmenureborn/vitasdk_stubs"
-)
-
 target_link_libraries("${PROJECT_NAME}"
   k
   gcc
@@ -51,6 +47,10 @@ target_link_libraries("${PROJECT_NAME}"
   SceSysmodule_stub
   SceKernelModulemgr_stub
   QuickMenuReborn_stub_weak
+)
+
+target_link_directories("${PROJECT_NAME}" PRIVATE
+  "${VENDOR_DIR}/quickmenureborn/vitasdk_stubs"
 )
 
 vita_create_self("${PROJECT_NAME}.suprx"
