@@ -11,7 +11,6 @@ endif()
 project(vitaQmBluetooth LANGUAGES C)
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
-# TODO prune
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,-q -Wall -nostdlib -Wl,-e,module_start")
