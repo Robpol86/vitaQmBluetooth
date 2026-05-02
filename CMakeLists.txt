@@ -11,7 +11,7 @@ endif()
 project(vitaQmBluetooth VERSION 0.1.0 LANGUAGES C)
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
-# Explicit includes for cmake-tidy.
+# Explicit includes for clang-tidy.
 list(REMOVE_ITEM CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-eabi/include")
 
 # Set or update CMAKE flags.
@@ -47,7 +47,7 @@ target_link_directories("${PROJECT_NAME}" PRIVATE
   "${VENDOR_DIR}/quickmenureborn/vitasdk_stubs"
 )
 
-target_link_libraries("${PROJECT_NAME}"
+target_link_libraries("${PROJECT_NAME}" PRIVATE
   SceLibc_stub
   taihen_stub
   SceLibKernel_stub
