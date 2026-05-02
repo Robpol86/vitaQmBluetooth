@@ -1,5 +1,3 @@
-set(CMAKE_POLICY_VERSION_MINIMUM 3.5)  # Silences "Compatibility with CMake < 3.5 has been removed from CMake"
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 cmake_minimum_required(VERSION 3.13)
 
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
@@ -11,13 +9,19 @@ if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
 endif()
 
 project(vitaQmBluetooth)
-list(REMOVE_ITEM CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-eabi/include")
-list(REMOVE_ITEM CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-eabi/include")
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,-q -Wall -nostdlib")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -fno-exceptions")
+# Explicit includes for clang-tidy.
+list(REMOVE_ITEM CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-eabi/include")
+list(REMOVE_ITEM CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-eabi/include")
 
+# Set cmake options.
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -fno-exceptions")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,-q -Wall -nostdlib")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5)  # Silences "Compatibility with CMake < 3.5 has been removed from CMake"
+
+# Set variables.
 set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
 
 add_executable("${PROJECT_NAME}"
@@ -39,7 +43,7 @@ target_link_directories("${PROJECT_NAME}" PRIVATE
   "${VENDOR_DIR}/quickmenureborn/vitasdk_stubs"
 )
 
-target_link_libraries("${PROJECT_NAME}"
+target_link_libraries("${PROJECT_NAME}" PRIVATE
   k
   gcc
   SceLibc_stub
@@ -51,6 +55,13 @@ target_link_libraries("${PROJECT_NAME}"
   QuickMenuReborn_stub_weak
 )
 
-vita_create_self("${PROJECT_NAME}.suprx" "${PROJECT_NAME}" CONFIG exports.yml UNSAFE)
+vita_create_self("${PROJECT_NAME}.suprx"
+  "${PROJECT_NAME}"
+  CONFIG exports.yml
+  UNSAFE
+)
 
-vita_create_stubs(stubs "${PROJECT_NAME}" "${CMAKE_SOURCE_DIR}/exports.yml")
+vita_create_stubs(stubs
+  "${PROJECT_NAME}"
+  "${CMAKE_SOURCE_DIR}/exports.yml"
+)
