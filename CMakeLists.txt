@@ -14,11 +14,8 @@ include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 # Explicit includes for clang-tidy.
 list(REMOVE_ITEM CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-eabi/include")
 
-# Set or update CMAKE flags.
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,-q -Wall -nostdlib -Wl,-e,module_start")
+# Set variables and flags.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-# Set custom variables.
 set(EXPORTS_YML "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen/exports.yml")
 set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
 
@@ -32,8 +29,15 @@ add_executable("${PROJECT_NAME}"
 )
 
 target_compile_options("${PROJECT_NAME}" PRIVATE
+  -Wall
   -Wformat=2
   -Werror=format-security
+)
+
+target_link_options("${PROJECT_NAME}" PRIVATE
+  -Wl,-q
+  -nostdlib
+  -Wl,-e,module_start
 )
 
 target_include_directories("${PROJECT_NAME}" SYSTEM PRIVATE
