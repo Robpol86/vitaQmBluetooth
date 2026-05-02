@@ -11,10 +11,14 @@ endif()
 project(vitaQmBluetooth VERSION 0.1.0 LANGUAGES C)
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,-q -Wall -nostdlib -Wl,-e,module_start")
+# Set or update CMAKE flags.
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -fno-exceptions")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,-q -Wall -nostdlib -Wl,-e,module_start")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Set custom variables.
+set(EXPORTS_YML "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen/exports.yml")
+set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/config.h.in" "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen/config.h" @ONLY)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/exports.yml.in" "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen/exports.yml" @ONLY)
@@ -55,11 +59,11 @@ target_compile_options("${PROJECT_NAME}" PRIVATE
 
 vita_create_self("${PROJECT_NAME}.suprx"
   "${PROJECT_NAME}"
-  CONFIG "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen/exports.yml"
+  CONFIG "${EXPORTS_YML}"
   UNSAFE
 )
 
 vita_create_stubs(stubs
   "${PROJECT_NAME}"
-  "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen/exports.yml"
+  "${EXPORTS_YML}"
 )
