@@ -8,13 +8,19 @@ if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   endif()
 endif()
 
-project(vitaQmBluetooth LANGUAGES C)
+project(vitaQmBluetooth VERSION 0.1.0 LANGUAGES C)
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,-q -Wall -nostdlib -Wl,-e,module_start")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -fno-exceptions")
+
+configure_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/config.h.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen/config.h"
+  @ONLY
+)
 
 add_executable("${PROJECT_NAME}"
   src/main.c
@@ -23,6 +29,9 @@ add_executable("${PROJECT_NAME}"
 
 target_include_directories("${PROJECT_NAME}" SYSTEM PRIVATE
   "${VENDOR_DIR}/quickmenureborn"
+)
+target_include_directories("${PROJECT_NAME}" PRIVATE
+    "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen"
 )
 
 # TODO prune

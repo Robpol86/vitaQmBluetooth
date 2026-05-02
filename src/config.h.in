@@ -17,6 +17,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define PROJECT_NAME "vitaQmBluetooth"
+#define PROJECT_NAME "@PROJECT_NAME@"
 
 #endif  // CONFIG_H
