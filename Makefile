@@ -54,13 +54,13 @@ endif
 .PHONY: lint
 lint: _HELP = Run linters
 lint: build-debug/$(PROJECT_NAME).suprx
-	find src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -name '*.h.in' \) -exec clang-tidy -p $(<D) {} +
-	find src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -name '*.h.in' \) -exec clang-format --dry-run --Werror {} +
+	find src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in' \) -exec clang-tidy -p $(<D) {} +
+	find src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in' \) -exec clang-format --dry-run --Werror {} +
 
 .PHONY: format
 format: _HELP = Apply format/lint fixes
 format:
-	find src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -name '*.h.in' \) -exec clang-format -i {} +
+	find src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in' \) -exec clang-format -i {} +
 
 .PHONY: test
 test: _HELP = Run unit tests
