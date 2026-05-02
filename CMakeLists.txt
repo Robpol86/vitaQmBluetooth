@@ -20,8 +20,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(EXPORTS_YML "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen/exports.yml")
 set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
 
+# Specify template files to generate.
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/config.h.in" "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen/config.h" @ONLY)
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/exports.yml.in" "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen/exports.yml" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/exports.yml.in" "${EXPORTS_YML}" @ONLY)
 
 add_executable("${PROJECT_NAME}"
   src/main.c
