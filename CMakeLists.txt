@@ -14,8 +14,10 @@ include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 # Explicit includes for clang-tidy.
 list(REMOVE_ITEM CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-eabi/include")
 
-# Set variables and flags.
+# Set cmake options.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Set variables.
 set(EXPORTS_YML "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen/exports.yml")
 set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
 
@@ -62,9 +64,4 @@ vita_create_self("${PROJECT_NAME}.suprx"
   "${PROJECT_NAME}"
   CONFIG "${EXPORTS_YML}"
   UNSAFE
-)
-
-vita_create_stubs(stubs
-  "${PROJECT_NAME}"
-  "${EXPORTS_YML}"
 )
