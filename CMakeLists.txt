@@ -40,15 +40,15 @@ target_include_directories("${PROJECT_NAME}" PRIVATE
     "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen"
 )
 
+target_link_directories("${PROJECT_NAME}" PRIVATE
+  "${VENDOR_DIR}/quickmenureborn/vitasdk_stubs"
+)
+
 target_link_libraries("${PROJECT_NAME}"
   SceLibc_stub
   taihen_stub
   SceLibKernel_stub
   QuickMenuReborn_stub_weak
-)
-
-target_link_directories("${PROJECT_NAME}" PRIVATE
-  "${VENDOR_DIR}/quickmenureborn/vitasdk_stubs"
 )
 
 vita_create_self("${PROJECT_NAME}.suprx"
