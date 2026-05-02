@@ -21,12 +21,11 @@ add_executable("${PROJECT_NAME}"
   src/quickmenu.c
 )
 
-# TODO prune
 target_include_directories("${PROJECT_NAME}" SYSTEM PRIVATE
-  "$ENV{VITASDK}/arm-vita-eabi/include"
   "${VENDOR_DIR}/quickmenureborn"
 )
 
+# TODO prune
 target_link_libraries("${PROJECT_NAME}"
   k
   gcc
