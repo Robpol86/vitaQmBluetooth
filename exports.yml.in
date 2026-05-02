@@ -1,8 +1,8 @@
 vitaQmBluetooth:
   attributes: 0
   version:
-    major: 1
-    minor: 0
+    major: @PROJECT_VERSION_MAJOR@
+    minor: @PROJECT_VERSION_MINOR@
   main:
     start: module_start
     stop: module_stop
