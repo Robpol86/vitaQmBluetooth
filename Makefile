@@ -11,7 +11,7 @@ BUILD_TARGETS += build-debug/$(PROJECT_NAME).suprx
 build-release/$(PROJECT_NAME).suprx: _HELP = Build release plugin
 build-release/$(PROJECT_NAME).suprx: export CMAKE_BUILD_TYPE = Release
 BUILD_TARGETS += build-release/$(PROJECT_NAME).suprx
-$(BUILD_TARGETS): CMakeLists.txt exports.yml $(wildcard src/* src/*/* src/*/*/* src/*/*/*/*)
+$(BUILD_TARGETS): CMakeLists.txt exports.yml.in $(wildcard src/* src/*/* src/*/*/* src/*/*/*/*)
 	cmake -B $(@D) .
 	cmake --build $(@D)
 
@@ -59,13 +59,13 @@ recv-logs:
 .PHONY: lint
 lint: _HELP = Run linters
 lint: build-debug/$(PROJECT_NAME).suprx
-	find src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' \) -exec clang-tidy -p $(<D) {} +
-	find src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' \) -exec clang-format --dry-run --Werror {} +
+	find src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in' \) -exec clang-tidy -p $(<D) {} +
+	find src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in' \) -exec clang-format --dry-run --Werror {} +
 
 .PHONY: format
 format: _HELP = Apply format/lint fixes
 format:
-	find src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' \) -exec clang-format -i {} +
+	find src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in' \) -exec clang-format -i {} +
 
 .PHONY: test
 test: _HELP = Run unit tests
