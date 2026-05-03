@@ -11,7 +11,7 @@ BUILD_TARGETS += build-debug/$(PROJECT_NAME).suprx
 build-release/$(PROJECT_NAME).suprx: _HELP = Build release plugin
 build-release/$(PROJECT_NAME).suprx: export CMAKE_BUILD_TYPE = Release
 BUILD_TARGETS += build-release/$(PROJECT_NAME).suprx
-$(BUILD_TARGETS): CMakeLists.txt exports.yml.in $(wildcard src/* src/*/* src/*/*/* src/*/*/*/*)
+$(BUILD_TARGETS): CMakeLists.txt $(wildcard src/* src/*/* src/*/*/* src/*/*/*/*)
 	cmake -B $(@D) .
 	cmake --build $(@D)
 
