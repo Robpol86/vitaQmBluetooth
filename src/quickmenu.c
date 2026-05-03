@@ -21,8 +21,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2/kernel/modulemgr.h>
 #include <quickmenureborn/qm_reborn.h>
 
+#include "config.h"
+
 // Widget IDs (prefixed because they must be unique across all plugins).
-#define PROJECT_NAME "vitaQmBluetooth"
 #define ID_SEPARATOR PROJECT_NAME "Separator"
 #define ID_PLANE_ROOT PROJECT_NAME "PlaneRoot"
 #define ID_SECTION_TEXT PROJECT_NAME "SectionText"
