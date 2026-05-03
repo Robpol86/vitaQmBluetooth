@@ -22,7 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "config.h"
 
-// TODO noop LOG_DEBUG() and helpers for release builds.
+// TODO noop LOG_DEBUG() and helpers for release builds (#52).
 #define LOG_DEBUG(fmtMsg, ...)                                                                                              \
     do {                                                                                                                    \
         SceDateTime _time;                                                                                                  \
