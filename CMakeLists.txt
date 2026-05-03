@@ -34,6 +34,7 @@ target_compile_options("${PROJECT_NAME}" PRIVATE
   -Wall
   -Werror=format-security
   -Wformat=2
+  -ffile-prefix-map=${CMAKE_SOURCE_DIR}/src/=
 )
 
 target_link_options("${PROJECT_NAME}" PRIVATE
@@ -57,6 +58,7 @@ target_link_libraries("${PROJECT_NAME}" PRIVATE
   SceLibc_stub
   taihen_stub
   SceLibKernel_stub
+  SceRtc_stub
   QuickMenuReborn_stub_weak
 )
 
