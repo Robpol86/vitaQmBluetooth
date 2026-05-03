@@ -27,15 +27,15 @@ add_executable("${PROJECT_NAME}"
 
 target_compile_options("${PROJECT_NAME}" PRIVATE
   -Wall
-  -Wformat=2
   -Werror=format-security
+  -Wformat=2
   -ffile-prefix-map=${CMAKE_SOURCE_DIR}/src/=
 )
 
 target_link_options("${PROJECT_NAME}" PRIVATE
+  -Wl,-e,module_start
   -Wl,-q
   -nostdlib
-  -Wl,-e,module_start
 )
 
 target_include_directories("${PROJECT_NAME}" SYSTEM PRIVATE
