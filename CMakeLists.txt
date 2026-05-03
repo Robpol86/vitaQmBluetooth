@@ -15,7 +15,6 @@ include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 list(REMOVE_ITEM CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-eabi/include")
 
 # Set cmake options.
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,-q -Wall -nostdlib")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Set variables.
@@ -27,12 +26,18 @@ add_executable("${PROJECT_NAME}"
 )
 
 target_compile_options("${PROJECT_NAME}" PRIVATE
+  -Wall
   -Wformat=2
   -Werror=format-security
 )
 
+target_link_options("${PROJECT_NAME}" PRIVATE
+  -Wl,-q
+  -nostdlib
+  -Wl,-e,module_start
+)
+
 target_include_directories("${PROJECT_NAME}" SYSTEM PRIVATE
-  "$ENV{VITASDK}/arm-vita-eabi/include"
   "${VENDOR_DIR}/quickmenureborn"
 )
 
