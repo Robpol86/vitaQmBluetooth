@@ -9,12 +9,16 @@ if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
 endif()
 
 project(vitaQmBluetooth VERSION 0.1.0 LANGUAGES C)
-list(REMOVE_ITEM CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-eabi/include")
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
-# Set variables.
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ffile-prefix-map=${CMAKE_SOURCE_DIR}/src/= -Wl,-q -Wall -nostdlib -Wl,-e,module_start")
+# Explicit includes for clang-tidy.
+list(REMOVE_ITEM CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-eabi/include")
+
+# Set cmake options.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Set variables.
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ffile-prefix-map=${CMAKE_SOURCE_DIR}/src/=")
 set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
 
 add_executable("${PROJECT_NAME}"
@@ -23,8 +27,15 @@ add_executable("${PROJECT_NAME}"
 )
 
 target_compile_options("${PROJECT_NAME}" PRIVATE
+  -Wall
   -Wformat=2
   -Werror=format-security
+)
+
+target_link_options("${PROJECT_NAME}" PRIVATE
+  -Wl,-q
+  -nostdlib
+  -Wl,-e,module_start
 )
 
 target_include_directories("${PROJECT_NAME}" SYSTEM PRIVATE
