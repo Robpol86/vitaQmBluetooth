@@ -24,6 +24,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 // todo noop log debug and helpers on release
 // TODO fix new lint warnings
+// TODO new screenshot
 #define LOG_DEBUG(fmtMsg, ...)                                                                                              \
     do {                                                                                                                    \
         SceDateTime _time;                                                                                                  \
