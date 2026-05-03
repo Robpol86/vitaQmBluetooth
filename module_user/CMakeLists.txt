@@ -3,7 +3,7 @@ set(EXPORTS_YML "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen/exports.yml")
 set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
 
 # Specify template files to generate.
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/config.h.in" "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen/config.h" @ONLY)
+configure_file("${CMAKE_SOURCE_DIR}/include/config.h.in" "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen/config.h" @ONLY)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/exports.yml.in" "${EXPORTS_YML}" @ONLY)
 
 add_executable("${PROJECT_NAME}"
@@ -15,7 +15,7 @@ target_compile_options("${PROJECT_NAME}" PRIVATE
   -Wall
   -Werror=format-security
   -Wformat=2
-  -ffile-prefix-map=${CMAKE_SOURCE_DIR}/src/=
+  # -ffile-prefix-map=${CMAKE_SOURCE_DIR}/src/=  # TODO
 )
 
 target_link_options("${PROJECT_NAME}" PRIVATE
