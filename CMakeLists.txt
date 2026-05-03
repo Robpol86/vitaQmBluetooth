@@ -18,7 +18,6 @@ list(REMOVE_ITEM CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-ea
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Set variables.
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ffile-prefix-map=${CMAKE_SOURCE_DIR}/src/=")
 set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
 
 add_executable("${PROJECT_NAME}"
@@ -30,6 +29,7 @@ target_compile_options("${PROJECT_NAME}" PRIVATE
   -Wall
   -Wformat=2
   -Werror=format-security
+  -ffile-prefix-map=${CMAKE_SOURCE_DIR}/src/=
 )
 
 target_link_options("${PROJECT_NAME}" PRIVATE
