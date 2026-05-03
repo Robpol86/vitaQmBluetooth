@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.20)
 
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   if(DEFINED ENV{VITASDK})
@@ -8,18 +8,15 @@ if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   endif()
 endif()
 
-project(vitaQmBluetooth)
+project(vitaQmBluetooth LANGUAGES C)
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
 # Explicit includes for clang-tidy.
-list(REMOVE_ITEM CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-eabi/include")
 list(REMOVE_ITEM CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-eabi/include")
 
 # Set cmake options.
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -fno-exceptions")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,-q -Wall -nostdlib")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_POLICY_VERSION_MINIMUM 3.5)  # Silences "Compatibility with CMake < 3.5 has been removed from CMake"
 
 # Set variables.
 set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
@@ -44,14 +41,9 @@ target_link_directories("${PROJECT_NAME}" PRIVATE
 )
 
 target_link_libraries("${PROJECT_NAME}" PRIVATE
-  k
-  gcc
   SceLibc_stub
   taihen_stub
   SceLibKernel_stub
-  SceIofilemgr_stub
-  SceSysmodule_stub
-  SceKernelModulemgr_stub
   QuickMenuReborn_stub_weak
 )
 
@@ -59,9 +51,4 @@ vita_create_self("${PROJECT_NAME}.suprx"
   "${PROJECT_NAME}"
   CONFIG exports.yml
   UNSAFE
-)
-
-vita_create_stubs(stubs
-  "${PROJECT_NAME}"
-  "${CMAKE_SOURCE_DIR}/exports.yml"
 )
