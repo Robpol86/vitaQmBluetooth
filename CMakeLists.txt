@@ -17,7 +17,4 @@ list(REMOVE_ITEM CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-ea
 # Set cmake options.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Set variables.
-set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
-
 add_subdirectory(module_user)
