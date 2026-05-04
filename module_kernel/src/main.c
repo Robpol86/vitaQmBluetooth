@@ -17,8 +17,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "log.h"
-
 #include <psp2/kernel/error.h>
 #include <psp2kern/ctrl.h>
 #include <psp2kern/io/fcntl.h>
@@ -33,14 +31,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <stdarg.h>
 #include <taihen.h>
 
-void _start() __attribute__((weak, alias("module_start"))); // TODO remove?
+#include "log.h"
 
-int module_start(SceSize argc, const void *args)
-{
-  (void)argc;
-  (void)args;
+void _start() __attribute__((weak, alias("module_start")));  // TODO remove?
 
-  LOG_DEBUG("TODO RP");
+int module_start(SceSize argc, const void* args) {
+    (void)argc;
+    (void)args;
 
-  return SCE_KERNEL_START_SUCCESS;
+    LOG_DEBUG("TODO RP");
+
+    return SCE_KERNEL_START_SUCCESS;
 }
