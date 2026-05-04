@@ -12,8 +12,8 @@ build-release/module_user/$(PROJECT_NAME).suprx: _HELP = Build release plugin
 build-release/module_user/$(PROJECT_NAME).suprx: export CMAKE_BUILD_TYPE = Release
 BUILD_TARGETS += build-release/module_user/$(PROJECT_NAME).suprx
 $(BUILD_TARGETS): CMakeLists.txt $(wildcard include/* module_*/* module_*/*/* module_*/*/*/* module_*/*/*/*/*)
-	cmake -B $(@D) .
-	cmake --build $(@D)
+	cmake -B $(firstword $(subst /, ,$@)) .
+	cmake --build $(firstword $(subst /, ,$@))
 
 .PHONY: build
 build: _HELP = Build debug and release plugins (alias)
