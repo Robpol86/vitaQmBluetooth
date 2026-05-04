@@ -59,7 +59,7 @@ recv-logs:
 .PHONY: lint
 lint: _HELP = Run linters
 lint: build-debug/module_user/$(PROJECT_NAME).suprx
-	find include module_*/src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in' \) -exec clang-tidy -p $(<D) {} +
+	find include module_*/src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in' \) -exec clang-tidy -p build-debug {} +
 	find include module_*/src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in' \) -exec clang-format --dry-run --Werror {} +
 
 .PHONY: format
