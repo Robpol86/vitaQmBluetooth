@@ -1,40 +1,41 @@
 # Set variables.
 set(EXPORTS_YML "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen/exports.yml")
+set(MODULE_NAME "${PROJECT_NAME}User")
 set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
 
 # Specify template files to generate.
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/exports.yml.in" "${EXPORTS_YML}" @ONLY)
 
-add_executable("${PROJECT_NAME}"
+add_executable("${MODULE_NAME}"
   src/main.c
   src/quickmenu.c
 )
 
-target_compile_options("${PROJECT_NAME}" PRIVATE
+target_compile_options("${MODULE_NAME}" PRIVATE
   -Wall
   -Werror=format-security
   -Wformat=2
   -ffile-prefix-map=${CMAKE_CURRENT_SOURCE_DIR}/src/=
 )
 
-target_link_options("${PROJECT_NAME}" PRIVATE
+target_link_options("${MODULE_NAME}" PRIVATE
   -Wl,-e,module_start
   -Wl,-q
   -nostdlib
 )
 
-target_include_directories("${PROJECT_NAME}" SYSTEM PRIVATE
+target_include_directories("${MODULE_NAME}" SYSTEM PRIVATE
   "${VENDOR_DIR}/quickmenureborn"
 )
-target_include_directories("${PROJECT_NAME}" PRIVATE
+target_include_directories("${MODULE_NAME}" PRIVATE
   "${CMAKE_BINARY_DIR}/cmake_gen"
 )
 
-target_link_directories("${PROJECT_NAME}" PRIVATE
+target_link_directories("${MODULE_NAME}" PRIVATE
   "${VENDOR_DIR}/quickmenureborn/vitasdk_stubs"
 )
 
-target_link_libraries("${PROJECT_NAME}" PRIVATE
+target_link_libraries("${MODULE_NAME}" PRIVATE
   gcc
 
   SceLibKernel_stub
@@ -47,7 +48,7 @@ target_link_libraries("${PROJECT_NAME}" PRIVATE
 )
 
 vita_create_self("${PROJECT_NAME}.suprx"
-  "${PROJECT_NAME}"
+  "${MODULE_NAME}"
   CONFIG "${EXPORTS_YML}"
   UNSAFE
 )
