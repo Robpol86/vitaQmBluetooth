@@ -17,20 +17,17 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef LOG_H
 #define LOG_H
 
-#include <psp2/kernel/clib.h>
-#include <psp2/rtc.h>
+#include <psp2kern/kernel/debug.h>
 
 #include "config.h"
 
 // TODO noop LOG_DEBUG() and helpers for release builds (#52).
 // TODO better project name part of log instead of appending "Kernel"?
+// TODO restore timestamp.
 #define LOG_DEBUG(fmtMsg, ...)                                                                                         \
     do {                                                                                                               \
-        SceDateTime _time;                                                                                             \
-        sceRtcGetCurrentClockLocalTime(&_time);                                                                        \
-        ksceKernelPrintf("[%02d:%02d:%02d.%03d] [" PROJECT_NAME "Kernel] [%s:%d:%s] [DEBUG] " fmtMsg "\n", _time.hour, \
-                         _time.minute, _time.second, _time.microsecond / 1000, __FILE__, __LINE__, __func__,           \
-                         ##__VA_ARGS__);                                                                               \
+        ksceKernelPrintf("[%02d:%02d:%02d.%03d] [" PROJECT_NAME "Kernel] [%s:%d:%s] [DEBUG] " fmtMsg "\n", 0, 0, 0, 0, \
+                         __FILE__, __LINE__, __func__, ##__VA_ARGS__);                                                 \
     } while (0)
 
 #endif  // LOG_H
