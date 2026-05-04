@@ -11,18 +11,21 @@ Copy from local to dev vita:
 
 ```bash
 cp ./redist/quickmenureborn/* /Volumes/BLUEVITA/downloads/
-cp ./build-debug/vitaQmBluetooth.suprx /Volumes/BLUEVITA/downloads/
+cp ./build-debug/module_*/vitaQmBluetooth.s?prx /Volumes/BLUEVITA/downloads/
 ```
 
 Unmount, then in VitaShell:
 
 1. Copy to `ur0:tai/`
+    1. `ux0:downloads/vitaQmBluetooth.skprx`
     1. `ux0:downloads/QuickMenuReborn.suprx`
 1. Copy to `ur0:QuickMenuReborn/` (mkdir)
     1. `ux0:downloads/qmr_plugin.rco`
     1. `ux0:downloads/vitaQmBluetooth.suprx`
 1. Append to `ur0:tai/config.txt`
     1.  ```
+        *KERNEL
+        ur0:tai/vitaQmBluetooth.skprx
         *main
         ur0:tai/QuickMenuReborn.suprx
         ```
