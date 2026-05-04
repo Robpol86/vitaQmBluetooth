@@ -28,6 +28,7 @@ ifndef PSVITA_IP
 	$(error PSVITA_IP is not set. Install https://github.com/devnoname120/vitacompanion on the Vita and set PSVITA_IP.")
 endif
 	curl -T $(<) "ftp://$(PSVITA_IP):1337/ur0:/QuickMenuReborn/"
+	curl -T $(word 2,$^) "ftp://$(PSVITA_IP):1337/ur0:/tai/"
 	echo screen on |nc -v "$(PSVITA_IP)" 1338
 
 .PHONY: reboot
