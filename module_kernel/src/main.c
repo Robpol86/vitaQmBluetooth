@@ -33,8 +33,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "log.h"
 
-void _start() __attribute__((weak, alias("module_start")));  // TODO remove?
-
 int module_start(SceSize argc, const void* args) {
     (void)argc;
     (void)args;

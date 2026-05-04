@@ -20,5 +20,5 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Specify template files to generate.
 configure_file("${CMAKE_SOURCE_DIR}/include/config.h.in" "${CMAKE_BINARY_DIR}/cmake_gen/config.h" @ONLY)
 
-# TODO add_subdirectory(module_kernel)
+add_subdirectory(module_kernel)
 add_subdirectory(module_user)
