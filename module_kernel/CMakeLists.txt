@@ -30,22 +30,6 @@ target_include_directories("${PROJECT_ELF}" PRIVATE
 target_link_libraries("${PROJECT_ELF}" PRIVATE
   gcc
 
-  taihenForKernel_stub
-  taihenModuleUtils_stub
-  SceSysmemForDriver_stub
-  SceSysclibForDriver_stub
-  SceSysrootForKernel_stub
-  SceKernelUtilsForDriver_stub
-
-  SceNetPsForDriver_stub
-  SceSblSsMgrForDriver_stub
-  SceThreadmgrForDriver_stub
-  SceSblACMgrForDriver_stub
-
-  SceQafMgrForDriver_stub
-
-  SceModulemgrForDriver_stub
-  SceIofilemgrForDriver_stub
   SceDebugForDriver_stub
 )
 

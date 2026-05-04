@@ -35,10 +35,14 @@ target_link_directories("${PROJECT_NAME}" PRIVATE
 )
 
 target_link_libraries("${PROJECT_NAME}" PRIVATE
-  SceLibc_stub
-  taihen_stub
+  gcc
+
   SceLibKernel_stub
+  SceLibc_stub
   SceRtc_stub
+
+  taihen_stub
+
   QuickMenuReborn_stub_weak
 )
 
