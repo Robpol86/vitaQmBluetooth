@@ -50,6 +50,7 @@ BUTTON_HANDLER(on_press) {
  * TODOs:
  * - Add function to calculate position from top left instead of center.
  * - Pixel perfect alignment.
+ * - If kernel plugin isn't loaded notify user.
  */
 void quickmenu_start() {
     // Add horizontal line separator.
