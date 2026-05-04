@@ -5,15 +5,15 @@ PROJECT_NAME = vitaQmBluetooth
 
 BUILD_TARGETS =
 
-build-debug/$(PROJECT_NAME).suprx: _HELP = Build debug plugin
-build-debug/$(PROJECT_NAME).suprx: export CMAKE_BUILD_TYPE = Debug
-BUILD_TARGETS += build-debug/$(PROJECT_NAME).suprx
-build-release/$(PROJECT_NAME).suprx: _HELP = Build release plugin
-build-release/$(PROJECT_NAME).suprx: export CMAKE_BUILD_TYPE = Release
-BUILD_TARGETS += build-release/$(PROJECT_NAME).suprx
-$(BUILD_TARGETS): CMakeLists.txt exports.yml.in $(wildcard src/* src/*/* src/*/*/* src/*/*/*/*)
-	cmake -B $(@D) .
-	cmake --build $(@D)
+build-debug/module_user/$(PROJECT_NAME).suprx: _HELP = Build debug plugin
+build-debug/module_user/$(PROJECT_NAME).suprx: export CMAKE_BUILD_TYPE = Debug
+BUILD_TARGETS += build-debug/module_user/$(PROJECT_NAME).suprx
+build-release/module_user/$(PROJECT_NAME).suprx: _HELP = Build release plugin
+build-release/module_user/$(PROJECT_NAME).suprx: export CMAKE_BUILD_TYPE = Release
+BUILD_TARGETS += build-release/module_user/$(PROJECT_NAME).suprx
+$(BUILD_TARGETS): CMakeLists.txt $(wildcard include/* module_*/* module_*/*/* module_*/*/*/* module_*/*/*/*/*)
+	cmake -B $(firstword $(subst /, ,$@)) .
+	cmake --build $(firstword $(subst /, ,$@))
 
 .PHONY: build
 build: _HELP = Build debug and release plugins (alias)
@@ -23,7 +23,7 @@ build: $(BUILD_TARGETS)
 
 .PHONY: deploy
 deploy: _HELP = Deploy plugin to the PS Vita (requires vitacompanion)
-deploy: build-debug/$(PROJECT_NAME).suprx
+deploy: build-debug/module_user/$(PROJECT_NAME).suprx
 ifndef PSVITA_IP
 	$(error PSVITA_IP is not set. Install https://github.com/devnoname120/vitacompanion on the Vita and set PSVITA_IP.")
 endif
@@ -58,14 +58,14 @@ recv-logs:
 
 .PHONY: lint
 lint: _HELP = Run linters
-lint: build-debug/$(PROJECT_NAME).suprx
-	find src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in' \) -exec clang-tidy -p $(<D) {} +
-	find src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in' \) -exec clang-format --dry-run --Werror {} +
+lint: build-debug/module_user/$(PROJECT_NAME).suprx
+	find include module_*/src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in' \) -exec clang-tidy -p build-debug {} +
+	find include module_*/src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in' \) -exec clang-format --dry-run --Werror {} +
 
 .PHONY: format
 format: _HELP = Apply format/lint fixes
 format:
-	find src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in' \) -exec clang-format -i {} +
+	find include module_*/src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in' \) -exec clang-format -i {} +
 
 .PHONY: test
 test: _HELP = Run unit tests

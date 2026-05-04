@@ -44,7 +44,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: release
-          path: build-release/*.s?prx
+          path: build-release/module_*/*.s?prx
           if-no-files-found: error
 
       - name: Upload debug artifact
@@ -54,5 +54,5 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: debug
-          path: build-debug/*.s?prx
+          path: build-debug/module_*/*.s?prx
           if-no-files-found: error
