@@ -3,7 +3,6 @@ set(EXPORTS_YML "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen/exports.yml")
 set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
 
 # Specify template files to generate.
-configure_file("${CMAKE_SOURCE_DIR}/include/config.h.in" "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen/config.h" @ONLY)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/exports.yml.in" "${EXPORTS_YML}" @ONLY)
 
 add_executable("${PROJECT_NAME}"
@@ -28,7 +27,7 @@ target_include_directories("${PROJECT_NAME}" SYSTEM PRIVATE
   "${VENDOR_DIR}/quickmenureborn"
 )
 target_include_directories("${PROJECT_NAME}" PRIVATE
-  "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen"
+  "${CMAKE_BINARY_DIR}/cmake_gen"
 )
 
 target_link_directories("${PROJECT_NAME}" PRIVATE
