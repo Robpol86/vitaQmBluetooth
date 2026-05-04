@@ -14,7 +14,7 @@ target_compile_options("${PROJECT_NAME}" PRIVATE
   -Wall
   -Werror=format-security
   -Wformat=2
-  # -ffile-prefix-map=${CMAKE_SOURCE_DIR}/src/=  # TODO
+  -ffile-prefix-map=${CMAKE_CURRENT_SOURCE_DIR}/src/=
 )
 
 target_link_options("${PROJECT_NAME}" PRIVATE
