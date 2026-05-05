@@ -19,7 +19,7 @@ build: $(DEBUG_TARGETS) $(RELEASE_TARGETS)
 
 .PHONY: deploy
 deploy: _HELP = Deploy plugin to the PS Vita (requires vitacompanion)
-deploy: build-debug/module_user/$(PROJECT_NAME).suprx build-debug/module_kernel/$(PROJECT_NAME).skprx
+deploy: $(DEBUG_TARGETS)
 ifndef PSVITA_IP
 	$(error PSVITA_IP is not set. Install https://github.com/devnoname120/vitacompanion on the Vita and set PSVITA_IP.")
 endif
@@ -55,7 +55,7 @@ recv-logs:
 
 .PHONY: lint
 lint: _HELP = Run linters
-lint: build-debug/module_user/$(PROJECT_NAME).suprx build-debug/module_kernel/$(PROJECT_NAME).skprx
+lint: $(DEBUG_TARGETS)
 	find include module_*/src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in' \) -exec clang-tidy -p build-debug {} +
 	find include module_*/src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in' \) -exec clang-format --dry-run --Werror {} +
 
@@ -73,7 +73,7 @@ test:
 
 .PHONY: all
 all: _HELP = Run linters and unit tests and then build
-all: test lint $(BUILD_TARGETS)
+all: test lint $(DEBUG_TARGETS) $(RELEASE_TARGETS)
 
 .PHONY: clean
 clean: _HELP = Remove build and temporary files
