@@ -1,7 +1,6 @@
 # Set variables.
 set(EXPORTS_YML "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen/exports.yml")
 set(MODULE_NAME "${PROJECT_NAME}Kernel")
-set(PROJECT_LIB "${PROJECT_NAME}_stub")
 
 # Specify template files to generate.
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/exports.yml.in" "${EXPORTS_YML}" @ONLY)
@@ -50,6 +49,7 @@ vita_create_stubs(stubs
 )
 
 # TODO implement communication between kernel and user modules then prune/reorder these.
+set(PROJECT_LIB "${PROJECT_NAME}_stub")
 add_library("${PROJECT_LIB}" STATIC IMPORTED GLOBAL)
 add_dependencies("${PROJECT_LIB}" stubs)
 set_target_properties("${PROJECT_LIB}" PROPERTIES
