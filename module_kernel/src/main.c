@@ -18,7 +18,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * Main entrypoint of the kernel plugin.
  */
 
-#include <psp2kern/kernel/debug.h>
 #include <psp2kern/kernel/modulemgr.h>
 
 #include "bluetooth.h"
