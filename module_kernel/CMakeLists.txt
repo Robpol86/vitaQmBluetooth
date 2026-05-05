@@ -10,6 +10,10 @@ add_executable("${MODULE_NAME}"
   src/main.c
 )
 
+target_compile_definitions("${MODULE_NAME}" PRIVATE
+  MODULE_NAME="${MODULE_NAME}"
+)
+
 target_compile_options("${MODULE_NAME}" PRIVATE
   -Wall
   -Werror=format-security
