@@ -3,31 +3,28 @@ PROJECT_NAME = vitaQmBluetooth
 
 ## Build
 
-BUILD_TARGETS =
-
-build-debug/module_user/$(PROJECT_NAME).suprx: _HELP = Build debug plugin
-build-debug/module_user/$(PROJECT_NAME).suprx: export CMAKE_BUILD_TYPE = Debug
-BUILD_TARGETS += build-debug/module_user/$(PROJECT_NAME).suprx
-build-release/module_user/$(PROJECT_NAME).suprx: _HELP = Build release plugin
-build-release/module_user/$(PROJECT_NAME).suprx: export CMAKE_BUILD_TYPE = Release
-BUILD_TARGETS += build-release/module_user/$(PROJECT_NAME).suprx
-$(BUILD_TARGETS): CMakeLists.txt $(wildcard include/* module_*/* module_*/*/* module_*/*/*/* module_*/*/*/*/*)
+DEBUG_TARGETS = build-debug/module_user/$(PROJECT_NAME).suprx build-debug/module_kernel/$(PROJECT_NAME).skprx
+RELEASE_TARGETS = build-release/module_user/$(PROJECT_NAME).suprx build-release/module_kernel/$(PROJECT_NAME).skprx
+$(DEBUG_TARGETS): export CMAKE_BUILD_TYPE = Debug
+$(RELEASE_TARGETS): export CMAKE_BUILD_TYPE = Release
+$(DEBUG_TARGETS) $(RELEASE_TARGETS): CMakeLists.txt $(wildcard include/* module_*/* module_*/*/* module_*/*/*/* module_*/*/*/*/*)
 	cmake -B $(firstword $(subst /, ,$@)) .
 	cmake --build $(firstword $(subst /, ,$@))
 
 .PHONY: build
-build: _HELP = Build debug and release plugins (alias)
-build: $(BUILD_TARGETS)
+build: _HELP = Build debug and release plugins
+build: $(DEBUG_TARGETS) $(RELEASE_TARGETS)
 
 ## PS Vita
 
 .PHONY: deploy
 deploy: _HELP = Deploy plugin to the PS Vita (requires vitacompanion)
-deploy: build-debug/module_user/$(PROJECT_NAME).suprx
+deploy: $(DEBUG_TARGETS)
 ifndef PSVITA_IP
 	$(error PSVITA_IP is not set. Install https://github.com/devnoname120/vitacompanion on the Vita and set PSVITA_IP.")
 endif
 	curl -T $(<) "ftp://$(PSVITA_IP):1337/ur0:/QuickMenuReborn/"
+	curl -T $(word 2,$^) "ftp://$(PSVITA_IP):1337/ur0:/tai/"
 	echo screen on |nc -v "$(PSVITA_IP)" 1338
 
 .PHONY: reboot
@@ -58,7 +55,7 @@ recv-logs:
 
 .PHONY: lint
 lint: _HELP = Run linters
-lint: build-debug/module_user/$(PROJECT_NAME).suprx
+lint: $(DEBUG_TARGETS)
 	find include module_*/src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in' \) -exec clang-tidy -p build-debug {} +
 	find include module_*/src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in' \) -exec clang-format --dry-run --Werror {} +
 
@@ -76,7 +73,7 @@ test:
 
 .PHONY: all
 all: _HELP = Run linters and unit tests and then build
-all: test lint $(BUILD_TARGETS)
+all: test lint $(DEBUG_TARGETS) $(RELEASE_TARGETS)
 
 .PHONY: clean
 clean: _HELP = Remove build and temporary files
