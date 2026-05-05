@@ -23,12 +23,38 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "log.h"
 
-int module_start(SceSize argc, const void* args) {
-    (void)argc;
+/**
+ * Main entrypoint. Called when the module is started.
+ *
+ * @param args The size of the arguments passed to the module.
+ * @param argp A pointer to the arguments passed to the module.
+ * @return SCE_KERNEL_START_SUCCESS on success, or an error code on failure.
+ */
+int module_start(SceSize args, const void* argp) {
     (void)args;
+    (void)argp;
 
-    // TODO not working, maybe recv message from QuickMenu then emit, then respond, then QM emits ack.
-    LOG_DEBUG("TODO RP");
+    LOG_DEBUG("Initialized");
+
+    // TODO load components.
 
     return SCE_KERNEL_START_SUCCESS;
+}
+
+/**
+ * Unloading entrypoint. Called when the module is stopped.
+ *
+ * @param args The size of the arguments passed to the module.
+ * @param argp A pointer to the arguments passed to the module.
+ * @return SCE_KERNEL_STOP_SUCCESS on success, or an error code on failure.
+ */
+int module_stop(SceSize args, const void* argp) {
+    (void)args;
+    (void)argp;
+
+    // TODO unload components.
+
+    LOG_DEBUG("Deinitialized");
+
+    return SCE_KERNEL_STOP_SUCCESS;
 }
