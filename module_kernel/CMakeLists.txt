@@ -49,9 +49,8 @@ vita_create_stubs(stubs
 )
 
 # TODO implement communication between kernel and user modules then prune/reorder these.
-set(PROJECT_LIB "${PROJECT_NAME}_stub")
-add_library("${PROJECT_LIB}" STATIC IMPORTED GLOBAL)
-add_dependencies("${PROJECT_LIB}" stubs)
-set_target_properties("${PROJECT_LIB}" PROPERTIES
+add_library("${MODULE_NAME}_stub" STATIC IMPORTED GLOBAL)
+add_dependencies("${MODULE_NAME}_stub" stubs)
+set_target_properties("${MODULE_NAME}_stub" PROPERTIES
   IMPORTED_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/stubs/lib${PROJECT_LIB}.a"
 )
