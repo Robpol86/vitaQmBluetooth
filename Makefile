@@ -3,21 +3,17 @@ PROJECT_NAME = vitaQmBluetooth
 
 ## Build
 
-BUILD_TARGETS =
-
-build-debug/module_user/$(PROJECT_NAME).suprx build-debug/module_kernel/$(PROJECT_NAME).skprx: export CMAKE_BUILD_TYPE = Debug
-BUILD_TARGETS += build-debug/module_user/$(PROJECT_NAME).suprx
-BUILD_TARGETS += build-debug/module_kernel/$(PROJECT_NAME).skprx
-build-release/module_user/$(PROJECT_NAME).suprx build-release/module_kernel/$(PROJECT_NAME).skprx: export CMAKE_BUILD_TYPE = Release
-BUILD_TARGETS += build-release/module_user/$(PROJECT_NAME).suprx
-BUILD_TARGETS += build-release/module_kernel/$(PROJECT_NAME).skprx
-$(BUILD_TARGETS): CMakeLists.txt $(wildcard include/* module_*/* module_*/*/* module_*/*/*/* module_*/*/*/*/*)
+DEBUG_TARGETS = build-debug/module_user/$(PROJECT_NAME).suprx build-debug/module_kernel/$(PROJECT_NAME).skprx
+RELEASE_TARGETS = build-release/module_user/$(PROJECT_NAME).suprx build-release/module_kernel/$(PROJECT_NAME).skprx
+$(DEBUG_TARGETS): export CMAKE_BUILD_TYPE = Debug
+$(RELEASE_TARGETS): export CMAKE_BUILD_TYPE = Release
+$(DEBUG_TARGETS) $(RELEASE_TARGETS): CMakeLists.txt $(wildcard include/* module_*/* module_*/*/* module_*/*/*/* module_*/*/*/*/*)
 	cmake -B $(firstword $(subst /, ,$@)) .
 	cmake --build $(firstword $(subst /, ,$@))
 
 .PHONY: build
 build: _HELP = Build debug and release plugins
-build: $(BUILD_TARGETS)
+build: $(DEBUG_TARGETS) $(RELEASE_TARGETS)
 
 ## PS Vita
 
