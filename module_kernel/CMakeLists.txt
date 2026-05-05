@@ -7,6 +7,7 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/exports.yml.in" "${EXPORTS_YML}" @ON
 
 add_executable("${MODULE_NAME}"
   src/main.c
+  src/bluetooth.c
 )
 
 target_compile_definitions("${MODULE_NAME}" PRIVATE

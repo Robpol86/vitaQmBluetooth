@@ -21,6 +21,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2kern/kernel/debug.h>
 #include <psp2kern/kernel/modulemgr.h>
 
+#include "bluetooth.h"
 #include "log.h"
 
 /**
@@ -36,7 +37,7 @@ int module_start(SceSize args, const void* argp) {
 
     LOG_DEBUG("Initialized");
 
-    // TODO load components.
+    log_paired_devices();
 
     return SCE_KERNEL_START_SUCCESS;
 }
