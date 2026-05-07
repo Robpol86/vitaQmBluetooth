@@ -39,11 +39,13 @@ void log_paired_devices() {
     unsigned int prev_mac_lo = 0;
 
     for (int i = 0; i < MAX_DEVICES; i++) {
-        int ret = ksceBtGetRegisteredInfo(0, prev_mac_lo, &info, sizeof(info));
+        int ret = ksceBtGetRegisteredInfo(i, prev_mac_lo, &info, sizeof(info));
         if (ret < 0) {
+            // TODO bad.
             LOG_DEBUG("ksceBtGetRegisteredInfo[%d] returned 0x%08X (end or error)", i, ret);
             break;
         }
+        LOG_DEBUG("GOT RET: %d", ret);
 
         // The MAC in the struct is 6 bytes; print it and the name.
         const unsigned char* m = (const unsigned char*)&info.mac;
@@ -54,6 +56,8 @@ void log_paired_devices() {
         // NOTE: This is the conventional pattern. Verify on hardware!
         prev_mac_lo = (m[2] << 24) | (m[3] << 16) | (m[4] << 8) | m[5];
         count++;
+
+        // TODO log name, connection state, mac, anthing else in settings app.
     }
 
     LOG_DEBUG("Enumerated %d paired device(s)", count);
