@@ -35,6 +35,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - Try with two paired
  * - Try with no paired
  * - Pair three devices, then unpair the middle one. Will registered slots be contiguous?
+ * - Memory eficiency? deallocate?
  */
 void log_paired_devices() {
     SceBtRegisteredInfo deviceInfo;
