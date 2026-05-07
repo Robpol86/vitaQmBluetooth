@@ -56,6 +56,16 @@ void log_paired_devices() {
                       deviceInfo.pid);
             LOG_DEBUG("       unk0=0x%04X unk1=0x%08X unk2=0x%08X unk3=0x%08X unk4=0x%08X unk5=TODO", deviceInfo.unk0,
                       deviceInfo.unk1, deviceInfo.unk2, deviceInfo.unk3, deviceInfo.unk4);
+            for (int row = 0; row < 0x60; row += 16) {
+                LOG_DEBUG(
+                    "       unk5[0x%02X]=%02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X",
+                    row, deviceInfo.unk5[row + 0], deviceInfo.unk5[row + 1], deviceInfo.unk5[row + 2],
+                    deviceInfo.unk5[row + 3], deviceInfo.unk5[row + 4], deviceInfo.unk5[row + 5],
+                    deviceInfo.unk5[row + 6], deviceInfo.unk5[row + 7], deviceInfo.unk5[row + 8],
+                    deviceInfo.unk5[row + 9], deviceInfo.unk5[row + 10], deviceInfo.unk5[row + 11],
+                    deviceInfo.unk5[row + 12], deviceInfo.unk5[row + 13], deviceInfo.unk5[row + 14],
+                    deviceInfo.unk5[row + 15]);
+            }
             prev_mac_lo = (m[2] << 24) | (m[3] << 16) | (m[4] << 8) | m[5];  // TODO remove?
         } else {
             LOG_DEBUG("slot=%d ret=%d", i, ret);
