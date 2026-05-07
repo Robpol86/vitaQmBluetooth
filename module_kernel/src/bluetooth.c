@@ -31,7 +31,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * TODO just log.
  */
 void log_paired_devices() {
-    SceBtRegisteredInfo info;
+    SceBtRegisteredInfo deviceInfo;
     int count = 0;
 
     // First call: device=0, unk=0. Subsequent: walk via prev MAC.
@@ -39,7 +39,7 @@ void log_paired_devices() {
     unsigned int prev_mac_lo = 0;
 
     for (int i = 0; i < MAX_DEVICES; i++) {
-        int ret = ksceBtGetRegisteredInfo(i, prev_mac_lo, &info, sizeof(info));
+        int ret = ksceBtGetRegisteredInfo(i, prev_mac_lo, &deviceInfo, sizeof(deviceInfo));
         if (ret < 0) {
             // TODO bad.
             LOG_DEBUG("ksceBtGetRegisteredInfo[%d] returned 0x%08X (end or error)", i, ret);
@@ -48,9 +48,9 @@ void log_paired_devices() {
         LOG_DEBUG("GOT RET: %d", ret);
 
         // The MAC in the struct is 6 bytes; print it and the name.
-        const unsigned char* m = (const unsigned char*)&info.mac;
+        const unsigned char* m = (const unsigned char*)&deviceInfo.mac;
         LOG_DEBUG("Device %d: %02X:%02X:%02X:%02X:%02X:%02X  name=\"%s\"", i, m[0], m[1], m[2], m[3], m[4], m[5],
-                  info.name);
+                  deviceInfo.name);
 
         // Pack low word of MAC for next iteration.
         // NOTE: This is the conventional pattern. Verify on hardware!
