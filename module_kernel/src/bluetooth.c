@@ -29,6 +29,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * TODO just log.
+ *
+ * TODO:
+ * - Try with one paired
+ * - Try with two paired
+ * - Try with no paired
+ * - Pair three devices, then unpair the middle one. Will registered slots be contiguous?
  */
 void log_paired_devices() {
     SceBtRegisteredInfo deviceInfo;
@@ -36,25 +42,20 @@ void log_paired_devices() {
 
     // First call: device=0, unk=0. Subsequent: walk via prev MAC.
     // Stop on SCE_BT_ERROR_REG_DELETE_NO_ENTRY (0x802F0102) or any error.
-    unsigned int prev_mac_lo = 0;
+    unsigned int prev_mac_lo = 0;  // TODO needed or can it be 0?
 
     for (int i = 0; i < MAX_DEVICES; i++) {
         int ret = ksceBtGetRegisteredInfo(i, prev_mac_lo, &deviceInfo, sizeof(deviceInfo));
-        if (ret < 0) {
-            // TODO bad.
-            LOG_DEBUG("ksceBtGetRegisteredInfo[%d] returned 0x%08X (end or error)", i, ret);
-            break;
-        }
-        LOG_DEBUG("GOT RET: %d", ret);
+        if (ret == 1) count++;
 
         // The MAC in the struct is 6 bytes; print it and the name.
         const unsigned char* m = (const unsigned char*)&deviceInfo.mac;
-        LOG_DEBUG("Device %d: %02X:%02X:%02X:%02X:%02X:%02X  name=\"%s\"", i, m[0], m[1], m[2], m[3], m[4], m[5],
-                  deviceInfo.name);
+        LOG_DEBUG("Device %d: %02X:%02X:%02X:%02X:%02X:%02X  name=\"%s\" ret=%d", i, m[0], m[1], m[2], m[3], m[4], m[5],
+                  deviceInfo.name, ret);
 
         // Pack low word of MAC for next iteration.
         // NOTE: This is the conventional pattern. Verify on hardware!
-        prev_mac_lo = (m[2] << 24) | (m[3] << 16) | (m[4] << 8) | m[5];
+        prev_mac_lo = (m[2] << 24) | (m[3] << 16) | (m[4] << 8) | m[5];  // TODO remove?
         count++;
 
         // TODO log name, connection state, mac, anthing else in settings app.
