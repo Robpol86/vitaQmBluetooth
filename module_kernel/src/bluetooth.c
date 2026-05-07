@@ -25,7 +25,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "log.h"
 
-#define MAX_DEVICES 8  // TODO
+#define MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with. This is a failsafe.
 
 /**
  * TODO just log.
