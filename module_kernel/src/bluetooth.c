@@ -31,18 +31,15 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * TODO just log.
  *
  * TODO:
- * - Try with one paired
  * - Try with two paired
- * - Try with no paired
  * - Pair three devices, then unpair the middle one. Will registered slots be contiguous?
  * - Memory eficiency? deallocate?
+ * - Investigate why APP2 and APP1Scuffed caused boot lock. Remove app2 and will the app1 name cause it? Or is it n>1?
+ * - Log connection state (reflect settings app)
  */
 void log_paired_devices() {
     SceBtRegisteredInfo deviceInfo;
     int count = 0;
-
-    // First call: device=0, unk=0. Subsequent: walk via prev MAC.
-    // Stop on SCE_BT_ERROR_REG_DELETE_NO_ENTRY (0x802F0102) or any error.
     unsigned int prev_mac_lo = 0;  // TODO needed or can it be 0?
 
     for (int i = 0; i < MAX_DEVICES; i++) {
@@ -54,7 +51,7 @@ void log_paired_devices() {
             LOG_DEBUG("slot=%d ret=%d mac=%02X:%02X:%02X:%02X:%02X:%02X name=\"%s\" class=0x%08X vid=0x%04X pid=0x%04X",
                       i, ret, m[0], m[1], m[2], m[3], m[4], m[5], deviceInfo.name, deviceInfo.bt_class, deviceInfo.vid,
                       deviceInfo.pid);
-            LOG_DEBUG("       unk0=0x%04X unk1=0x%08X unk2=0x%08X unk3=0x%08X unk4=0x%08X unk5=TODO", deviceInfo.unk0,
+            LOG_DEBUG("       unk0=0x%04X unk1=0x%08X unk2=0x%08X unk3=0x%08X unk4=0x%08X", deviceInfo.unk0,
                       deviceInfo.unk1, deviceInfo.unk2, deviceInfo.unk3, deviceInfo.unk4);
             for (int row = 0; row < 0x60; row += 16) {
                 LOG_DEBUG(
@@ -70,8 +67,6 @@ void log_paired_devices() {
         } else {
             LOG_DEBUG("slot=%d ret=%d", i, ret);
         }
-
-        // TODO log name, connection state, mac, anthing else in settings app.
     }
 
     LOG_DEBUG("Found %d paired device(s)", count);
