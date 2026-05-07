@@ -25,7 +25,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "log.h"
 
-#define MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with. This is a failsafe.
+#define MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with.
 
 /**
  * TODO just log.
@@ -47,20 +47,19 @@ void log_paired_devices() {
 
     for (int i = 0; i < MAX_DEVICES; i++) {
         int ret = ksceBtGetRegisteredInfo(i, prev_mac_lo, &deviceInfo, sizeof(deviceInfo));
-        if (ret == 1) count++;
 
-        // The MAC in the struct is 6 bytes; print it and the name.
-        const unsigned char* m = (const unsigned char*)&deviceInfo.mac;
-        LOG_DEBUG("Device %d: %02X:%02X:%02X:%02X:%02X:%02X  name=\"%s\" ret=%d", i, m[0], m[1], m[2], m[3], m[4], m[5],
-                  deviceInfo.name, ret);
-
-        // Pack low word of MAC for next iteration.
-        // NOTE: This is the conventional pattern. Verify on hardware!
-        prev_mac_lo = (m[2] << 24) | (m[3] << 16) | (m[4] << 8) | m[5];  // TODO remove?
-        count++;
+        if (ret == 1) {
+            count++;
+            const unsigned char* m = (const unsigned char*)&deviceInfo.mac;
+            LOG_DEBUG("slot=%d ret=%d mac=%02X:%02X:%02X:%02X:%02X:%02X name=\"%s\"", i, ret, m[0], m[1], m[2], m[3],
+                      m[4], m[5], deviceInfo.name);
+            prev_mac_lo = (m[2] << 24) | (m[3] << 16) | (m[4] << 8) | m[5];  // TODO remove?
+        } else {
+            LOG_DEBUG("slot=%d ret=%d", i, ret);
+        }
 
         // TODO log name, connection state, mac, anthing else in settings app.
     }
 
-    LOG_DEBUG("Enumerated %d paired device(s)", count);
+    LOG_DEBUG("Found %d paired device(s)", count);
 }
