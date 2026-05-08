@@ -14,6 +14,11 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
+/******************************************************************************
+ * @file
+ * @brief Macros for logging.
+ ******************************************************************************/
+
 #ifndef LOG_H
 #define LOG_H
 

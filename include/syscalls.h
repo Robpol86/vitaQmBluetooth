@@ -15,7 +15,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
 /******************************************************************************
- * TODO.
+ * @file
+ * @brief Interface for functions exposed from the kernel module.
  ******************************************************************************/
 
 #ifndef SYSCALLS_H

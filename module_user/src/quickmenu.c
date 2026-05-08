@@ -14,9 +14,10 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-/**
- * Interface for the Quick Menu on the PS Vita.
- */
+/******************************************************************************
+ * @file
+ * @brief Interface for the Quick Menu on the PS Vita.
+ ******************************************************************************/
 
 #include <psp2/kernel/modulemgr.h>
 #include <quickmenureborn/qm_reborn.h>
