@@ -56,15 +56,6 @@ ONLOAD_HANDLER(on_load) {
 }
 
 /**
- * Called when the quick menu is opened by the user.
- */
-ONLOAD_HANDLER(on_load) {
-    (void)id;
-
-    LOG_DEBUG("Quick menu opened.");
-}
-
-/**
  * Loads the plugin's quick menu items.
  *
  * TODOs:
