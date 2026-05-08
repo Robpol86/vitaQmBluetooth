@@ -21,9 +21,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2/kernel/modulemgr.h>
 #include <quickmenureborn/qm_reborn.h>
 
-#include "bridge.h"
 #include "config.h"
 #include "log.h"
+#include "syscalls.h"
 
 // Widget IDs (prefixed because they must be unique across all plugins).
 #define ID_SEPARATOR PROJECT_NAME "Separator"
