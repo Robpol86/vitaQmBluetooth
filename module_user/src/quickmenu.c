@@ -45,6 +45,15 @@ BUTTON_HANDLER(on_press) {
 }
 
 /**
+ * Called when the quick menu is opened by the user.
+ */
+ONLOAD_HANDLER(on_load) {
+    (void)id;
+
+    LOG_DEBUG("Quick menu opened.");
+}
+
+/**
  * Loads the plugin's quick menu items.
  *
  * TODOs:
@@ -82,6 +91,9 @@ void quickmenu_start(void) {
     QuickMenuRebornSetWidgetColor(ID_BUTTON, 1, 1, 1, 1);
     QuickMenuRebornSetWidgetLabel(ID_BUTTON, "Emit Log");
     QuickMenuRebornRegisterEventHanlder(ID_BUTTON, QMR_BUTTON_RELEASE_ID, on_press, NULL);
+
+    // Register onload handler.
+    QuickMenuRebornAssignOnLoadHandler(on_load, ID_PLANE_ROOT);
 }
 
 /**
