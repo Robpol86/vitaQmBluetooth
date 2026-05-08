@@ -17,9 +17,5 @@ list(REMOVE_ITEM CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-ea
 # Set cmake options.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Specify template files to generate.
-# TODO switch to target_compile_definitions().
-configure_file("${CMAKE_SOURCE_DIR}/include/config.h.in" "${CMAKE_BINARY_DIR}/cmake_gen/config.h" @ONLY)
-
 add_subdirectory(module_kernel)
 add_subdirectory(module_user)

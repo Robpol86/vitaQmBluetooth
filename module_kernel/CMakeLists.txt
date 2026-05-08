@@ -3,6 +3,8 @@ set(EXPORTS_YML "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen/exports.yml")
 set(MODULE_NAME "${PROJECT_NAME}Kernel")
 
 # Specify template files to generate.
+# TODO switch to target_compile_definitions().
+configure_file("${CMAKE_SOURCE_DIR}/include/config.h.in" "${CMAKE_BINARY_DIR}/cmake_gen/config.h" @ONLY)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/exports.yml.in" "${EXPORTS_YML}" @ONLY)
 
 add_executable("${MODULE_NAME}"
@@ -55,5 +57,5 @@ vita_create_stubs(stubs
 add_library("${MODULE_NAME}_stub" STATIC IMPORTED GLOBAL)
 add_dependencies("${MODULE_NAME}_stub" stubs)
 set_target_properties("${MODULE_NAME}_stub" PROPERTIES
-  IMPORTED_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/stubs/lib${PROJECT_LIB}.a"
+  IMPORTED_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/stubs/lib${MODULE_NAME}_stub.a"
 )
