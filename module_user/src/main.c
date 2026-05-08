@@ -20,6 +20,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <psp2/kernel/modulemgr.h>
 
+#include "log.h"
 #include "quickmenu.h"
 
 /**
@@ -32,6 +33,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 int module_start(SceSize args, const void* argp) {
     (void)args;
     (void)argp;
+
+    LOG_DEBUG("Initialized");
 
     quickmenu_start();
 
@@ -50,6 +53,8 @@ int module_stop(SceSize args, const void* argp) {
     (void)argp;
 
     quickmenu_stop();
+
+    LOG_DEBUG("Deinitialized");
 
     return SCE_KERNEL_STOP_SUCCESS;
 }
