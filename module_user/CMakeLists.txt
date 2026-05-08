@@ -4,7 +4,7 @@ set(MODULE_NAME "${PROJECT_NAME}User")
 set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
 
 # Specify template files to generate.
-# TODO switch to target_compile_definitions().
+# TODO move to target_compile_definitions() below.
 configure_file("${CMAKE_SOURCE_DIR}/include/config.h.in" "${CMAKE_BINARY_DIR}/cmake_gen/config.h" @ONLY)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/exports.yml.in" "${EXPORTS_YML}" @ONLY)
 
@@ -15,6 +15,14 @@ add_executable("${MODULE_NAME}"
 
 target_compile_definitions("${MODULE_NAME}" PRIVATE
   MODULE_NAME="${MODULE_NAME}"
+)
+
+target_include_directories("${MODULE_NAME}" SYSTEM PRIVATE
+  "${VENDOR_DIR}/quickmenureborn"
+)
+target_include_directories("${MODULE_NAME}" PRIVATE
+  "${CMAKE_SOURCE_DIR}/include"
+  "${CMAKE_BINARY_DIR}/cmake_gen"
 )
 
 target_compile_options("${MODULE_NAME}" PRIVATE
@@ -29,14 +37,6 @@ target_link_options("${MODULE_NAME}" PRIVATE
   -Wl,-e,module_start
   -Wl,-q
   -nostdlib
-)
-
-target_include_directories("${MODULE_NAME}" SYSTEM PRIVATE
-  "${VENDOR_DIR}/quickmenureborn"
-)
-target_include_directories("${MODULE_NAME}" PRIVATE
-  "${CMAKE_SOURCE_DIR}/include"
-  "${CMAKE_BINARY_DIR}/cmake_gen"
 )
 
 target_link_directories("${MODULE_NAME}" PRIVATE
