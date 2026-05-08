@@ -6,7 +6,7 @@
   main:
     start: module_start
   libraries:
-    @PROJECT_NAME@Bridge:
+    @PROJECT_NAME@:
       syscall: true
       functions:
         - log_paired_devices
