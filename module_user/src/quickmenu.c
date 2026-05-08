@@ -21,6 +21,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2/kernel/modulemgr.h>
 #include <quickmenureborn/qm_reborn.h>
 
+#include "bridge.h"
 #include "config.h"
 #include "log.h"
 
@@ -41,9 +42,8 @@ BUTTON_HANDLER(on_press) {
     (void)userDat;
 
     LOG_DEBUG("Calling kernel function.");
-    // TODO call kernel log_paired_devices() (one way)
-    // TODO wait until function call finishes
-    // TODO LOG_DEBUG("Done calling kernel function.");
+    log_paired_devices();
+    LOG_DEBUG("Done calling kernel function.");
 }
 
 /**

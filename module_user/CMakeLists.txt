@@ -4,6 +4,8 @@ set(MODULE_NAME "${PROJECT_NAME}User")
 set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
 
 # Specify template files to generate.
+# TODO switch to target_compile_definitions().
+configure_file("${CMAKE_SOURCE_DIR}/include/config.h.in" "${CMAKE_BINARY_DIR}/cmake_gen/config.h" @ONLY)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/exports.yml.in" "${EXPORTS_YML}" @ONLY)
 
 add_executable("${MODULE_NAME}"
@@ -32,6 +34,7 @@ target_include_directories("${MODULE_NAME}" SYSTEM PRIVATE
   "${VENDOR_DIR}/quickmenureborn"
 )
 target_include_directories("${MODULE_NAME}" PRIVATE
+  "${CMAKE_SOURCE_DIR}/include"
   "${CMAKE_BINARY_DIR}/cmake_gen"
 )
 
@@ -49,6 +52,8 @@ target_link_libraries("${MODULE_NAME}" PRIVATE
   taihen_stub
 
   QuickMenuReborn_stub_weak
+
+  "${PROJECT_NAME}Bridge_stub"
 )
 
 vita_create_self("${PROJECT_NAME}.suprx"

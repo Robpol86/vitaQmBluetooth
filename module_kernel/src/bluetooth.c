@@ -19,6 +19,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include <psp2kern/bt.h>
+#include <psp2kern/kernel/cpu.h>
 #include <psp2kern/kernel/modulemgr.h>
 #include <psp2kern/kernel/sysmem.h>
 #include <psp2kern/kernel/threadmgr.h>
@@ -38,6 +39,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - Log connection state (reflect settings app)
  */
 void log_paired_devices() {
+    uint32_t state;
+    ENTER_SYSCALL(state);
+
     SceBtRegisteredInfo device_info;
     int count = 0;
     unsigned int prev_mac_lo = 0;  // TODO needed or can it be 0?
@@ -78,4 +82,6 @@ void log_paired_devices() {
     }
 
     LOG_DEBUG("Found %d paired device(s)", count);
+
+    EXIT_SYSCALL(state);
 }

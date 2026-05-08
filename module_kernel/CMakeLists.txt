@@ -3,6 +3,8 @@ set(EXPORTS_YML "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen/exports.yml")
 set(MODULE_NAME "${PROJECT_NAME}Kernel")
 
 # Specify template files to generate.
+# TODO switch to target_compile_definitions().
+configure_file("${CMAKE_SOURCE_DIR}/include/config.h.in" "${CMAKE_BINARY_DIR}/cmake_gen/config.h" @ONLY)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/exports.yml.in" "${EXPORTS_YML}" @ONLY)
 
 add_executable("${MODULE_NAME}"
