@@ -14,9 +14,10 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-/**
- * Interface with the bluetooth subsystem.
- */
+/******************************************************************************
+ * @file
+ * @brief Interface with the bluetooth subsystem.
+ ******************************************************************************/
 
 #include <psp2kern/bt.h>
 #include <psp2kern/kernel/modulemgr.h>

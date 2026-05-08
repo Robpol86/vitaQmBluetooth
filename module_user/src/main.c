@@ -14,9 +14,10 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-/**
- * Main entrypoint of the plugin.
- */
+/******************************************************************************
+ * @file
+ * @brief Main entrypoint of the plugin.
+ ******************************************************************************/
 
 #include <psp2/kernel/modulemgr.h>
 
