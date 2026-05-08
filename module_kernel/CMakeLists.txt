@@ -19,6 +19,7 @@ target_compile_definitions("${MODULE_NAME}" PRIVATE
 target_compile_options("${MODULE_NAME}" PRIVATE
   -Wall
   -Werror=format-security
+  -Werror=strict-prototypes
   -Wformat=2
   -ffile-prefix-map=${CMAKE_CURRENT_SOURCE_DIR}/src/=
 )

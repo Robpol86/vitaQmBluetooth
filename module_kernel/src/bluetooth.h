@@ -17,6 +17,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef BLUETOOTH_H
 #define BLUETOOTH_H
 
-void log_paired_devices();
+void log_paired_devices(void);
+void log_paired_devices_exported(void);
 
 #endif  // BLUETOOTH_H

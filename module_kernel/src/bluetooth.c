@@ -38,10 +38,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - Investigate why APP2 and APP1Scuffed caused boot lock. Remove app2 and will the app1 name cause it? Or is it n>1?
  * - Log connection state (reflect settings app)
  */
-void log_paired_devices() {
-    uint32_t state;
-    ENTER_SYSCALL(state);
-
+static void log_paired_devices(void) {
     SceBtRegisteredInfo device_info;
     int count = 0;
     unsigned int prev_mac_lo = 0;  // TODO needed or can it be 0?
@@ -82,6 +79,16 @@ void log_paired_devices() {
     }
 
     LOG_DEBUG("Found %d paired device(s)", count);
+}
+
+/**
+ * Exported syscall wrapper for log_paired_devices() to call from the user module.
+ */
+void log_paired_devices_exported(void) {
+    uint32_t state;
+    ENTER_SYSCALL(state);
+
+    log_paired_devices();
 
     EXIT_SYSCALL(state);
 }
