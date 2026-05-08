@@ -4,6 +4,8 @@ set(MODULE_NAME "${PROJECT_NAME}User")
 set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
 
 # Specify template files to generate.
+# TODO switch to target_compile_definitions().
+configure_file("${CMAKE_SOURCE_DIR}/include/config.h.in" "${CMAKE_BINARY_DIR}/cmake_gen/config.h" @ONLY)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/exports.yml.in" "${EXPORTS_YML}" @ONLY)
 
 add_executable("${MODULE_NAME}"
