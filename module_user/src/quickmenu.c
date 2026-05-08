@@ -40,8 +40,10 @@ BUTTON_HANDLER(on_press) {
     (void)eventId;
     (void)userDat;
 
-    LOG_DEBUG("Example string only.");
-    LOG_DEBUG("Example with argument: %s:%d", "ARGUMENT", 86);
+    LOG_DEBUG("Calling kernel function.");
+    // TODO call kernel log_paired_devices() (one way)
+    // TODO wait until function call finishes
+    // TODO LOG_DEBUG("Done calling kernel function.");
 }
 
 /**

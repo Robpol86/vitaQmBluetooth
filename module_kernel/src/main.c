@@ -36,7 +36,7 @@ int module_start(SceSize args, const void* argp) {
 
     LOG_DEBUG("Initialized");
 
-    log_paired_devices();
+    log_paired_devices();  // TODO remove
 
     return SCE_KERNEL_START_SUCCESS;
 }
