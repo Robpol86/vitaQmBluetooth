@@ -52,7 +52,7 @@ BUTTON_HANDLER(on_press) {
  * - Pixel perfect alignment.
  * - If kernel plugin isn't loaded notify user.
  */
-void quickmenu_start() {
+void quickmenu_start(void) {
     // Add horizontal line separator.
     QuickMenuRebornSeparator(ID_SEPARATOR, SCE_SEPARATOR_HEIGHT);
 
@@ -87,7 +87,7 @@ void quickmenu_start() {
 /**
  * Unloads the plugin's quick menu items.
  */
-void quickmenu_stop() {
+void quickmenu_stop(void) {
     QuickMenuRebornUnregisterWidget(ID_BUTTON);
     QuickMenuRebornUnregisterWidget(ID_LOADING_TEXT);
     QuickMenuRebornUnregisterWidget(ID_SECTION_TEXT);

@@ -37,7 +37,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - Investigate why APP2 and APP1Scuffed caused boot lock. Remove app2 and will the app1 name cause it? Or is it n>1?
  * - Log connection state (reflect settings app)
  */
-void log_paired_devices() {
+void log_paired_devices(void) {
     SceBtRegisteredInfo device_info;
     int count = 0;
     unsigned int prev_mac_lo = 0;  // TODO needed or can it be 0?
