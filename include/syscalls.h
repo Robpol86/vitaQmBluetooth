@@ -14,13 +14,13 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-/**
+/******************************************************************************
  * TODO.
- */
+ ******************************************************************************/
 
-#ifndef BRIDGE_H
-#define BRIDGE_H
+#ifndef SYSCALLS_H
+#define SYSCALLS_H
 
 void log_paired_devices(void);
 
-#endif  // BRIDGE_H
+#endif  // SYSCALLS_H
