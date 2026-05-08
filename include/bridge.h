@@ -17,6 +17,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef BRIDGE_H
 #define BRIDGE_H
 
-void log_paired_devices_exported(void);
+void log_paired_devices(void);
 
 #endif  // BRIDGE_H

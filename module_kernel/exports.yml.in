@@ -9,4 +9,4 @@
     @PROJECT_NAME@:
       syscall: true
       functions:
-        - log_paired_devices_exported
+        - log_paired_devices

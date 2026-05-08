@@ -42,7 +42,7 @@ BUTTON_HANDLER(on_press) {
     (void)userDat;
 
     LOG_DEBUG("Calling kernel function.");
-    log_paired_devices_exported();
+    log_paired_devices();
     LOG_DEBUG("Done calling kernel function.");
 }
 
