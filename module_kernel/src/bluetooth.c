@@ -15,7 +15,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
 /**
- * TODO bluetooth interface.
+ * Interface with the bluetooth subsystem.
  */
 
 #include <psp2kern/bt.h>
@@ -28,7 +28,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with.
 
 /**
- * TODO just log.
+ * Iterate through all paired bluetooth devices and log their information.
  *
  * TODO:
  * - Try with two paired
