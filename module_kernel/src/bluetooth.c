@@ -41,12 +41,12 @@ static void connect_or_disconnect(SceBtRegisteredInfo* device_info) {
     char name_v1[0x79];
     char name_v2[0x79];
     char name_v3[0x79];
-    unsigned int mac0_v1 = (m[0] << 8) | m[1];
-    unsigned int mac1_v1 = (m[2] << 24) | (m[3] << 16) | (m[4] << 8) | m[5];
+    unsigned int mac0_v1 = (m[0] << 16) | (m[1] << 8) | m[2];
+    unsigned int mac1_v1 = (m[3] << 16) | (m[4] << 8) | m[5];
     LOG_DEBUG("v1 mac0=0x%08X mac1=0x%08X state=%d", mac0_v1, mac1_v1, ksceBtGetConnectingInfo(mac0_v1, mac1_v1));
     // Variant 2: reversed (LE-style — last 2 bytes are mac0)
-    unsigned int mac0_v2 = (m[5] << 8) | m[4];
-    unsigned int mac1_v2 = (m[3] << 24) | (m[2] << 16) | (m[1] << 8) | m[0];
+    unsigned int mac0_v2 = (m[2] << 16) | (m[1] << 8) | m[0];
+    unsigned int mac1_v2 = (m[5] << 16) | (m[4] << 8) | m[3];
     LOG_DEBUG("v2 mac0=0x%08X mac1=0x%08X state=%d", mac0_v2, mac1_v2, ksceBtGetConnectingInfo(mac0_v2, mac1_v2));
     // Variant 3: word-swapped — mac0 is bytes 4..5, mac1 is bytes 0..3
     unsigned int mac0_v3 = (m[4] << 8) | m[5];
