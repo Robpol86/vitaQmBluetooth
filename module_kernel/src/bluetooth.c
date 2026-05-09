@@ -30,6 +30,11 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with.
 
 /**
+ * TODO
+ */
+static void connect_or_disconnect(SceBtRegisteredInfo* device_info) { LOG_DEBUG("TODO TOGGLE %s", device_info->name); }
+
+/**
  * Iterate through all paired bluetooth devices and log their information.
  *
  * TODO:
@@ -76,6 +81,11 @@ void log_paired_devices(void) {
                 device_info.unk5[row + 9], device_info.unk5[row + 10], device_info.unk5[row + 11],
                 device_info.unk5[row + 12], device_info.unk5[row + 13], device_info.unk5[row + 14],
                 device_info.unk5[row + 15]);
+        }
+
+        // Connect or disconnect first device, depending on current state.
+        if (count == 0) {
+            connect_or_disconnect(&device_info);
         }
 
         prev_mac_lo = (m[2] << 24) | (m[3] << 16) | (m[4] << 8) | m[5];  // TODO remove?
