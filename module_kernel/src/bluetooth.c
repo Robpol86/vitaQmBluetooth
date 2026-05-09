@@ -33,8 +33,15 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * TODO
  */
 static void connect_or_disconnect(SceBtRegisteredInfo* device_info) {
+    const unsigned char* m = (const unsigned char*)&device_info->mac;
+    unsigned int mac0 = (m[0] << 8) | m[1];
+    unsigned int mac1 = (m[2] << 24) | (m[3] << 16) | (m[4] << 8) | m[5];
+
+    // Get current state
     LOG_DEBUG("Reading state for \"%s\"", device_info->name);
-    // TODO get state
+    int state = ksceBtGetConnectingInfo(mac0, mac1);  // TODO DOESNT WORK ALWAYS 1
+    LOG_DEBUG("Got state: %d", state);
+
     // TODO if connected disconnect
     // TODO else connect
 }
