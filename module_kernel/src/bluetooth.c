@@ -32,7 +32,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 /**
  * TODO
  */
-static void connect_or_disconnect(SceBtRegisteredInfo* device_info) { LOG_DEBUG("TODO TOGGLE %s", device_info->name); }
+static void connect_or_disconnect(SceBtRegisteredInfo* device_info) {
+    LOG_DEBUG("Reading state for \"%s\"", device_info->name);
+    // TODO get state
+    // TODO if connected disconnect
+    // TODO else connect
+}
 
 /**
  * Iterate through all paired bluetooth devices and log their information.
