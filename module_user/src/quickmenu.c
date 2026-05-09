@@ -24,6 +24,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "config.h"
 #include "log.h"
+#include "syscalls.h"
 
 // Widget IDs (prefixed because they must be unique across all plugins).
 #define ID_SEPARATOR PROJECT_NAME "Separator"
@@ -41,8 +42,9 @@ BUTTON_HANDLER(on_press) {
     (void)eventId;
     (void)userDat;
 
-    LOG_DEBUG("Example string only.");
-    LOG_DEBUG("Example with argument: %s:%d", "ARGUMENT", 86);
+    LOG_DEBUG("Calling kernel function.");
+    log_paired_devices();
+    LOG_DEBUG("Done calling kernel function.");
 }
 
 /**
