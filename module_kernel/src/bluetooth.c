@@ -62,22 +62,6 @@ void log_paired_devices(void) {
                   ret, m[0], m[1], m[2], m[3], m[4], m[5], device_info.name, device_info.bt_class, device_info.vid,
                   device_info.pid);
 
-        // Log unknown fields except unk5.
-        LOG_DEBUG("       unk0=0x%04X unk1=0x%08X unk2=0x%08X unk3=0x%08X unk4=0x%08X", device_info.unk0,
-                  device_info.unk1, device_info.unk2, device_info.unk3, device_info.unk4);
-
-        // Log unk5 in rows of 16 bytes.
-        for (int row = 0; row < 0x60; row += 16) {
-            LOG_DEBUG(
-                "       unk5[0x%02X]=%02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X",
-                row, device_info.unk5[row + 0], device_info.unk5[row + 1], device_info.unk5[row + 2],
-                device_info.unk5[row + 3], device_info.unk5[row + 4], device_info.unk5[row + 5],
-                device_info.unk5[row + 6], device_info.unk5[row + 7], device_info.unk5[row + 8],
-                device_info.unk5[row + 9], device_info.unk5[row + 10], device_info.unk5[row + 11],
-                device_info.unk5[row + 12], device_info.unk5[row + 13], device_info.unk5[row + 14],
-                device_info.unk5[row + 15]);
-        }
-
         prev_mac0 = (m[3] << 24) | (m[2] << 16) | (m[1] << 8) | m[0];
         count++;
     }
