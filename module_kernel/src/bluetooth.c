@@ -48,7 +48,9 @@ void log_paired_devices(void) {
     unsigned int prev_mac0 = 0;  // TODO needed or can it be 0? See comment below (same variable).
 
     for (int i = 0; i < MAX_DEVICES; i++) {
+        LOG_DEBUG("Current value of i (1): %d", i);
         int ret = ksceBtGetRegisteredInfo(i, prev_mac0, &device_info, sizeof(device_info));
+        LOG_DEBUG("Current value of i (2): %d", i);
 
         // If slot is empty log and continue.
         if (ret != 1) {
