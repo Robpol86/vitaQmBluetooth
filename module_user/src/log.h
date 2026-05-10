@@ -30,7 +30,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     do {                                                                                                     \
         SceDateTime _time;                                                                                   \
         sceRtcGetCurrentClockLocalTime(&_time);                                                              \
-        sceClibPrintf("[%02d:%02d:%02d.%03d] [" MODULE_NAME "] [%s:%d:%s] [DEBUG] " fmtMsg "\n", _time.hour, \
+        sceClibPrintf("[%02d:%02d:%02d.%03d] [DEBUG] [" MODULE_NAME "] [%s:%d:%s] " fmtMsg "\n", _time.hour, \
                       _time.minute, _time.second, _time.microsecond / 1000, __FILE__, __LINE__, __func__,    \
                       ##__VA_ARGS__);                                                                        \
     } while (0)
