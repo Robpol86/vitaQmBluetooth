@@ -22,17 +22,18 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef LOG_H
 #define LOG_H
 
-#ifdef NDEBUG
-
-#define LOG_DEBUG(fmtMsg, ...) \
-    do {                       \
-    } while (0)
-
-#else
-
+#ifndef NDEBUG
 #include <psp2/kernel/clib.h>
 #include <psp2/rtc.h>
+#endif  // NDEBUG
 
+#ifndef NDEBUG
+/**
+ * Macro that logs a debug message.
+ *
+ * @param fmtMsg The log message including any format specifiers.
+ * @param ... Arguments for the format specifiers.
+ */
 #define LOG_DEBUG(fmtMsg, ...)                                                                               \
     do {                                                                                                     \
         SceDateTime _time;                                                                                   \
@@ -41,7 +42,13 @@ this program. If not, see <https://www.gnu.org/licenses/>.
                       _time.minute, _time.second, _time.microsecond / 1000, __FILE__, __LINE__, __func__,    \
                       ##__VA_ARGS__);                                                                        \
     } while (0)
-
+#else
+/**
+ * No-op in release builds.
+ */
+#define LOG_DEBUG(fmtMsg, ...) \
+    do {                       \
+    } while (0)
 #endif  // NDEBUG
 
 #endif  // LOG_H
