@@ -30,47 +30,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with.
 
 /**
- * Disconnect first bluetooth device if connected, and vice versa.
- *
- * PoC confirmed! I have verified this function connects and disconnects my AirPods Pro from the Quick Menu whilst
- * RetroArch was running.
- */
-static void connect_or_disconnect(SceBtRegisteredInfo* device_info) {
-    const unsigned char* m = (const unsigned char*)&device_info->mac;
-    unsigned int mac0 = (m[3] << 24) | (m[2] << 16) | (m[1] << 8) | m[0];
-    unsigned int mac1 = (m[5] << 8) | m[4];
-
-    // Sanity check.
-    int ret;
-    char name[0x79];
-    ret = ksceBtGetDeviceName(mac0, mac1, name);
-    LOG_DEBUG("Got name: ret=%d name=\"%s\"", ret, name);
-    if (ret != 0) {
-        LOG_DEBUG("UNKNOWN DEVICE");
-        return;
-    }
-
-    // Get current state
-    LOG_DEBUG("Reading state for \"%s\"", device_info->name);
-    int state = ksceBtGetConnectingInfo(mac0, mac1);  // 1 == unknown/disconnected; 6 == connected
-    LOG_DEBUG("Got state: %d", state);
-
-    // Connect or disconnect.
-    if (state == 1) {
-        // TODO does not work if Settings is open in the Bluetooth Devices view.
-        LOG_DEBUG("Connecting \"%s\"", device_info->name);
-        ret = ksceBtStartConnect(mac0, mac1);
-        LOG_DEBUG("Connect ret=%d", ret);
-    } else if (state == 6 || state == 5) {  // 6=Ovaltine 5=APPScuffed
-        LOG_DEBUG("Disconnecting \"%s\"", device_info->name);
-        ret = ksceBtStartDisconnect(mac0, mac1);
-        LOG_DEBUG("Disconnect ret=%d", ret);
-    } else {
-        LOG_DEBUG("Unknown state");
-    }
-}
-
-/**
  * Iterate through all paired bluetooth devices and log their information.
  *
  * TODO:
@@ -117,11 +76,6 @@ void log_paired_devices(void) {
                 device_info.unk5[row + 9], device_info.unk5[row + 10], device_info.unk5[row + 11],
                 device_info.unk5[row + 12], device_info.unk5[row + 13], device_info.unk5[row + 14],
                 device_info.unk5[row + 15]);
-        }
-
-        // Connect or disconnect first device, depending on current state.
-        if (count == 0) {
-            connect_or_disconnect(&device_info);
         }
 
         prev_mac_lo = (m[2] << 24) | (m[3] << 16) | (m[4] << 8) | m[5];  // TODO remove after multiple devices confirmed?
