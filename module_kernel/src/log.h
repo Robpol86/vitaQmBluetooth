@@ -23,14 +23,18 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define LOG_H
 
 #include <psp2kern/kernel/debug.h>
+#include <psp2kern/kernel/rtc.h>
 
 // TODO noop LOG_DEBUG() and helpers for release builds (#52).
 // TODO restore timestamp.
 // TODO fix race condition when logging in a loop.
 #define LOG_DEBUG(fmtMsg, ...)                                                                                  \
     do {                                                                                                        \
-        ksceKernelPrintf("[%02d:%02d:%02d.%03d] [" MODULE_NAME "] [%s:%d:%s] [DEBUG] " fmtMsg "\n", 0, 0, 0, 0, \
-                         __FILE__, __LINE__, __func__, ##__VA_ARGS__);                                          \
+        SceDateTime _time;                                                                                      \
+        ksceRtcGetCurrentClockLocalTime(&_time);                                                                \
+        ksceKernelPrintf("[%02d:%02d:%02d.%03d] [" MODULE_NAME "] [%s:%d:%s] [DEBUG] " fmtMsg "\n", _time.hour, \
+                         _time.minute, _time.second, _time.microsecond / 1000, __FILE__, __LINE__, __func__,    \
+                         ##__VA_ARGS__);                                                                        \
     } while (0)
 
 #endif  // LOG_H
