@@ -26,7 +26,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2kern/kernel/rtc.h>
 
 // TODO noop LOG_DEBUG() and helpers for release builds (#52).
-// TODO restore timestamp.
 // TODO fix race condition when logging in a loop.
 #define LOG_DEBUG(fmtMsg, ...)                                                                                  \
     do {                                                                                                        \
