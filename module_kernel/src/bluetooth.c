@@ -132,6 +132,29 @@ static int bt_cb_func(int notifyId, int notifyCount, int notifyArg, void* common
     return 0;
 }
 
+static SceUID bt_cb_uid = -1;
+static int bt_thread_run = 1;
+
+static int todo_bt_thread(SceSize args, void* argp) {
+    bt_cb_uid = ksceKernelCreateCallback("vqmbt_bt_callback", 0, bt_cb_func, NULL);
+
+    ksceBtRegisterCallback(bt_cb_uid, 0, 0xFFFFFFFF, 0xFFFFFFFF);
+
+    ksceBtStartInquiry();
+    ksceKernelDelayThreadCB(4 * 1000 * 1000);
+    ksceBtStopInquiry();
+
+    while (bt_thread_run) {
+        ksceKernelDelayThreadCB(200 * 1000);
+    }
+
+    ksceBtUnregisterCallback(bt_cb_uid);
+
+    ksceKernelDeleteCallback(bt_cb_uid);
+
+    return 0;
+}
+
 /**
  * Iterate through all paired bluetooth devices and log their information.
  *
