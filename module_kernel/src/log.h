@@ -22,20 +22,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef LOG_H
 #define LOG_H
 
-#ifdef NDEBUG
-
-/**
- * No-op in release builds.
- */
-#define LOG_DEBUG(fmtMsg, ...) \
-    do {                       \
-    } while (0)
-
-#else
-
+#ifndef NDEBUG
 #include <psp2kern/kernel/debug.h>
 #include <psp2kern/kernel/rtc.h>
+#endif  // NDEBUG
 
+#ifndef NDEBUG
 /**
  * Macro that logs a debug message.
  *
@@ -50,7 +42,13 @@ this program. If not, see <https://www.gnu.org/licenses/>.
                          _time.minute, _time.second, _time.microsecond / 1000, __FILE__, __LINE__, __func__,    \
                          ##__VA_ARGS__);                                                                        \
     } while (0)
-
+#else
+/**
+ * No-op in release builds.
+ */
+#define LOG_DEBUG(fmtMsg, ...) \
+    do {                       \
+    } while (0)
 #endif  // NDEBUG
 
 #endif  // LOG_H
