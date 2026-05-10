@@ -45,10 +45,10 @@ void log_paired_devices(void) {
 
     SceBtRegisteredInfo device_info;
     int count = 0;
-    unsigned int prev_mac_lo = 0;  // TODO needed or can it be 0? See comment below (same variable).
+    unsigned int prev_mac0 = 0;  // TODO needed or can it be 0? See comment below (same variable).
 
     for (int i = 0; i < MAX_DEVICES; i++) {
-        int ret = ksceBtGetRegisteredInfo(i, prev_mac_lo, &device_info, sizeof(device_info));
+        int ret = ksceBtGetRegisteredInfo(i, prev_mac0, &device_info, sizeof(device_info));
 
         // If slot is empty log and continue.
         if (ret != 1) {
@@ -78,7 +78,7 @@ void log_paired_devices(void) {
                 device_info.unk5[row + 15]);
         }
 
-        prev_mac_lo = (m[2] << 24) | (m[3] << 16) | (m[4] << 8) | m[5];  // TODO remove after multiple devices confirmed?
+        prev_mac0 = (m[3] << 24) | (m[2] << 16) | (m[1] << 8) | m[0];
         count++;
     }
 
