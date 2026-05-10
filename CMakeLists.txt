@@ -14,7 +14,7 @@ include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 # Explicit includes for clang-tidy.
 list(REMOVE_ITEM CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-eabi/include")
 
-# Set cmake options.
+# Export compile commands for clang-tidy.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_subdirectory(module_kernel)
