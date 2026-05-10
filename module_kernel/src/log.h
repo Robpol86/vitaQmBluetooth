@@ -24,6 +24,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #ifdef NDEBUG
 
+/**
+ * No-op in release builds.
+ */
 #define LOG_DEBUG(fmtMsg, ...) \
     do {                       \
     } while (0)
@@ -33,7 +36,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2kern/kernel/debug.h>
 #include <psp2kern/kernel/rtc.h>
 
-// TODO fix race condition when logging in a loop.
+/**
+ * Macro that logs a debug message.
+ *
+ * @param fmtMsg The log message including any format specifiers.
+ * @param ... Arguments for the format specifiers.
+ */
 #define LOG_DEBUG(fmtMsg, ...)                                                                                  \
     do {                                                                                                        \
         SceDateTime _time;                                                                                      \
