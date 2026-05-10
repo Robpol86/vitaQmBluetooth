@@ -37,13 +37,33 @@ static void connect_or_disconnect(SceBtRegisteredInfo* device_info) {
     unsigned int mac0 = (m[3] << 24) | (m[2] << 16) | (m[1] << 8) | m[0];
     unsigned int mac1 = (m[5] << 8) | m[4];
 
+    // Sanity check.
+    int ret;
+    char name[0x79];
+    ret = ksceBtGetDeviceName(mac0, mac1, name);
+    LOG_DEBUG("Got name: ret=%d name=\"%s\"", ret, name);
+    if (ret != 0) {
+        LOG_DEBUG("UNKNOWN DEVICE");
+        return;
+    }
+
     // Get current state
     LOG_DEBUG("Reading state for \"%s\"", device_info->name);
     int state = ksceBtGetConnectingInfo(mac0, mac1);  // 1 == unknown/disconnected; 6 == connected
     LOG_DEBUG("Got state: %d", state);
 
-    // TODO if connected disconnect
-    // TODO else connect
+    // Connect or disconnect.
+    if (state == 1) {
+        LOG_DEBUG("Connecting \"%s\"", device_info->name);
+        ret = ksceBtStartConnect(mac0, mac1);
+        LOG_DEBUG("Connect ret=%d", ret);
+    } else if (state == 6) {
+        LOG_DEBUG("Disconnecting \"%s\"", device_info->name);
+        ret = ksceBtStartDisconnect(mac0, mac1);
+        LOG_DEBUG("Disconnect ret=%d", ret);
+    } else {
+        LOG_DEBUG("Unknown state");
+    }
 }
 
 /**
