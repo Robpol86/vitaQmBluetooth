@@ -39,6 +39,15 @@ target_link_libraries("${MODULE_NAME}" PRIVATE
 
   SceBtForDriver_stub
   SceDebugForDriver_stub
+
+	taihenForKernel_stub
+	SceSysclibForDriver_stub
+	SceSysmemForDriver_stub
+	SceSysmemForKernel_stub
+	SceThreadmgrForDriver_stub
+	SceIofilemgrForDriver_stub
+	SceKernelSuspendForDriver_stub
+	SceCtrlForDriver_stub
 )
 
 vita_create_self("${PROJECT_NAME}.skprx"

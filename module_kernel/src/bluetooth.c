@@ -19,11 +19,16 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief Interface with the bluetooth subsystem.
  ******************************************************************************/
 
+#include <psp2/motion.h>
+#include <psp2/touch.h>
 #include <psp2kern/bt.h>
+#include <psp2kern/ctrl.h>
 #include <psp2kern/kernel/cpu.h>
 #include <psp2kern/kernel/modulemgr.h>
+#include <psp2kern/kernel/suspend.h>
 #include <psp2kern/kernel/sysmem.h>
 #include <psp2kern/kernel/threadmgr.h>
+#include <taihen.h>
 
 #include "log.h"
 
