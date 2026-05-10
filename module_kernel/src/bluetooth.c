@@ -58,7 +58,7 @@ static void connect_or_disconnect(SceBtRegisteredInfo* device_info) {
         LOG_DEBUG("Connecting \"%s\"", device_info->name);
         ret = ksceBtStartConnect(mac0, mac1);
         LOG_DEBUG("Connect ret=%d", ret);
-    } else if (state == 6) {
+    } else if (state == 6 || state == 5) {  // 6=Ovaltine 5=APPScuffed
         LOG_DEBUG("Disconnecting \"%s\"", device_info->name);
         ret = ksceBtStartDisconnect(mac0, mac1);
         LOG_DEBUG("Disconnect ret=%d", ret);
