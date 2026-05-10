@@ -155,6 +155,15 @@ static int todo_bt_thread(SceSize args, void* argp) {
     return 0;
 }
 
+static SceUID bt_thread_uid = -1;
+
+void start_bt_thread(void) {
+    LOG_DEBUG("CALLED");
+    bt_thread_uid = ksceKernelCreateThread("vqmbt_bt_thread", todo_bt_thread, 0x3C, 0x1000, 0, 0x10000, 0);
+    LOG_DEBUG("Bluetooth thread UID: 0x%08X", bt_thread_uid);
+    ksceKernelStartThread(bt_thread_uid, 0, NULL);
+}
+
 /**
  * Iterate through all paired bluetooth devices and log their information.
  *

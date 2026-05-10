@@ -18,5 +18,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define BLUETOOTH_H
 
 void log_paired_devices(void);
+void start_bt_thread(void);
 
 #endif  // BLUETOOTH_H
