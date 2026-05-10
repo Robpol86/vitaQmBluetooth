@@ -30,7 +30,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with.
 
 /**
- * TODO
+ * Disconnect first bluetooth device if connected, and vice versa.
+ *
+ * PoC confirmed! I have verified this function connects and disconnects my AirPods Pro from the Quick Menu whilst
+ * RetroArch was running.
  */
 static void connect_or_disconnect(SceBtRegisteredInfo* device_info) {
     const unsigned char* m = (const unsigned char*)&device_info->mac;
