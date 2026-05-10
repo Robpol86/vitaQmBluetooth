@@ -54,7 +54,7 @@ int module_stop(SceSize args, const void* argp) {
     (void)argp;
 
     // TODO unload components.
-
+    // todo stop thread. 
     LOG_DEBUG("Deinitialized");
 
     return SCE_KERNEL_STOP_SUCCESS;
