@@ -86,7 +86,7 @@ void log_paired_devices(void) {
 
     SceBtRegisteredInfo device_info;
     int count = 0;
-    unsigned int prev_mac_lo = 0;  // TODO needed or can it be 0?
+    unsigned int prev_mac_lo = 0;  // TODO needed or can it be 0? See comment below (same variable).
 
     for (int i = 0; i < MAX_DEVICES; i++) {
         int ret = ksceBtGetRegisteredInfo(i, prev_mac_lo, &device_info, sizeof(device_info));
@@ -124,7 +124,7 @@ void log_paired_devices(void) {
             connect_or_disconnect(&device_info);
         }
 
-        prev_mac_lo = (m[2] << 24) | (m[3] << 16) | (m[4] << 8) | m[5];  // TODO remove?
+        prev_mac_lo = (m[2] << 24) | (m[3] << 16) | (m[4] << 8) | m[5];  // TODO remove after multiple devices confirmed?
         count++;
     }
 
