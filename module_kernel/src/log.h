@@ -22,10 +22,17 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef LOG_H
 #define LOG_H
 
+#ifdef NDEBUG
+
+#define LOG_DEBUG(fmtMsg, ...) \
+    do {                       \
+    } while (0)
+
+#else
+
 #include <psp2kern/kernel/debug.h>
 #include <psp2kern/kernel/rtc.h>
 
-// TODO noop LOG_DEBUG() and helpers for release builds (#52).
 // TODO fix race condition when logging in a loop.
 #define LOG_DEBUG(fmtMsg, ...)                                                                                  \
     do {                                                                                                        \
@@ -35,5 +42,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
                          _time.minute, _time.second, _time.microsecond / 1000, __FILE__, __LINE__, __func__,    \
                          ##__VA_ARGS__);                                                                        \
     } while (0)
+
+#endif  // NDEBUG
 
 #endif  // LOG_H
