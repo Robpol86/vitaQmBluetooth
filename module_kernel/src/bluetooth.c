@@ -27,8 +27,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "log.h"
 
+static unsigned char device_info_buf[0x400];
+
 static void attempt(int device, int unk) {
-    static unsigned char device_info_buf[0x400];
+    for (int i = 0; i < (int)sizeof(device_info_buf); i++) device_info_buf[i] = 0;
     SceBtRegisteredInfo* device_info = (SceBtRegisteredInfo*)device_info_buf;
     LOG_DEBUG("  in: device=%d unk=%d name=\"%s\"", device, unk, device_info->name);
     ksceKernelDelayThread(50000);
