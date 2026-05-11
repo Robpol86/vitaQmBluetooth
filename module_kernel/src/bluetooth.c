@@ -44,6 +44,7 @@ void log_paired_devices(void) {
 
     LOG_DEBUG("Start");
     attempt(0, 0);
+    attempt(1, 0);
     LOG_DEBUG("End");
 
     EXIT_SYSCALL(state);
