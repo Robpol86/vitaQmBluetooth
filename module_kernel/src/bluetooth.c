@@ -36,6 +36,16 @@ static void attempt(int device, int unk) {
 
     LOG_DEBUG("out: device=%d unk=%d ret=%d name=\"%s\"", device, unk, ret, device_info->name);
     ksceKernelDelayThread(50000);
+
+    for (int row = 0; row < 0x100; row += 16) {
+        LOG_DEBUG("buf[0x%03X]: %02X %02X %02X %02X %02X %02X %02X %02X  %02X %02X %02X %02X %02X %02X %02X %02X", row,
+                  device_info_buf[row + 0], device_info_buf[row + 1], device_info_buf[row + 2], device_info_buf[row + 3],
+                  device_info_buf[row + 4], device_info_buf[row + 5], device_info_buf[row + 6], device_info_buf[row + 7],
+                  device_info_buf[row + 8], device_info_buf[row + 9], device_info_buf[row + 10],
+                  device_info_buf[row + 11], device_info_buf[row + 12], device_info_buf[row + 13],
+                  device_info_buf[row + 14], device_info_buf[row + 15]);
+    }
+    ksceKernelDelayThread(50000);
 }
 
 void log_paired_devices(void) {
