@@ -27,11 +27,21 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "log.h"
 
-#define MAX_DEVICES 8
+#define MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with.
 #define DEVICE_RECORD_SIZE 0x100
 
 static unsigned char paired_devices_buf[MAX_DEVICES * DEVICE_RECORD_SIZE];  // 2 KiB
 
+/**
+ * Iterate through all paired bluetooth devices and log their information.
+ *
+ * TODO:
+ * - Try with two paired
+ * - Pair three devices, then unpair the middle one. Will registered slots be contiguous?
+ * - Memory eficiency? deallocate?
+ * - Investigate why APP2 and APP1Scuffed caused boot lock. Remove app2 and will the app1 name cause it? Or is it n>1?
+ * - Log connection state (reflect settings app)
+ */
 void log_paired_devices(void) {
     uint32_t state;
     ENTER_SYSCALL(state);
