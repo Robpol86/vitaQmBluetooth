@@ -27,69 +27,24 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "log.h"
 
-#define MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with.
+static void attempt(int device, int unk) {
+    LOG_DEBUG(" in: device=%d unk=%d", device, unk);
 
-/**
- * Iterate through all paired bluetooth devices and log their information.
- *
- * TODO:
- * - Try with two paired
- * - Pair three devices, then unpair the middle one. Will registered slots be contiguous?
- * - Memory eficiency? deallocate?
- * - Investigate why APP2 and APP1Scuffed caused boot lock. Remove app2 and will the app1 name cause it? Or is it n>1?
- * - Log connection state (reflect settings app)
- */
+    static unsigned char device_info_buf[0x400];
+    SceBtRegisteredInfo* device_info = (SceBtRegisteredInfo*)device_info_buf;
+    int ret = ksceBtGetRegisteredInfo(device, unk, device_info, sizeof(device_info_buf));
+
+    LOG_DEBUG("out: device=%d unk=%d ret=%d name=\"%s\"", device, unk, ret, device_info->name);
+    ksceKernelDelayThread(50000);
+}
+
 void log_paired_devices(void) {
     uint32_t state;
     ENTER_SYSCALL(state);
 
-    static unsigned char device_info_buf[0x400];  // TODO
-    SceBtRegisteredInfo* device_info = (SceBtRegisteredInfo*)device_info_buf;
-
-    int count = 0;
-    unsigned int prev_mac0 = 0;  // TODO needed or can it be 0? See comment below (same variable).
-
-    unsigned int probes[] = {0, 1, 0xFFFFFFFF, 0x84D20063, 0x6300D284};
-    for (int j = 0; j < 5; j++) {
-        int ret = ksceBtGetRegisteredInfo(0, probes[j], device_info, sizeof(device_info_buf));
-        LOG_DEBUG("Exp2 dev=0 prev=0x%08X ret=%d name=\"%s\"", probes[j], ret, device_info->name);
-        ksceKernelDelayThread(50000);  // For logging.
-    }
-
-    for (int i = 0; i < MAX_DEVICES; i++) {
-        LOG_DEBUG("Current value of i (1): %d", i);
-        int ret = ksceBtGetRegisteredInfo(i, prev_mac0, device_info, sizeof(device_info_buf));
-        LOG_DEBUG("Current value of i (2): %d", i);
-
-        ksceKernelDelayThread(50000);  // For logging.
-
-        for (int row = 0; row < 0x100; row += 16) {
-            LOG_DEBUG("buf[0x%03X]: %02X %02X %02X %02X %02X %02X %02X %02X  %02X %02X %02X %02X %02X %02X %02X %02X",
-                      row, device_info_buf[row + 0], device_info_buf[row + 1], device_info_buf[row + 2],
-                      device_info_buf[row + 3], device_info_buf[row + 4], device_info_buf[row + 5],
-                      device_info_buf[row + 6], device_info_buf[row + 7], device_info_buf[row + 8],
-                      device_info_buf[row + 9], device_info_buf[row + 10], device_info_buf[row + 11],
-                      device_info_buf[row + 12], device_info_buf[row + 13], device_info_buf[row + 14],
-                      device_info_buf[row + 15]);
-        }
-
-        // If slot is empty log and continue.
-        // if (ret != 1) {
-        //     LOG_DEBUG("slot=%d ret=%d", i, ret);
-        //     continue;
-        // }
-
-        // Log known device info fields.
-        const unsigned char* m = (const unsigned char*)&device_info->mac;
-        LOG_DEBUG("slot=%d ret=%d mac=%02X:%02X:%02X:%02X:%02X:%02X name=\"%s\" class=0x%08X vid=0x%04X pid=0x%04X", i,
-                  ret, m[0], m[1], m[2], m[3], m[4], m[5], device_info->name, device_info->bt_class, device_info->vid,
-                  device_info->pid);
-
-        prev_mac0 = (m[3] << 24) | (m[2] << 16) | (m[1] << 8) | m[0];
-        count++;
-    }
-
-    LOG_DEBUG("Found %d paired device(s)", count);
+    LOG_DEBUG("Start");
+    attempt(0, 0);
+    LOG_DEBUG("End");
 
     EXIT_SYSCALL(state);
 }
