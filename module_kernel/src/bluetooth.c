@@ -33,11 +33,9 @@ static void attempt(int device, int unk) {
     for (int i = 0; i < (int)sizeof(device_info_buf); i++) device_info_buf[i] = 0;
     SceBtRegisteredInfo* device_info = (SceBtRegisteredInfo*)device_info_buf;
     LOG_DEBUG("  in: device=%d unk=%d name=\"%s\"", device, unk, device_info->name);
-    ksceKernelDelayThread(50000);
 
     int ret = ksceBtGetRegisteredInfo(device, unk, device_info, sizeof(device_info_buf));
     LOG_DEBUG("out1: device=%d unk=%d name=\"%s\" ret=%d", device, unk, device_info->name, ret);
-    ksceKernelDelayThread(50000);
 
     for (int row = 0; row < 0x100; row += 16) {
         LOG_DEBUG("out2: buf[0x%03X]: %02X %02X %02X %02X %02X %02X %02X %02X  %02X %02X %02X %02X %02X %02X %02X %02X",
@@ -47,6 +45,7 @@ static void attempt(int device, int unk) {
                   device_info_buf[row + 11], device_info_buf[row + 12], device_info_buf[row + 13],
                   device_info_buf[row + 14], device_info_buf[row + 15]);
     }
+
     ksceKernelDelayThread(50000);
 }
 
@@ -55,8 +54,45 @@ void log_paired_devices(void) {
     ENTER_SYSCALL(state);
 
     LOG_DEBUG("Start");
-    attempt(0, 0);
-    attempt(1, 0);
+    static int devices_to_try[] = {
+        // small slot indices (already tested 0-7, but redo with zero-init)
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        // larger powers/edges
+        8,
+        9,
+        10,
+        15,
+        16,
+        31,
+        32,
+        63,
+        64,
+        // common boundaries
+        100,
+        127,
+        128,
+        255,
+        256,
+        65535,
+        // signed-vs-unsigned probes
+        -1,
+        0x80000000,
+        0xFFFFFFFF,
+        // bigger magnitudes
+        0x100,
+        0x1000,
+        0x10000,
+    };
+    for (int i = 0; i < (int)(sizeof(devices_to_try) / sizeof(devices_to_try[0])); i++) {
+        attempt(devices_to_try[i], 0);
+    }
     LOG_DEBUG("End");
 
     EXIT_SYSCALL(state);
