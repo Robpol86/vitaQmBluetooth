@@ -43,16 +43,35 @@ void log_paired_devices(void) {
     uint32_t state;
     ENTER_SYSCALL(state);
 
-    static unsigned char device_info_buf[0x400];  // TODO remove
+    static unsigned char device_info_buf[0x400];  // TODO
     SceBtRegisteredInfo* device_info = (SceBtRegisteredInfo*)device_info_buf;
 
     int count = 0;
     unsigned int prev_mac0 = 0;  // TODO needed or can it be 0? See comment below (same variable).
 
+    unsigned int probes[] = {0, 1, 0xFFFFFFFF, 0x84D20063, 0x6300D284};
+    for (int j = 0; j < 5; j++) {
+        int ret = ksceBtGetRegisteredInfo(0, probes[j], device_info, sizeof(device_info_buf));
+        LOG_DEBUG("Exp2 dev=0 prev=0x%08X ret=%d name=\"%s\"", probes[j], ret, device_info->name);
+        ksceKernelDelayThread(50000);  // For logging.
+    }
+
     for (int i = 0; i < MAX_DEVICES; i++) {
         LOG_DEBUG("Current value of i (1): %d", i);
         int ret = ksceBtGetRegisteredInfo(i, prev_mac0, device_info, sizeof(device_info_buf));
         LOG_DEBUG("Current value of i (2): %d", i);
+
+        ksceKernelDelayThread(50000);  // For logging.
+
+        for (int row = 0; row < 0x100; row += 16) {
+            LOG_DEBUG("buf[0x%03X]: %02X %02X %02X %02X %02X %02X %02X %02X  %02X %02X %02X %02X %02X %02X %02X %02X",
+                      row, device_info_buf[row + 0], device_info_buf[row + 1], device_info_buf[row + 2],
+                      device_info_buf[row + 3], device_info_buf[row + 4], device_info_buf[row + 5],
+                      device_info_buf[row + 6], device_info_buf[row + 7], device_info_buf[row + 8],
+                      device_info_buf[row + 9], device_info_buf[row + 10], device_info_buf[row + 11],
+                      device_info_buf[row + 12], device_info_buf[row + 13], device_info_buf[row + 14],
+                      device_info_buf[row + 15]);
+        }
 
         // If slot is empty log and continue.
         // if (ret != 1) {
