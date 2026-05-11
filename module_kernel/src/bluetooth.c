@@ -51,7 +51,7 @@ static unsigned char paired_devices_buf[MAX_DEVICES * DEVICE_RECORD_SIZE];  // 2
  */
 void log_paired_devices(void) {
     uint32_t state;
-    ENTER_SYSCALL(state);
+    ENTER_SYSCALL(state);  // TODO remove?
 
     // Zero the buffer to detect what the kernel actually writes.
     for (int i = 0; i < (int)sizeof(paired_devices_buf); i++) paired_devices_buf[i] = 0;
