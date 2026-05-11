@@ -36,6 +36,13 @@ static unsigned char paired_devices_buf[MAX_DEVICES * DEVICE_RECORD_SIZE];  // 2
  * Iterate through all paired bluetooth devices and log their information.
  *
  * TODO:
+ * - Merge in main branch until PR ready.
+ * - Double check func args are right.
+ * - Test with 0, 1, 2, more devices.
+ * - See if extra data is in the buffer, such as battery or other stuff shown in Settings app.
+ * - What is DEVICE_RECORD_SIZE?
+ * - Is 8 actually the max number of devices?
+ * TODO:
  * - Try with two paired
  * - Pair three devices, then unpair the middle one. Will registered slots be contiguous?
  * - Memory eficiency? deallocate?
