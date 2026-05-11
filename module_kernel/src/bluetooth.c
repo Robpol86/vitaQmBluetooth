@@ -28,13 +28,13 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "log.h"
 
 static void attempt(int device, int unk) {
-    LOG_DEBUG("  in: device=%d unk=%d", device, unk);
-
     static unsigned char device_info_buf[0x400];
     SceBtRegisteredInfo* device_info = (SceBtRegisteredInfo*)device_info_buf;
-    int ret = ksceBtGetRegisteredInfo(device, unk, device_info, sizeof(device_info_buf));
+    LOG_DEBUG("  in: device=%d unk=%d name=\"%s\"", device, unk, device_info->name);
+    ksceKernelDelayThread(50000);
 
-    LOG_DEBUG("out1: device=%d unk=%d ret=%d name=\"%s\"", device, unk, ret, device_info->name);
+    int ret = ksceBtGetRegisteredInfo(device, unk, device_info, sizeof(device_info_buf));
+    LOG_DEBUG("out1: device=%d unk=%d name=\"%s\" ret=%d", device, unk, device_info->name, ret);
     ksceKernelDelayThread(50000);
 
     for (int row = 0; row < 0x100; row += 16) {
