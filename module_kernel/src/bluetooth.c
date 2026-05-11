@@ -54,44 +54,46 @@ void log_paired_devices(void) {
     ENTER_SYSCALL(state);
 
     LOG_DEBUG("Start");
-    static int devices_to_try[] = {
-        // small slot indices (already tested 0-7, but redo with zero-init)
+    static int unks_to_try[] = {
+        // baseline (known working)
         0,
+
+        // small flag-like values
         1,
         2,
-        3,
         4,
-        5,
-        6,
-        7,
-        // larger powers/edges
         8,
-        9,
-        10,
-        15,
-        16,
-        31,
-        32,
-        63,
-        64,
-        // common boundaries
-        100,
-        127,
-        128,
-        255,
-        256,
-        65535,
-        // signed-vs-unsigned probes
-        -1,
-        0x80000000,
-        0xFFFFFFFF,
-        // bigger magnitudes
+        0x10,
+        0xFF,
         0x100,
-        0x1000,
-        0x10000,
+
+        // APP Scuffed - Find My: MAC 63:00:D2:84:80:DC
+        0x6300D284,
+        0x84D20063,
+        0x0063D284,
+        0x84D26300,
+        0x80DC,
+        0xDC80,
+        0x000080DC,
+        0x0000DC80,
+        0x63,
+        0xDC,
+        0x630080DC,
+        0xDC800063,
+
+        // Ovaltine: MAC 1C:DB:26:97:A9:80
+        0x1CDB2697,
+        0x9726DB1C,
+        0x80A9,
+        0xA980,
+
+        // junk
+        0xDEADBEEF,
+        0xCAFEBABE,
     };
-    for (int i = 0; i < (int)(sizeof(devices_to_try) / sizeof(devices_to_try[0])); i++) {
-        attempt(devices_to_try[i], 0);
+
+    for (int i = 0; i < (int)(sizeof(unks_to_try) / sizeof(unks_to_try[0])); i++) {
+        attempt(0, unks_to_try[i]);
     }
     LOG_DEBUG("End");
 
