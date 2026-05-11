@@ -43,26 +43,28 @@ void log_paired_devices(void) {
     uint32_t state;
     ENTER_SYSCALL(state);
 
-    SceBtRegisteredInfo device_info;
+    static unsigned char device_info_buf[0x400];  // TODO remove
+    SceBtRegisteredInfo* device_info = (SceBtRegisteredInfo*)device_info_buf;
+
     int count = 0;
     unsigned int prev_mac0 = 0;  // TODO needed or can it be 0? See comment below (same variable).
 
     for (int i = 0; i < MAX_DEVICES; i++) {
         LOG_DEBUG("Current value of i (1): %d", i);
-        int ret = ksceBtGetRegisteredInfo(i, prev_mac0, &device_info, sizeof(device_info));
+        int ret = ksceBtGetRegisteredInfo(i, prev_mac0, device_info, sizeof(device_info_buf));
         LOG_DEBUG("Current value of i (2): %d", i);
 
         // If slot is empty log and continue.
-        if (ret != 1) {
-            LOG_DEBUG("slot=%d ret=%d", i, ret);
-            continue;
-        }
+        // if (ret != 1) {
+        //     LOG_DEBUG("slot=%d ret=%d", i, ret);
+        //     continue;
+        // }
 
         // Log known device info fields.
-        const unsigned char* m = (const unsigned char*)&device_info.mac;
+        const unsigned char* m = (const unsigned char*)&device_info->mac;
         LOG_DEBUG("slot=%d ret=%d mac=%02X:%02X:%02X:%02X:%02X:%02X name=\"%s\" class=0x%08X vid=0x%04X pid=0x%04X", i,
-                  ret, m[0], m[1], m[2], m[3], m[4], m[5], device_info.name, device_info.bt_class, device_info.vid,
-                  device_info.pid);
+                  ret, m[0], m[1], m[2], m[3], m[4], m[5], device_info->name, device_info->bt_class, device_info->vid,
+                  device_info->pid);
 
         prev_mac0 = (m[3] << 24) | (m[2] << 16) | (m[1] << 8) | m[0];
         count++;
