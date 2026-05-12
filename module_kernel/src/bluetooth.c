@@ -57,7 +57,9 @@ void log_paired_devices(void) {
     for (int i = 0; i < (int)sizeof(all_bt_devices_buf); i++) all_bt_devices_buf[i] = 0;
 
     // The 4th argument is max_devices, NOT a byte size!
-    int count = ksceBtGetRegisteredInfo(0, 0, (SceBtRegisteredInfo*)all_bt_devices_buf, MAX_DEVICES);
+    int mac0 = 0;  // TODO test single device lookup to confirm params are actualy mac0/mac1.
+    int mac1 = 0;
+    int count = ksceBtGetRegisteredInfo(mac0, mac1, (SceBtRegisteredInfo*)all_bt_devices_buf, MAX_DEVICES);
     LOG_DEBUG(0, "ksceBtGetRegisteredInfo returned count=%d", count);
 
     if (count < 0) {
