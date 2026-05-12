@@ -87,17 +87,8 @@ static void connect_or_disconnect(int device_index) {
  * Iterate through all paired bluetooth devices and log their information.
  *
  * TODO:
- * - Merge in main branch until PR ready.
- * - Double check func args are right.
- * - Test with 0, 1, 2, more devices.
- * - See if extra data is in the buffer, such as battery or other stuff shown in Settings app.
- * - What is SCE_BT_REGISTERED_INFO_SIZE?
  * - Is 8 actually the max number of devices?
- * TODO:
- * - Try with two paired
- * - Pair three devices, then unpair the middle one. Will registered slots be contiguous?
  * - Memory eficiency? deallocate?
- * - Investigate why APP2 and APP1Scuffed caused boot lock. Remove app2 and will the app1 name cause it? Or is it n>1?
  * - Log connection state (reflect settings app)
  */
 static void _log_paired_devices(void) {
