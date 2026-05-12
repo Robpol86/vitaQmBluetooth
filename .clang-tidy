@@ -17,5 +17,7 @@ Checks: >
   -readability-use-concise-preprocessor-directives,
   -bugprone-macro-parentheses,
   -readability-non-const-parameter,
+CheckOptions:
+  readability-function-cognitive-complexity.IgnoreMacros: true
 HeaderFilterRegex: '.*'
 WarningsAsErrors: '*'

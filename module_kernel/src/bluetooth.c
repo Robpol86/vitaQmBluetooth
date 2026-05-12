@@ -58,10 +58,10 @@ void log_paired_devices(void) {
 
     // The 4th argument is max_devices, NOT a byte size!
     int count = ksceBtGetRegisteredInfo(0, 0, (SceBtRegisteredInfo*)paired_devices_buf, MAX_DEVICES);
-    LOG_DEBUG("ksceBtGetRegisteredInfo returned count=%d", count);
+    LOG_DEBUG(0, "ksceBtGetRegisteredInfo returned count=%d", count);
 
     if (count < 0) {
-        LOG_DEBUG("Error: 0x%08X", count);
+        LOG_DEBUG(0, "Error: 0x%08X", count);
         EXIT_SYSCALL(state);
         return;
     }
@@ -69,10 +69,10 @@ void log_paired_devices(void) {
     for (int i = 0; i < count; i++) {
         SceBtRegisteredInfo* dev = (SceBtRegisteredInfo*)(paired_devices_buf + (i * DEVICE_RECORD_SIZE));
         const unsigned char* m = (const unsigned char*)&dev->mac;
-        LOG_DEBUG("slot=%d mac=%02X:%02X:%02X:%02X:%02X:%02X name=\"%s\" class=0x%08X", i, m[0], m[1], m[2], m[3], m[4],
-                  m[5], dev->name, dev->bt_class);
+        LOG_DEBUG(0, "slot=%d mac=%02X:%02X:%02X:%02X:%02X:%02X name=\"%s\" class=0x%08X", i, m[0], m[1], m[2], m[3],
+                  m[4], m[5], dev->name, dev->bt_class);
     }
 
-    LOG_DEBUG("Found %d paired device(s)", count);
+    LOG_DEBUG(0, "Found %d paired device(s)", count);
     EXIT_SYSCALL(state);
 }
