@@ -87,6 +87,7 @@ static void _log_paired_devices(void) {
                 device_info->unk5[row + 12], device_info->unk5[row + 13], device_info->unk5[row + 14],
                 device_info->unk5[row + 15]);
         }
+        // TODO Connect one device and compare? Connect each and compare?
     }
 }
 
