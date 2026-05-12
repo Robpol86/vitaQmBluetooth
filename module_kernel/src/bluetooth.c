@@ -138,6 +138,8 @@ static void _log_paired_devices(void) {
 
 /**
  * Iterate through all paired bluetooth devices and log their information.
+ *
+ * TODO: no dual function, use "decorator" style macro.
  */
 void log_paired_devices(void) {
     uint32_t state;
