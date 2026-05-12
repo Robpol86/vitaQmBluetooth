@@ -27,10 +27,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "log.h"
 
-#define MAX_DEVICES 8                      // Maximum number of bluetooth devices the PS Vita can be paired with.
-#define SCE_BT_REGISTERED_INFO_SIZE 0x100  // TODO use sizeof(SceBtRegisteredInfo)
+#define MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with.
 
-static unsigned char all_bt_devices_buf[MAX_DEVICES * SCE_BT_REGISTERED_INFO_SIZE];
+static SceBtRegisteredInfo paired_devices[MAX_DEVICES];
 
 /**
  * Iterate through all paired bluetooth devices and log their information.
@@ -51,15 +50,15 @@ static unsigned char all_bt_devices_buf[MAX_DEVICES * SCE_BT_REGISTERED_INFO_SIZ
  */
 void log_paired_devices(void) {
     uint32_t state;
-    ENTER_SYSCALL(state);  // TODO remove?
+    ENTER_SYSCALL(state);
 
-    // Zero the buffer to detect what the kernel actually writes.
-    for (int i = 0; i < (int)sizeof(all_bt_devices_buf); i++) all_bt_devices_buf[i] = 0;
+    // Zero the array to detect what the kernel actually writes.
+    for (int i = 0; i < (int)sizeof(paired_devices); i++) ((unsigned char*)paired_devices)[i] = 0;
 
     // The 4th argument is max_devices, NOT a byte size!
     int mac0 = 0;  // TODO test single device lookup to confirm params are actualy mac0/mac1.
     int mac1 = 0;
-    int count = ksceBtGetRegisteredInfo(mac0, mac1, (SceBtRegisteredInfo*)all_bt_devices_buf, MAX_DEVICES);
+    int count = ksceBtGetRegisteredInfo(mac0, mac1, paired_devices, MAX_DEVICES);
     LOG_DEBUG(0, "ksceBtGetRegisteredInfo returned count=%d", count);
 
     if (count < 0) {
@@ -69,7 +68,7 @@ void log_paired_devices(void) {
     }
 
     for (int i = 0; i < count; i++) {
-        SceBtRegisteredInfo* dev = (SceBtRegisteredInfo*)(all_bt_devices_buf + (i * SCE_BT_REGISTERED_INFO_SIZE));
+        SceBtRegisteredInfo* dev = &paired_devices[i];
         const unsigned char* m = (const unsigned char*)&dev->mac;
         LOG_DEBUG(0, "slot=%d mac=%02X:%02X:%02X:%02X:%02X:%02X name=\"%s\" class=0x%08X", i, m[0], m[1], m[2], m[3],
                   m[4], m[5], dev->name, dev->bt_class);
