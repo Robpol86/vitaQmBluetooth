@@ -34,7 +34,7 @@ int module_start(SceSize args, const void* argp) {
     (void)args;
     (void)argp;
 
-    LOG_DEBUG("Initialized");
+    LOG_DEBUG(0, "Initialized");
 
     return SCE_KERNEL_START_SUCCESS;
 }
@@ -52,7 +52,7 @@ int module_stop(SceSize args, const void* argp) {
 
     // TODO unload components.
 
-    LOG_DEBUG("Deinitialized");
+    LOG_DEBUG(0, "Deinitialized");
 
     return SCE_KERNEL_STOP_SUCCESS;
 }

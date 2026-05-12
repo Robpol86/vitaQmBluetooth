@@ -44,29 +44,29 @@ static void connect_or_disconnect(SceBtRegisteredInfo* device_info) {
     int ret;
     char name[0x79];
     ret = ksceBtGetDeviceName(mac0, mac1, name);
-    LOG_DEBUG("Got name: ret=%d name=\"%s\"", ret, name);
+    LOG_DEBUG(0, "Got name: ret=%d name=\"%s\"", ret, name);
     if (ret != 0) {
-        LOG_DEBUG("UNKNOWN DEVICE");
+        LOG_DEBUG(0, "UNKNOWN DEVICE");
         return;
     }
 
     // Get current state
-    LOG_DEBUG("Reading state for \"%s\"", device_info->name);
+    LOG_DEBUG(0, "Reading state for \"%s\"", device_info->name);
     int state = ksceBtGetConnectingInfo(mac0, mac1);  // 1 == unknown/disconnected; 6 == connected
-    LOG_DEBUG("Got state: %d", state);
+    LOG_DEBUG(0, "Got state: %d", state);
 
     // Connect or disconnect.
     if (state == 1) {
         // TODO does not work if Settings is open in the Bluetooth Devices view.
-        LOG_DEBUG("Connecting \"%s\"", device_info->name);
+        LOG_DEBUG(0, "Connecting \"%s\"", device_info->name);
         ret = ksceBtStartConnect(mac0, mac1);
-        LOG_DEBUG("Connect ret=%d", ret);
+        LOG_DEBUG(0, "Connect ret=%d", ret);
     } else if (state == 6 || state == 5) {  // 6=Ovaltine 5=APPScuffed
-        LOG_DEBUG("Disconnecting \"%s\"", device_info->name);
+        LOG_DEBUG(0, "Disconnecting \"%s\"", device_info->name);
         ret = ksceBtStartDisconnect(mac0, mac1);
-        LOG_DEBUG("Disconnect ret=%d", ret);
+        LOG_DEBUG(0, "Disconnect ret=%d", ret);
     } else {
-        LOG_DEBUG("Unknown state");
+        LOG_DEBUG(0, "Unknown state");
     }
 }
 
@@ -93,24 +93,24 @@ void log_paired_devices(void) {
 
         // If slot is empty log and continue.
         if (ret != 1) {
-            LOG_DEBUG("slot=%d ret=%d", i, ret);
+            LOG_DEBUG(0, "slot=%d ret=%d", i, ret);
             continue;
         }
 
         // Log known device info fields.
         const unsigned char* m = (const unsigned char*)&device_info.mac;
-        LOG_DEBUG("slot=%d ret=%d mac=%02X:%02X:%02X:%02X:%02X:%02X name=\"%s\" class=0x%08X vid=0x%04X pid=0x%04X", i,
+        LOG_DEBUG(0, "slot=%d ret=%d mac=%02X:%02X:%02X:%02X:%02X:%02X name=\"%s\" class=0x%08X vid=0x%04X pid=0x%04X", i,
                   ret, m[0], m[1], m[2], m[3], m[4], m[5], device_info.name, device_info.bt_class, device_info.vid,
                   device_info.pid);
 
         // Log unknown fields except unk5.
-        LOG_DEBUG("       unk0=0x%04X unk1=0x%08X unk2=0x%08X unk3=0x%08X unk4=0x%08X", device_info.unk0,
+        LOG_DEBUG(0, "       unk0=0x%04X unk1=0x%08X unk2=0x%08X unk3=0x%08X unk4=0x%08X", device_info.unk0,
                   device_info.unk1, device_info.unk2, device_info.unk3, device_info.unk4);
 
         // Log unk5 in rows of 16 bytes.
         for (int row = 0; row < 0x60; row += 16) {
             LOG_DEBUG(
-                "       unk5[0x%02X]=%02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X",
+                0, "       unk5[0x%02X]=%02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X",
                 row, device_info.unk5[row + 0], device_info.unk5[row + 1], device_info.unk5[row + 2],
                 device_info.unk5[row + 3], device_info.unk5[row + 4], device_info.unk5[row + 5],
                 device_info.unk5[row + 6], device_info.unk5[row + 7], device_info.unk5[row + 8],
@@ -128,7 +128,7 @@ void log_paired_devices(void) {
         count++;
     }
 
-    LOG_DEBUG("Found %d paired device(s)", count);
+    LOG_DEBUG(0, "Found %d paired device(s)", count);
 
     EXIT_SYSCALL(state);
 }

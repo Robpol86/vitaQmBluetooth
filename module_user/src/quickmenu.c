@@ -41,9 +41,9 @@ BUTTON_HANDLER(on_press) {
     (void)eventId;
     (void)userDat;
 
-    LOG_DEBUG("Calling kernel function.");
+    LOG_DEBUG(0, "Calling kernel function.");
     log_paired_devices();
-    LOG_DEBUG("Done calling kernel function.");
+    LOG_DEBUG(0, "Done calling kernel function.");
 }
 
 /**
@@ -52,7 +52,7 @@ BUTTON_HANDLER(on_press) {
 ONLOAD_HANDLER(on_load) {
     (void)id;
 
-    LOG_DEBUG("Quick menu opened.");
+    LOG_DEBUG(0, "Quick menu opened.");
 }
 
 /**
