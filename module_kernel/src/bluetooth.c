@@ -48,7 +48,7 @@ static void connect_or_disconnect(int device_index) {
     int ret;
     char name[0x79];
     ret = ksceBtGetDeviceName(mac0, mac1, name);
-    LOG_DEBUG(0, "Got name: ret=%d name=\"%s\"", ret, name);
+    LOG_DEBUG(0, "ksceBtGetDeviceName: ret=%d name=\"%s\" mac0=0x%08X mac1=0x%04X", ret, name, mac0, mac1);
     if (ret != 0) {
         LOG_DEBUG(0, "UNKNOWN DEVICE");
         return;
