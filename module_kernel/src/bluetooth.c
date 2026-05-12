@@ -96,8 +96,7 @@ static void _log_paired_devices(void) {
     for (int i = 0; i < (int)sizeof(paired_devices); i++) ((unsigned char*)paired_devices)[i] = 0;
 
     // Populate the array with all currently paired devices.
-    int mac0 = 0;  // TODO test single device lookup to confirm params are actualy mac0/mac1.
-    int mac1 = 0;
+    int mac0 = 0, mac1 = 0;
     int count = ksceBtGetRegisteredInfo(mac0, mac1, paired_devices, MAX_DEVICES);
     if (count < 0) {
         LOG_DEBUG(0, "ksceBtGetRegisteredInfo returned error: 0x%08X", count);
