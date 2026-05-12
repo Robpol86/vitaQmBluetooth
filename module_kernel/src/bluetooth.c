@@ -48,10 +48,7 @@ static SceBtRegisteredInfo paired_devices[MAX_DEVICES];
  * - Investigate why APP2 and APP1Scuffed caused boot lock. Remove app2 and will the app1 name cause it? Or is it n>1?
  * - Log connection state (reflect settings app)
  */
-void log_paired_devices(void) {
-    uint32_t state;
-    ENTER_SYSCALL(state);
-
+static void _log_paired_devices(void) {
     // Zero the array to detect what the kernel actually writes.
     for (int i = 0; i < (int)sizeof(paired_devices); i++) ((unsigned char*)paired_devices)[i] = 0;
 
@@ -63,7 +60,6 @@ void log_paired_devices(void) {
 
     if (count < 0) {
         LOG_DEBUG(0, "Error: 0x%08X", count);
-        EXIT_SYSCALL(state);
         return;
     }
 
@@ -75,5 +71,14 @@ void log_paired_devices(void) {
     }
 
     LOG_DEBUG(0, "Found %d paired device(s)", count);
+}
+
+/**
+ * Iterate through all paired bluetooth devices and log their information.
+ */
+void log_paired_devices(void) {
+    uint32_t state;
+    ENTER_SYSCALL(state);
+    _log_paired_devices();
     EXIT_SYSCALL(state);
 }
