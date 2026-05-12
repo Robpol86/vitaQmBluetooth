@@ -32,7 +32,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 /**
  * Macro that logs a debug message.
  *
- * If log messages override each other try setting delay to 50000. 
+ * If log messages overwrite each other try setting the delay to 50000.
  *
  * @param delay Delay the thread for these many microseconds if >0 (mitigates clobbering).
  * @param fmtMsg The log message including any format specifiers.
