@@ -27,10 +27,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "log.h"
 
-#define MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with.
-#define DEVICE_RECORD_SIZE 0x100
+#define MAX_DEVICES 8                      // Maximum number of bluetooth devices the PS Vita can be paired with.
+#define SCE_BT_REGISTERED_INFO_SIZE 0x100  // TODO use sizeof(SceBtRegisteredInfo)
 
-static unsigned char paired_devices_buf[MAX_DEVICES * DEVICE_RECORD_SIZE];  // 2 KiB
+static unsigned char all_bt_devices_buf[MAX_DEVICES * SCE_BT_REGISTERED_INFO_SIZE];
 
 /**
  * Iterate through all paired bluetooth devices and log their information.
@@ -40,7 +40,7 @@ static unsigned char paired_devices_buf[MAX_DEVICES * DEVICE_RECORD_SIZE];  // 2
  * - Double check func args are right.
  * - Test with 0, 1, 2, more devices.
  * - See if extra data is in the buffer, such as battery or other stuff shown in Settings app.
- * - What is DEVICE_RECORD_SIZE?
+ * - What is SCE_BT_REGISTERED_INFO_SIZE?
  * - Is 8 actually the max number of devices?
  * TODO:
  * - Try with two paired
@@ -54,10 +54,10 @@ void log_paired_devices(void) {
     ENTER_SYSCALL(state);  // TODO remove?
 
     // Zero the buffer to detect what the kernel actually writes.
-    for (int i = 0; i < (int)sizeof(paired_devices_buf); i++) paired_devices_buf[i] = 0;
+    for (int i = 0; i < (int)sizeof(all_bt_devices_buf); i++) all_bt_devices_buf[i] = 0;
 
     // The 4th argument is max_devices, NOT a byte size!
-    int count = ksceBtGetRegisteredInfo(0, 0, (SceBtRegisteredInfo*)paired_devices_buf, MAX_DEVICES);
+    int count = ksceBtGetRegisteredInfo(0, 0, (SceBtRegisteredInfo*)all_bt_devices_buf, MAX_DEVICES);
     LOG_DEBUG(0, "ksceBtGetRegisteredInfo returned count=%d", count);
 
     if (count < 0) {
@@ -67,7 +67,7 @@ void log_paired_devices(void) {
     }
 
     for (int i = 0; i < count; i++) {
-        SceBtRegisteredInfo* dev = (SceBtRegisteredInfo*)(paired_devices_buf + (i * DEVICE_RECORD_SIZE));
+        SceBtRegisteredInfo* dev = (SceBtRegisteredInfo*)(all_bt_devices_buf + (i * SCE_BT_REGISTERED_INFO_SIZE));
         const unsigned char* m = (const unsigned char*)&dev->mac;
         LOG_DEBUG(0, "slot=%d mac=%02X:%02X:%02X:%02X:%02X:%02X name=\"%s\" class=0x%08X", i, m[0], m[1], m[2], m[3],
                   m[4], m[5], dev->name, dev->bt_class);
