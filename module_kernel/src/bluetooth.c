@@ -22,6 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2kern/bt.h>
 #include <psp2kern/kernel/cpu.h>
 #include <psp2kern/kernel/modulemgr.h>
+#include <psp2kern/kernel/sysclib.h>
 #include <psp2kern/kernel/sysmem.h>
 #include <psp2kern/kernel/threadmgr.h>
 
@@ -30,6 +31,57 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with.
 
 static SceBtRegisteredInfo paired_devices[MAX_DEVICES];
+
+/**
+ * Disconnect first bluetooth device if connected, and vice versa.
+ *
+ * PoC confirmed! I have verified this function connects and disconnects my AirPods Pro from the Quick Menu whilst
+ * RetroArch was running.
+ */
+static void connect_or_disconnect(int device_index) {
+    SceBtRegisteredInfo* device_info = &paired_devices[device_index];
+    const unsigned char* m = (const unsigned char*)&device_info->mac;
+    unsigned int mac0 = (m[3] << 24) | (m[2] << 16) | (m[1] << 8) | m[0];
+    unsigned int mac1 = (m[5] << 8) | m[4];
+
+    // Sanity check.
+    int ret;
+    char name[0x79];
+    ret = ksceBtGetDeviceName(mac0, mac1, name);
+    LOG_DEBUG(0, "Got name: ret=%d name=\"%s\"", ret, name);
+    if (ret != 0) {
+        LOG_DEBUG(0, "UNKNOWN DEVICE");
+        return;
+    }
+
+    // Get current state
+    LOG_DEBUG(0, "Reading state for \"%s\"", device_info->name);
+    int state = ksceBtGetConnectingInfo(mac0, mac1);  // 1 == unknown/disconnected; 6 == connected
+    LOG_DEBUG(0, "Got state: %d", state);
+
+    // Connect or disconnect.
+    if (state == 1) {
+        // TODO does not work if Settings is open in the Bluetooth Devices view.
+        LOG_DEBUG(0, "Connecting \"%s\"", device_info->name);
+        ret = ksceBtStartConnect(mac0, mac1);
+        if (ret < 0) {
+            LOG_DEBUG(0, "ksceBtStartConnect returned error: 0x%08X", ret);
+        } else {
+            LOG_DEBUG(0, "ksceBtStartConnect returned: %d", ret);
+        }
+    } else if (state == 6 || state == 5) {  // 6=Ovaltine 5=APPScuffed
+        LOG_DEBUG(0, "Disconnecting \"%s\"", device_info->name);
+        ret = ksceBtStartDisconnect(mac0, mac1);
+        if (ret < 0) {
+            LOG_DEBUG(0, "ksceBtStartDisconnect returned error: 0x%08X", ret);
+        } else {
+            LOG_DEBUG(0, "ksceBtStartDisconnect returned: %d", ret);
+        }
+        LOG_DEBUG(0, "Disconnect ret=%d", ret);
+    } else {
+        LOG_DEBUG(0, "Unknown state");
+    }
+}
 
 /**
  * Iterate through all paired bluetooth devices and log their information.
@@ -63,8 +115,13 @@ static void _log_paired_devices(void) {
     LOG_DEBUG(0, "count=%d max=%d", count, MAX_DEVICES);
 
     // Log each device.
+    int conn_disconn_dev = 0;
     for (int i = 0; i < count; i++) {
         SceBtRegisteredInfo* device_info = &paired_devices[i];
+        if (strncmp(device_info->name, "APP Scuffed", 11) == 0) {
+            LOG_DEBUG(0, "Set conn_disconn_dev to %d for device \"%s\"", i, device_info->name);
+            conn_disconn_dev = i;
+        }
 
         // Log known device info fields.
         const unsigned char* m = (const unsigned char*)&device_info->mac;
@@ -87,7 +144,12 @@ static void _log_paired_devices(void) {
                 device_info->unk5[row + 12], device_info->unk5[row + 13], device_info->unk5[row + 14],
                 device_info->unk5[row + 15]);
         }
-        // TODO Connect one device and compare? Connect each and compare?
+    }
+
+    // Connect or disconnect first device, depending on current state.
+    if (count > 0) {
+        LOG_DEBUG(0, "Connecting or disconnecting device %d", conn_disconn_dev);
+        connect_or_disconnect(conn_disconn_dev);
     }
 }
 
