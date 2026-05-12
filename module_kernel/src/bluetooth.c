@@ -61,7 +61,7 @@ static void connect_or_disconnect(int device_index) {
 
     // Connect or disconnect.
     if (state == 1) {
-        // TODO does not work if Settings is open in the Bluetooth Devices view.
+        // Fails if Settings is open in the Bluetooth Devices view.
         LOG_DEBUG(0, "Connecting \"%s\"", device_info->name);
         ret = ksceBtStartConnect(mac0, mac1);
         if (ret < 0) {
