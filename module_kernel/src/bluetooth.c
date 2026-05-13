@@ -28,7 +28,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "common.h"
 #include "log.h"
-#include "syscalls.h"
+#include "vqmbt.h"
 
 /**
  * TODO

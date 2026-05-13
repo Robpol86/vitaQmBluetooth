@@ -16,11 +16,11 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /******************************************************************************
  * @file
- * @brief Interface for functions exposed from the kernel module.
+ * @brief Cross-module interface exposed by the kernel module.
  ******************************************************************************/
 
-#ifndef SYSCALLS_H
-#define SYSCALLS_H
+#ifndef VQMBT_H
+#define VQMBT_H
 
 #define VQMBT_MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with.
 
@@ -39,4 +39,4 @@ int kvqmbtDisconnectDevice(unsigned int mac0, unsigned int mac1);
 
 void log_paired_devices(void);  // TODO remove
 
-#endif  // SYSCALLS_H
+#endif  // VQMBT_H
