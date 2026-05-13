@@ -25,6 +25,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2kern/kernel/sysmem.h>
 #include <psp2kern/kernel/threadmgr.h>
 
+#include "common.h"
 #include "log.h"
 
 #define MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with.
@@ -88,7 +89,10 @@ static void connect_or_disconnect(SceBtRegisteredInfo* device_info) {
  * - Investigate why APP2 and APP1Scuffed caused boot lock. Remove app2 and will the app1 name cause it? Or is it n>1?
  * - Log connection state (reflect settings app)
  */
-static void _log_paired_devices(void) {
+void log_paired_devices(void) {
+    uint32_t state SYSCALL_STATE = 0;
+    ENTER_SYSCALL(state);
+
     SceBtRegisteredInfo device_info;
     int count = 0;
     unsigned int prev_mac_lo = 0;  // TODO needed or can it be 0? See comment below (same variable).
@@ -134,16 +138,4 @@ static void _log_paired_devices(void) {
     }
 
     LOG_DEBUG(0, "Found %d paired device(s)", count);
-}
-
-/**
- * Iterate through all paired bluetooth devices and log their information.
- *
- * TODO: no dual function, use "decorator" style macro.
- */
-void log_paired_devices(void) {
-    uint32_t state;
-    ENTER_SYSCALL(state);
-    _log_paired_devices();
-    EXIT_SYSCALL(state);
 }
