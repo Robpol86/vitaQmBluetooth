@@ -16,12 +16,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /******************************************************************************
  * @file
- * @brief Interface for functions exposed from the kernel module.
+ * @brief Cross-module interface exposed by the kernel module.
  ******************************************************************************/
 
-#ifndef SYSCALLS_H
-#define SYSCALLS_H
+#ifndef VQMBT_H
+#define VQMBT_H
 
 void log_paired_devices(void);
 
-#endif  // SYSCALLS_H
+#endif  // VQMBT_H

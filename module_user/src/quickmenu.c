@@ -23,7 +23,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <quickmenureborn/qm_reborn.h>
 
 #include "log.h"
-#include "syscalls.h"
+#include "vqmbt.h"
 
 // Widget IDs (prefixed because they must be unique across all plugins).
 #define ID_SEPARATOR PROJECT_NAME "Separator"
