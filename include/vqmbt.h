@@ -22,6 +22,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef VQMBT_H
 #define VQMBT_H
 
+#define VQMBT_MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with.
+
 void log_paired_devices(void);
 
 #endif  // VQMBT_H
