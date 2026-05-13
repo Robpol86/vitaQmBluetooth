@@ -39,6 +39,7 @@ target_link_libraries("${MODULE_NAME}" PRIVATE
   SceBtForDriver_stub
   SceDebugForDriver_stub
   SceRtcForDriver_stub
+  SceSysclibForDriver_stub
   SceThreadmgrForDriver_stub
 )
 

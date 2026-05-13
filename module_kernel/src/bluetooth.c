@@ -22,6 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2kern/bt.h>
 #include <psp2kern/kernel/cpu.h>
 #include <psp2kern/kernel/modulemgr.h>
+#include <psp2kern/kernel/sysclib.h>
 #include <psp2kern/kernel/sysmem.h>
 #include <psp2kern/kernel/threadmgr.h>
 
@@ -30,13 +31,16 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #define MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with.
 
+static SceBtRegisteredInfo paired_devices[MAX_DEVICES];
+
 /**
  * Disconnect first bluetooth device if connected, and vice versa.
  *
  * PoC confirmed! I have verified this function connects and disconnects my AirPods Pro from the Quick Menu whilst
  * RetroArch was running.
  */
-static void connect_or_disconnect(SceBtRegisteredInfo* device_info) {
+static void connect_or_disconnect(int device_index) {
+    SceBtRegisteredInfo* device_info = &paired_devices[device_index];
     const unsigned char* m = (const unsigned char*)&device_info->mac;
     unsigned int mac0 = (m[3] << 24) | (m[2] << 16) | (m[1] << 8) | m[0];
     unsigned int mac1 = (m[5] << 8) | m[4];
@@ -83,59 +87,61 @@ static void connect_or_disconnect(SceBtRegisteredInfo* device_info) {
  * Iterate through all paired bluetooth devices and log their information.
  *
  * TODO:
- * - Try with two paired
- * - Pair three devices, then unpair the middle one. Will registered slots be contiguous?
+ * - Is 8 actually the max number of devices?
  * - Memory eficiency? deallocate?
- * - Investigate why APP2 and APP1Scuffed caused boot lock. Remove app2 and will the app1 name cause it? Or is it n>1?
  * - Log connection state (reflect settings app)
  */
 void log_paired_devices(void) {
     uint32_t state SYSCALL_STATE = 0;
     ENTER_SYSCALL(state);
 
-    SceBtRegisteredInfo device_info;
-    int count = 0;
-    unsigned int prev_mac_lo = 0;  // TODO needed or can it be 0? See comment below (same variable).
+    // Zero the array to prevent ghost data.
+    for (int i = 0; i < (int)sizeof(paired_devices); i++) ((unsigned char*)paired_devices)[i] = 0;
 
-    for (int i = 0; i < MAX_DEVICES; i++) {
-        int ret = ksceBtGetRegisteredInfo(i, prev_mac_lo, &device_info, sizeof(device_info));
+    // Populate the array with all currently paired devices.
+    int mac0 = 0, mac1 = 0;
+    int count = ksceBtGetRegisteredInfo(mac0, mac1, paired_devices, MAX_DEVICES);
+    if (count < 0) {
+        LOG_DEBUG(0, "ksceBtGetRegisteredInfo returned error: 0x%08X", count);
+        return;
+    }
+    LOG_DEBUG(0, "count=%d max=%d", count, MAX_DEVICES);
 
-        // If slot is empty log and continue.
-        if (ret != 1) {
-            LOG_DEBUG(0, "slot=%d ret=%d", i, ret);
-            continue;
+    // Log each device.
+    int conn_disconn_dev = 0;
+    for (int i = 0; i < count; i++) {
+        SceBtRegisteredInfo* device_info = &paired_devices[i];
+        if (strncmp(device_info->name, "APP Scuffed", 11) == 0) {
+            LOG_DEBUG(0, "Set conn_disconn_dev to %d for device \"%s\"", i, device_info->name);
+            conn_disconn_dev = i;
         }
 
         // Log known device info fields.
-        const unsigned char* m = (const unsigned char*)&device_info.mac;
-        LOG_DEBUG(0, "slot=%d ret=%d mac=%02X:%02X:%02X:%02X:%02X:%02X name=\"%s\" class=0x%08X vid=0x%04X pid=0x%04X", i,
-                  ret, m[0], m[1], m[2], m[3], m[4], m[5], device_info.name, device_info.bt_class, device_info.vid,
-                  device_info.pid);
+        const unsigned char* m = (const unsigned char*)&device_info->mac;
+        LOG_DEBUG(50000, "num=%d mac=%02X:%02X:%02X:%02X:%02X:%02X name=\"%s\" class=0x%08X vid=0x%04X pid=0x%04X", i,
+                  m[0], m[1], m[2], m[3], m[4], m[5], device_info->name, device_info->bt_class, device_info->vid,
+                  device_info->pid);
 
         // Log unknown fields except unk5.
-        LOG_DEBUG(0, "       unk0=0x%04X unk1=0x%08X unk2=0x%08X unk3=0x%08X unk4=0x%08X", device_info.unk0,
-                  device_info.unk1, device_info.unk2, device_info.unk3, device_info.unk4);
+        LOG_DEBUG(0, "      unk0=0x%04X unk1=0x%08X unk2=0x%08X unk3=0x%08X unk4=0x%08X", device_info->unk0,
+                  device_info->unk1, device_info->unk2, device_info->unk3, device_info->unk4);
 
         // Log unk5 in rows of 16 bytes.
         for (int row = 0; row < 0x60; row += 16) {
             LOG_DEBUG(
-                0, "       unk5[0x%02X]=%02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X",
-                row, device_info.unk5[row + 0], device_info.unk5[row + 1], device_info.unk5[row + 2],
-                device_info.unk5[row + 3], device_info.unk5[row + 4], device_info.unk5[row + 5],
-                device_info.unk5[row + 6], device_info.unk5[row + 7], device_info.unk5[row + 8],
-                device_info.unk5[row + 9], device_info.unk5[row + 10], device_info.unk5[row + 11],
-                device_info.unk5[row + 12], device_info.unk5[row + 13], device_info.unk5[row + 14],
-                device_info.unk5[row + 15]);
+                0, "      unk5[0x%02X]=%02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X",
+                row, device_info->unk5[row + 0], device_info->unk5[row + 1], device_info->unk5[row + 2],
+                device_info->unk5[row + 3], device_info->unk5[row + 4], device_info->unk5[row + 5],
+                device_info->unk5[row + 6], device_info->unk5[row + 7], device_info->unk5[row + 8],
+                device_info->unk5[row + 9], device_info->unk5[row + 10], device_info->unk5[row + 11],
+                device_info->unk5[row + 12], device_info->unk5[row + 13], device_info->unk5[row + 14],
+                device_info->unk5[row + 15]);
         }
-
-        // Connect or disconnect first device, depending on current state.
-        if (count == 0) {
-            connect_or_disconnect(&device_info);
-        }
-
-        prev_mac_lo = (m[2] << 24) | (m[3] << 16) | (m[4] << 8) | m[5];  // TODO remove after multiple devices confirmed?
-        count++;
     }
 
-    LOG_DEBUG(0, "Found %d paired device(s)", count);
+    // Connect or disconnect first device, depending on current state.
+    if (count > 0) {
+        LOG_DEBUG(0, "Connecting or disconnecting device %d", conn_disconn_dev);
+        connect_or_disconnect(conn_disconn_dev);
+    }
 }
