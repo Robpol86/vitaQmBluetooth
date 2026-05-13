@@ -34,6 +34,31 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * TODO
  */
 int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
+    uint32_t state SYSCALL_STATE = 0;
+    ENTER_SYSCALL(state);
+
+    LOG_DEBUG(0, "TODO");
+    return 0;
+}
+
+/**
+ * TODO
+ */
+int kvqmbtConnectDevice(unsigned int mac0, unsigned int mac1) {
+    uint32_t state SYSCALL_STATE = 0;
+    ENTER_SYSCALL(state);
+
+    LOG_DEBUG(0, "TODO");
+    return 0;
+}
+
+/**
+ * TODO
+ */
+int kvqmbtDisconnectDevice(unsigned int mac0, unsigned int mac1) {
+    uint32_t state SYSCALL_STATE = 0;
+    ENTER_SYSCALL(state);
+
     LOG_DEBUG(0, "TODO");
     return 0;
 }
