@@ -28,10 +28,17 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "common.h"
 #include "log.h"
+#include "syscalls.h"
 
-#define MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with.
+/**
+ * TODO
+ */
+int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
+    LOG_DEBUG(0, "TODO");
+    return 0;
+}
 
-static SceBtRegisteredInfo paired_devices[MAX_DEVICES];
+static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];
 
 /**
  * Disconnect first bluetooth device if connected, and vice versa.
@@ -100,12 +107,12 @@ void log_paired_devices(void) {
 
     // Populate the array with all currently paired devices.
     int mac0 = 0, mac1 = 0;
-    int count = ksceBtGetRegisteredInfo(mac0, mac1, paired_devices, MAX_DEVICES);
+    int count = ksceBtGetRegisteredInfo(mac0, mac1, paired_devices, VQMBT_MAX_DEVICES);
     if (count < 0) {
         LOG_DEBUG(0, "ksceBtGetRegisteredInfo returned error: 0x%08X", count);
         return;
     }
-    LOG_DEBUG(0, "count=%d max=%d", count, MAX_DEVICES);
+    LOG_DEBUG(0, "count=%d max=%d", count, VQMBT_MAX_DEVICES);
 
     // Log each device.
     int conn_disconn_dev = 0;

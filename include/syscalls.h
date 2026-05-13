@@ -22,7 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef SYSCALLS_H
 #define SYSCALLS_H
 
-void log_paired_devices(void);  // TODO remove
+#define VQMBT_MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with.
 
 typedef struct VqmbtDeviceInfo {
     char name[128];
@@ -36,5 +36,7 @@ int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size);
 int kvqmbtConnectDevice(unsigned int mac0, unsigned int mac1);
 
 int kvqmbtDisconnectDevice(unsigned int mac0, unsigned int mac1);
+
+void log_paired_devices(void);  // TODO remove
 
 #endif  // SYSCALLS_H
