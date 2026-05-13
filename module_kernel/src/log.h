@@ -22,8 +22,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef LOG_H
 #define LOG_H
 
-#ifndef NDEBUG
 #include <psp2kern/kernel/debug.h>
+#ifndef NDEBUG
 #include <psp2kern/kernel/rtc.h>
 #include <psp2kern/kernel/threadmgr.h>
 #endif  // NDEBUG
@@ -31,6 +31,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef NDEBUG
 /**
  * Macro that logs a debug message.
+ *
+ * If log messages overwrite each other try setting the delay to 50000.
  *
  * @param delay Delay the thread for these many microseconds if >0 (mitigates clobbering).
  * @param fmtMsg The log message including any format specifiers.
@@ -49,8 +51,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 /**
  * No-op in release builds.
  */
-#define LOG_DEBUG(fmtMsg, ...) \
-    do {                       \
+#define LOG_DEBUG(delay, fmtMsg, ...)                   \
+    do {                                                \
+        (void)(delay);                                  \
+        if (0) ksceKernelPrintf(fmtMsg, ##__VA_ARGS__); \
     } while (0)
 #endif  // NDEBUG
 

@@ -25,6 +25,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2kern/kernel/sysmem.h>
 #include <psp2kern/kernel/threadmgr.h>
 
+#include "common.h"
 #include "log.h"
 
 #define MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with.
@@ -44,7 +45,7 @@ static void connect_or_disconnect(SceBtRegisteredInfo* device_info) {
     int ret;
     char name[0x79];
     ret = ksceBtGetDeviceName(mac0, mac1, name);
-    LOG_DEBUG(0, "Got name: ret=%d name=\"%s\"", ret, name);
+    LOG_DEBUG(0, "ksceBtGetDeviceName: ret=%d name=\"%s\" mac0=0x%08X mac1=0x%04X", ret, name, mac0, mac1);
     if (ret != 0) {
         LOG_DEBUG(0, "UNKNOWN DEVICE");
         return;
@@ -57,14 +58,22 @@ static void connect_or_disconnect(SceBtRegisteredInfo* device_info) {
 
     // Connect or disconnect.
     if (state == 1) {
-        // TODO does not work if Settings is open in the Bluetooth Devices view.
+        // Fails if Settings is open in the Bluetooth Devices view.
         LOG_DEBUG(0, "Connecting \"%s\"", device_info->name);
         ret = ksceBtStartConnect(mac0, mac1);
-        LOG_DEBUG(0, "Connect ret=%d", ret);
+        if (ret < 0) {
+            LOG_DEBUG(0, "ksceBtStartConnect returned error: 0x%08X", ret);
+        } else {
+            LOG_DEBUG(0, "ksceBtStartConnect returned: %d", ret);
+        }
     } else if (state == 6 || state == 5) {  // 6=Ovaltine 5=APPScuffed
         LOG_DEBUG(0, "Disconnecting \"%s\"", device_info->name);
         ret = ksceBtStartDisconnect(mac0, mac1);
-        LOG_DEBUG(0, "Disconnect ret=%d", ret);
+        if (ret < 0) {
+            LOG_DEBUG(0, "ksceBtStartDisconnect returned error: 0x%08X", ret);
+        } else {
+            LOG_DEBUG(0, "ksceBtStartDisconnect returned: %d", ret);
+        }
     } else {
         LOG_DEBUG(0, "Unknown state");
     }
@@ -81,7 +90,7 @@ static void connect_or_disconnect(SceBtRegisteredInfo* device_info) {
  * - Log connection state (reflect settings app)
  */
 void log_paired_devices(void) {
-    uint32_t state;
+    uint32_t state SYSCALL_STATE = 0;
     ENTER_SYSCALL(state);
 
     SceBtRegisteredInfo device_info;
@@ -129,6 +138,4 @@ void log_paired_devices(void) {
     }
 
     LOG_DEBUG(0, "Found %d paired device(s)", count);
-
-    EXIT_SYSCALL(state);
 }
