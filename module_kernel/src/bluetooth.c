@@ -78,7 +78,6 @@ static void connect_or_disconnect(int device_index) {
         } else {
             LOG_DEBUG(0, "ksceBtStartDisconnect returned: %d", ret);
         }
-        LOG_DEBUG(0, "Disconnect ret=%d", ret);
     } else {
         LOG_DEBUG(0, "Unknown state");
     }
