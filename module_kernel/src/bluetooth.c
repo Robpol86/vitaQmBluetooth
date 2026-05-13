@@ -30,15 +30,70 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "log.h"
 #include "vqmbt.h"
 
+static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];
+
 /**
- * TODO
+ * Enumerate paired bluetooth devices and copy summarized info into the user-supplied array.
+ *
+ * Acts as a syscall: marshals data across the kernel/user address boundary using
+ * ksceKernelMemcpyKernelToUser, since the kernel cannot dereference user pointers directly
+ * (DACR enforcement).
+ *
+ * @param info User-space pointer to an array of VqmbtDeviceInfo records.
+ * @param info_size Capacity of the user array, in records.
+ * @return Number of records written on success (0 to min(info_size, MAX_DEVICES, registered)),
+ *         or a negative error code on failure.
  */
 int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
     uint32_t state SYSCALL_STATE = 0;
     ENTER_SYSCALL(state);
 
-    LOG_DEBUG(0, "TODO");
-    return 0;
+    // Validate user inputs.
+    if (info == NULL || info_size <= 0) {
+        LOG_DEBUG(0, "Invalid args: info=%p info_size=%d", info, info_size);
+        return -1;
+    }
+
+    // Clamp to local buffer capacity. Querying more than VQMBT_MAX_DEVICES would overflow paired_devices.
+    int cap = info_size;
+    if (cap > VQMBT_MAX_DEVICES) cap = VQMBT_MAX_DEVICES;
+
+    // Zero the kernel-side array to prevent ghost data from a previous call.
+    for (int i = 0; i < (int)sizeof(paired_devices); i++) ((unsigned char*)paired_devices)[i] = 0;
+
+    // Enumerate registered devices into the kernel-side array.
+    int count = ksceBtGetRegisteredInfo(0, 0, paired_devices, cap);
+    if (count < 0) {
+        LOG_DEBUG(0, "ksceBtGetRegisteredInfo returned error: 0x%08X", count);
+        return count;
+    }
+    LOG_DEBUG(0, "count=%d cap=%d", count, cap);
+
+    // Marshal each record across the kernel/user boundary.
+    for (int i = 0; i < count; i++) {
+        SceBtRegisteredInfo* src = &paired_devices[i];
+        VqmbtDeviceInfo entry;
+
+        // Copy the device name. SceBtRegisteredInfo.name is 0x4F bytes; VqmbtDeviceInfo.name is 128.
+        // Always NUL-terminate defensively in case the source isn't terminated.
+        for (int j = 0; j < (int)sizeof(entry.name); j++) entry.name[j] = 0;
+        strncpy(entry.name, src->name, sizeof(entry.name) - 1);
+
+        // Pack the MAC bytes into mac0/mac1 using the SceBt convention (LE bytes 0..3 into mac0,
+        // LE bytes 4..5 in the low 16 bits of mac1).
+        const unsigned char* m = (const unsigned char*)&src->mac;
+        entry.mac0 = ((unsigned int)m[3] << 24) | ((unsigned int)m[2] << 16) | ((unsigned int)m[1] << 8) | m[0];
+        entry.mac1 = ((unsigned int)m[5] << 8) | m[4];
+
+        // Copy this entry into the user buffer slot.
+        int ret = ksceKernelMemcpyKernelToUser((uintptr_t)&info[i], &entry, sizeof(entry));
+        if (ret < 0) {
+            LOG_DEBUG(0, "ksceKernelMemcpyKernelToUser failed at index %d: 0x%08X", i, ret);
+            return ret;
+        }
+    }
+
+    return count;
 }
 
 /**
@@ -62,8 +117,6 @@ int kvqmbtDisconnectDevice(unsigned int mac0, unsigned int mac1) {
     LOG_DEBUG(0, "TODO");
     return 0;
 }
-
-static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];
 
 /**
  * Disconnect first bluetooth device if connected, and vice versa.

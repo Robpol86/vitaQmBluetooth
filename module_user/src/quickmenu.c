@@ -42,7 +42,18 @@ BUTTON_HANDLER(on_press) {
     (void)userDat;
 
     LOG_DEBUG(0, "Calling kernel function.");
-    log_paired_devices();
+
+    // Pull a summarized device list across the syscall boundary.
+    VqmbtDeviceInfo devices[8];
+    int count = kvqmbtGetPairedDevices(devices, (int)(sizeof(devices) / sizeof(devices[0])));
+    LOG_DEBUG(0, "kvqmbtGetPairedDevices returned %d", count);
+    if (count > 0) {
+        for (int i = 0; i < count; i++) {
+            VqmbtDeviceInfo* d = &devices[i];
+            LOG_DEBUG(50000, "user num=%d name=\"%s\" mac0=0x%08X mac1=0x%04X", i, d->name, d->mac0, d->mac1);
+        }
+    }
+
     LOG_DEBUG(0, "Done calling kernel function.");
 }
 
