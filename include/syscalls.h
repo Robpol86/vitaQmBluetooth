@@ -19,17 +19,17 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief Interface for functions exposed from the kernel module.
  ******************************************************************************/
 
-#ifndef KBLUETOOTH_H
-#define KBLUETOOTH_H
+#ifndef SYSCALLS_H
+#define SYSCALLS_H
 
 void log_paired_devices(void);
 
-typedef struct VqmbtRegisteredInfo {
+typedef struct VqmbtDeviceInfo {
+    char name[128];
     unsigned int mac0;
     unsigned int mac1;
-    char name[128];
-} VqmbtRegisteredInfo;
+} VqmbtDeviceInfo;
 
-int kvqmbtGetPairedDevices(VqmbtRegisteredInfo* info, int info_size);
+int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size);
 
-#endif  // KBLUETOOTH_H
+#endif  // SYSCALLS_H
