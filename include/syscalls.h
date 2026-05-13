@@ -22,14 +22,19 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef SYSCALLS_H
 #define SYSCALLS_H
 
-void log_paired_devices(void);
+void log_paired_devices(void);  // TODO remove
 
 typedef struct VqmbtDeviceInfo {
     char name[128];
     unsigned int mac0;
     unsigned int mac1;
+    int connecting_state;
 } VqmbtDeviceInfo;
 
 int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size);
+
+int kvqmbtConnectDevice(unsigned int mac0, unsigned int mac1);
+
+int kvqmbtDisconnectDevice(unsigned int mac0, unsigned int mac1);
 
 #endif  // SYSCALLS_H
