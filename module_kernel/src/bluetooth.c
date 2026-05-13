@@ -75,9 +75,10 @@ int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
         VqmbtDeviceInfo entry;
 
         // Copy the device name. SceBtRegisteredInfo.name is 0x4F bytes; VqmbtDeviceInfo.name is 128.
-        // Always NUL-terminate defensively in case the source isn't terminated.
-        for (int j = 0; j < (int)sizeof(entry.name); j++) entry.name[j] = 0;
-        strncpy(entry.name, src->name, sizeof(entry.name) - 1);
+        // Byte loop instead of memcpy/strncpy to satisfy clang-analyzer-security.insecureAPI.
+        for (int j = 0; j < (int)sizeof(entry.name); j++) {
+            entry.name[j] = (j < (int)sizeof(src->name)) ? src->name[j] : 0;
+        }
 
         // Pack the MAC bytes into mac0/mac1 using the SceBt convention (LE bytes 0..3 into mac0,
         // LE bytes 4..5 in the low 16 bits of mac1).
