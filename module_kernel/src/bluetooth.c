@@ -36,7 +36,7 @@ static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];
  * Enumerate paired bluetooth devices and copy summarized info into the user-supplied array.
  *
  * Acts as a syscall: marshals data across the kernel/user address boundary using
- * ksceKernelMemcpyKernelToUser, since the kernel cannot dereference user pointers directly
+ * ksceKernelCopyToUser, since the kernel cannot dereference user pointers directly
  * (DACR enforcement).
  *
  * @param info User-space pointer to an array of VqmbtDeviceInfo records.
@@ -86,9 +86,9 @@ int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
         entry.mac1 = ((unsigned int)m[5] << 8) | m[4];
 
         // Copy this entry into the user buffer slot.
-        int ret = ksceKernelMemcpyKernelToUser((uintptr_t)&info[i], &entry, sizeof(entry));
+        int ret = ksceKernelCopyToUser(&info[i], &entry, sizeof(entry));
         if (ret < 0) {
-            LOG_DEBUG(0, "ksceKernelMemcpyKernelToUser failed at index %d: 0x%08X", i, ret);
+            LOG_DEBUG(0, "ksceKernelCopyToUser failed at index %d: 0x%08X", i, ret);
             return ret;
         }
     }
