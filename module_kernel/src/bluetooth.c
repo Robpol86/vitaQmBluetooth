@@ -26,6 +26,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2kern/kernel/sysmem.h>
 #include <psp2kern/kernel/threadmgr.h>
 
+#include "common.h"
 #include "log.h"
 
 #define MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with.
@@ -91,7 +92,10 @@ static void connect_or_disconnect(int device_index) {
  * - Memory eficiency? deallocate?
  * - Log connection state (reflect settings app)
  */
-static void _log_paired_devices(void) {
+void log_paired_devices(void) {
+    uint32_t state SYSCALL_STATE = 0;
+    ENTER_SYSCALL(state);
+
     // Zero the array to prevent ghost data.
     for (int i = 0; i < (int)sizeof(paired_devices); i++) ((unsigned char*)paired_devices)[i] = 0;
 
@@ -141,16 +145,4 @@ static void _log_paired_devices(void) {
         LOG_DEBUG(0, "Connecting or disconnecting device %d", conn_disconn_dev);
         connect_or_disconnect(conn_disconn_dev);
     }
-}
-
-/**
- * Iterate through all paired bluetooth devices and log their information.
- *
- * TODO: no dual function, use "decorator" style macro.
- */
-void log_paired_devices(void) {
-    uint32_t state;
-    ENTER_SYSCALL(state);
-    _log_paired_devices();
-    EXIT_SYSCALL(state);
 }
