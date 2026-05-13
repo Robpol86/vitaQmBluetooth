@@ -12,4 +12,3 @@
         - kvqmbtGetPairedDevices
         - kvqmbtConnectDevice
         - kvqmbtDisconnectDevice
-        - log_paired_devices
