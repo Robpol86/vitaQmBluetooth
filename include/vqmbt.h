@@ -37,6 +37,4 @@ int kvqmbtConnectDevice(unsigned int mac0, unsigned int mac1);
 
 int kvqmbtDisconnectDevice(unsigned int mac0, unsigned int mac1);
 
-void log_paired_devices(void);  // TODO remove
-
 #endif  // VQMBT_H
