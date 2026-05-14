@@ -33,28 +33,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];
 
 /**
- * TODO
- */
-int kvqmbtConnectDevice(unsigned int mac0, unsigned int mac1) {
-    uint32_t state SYSCALL_STATE = 0;
-    ENTER_SYSCALL(state);
-
-    LOG_DEBUG(0, "TODO");
-    return 0;
-}
-
-/**
- * TODO
- */
-int kvqmbtDisconnectDevice(unsigned int mac0, unsigned int mac1) {
-    uint32_t state SYSCALL_STATE = 0;
-    ENTER_SYSCALL(state);
-
-    LOG_DEBUG(0, "TODO");
-    return 0;
-}
-
-/**
  * Disconnect first bluetooth device if connected, and vice versa.
  *
  * PoC confirmed! I have verified this function connects and disconnects my AirPods Pro from the Quick Menu whilst

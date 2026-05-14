@@ -10,5 +10,3 @@
       syscall: true
       functions:
         - kvqmbtGetPairedDevices
-        - kvqmbtConnectDevice
-        - kvqmbtDisconnectDevice
