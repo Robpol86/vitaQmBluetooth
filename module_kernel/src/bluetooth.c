@@ -158,10 +158,10 @@ int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
 
         // Populate user side.
         VqmbtDeviceInfo dev = {0};
-        // Name.
+        // name
         strncpy(dev.name, sceDev->name, sizeof(dev.name) - 1);
         dev.name[sizeof(dev.name) - 1] = '\0';
-        // Mac.
+        // mac
         dev.mac0 = ((unsigned int)mac[3] << 24) | ((unsigned int)mac[2] << 16) | ((unsigned int)mac[1] << 8) | mac[0];
         dev.mac1 = ((unsigned int)mac[5] << 8) | mac[4];
 
