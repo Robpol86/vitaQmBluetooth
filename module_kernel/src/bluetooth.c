@@ -49,25 +49,22 @@ int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
     ENTER_SYSCALL(state);
 
     // Validate.
-    if (info == NULL || info_size <= 0) {
+    if (info == NULL || info_size < 1 || info_size > VQMBT_MAX_DEVICES) {
         LOG_ERROR("Invalid argument: info=%p info_size=%d", info, info_size);
         return VQMBT_ERROR_INVALID_ARGUMENT;
     }
 
-    // Clamp to local buffer capacity. Querying more than VQMBT_MAX_DEVICES would overflow paired_devices.
-    int cap = info_size;
-    if (cap > VQMBT_MAX_DEVICES) cap = VQMBT_MAX_DEVICES;
-
-    // Zero the kernel-side array to prevent ghost data from a previous call.
+    // Zero the kernel-side array to prevent ghost data.
     for (int i = 0; i < (int)sizeof(paired_devices); i++) ((unsigned char*)paired_devices)[i] = 0;
 
+    // HERE
     // Enumerate registered devices into the kernel-side array.
-    int count = ksceBtGetRegisteredInfo(0, 0, paired_devices, cap);
+    int count = ksceBtGetRegisteredInfo(0, 0, paired_devices, info_size);
     if (count < 0) {
         LOG_DEBUG(0, "ksceBtGetRegisteredInfo returned error: 0x%08X", count);
         return count;
     }
-    LOG_DEBUG(0, "count=%d cap=%d", count, cap);
+    LOG_DEBUG(0, "count=%d cap=%d", count, info_size);
 
     // Marshal each record across the kernel/user boundary.
     for (int i = 0; i < count; i++) {
