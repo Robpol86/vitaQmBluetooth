@@ -28,7 +28,7 @@ typedef struct VqmbtDeviceInfo {
     char name[128];
     unsigned int mac0;
     unsigned int mac1;
-    int connecting_state;
+    int state;
 } VqmbtDeviceInfo;
 
 int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size);
