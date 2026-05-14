@@ -85,29 +85,17 @@ int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
                 sceDev->unk5[row + 12], sceDev->unk5[row + 13], sceDev->unk5[row + 14], sceDev->unk5[row + 15]);
         }
 
-        // HERE
+        // Populate user side.
         VqmbtDeviceInfo dev;
-
-        // TODO remove
-        LOG_DEBUG(0, "name=\"%s\" name[127]=0x%02X (0=terminated, else=not)", sceDev->name,
-                  (unsigned char)sceDev->name[sizeof(sceDev->name) - 1]);
-
-        // Copy the device name. SceBtRegisteredInfo.name is 0x4F bytes; VqmbtDeviceInfo.name is 128.
-        // Byte loop instead of memcpy/strncpy to satisfy clang-analyzer-security.insecureAPI.
-        for (int j = 0; j < (int)sizeof(dev.name); j++) {
-            dev.name[j] = sceDev->name[j];
-        }
-
-        // Pack the MAC bytes into mac0/mac1 using the SceBt convention (LE bytes 0..3 into mac0,
-        // LE bytes 4..5 in the low 16 bits of mac1).
+        for (int j = 0; j < (int)sizeof(dev.name); j++) dev.name[j] = sceDev->name[j];  // TODO strncpy?
         dev.mac0 = ((unsigned int)m[3] << 24) | ((unsigned int)m[2] << 16) | ((unsigned int)m[1] << 8) | m[0];
         dev.mac1 = ((unsigned int)m[5] << 8) | m[4];
 
-        // Copy this entry into the user buffer slot.
+        // Export to user space.
         int ret = ksceKernelCopyToUser(&info[idx], &dev, sizeof(dev));
         if (ret < 0) {
-            LOG_DEBUG(0, "ksceKernelCopyToUser failed at index %d: 0x%08X", idx, ret);
-            return ret;
+            LOG_ERROR("ksceKernelCopyToUser failed at index %d: 0x%08X", idx, ret);
+            return VQMBT_ERROR_KERNEL_SIDE;
         }
     }
 
