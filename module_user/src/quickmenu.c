@@ -49,8 +49,7 @@ BUTTON_HANDLER(on_press) {
         LOG_DEBUG(0, "count=%d", count);
         for (int idx = 0; idx < count; idx++) {
             VqmbtDeviceInfo* dev = &devices[idx];
-            LOG_DEBUG(0, "idx=%d name=\"%s\" mac0=0x%08X mac1=0x%08X", idx, dev->name, dev->mac0,
-                      dev->mac1);  // TODO review
+            LOG_DEBUG(0, "idx=%d name=\"%s\" mac0=0x%08X mac1=0x%08X", idx, dev->name, dev->mac0, dev->mac1);
         }
     } else {
         LOG_DEBUG(0, "kvqmbtGetPairedDevices returned error: 0x%08X", count);
