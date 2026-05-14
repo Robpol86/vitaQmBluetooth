@@ -43,15 +43,17 @@ BUTTON_HANDLER(on_press) {
 
     LOG_DEBUG(0, "Calling kernel function.");
 
-    // Pull a summarized device list across the syscall boundary.
-    VqmbtDeviceInfo devices[8];
-    int count = kvqmbtGetPairedDevices(devices, (int)(sizeof(devices) / sizeof(devices[0])));
-    LOG_DEBUG(0, "kvqmbtGetPairedDevices returned %d", count);
+    VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];
+    int count = kvqmbtGetPairedDevices(devices, VQMBT_MAX_DEVICES);
     if (count > 0) {
+        LOG_DEBUG(0, "count=%d", count);
         for (int i = 0; i < count; i++) {
-            VqmbtDeviceInfo* d = &devices[i];
-            LOG_DEBUG(50000, "user num=%d name=\"%s\" mac0=0x%08X mac1=0x%04X", i, d->name, d->mac0, d->mac1);
+            VqmbtDeviceInfo* dev = &devices[i];
+            LOG_DEBUG(50000, "user num=%d name=\"%s\" mac0=0x%08X mac1=0x%04X state=%d", i, dev->name, dev->mac0,
+                      dev->mac1, dev->connecting_state);
         }
+    } else {
+        LOG_DEBUG(0, "kvqmbtGetPairedDevices returned error: 0x%08X", count);
     }
 
     LOG_DEBUG(0, "Done calling kernel function.");
