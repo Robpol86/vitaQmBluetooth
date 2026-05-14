@@ -57,15 +57,16 @@ int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
     // Zero the kernel-side array to prevent ghost data.
     for (int i = 0; i < (int)sizeof(paired_devices); i++) ((unsigned char*)paired_devices)[i] = 0;
 
-    // HERE
-    // Enumerate registered devices into the kernel-side array.
-    int count = ksceBtGetRegisteredInfo(0, 0, paired_devices, info_size);
+    // Populate file-scoped array with all currently paired devices.
+    int mac0 = 0, mac1 = 0;
+    int count = ksceBtGetRegisteredInfo(mac0, mac1, paired_devices, info_size);
     if (count < 0) {
-        LOG_DEBUG(0, "ksceBtGetRegisteredInfo returned error: 0x%08X", count);
-        return count;
+        LOG_ERROR("ksceBtGetRegisteredInfo returned error: 0x%08X", count);
+        return VQMBT_ERROR_KERNEL_SIDE;
     }
-    LOG_DEBUG(0, "count=%d cap=%d", count, info_size);
+    LOG_DEBUG(0, "ksceBtGetRegisteredInfo returned count=%d info_size=%d max=%d", count, info_size, VQMBT_MAX_DEVICES);
 
+    // HERE
     // Marshal each record across the kernel/user boundary.
     for (int i = 0; i < count; i++) {
         SceBtRegisteredInfo* src = &paired_devices[i];

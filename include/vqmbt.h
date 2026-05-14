@@ -26,6 +26,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 // Error codes.
 #define VQMBT_ERROR_INVALID_ARGUMENT ((int)0x80690001)
+#define VQMBT_ERROR_KERNEL_SIDE ((int)0x80690002)
 
 typedef struct VqmbtDeviceInfo {
     char name[128];
