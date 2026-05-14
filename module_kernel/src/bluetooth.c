@@ -141,8 +141,8 @@ int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
         // Get kernel side.
         SceBtRegisteredInfo* sceDev = &paired_devices[idx];
         const unsigned char* mac = (const unsigned char*)&sceDev->mac;
-        LOG_DEBUG(0, "idx=%d mac=%02X:%02X:%02X:%02X:%02X:%02X name=\"%s\" class=0x%08X vid=0x%04X pid=0x%04X", idx,
-                  mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], sceDev->name, sceDev->bt_class, sceDev->vid,
+        LOG_DEBUG(0, "idx=%d name=\"%s\" mac=%02X:%02X:%02X:%02X:%02X:%02X class=0x%08X vid=0x%04X pid=0x%04X", idx,
+                  sceDev->name, mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], sceDev->bt_class, sceDev->vid,
                   sceDev->pid);
         LOG_DEBUG(0, "      unk0=0x%04X unk1=0x%08X unk2=0x%08X unk3=0x%08X unk4=0x%08X", sceDev->unk0, sceDev->unk1,
                   sceDev->unk2, sceDev->unk3, sceDev->unk4);
