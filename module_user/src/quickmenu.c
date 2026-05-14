@@ -49,7 +49,7 @@ BUTTON_HANDLER(on_press) {
         LOG_DEBUG(0, "count=%d", count);
         for (int i = 0; i < count; i++) {
             VqmbtDeviceInfo* dev = &devices[i];
-            LOG_DEBUG(0, "user num=%d name=\"%s\" mac0=0x%08X mac1=0x%04X", i, dev->name, dev->mac0, dev->mac1);
+            LOG_DEBUG(0, "user num=%d name=\"%s\" mac0=0x%08X mac1=0x%08X", i, dev->name, dev->mac0, dev->mac1);
         }
     } else {
         LOG_DEBUG(0, "kvqmbtGetPairedDevices returned error: 0x%08X", count);
