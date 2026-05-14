@@ -30,7 +30,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "log.h"
 #include "vqmbt.h"
 
-static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];
+static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];  // TODO move to kvqmbtGetPairedDevices?
 
 /**
  * Enumerate paired bluetooth devices and copy summarized info into the user-supplied array.
