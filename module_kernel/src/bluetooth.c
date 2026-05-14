@@ -48,10 +48,10 @@ int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
     uint32_t state SYSCALL_STATE = 0;
     ENTER_SYSCALL(state);
 
-    // Validate user inputs.
+    // Validate.
     if (info == NULL || info_size <= 0) {
-        LOG_DEBUG(0, "Invalid args: info=%p info_size=%d", info, info_size);
-        return -1;
+        LOG_ERROR(0, "Invalid argument: info=%p info_size=%d", info, info_size);
+        return VQMBT_ERROR_INVALID_ARGUMENT;
     }
 
     // Clamp to local buffer capacity. Querying more than VQMBT_MAX_DEVICES would overflow paired_devices.
