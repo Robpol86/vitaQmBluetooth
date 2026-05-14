@@ -30,26 +30,17 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "log.h"
 #include "vqmbt.h"
 
-static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];  // TODO move to kvqmbtGetPairedDevices?
+static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];
 
 /**
- * Enumerate paired bluetooth devices and copy summarized info into the user-supplied array.
- *
- * TODO rewrite this comment.
+ * Get all currently paired bluetooth devices.
  *
  * TODO:
  * - Is 8 actually the max number of devices?
- * - Memory eficiency? deallocate paired_devices?
- * - Log connection state (reflect settings app)
- *
- * Acts as a syscall: marshals data across the kernel/user address boundary using
- * ksceKernelCopyToUser, since the kernel cannot dereference user pointers directly
- * (DACR enforcement).
  *
  * @param info User-space pointer to an array of VqmbtDeviceInfo records.
  * @param info_size Capacity of the user array, in records.
- * @return Number of records written on success (0 to min(info_size, MAX_DEVICES, registered)),
- *         or a negative error code on failure.
+ * @return Number of records written on success, or a negative error code on failure.
  */
 int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
     uint32_t state SYSCALL_STATE = 0;
