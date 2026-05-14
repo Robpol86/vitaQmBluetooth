@@ -48,7 +48,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @param fmtMsg The log message including any format specifiers.
  * @param ... Arguments for the format specifiers.
  */
-#define LOG_ERROR(fmtMsg, ...) _LOG_MESSAGE(0, "ERROR", fmtMsg, ##__VA_ARGS__);
+#define LOG_ERROR(fmtMsg, ...) _LOG_MESSAGE(0, "ERROR", fmtMsg, ##__VA_ARGS__)
 
 #ifndef NDEBUG
 /**
@@ -60,9 +60,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @param fmtMsg The log message including any format specifiers.
  * @param ... Arguments for the format specifiers.
  */
-#define LOG_DEBUG(delay, fmtMsg, ...) _LOG_MESSAGE(delay, "DEBUG", fmtMsg, ##__VA_ARGS__);
+#define LOG_DEBUG(delay, fmtMsg, ...) _LOG_MESSAGE(delay, "DEBUG", fmtMsg, ##__VA_ARGS__)
 #else
-#define LOG_DEBUG(delay, fmtMsg, ...) _LOG_MESSAGE_NOOP(delay, fmtMsg, ##__VA_ARGS__);
+#define LOG_DEBUG(delay, fmtMsg, ...) _LOG_MESSAGE_NOOP(delay, fmtMsg, ##__VA_ARGS__)
 #endif  // NDEBUG
 
 #endif  // LOG_H
