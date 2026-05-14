@@ -66,13 +66,14 @@ int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
     }
     LOG_DEBUG(0, "ksceBtGetRegisteredInfo returned count=%d info_size=%d max=%d", count, info_size, VQMBT_MAX_DEVICES);
 
-    // Marshal each record across the kernel/user boundary.
+    // Copy each record across the kernel/user boundary.
     for (int idx = 0; idx < count; idx++) {
         // Get kernel side.
         SceBtRegisteredInfo* sceDev = &paired_devices[idx];
-        const unsigned char* m = (const unsigned char*)&sceDev->mac;  // TODO rename?
-        LOG_DEBUG(0, "idx=%d mac=%02X:%02X:%02X:%02X:%02X:%02X name=\"%s\" class=0x%08X vid=0x%04X pid=0x%04X", idx, m[0],
-                  m[1], m[2], m[3], m[4], m[5], sceDev->name, sceDev->bt_class, sceDev->vid, sceDev->pid);
+        const unsigned char* mac = (const unsigned char*)&sceDev->mac;  // TODO rename?
+        LOG_DEBUG(0, "idx=%d mac=%02X:%02X:%02X:%02X:%02X:%02X name=\"%s\" class=0x%08X vid=0x%04X pid=0x%04X", idx,
+                  mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], sceDev->name, sceDev->bt_class, sceDev->vid,
+                  sceDev->pid);
         LOG_DEBUG(0, "      unk0=0x%04X unk1=0x%08X unk2=0x%08X unk3=0x%08X unk4=0x%08X", sceDev->unk0, sceDev->unk1,
                   sceDev->unk2, sceDev->unk3, sceDev->unk4);
         for (int row = 0; row < 0x60; row += 16) {
@@ -88,8 +89,8 @@ int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
         // Populate user side.
         VqmbtDeviceInfo dev;
         for (int j = 0; j < (int)sizeof(dev.name); j++) dev.name[j] = sceDev->name[j];  // TODO strncpy?
-        dev.mac0 = ((unsigned int)m[3] << 24) | ((unsigned int)m[2] << 16) | ((unsigned int)m[1] << 8) | m[0];
-        dev.mac1 = ((unsigned int)m[5] << 8) | m[4];
+        dev.mac0 = ((unsigned int)mac[3] << 24) | ((unsigned int)mac[2] << 16) | ((unsigned int)mac[1] << 8) | mac[0];
+        dev.mac1 = ((unsigned int)mac[5] << 8) | mac[4];
 
         // Export to user space.
         int ret = ksceKernelCopyToUser(&info[idx], &dev, sizeof(dev));
