@@ -50,7 +50,7 @@ int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
 
     // Validate.
     if (info == NULL || info_size <= 0) {
-        LOG_ERROR(0, "Invalid argument: info=%p info_size=%d", info, info_size);
+        LOG_ERROR("Invalid argument: info=%p info_size=%d", info, info_size);
         return VQMBT_ERROR_INVALID_ARGUMENT;
     }
 
