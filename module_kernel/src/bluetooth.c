@@ -66,26 +66,30 @@ int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
     }
     LOG_DEBUG(0, "ksceBtGetRegisteredInfo returned count=%d info_size=%d max=%d", count, info_size, VQMBT_MAX_DEVICES);
 
-    // HERE
     // Marshal each record across the kernel/user boundary.
     for (int i = 0; i < count; i++) {
-        SceBtRegisteredInfo* src = &paired_devices[i];
-        VqmbtDeviceInfo entry;
+        SceBtRegisteredInfo* sceDev = &paired_devices[i];
+        VqmbtDeviceInfo dev;
 
+        // TODO remove
+        LOG_DEBUG(0, "name=\"%s\" name[127]=0x%02X (0=terminated, else=not)", sceDev->name,
+                  (unsigned char)sceDev->name[sizeof(sceDev->name) - 1]);
+
+        // HERE
         // Copy the device name. SceBtRegisteredInfo.name is 0x4F bytes; VqmbtDeviceInfo.name is 128.
         // Byte loop instead of memcpy/strncpy to satisfy clang-analyzer-security.insecureAPI.
-        for (int j = 0; j < (int)sizeof(entry.name); j++) {
-            entry.name[j] = (j < (int)sizeof(src->name)) ? src->name[j] : 0;
+        for (int j = 0; j < (int)sizeof(dev.name); j++) {
+            dev.name[j] = sceDev->name[j];
         }
 
         // Pack the MAC bytes into mac0/mac1 using the SceBt convention (LE bytes 0..3 into mac0,
         // LE bytes 4..5 in the low 16 bits of mac1).
-        const unsigned char* m = (const unsigned char*)&src->mac;
-        entry.mac0 = ((unsigned int)m[3] << 24) | ((unsigned int)m[2] << 16) | ((unsigned int)m[1] << 8) | m[0];
-        entry.mac1 = ((unsigned int)m[5] << 8) | m[4];
+        const unsigned char* m = (const unsigned char*)&sceDev->mac;
+        dev.mac0 = ((unsigned int)m[3] << 24) | ((unsigned int)m[2] << 16) | ((unsigned int)m[1] << 8) | m[0];
+        dev.mac1 = ((unsigned int)m[5] << 8) | m[4];
 
         // Copy this entry into the user buffer slot.
-        int ret = ksceKernelCopyToUser(&info[i], &entry, sizeof(entry));
+        int ret = ksceKernelCopyToUser(&info[i], &dev, sizeof(dev));
         if (ret < 0) {
             LOG_DEBUG(0, "ksceKernelCopyToUser failed at index %d: 0x%08X", i, ret);
             return ret;

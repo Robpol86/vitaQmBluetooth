@@ -34,6 +34,7 @@ typedef struct VqmbtDeviceInfo {
     unsigned int mac1;
     int state;
 } VqmbtDeviceInfo;
+// TODO VITASDK_BUILD_ASSERT_EQ VqmbtDeviceInfo?
 
 int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size);
 
