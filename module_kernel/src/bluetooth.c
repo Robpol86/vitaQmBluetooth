@@ -67,15 +67,31 @@ int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
     LOG_DEBUG(0, "ksceBtGetRegisteredInfo returned count=%d info_size=%d max=%d", count, info_size, VQMBT_MAX_DEVICES);
 
     // Marshal each record across the kernel/user boundary.
-    for (int i = 0; i < count; i++) {
-        SceBtRegisteredInfo* sceDev = &paired_devices[i];
+    for (int idx = 0; idx < count; idx++) {
+        // Get kernel side.
+        SceBtRegisteredInfo* sceDev = &paired_devices[idx];
+        const unsigned char* m = (const unsigned char*)&sceDev->mac;  // TODO rename?
+        LOG_DEBUG(0, "idx=%d mac=%02X:%02X:%02X:%02X:%02X:%02X name=\"%s\" class=0x%08X vid=0x%04X pid=0x%04X", idx, m[0],
+                  m[1], m[2], m[3], m[4], m[5], sceDev->name, sceDev->bt_class, sceDev->vid, sceDev->pid);
+        LOG_DEBUG(0, "      unk0=0x%04X unk1=0x%08X unk2=0x%08X unk3=0x%08X unk4=0x%08X", sceDev->unk0, sceDev->unk1,
+                  sceDev->unk2, sceDev->unk3, sceDev->unk4);
+        for (int row = 0; row < 0x60; row += 16) {
+            LOG_DEBUG(
+                10000,
+                "      unk5[0x%02X]=%02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X", row,
+                sceDev->unk5[row + 0], sceDev->unk5[row + 1], sceDev->unk5[row + 2], sceDev->unk5[row + 3],
+                sceDev->unk5[row + 4], sceDev->unk5[row + 5], sceDev->unk5[row + 6], sceDev->unk5[row + 7],
+                sceDev->unk5[row + 8], sceDev->unk5[row + 9], sceDev->unk5[row + 10], sceDev->unk5[row + 11],
+                sceDev->unk5[row + 12], sceDev->unk5[row + 13], sceDev->unk5[row + 14], sceDev->unk5[row + 15]);
+        }
+
+        // HERE
         VqmbtDeviceInfo dev;
 
         // TODO remove
         LOG_DEBUG(0, "name=\"%s\" name[127]=0x%02X (0=terminated, else=not)", sceDev->name,
                   (unsigned char)sceDev->name[sizeof(sceDev->name) - 1]);
 
-        // HERE
         // Copy the device name. SceBtRegisteredInfo.name is 0x4F bytes; VqmbtDeviceInfo.name is 128.
         // Byte loop instead of memcpy/strncpy to satisfy clang-analyzer-security.insecureAPI.
         for (int j = 0; j < (int)sizeof(dev.name); j++) {
@@ -84,14 +100,13 @@ int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
 
         // Pack the MAC bytes into mac0/mac1 using the SceBt convention (LE bytes 0..3 into mac0,
         // LE bytes 4..5 in the low 16 bits of mac1).
-        const unsigned char* m = (const unsigned char*)&sceDev->mac;
         dev.mac0 = ((unsigned int)m[3] << 24) | ((unsigned int)m[2] << 16) | ((unsigned int)m[1] << 8) | m[0];
         dev.mac1 = ((unsigned int)m[5] << 8) | m[4];
 
         // Copy this entry into the user buffer slot.
-        int ret = ksceKernelCopyToUser(&info[i], &dev, sizeof(dev));
+        int ret = ksceKernelCopyToUser(&info[idx], &dev, sizeof(dev));
         if (ret < 0) {
-            LOG_DEBUG(0, "ksceKernelCopyToUser failed at index %d: 0x%08X", i, ret);
+            LOG_DEBUG(0, "ksceKernelCopyToUser failed at index %d: 0x%08X", idx, ret);
             return ret;
         }
     }

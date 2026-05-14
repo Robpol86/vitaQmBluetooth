@@ -32,7 +32,6 @@ typedef struct VqmbtDeviceInfo {
     char name[128];
     unsigned int mac0;
     unsigned int mac1;
-    int state;
 } VqmbtDeviceInfo;
 // TODO VITASDK_BUILD_ASSERT_EQ VqmbtDeviceInfo?
 
