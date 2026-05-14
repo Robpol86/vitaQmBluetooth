@@ -39,7 +39,7 @@ static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];
  *
  * TODO:
  * - Is 8 actually the max number of devices?
- * - Memory eficiency? deallocate?
+ * - Memory eficiency? deallocate paired_devices?
  * - Log connection state (reflect settings app)
  *
  * Acts as a syscall: marshals data across the kernel/user address boundary using

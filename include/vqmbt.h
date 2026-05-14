@@ -22,6 +22,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef VQMBT_H
 #define VQMBT_H
 
+#include <vitasdk/build_utils.h>
+
 #define VQMBT_MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with.
 
 // Error codes.
@@ -33,7 +35,7 @@ typedef struct VqmbtDeviceInfo {
     unsigned int mac0;
     unsigned int mac1;
 } VqmbtDeviceInfo;
-// TODO VITASDK_BUILD_ASSERT_EQ VqmbtDeviceInfo?
+VITASDK_BUILD_ASSERT_EQ(0x88, VqmbtDeviceInfo);
 
 int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size);
 
