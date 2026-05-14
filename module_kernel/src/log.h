@@ -26,7 +26,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2kern/kernel/rtc.h>
 #include <psp2kern/kernel/threadmgr.h>
 
-#define _LOG_MESSAGE(delay, category, fmtMsg, ...)                                                                     \
+#define LOG_MESSAGE_(delay, category, fmtMsg, ...)                                                                     \
     do {                                                                                                               \
         SceDateTime _time;                                                                                             \
         ksceRtcGetCurrentClockLocalTime(&_time);                                                                       \
@@ -36,7 +36,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
         if (!__builtin_constant_p(delay) || (delay) > 0) ksceKernelDelayThread((delay));                               \
     } while (0)
 
-#define _LOG_MESSAGE_NOOP(delay, fmtMsg, ...)           \
+#define LOG_MESSAGE_NOOP_(delay, fmtMsg, ...)           \
     do {                                                \
         (void)(delay);                                  \
         if (0) ksceKernelPrintf(fmtMsg, ##__VA_ARGS__); \
@@ -48,7 +48,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @param fmtMsg The log message including any format specifiers.
  * @param ... Arguments for the format specifiers.
  */
-#define LOG_ERROR(fmtMsg, ...) _LOG_MESSAGE(0, "ERROR", fmtMsg, ##__VA_ARGS__)
+#define LOG_ERROR(fmtMsg, ...) LOG_MESSAGE_(0, "ERROR", fmtMsg, ##__VA_ARGS__)
 
 #ifndef NDEBUG
 /**
@@ -60,9 +60,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @param fmtMsg The log message including any format specifiers.
  * @param ... Arguments for the format specifiers.
  */
-#define LOG_DEBUG(delay, fmtMsg, ...) _LOG_MESSAGE(delay, "DEBUG", fmtMsg, ##__VA_ARGS__)
+#define LOG_DEBUG(delay, fmtMsg, ...) LOG_MESSAGE_(delay, "DEBUG", fmtMsg, ##__VA_ARGS__)
 #else
-#define LOG_DEBUG(delay, fmtMsg, ...) _LOG_MESSAGE_NOOP(delay, fmtMsg, ##__VA_ARGS__)
+#define LOG_DEBUG(delay, fmtMsg, ...) LOG_MESSAGE_NOOP_(delay, fmtMsg, ##__VA_ARGS__)
 #endif  // NDEBUG
 
 #endif  // LOG_H
