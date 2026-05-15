@@ -42,7 +42,19 @@ BUTTON_HANDLER(on_press) {
     (void)userDat;
 
     LOG_DEBUG(0, "Calling kernel function.");
-    log_paired_devices();
+
+    VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];
+    int count = kvqmbtGetPairedDevices(devices, VQMBT_MAX_DEVICES);
+    if (count > 0) {
+        LOG_DEBUG(0, "count=%d", count);
+        for (int idx = 0; idx < count; idx++) {
+            VqmbtDeviceInfo* dev = &devices[idx];
+            LOG_DEBUG(0, "idx=%d name=\"%s\" mac0=0x%08X mac1=0x%08X", idx, dev->name, dev->mac0, dev->mac1);
+        }
+    } else {
+        LOG_ERROR("kvqmbtGetPairedDevices returned error: 0x%08X", count);
+    }
+
     LOG_DEBUG(0, "Done calling kernel function.");
 }
 
