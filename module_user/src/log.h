@@ -23,10 +23,32 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define LOG_H
 
 #include <psp2/kernel/clib.h>
-#ifndef NDEBUG
 #include <psp2/kernel/threadmgr.h>
 #include <psp2/rtc.h>
-#endif  // NDEBUG
+
+#define LOG_MESSAGE_(delay, category, fmtMsg, ...)                                                                  \
+    do {                                                                                                            \
+        SceDateTime _time;                                                                                          \
+        sceRtcGetCurrentClockLocalTime(&_time);                                                                     \
+        sceClibPrintf("[%02d:%02d:%02d.%03d] [" category "] [" MODULE_NAME "] [%s:%d:%s] " fmtMsg "\n", _time.hour, \
+                      _time.minute, _time.second, _time.microsecond / 1000, __FILE__, __LINE__, __func__,           \
+                      ##__VA_ARGS__);                                                                               \
+        if (!__builtin_constant_p(delay) || (delay) > 0) sceKernelDelayThread((delay));                             \
+    } while (0)
+
+#define LOG_MESSAGE_NOOP_(delay, fmtMsg, ...)        \
+    do {                                             \
+        (void)(delay);                               \
+        if (0) sceClibPrintf(fmtMsg, ##__VA_ARGS__); \
+    } while (0)
+
+/**
+ * Macro that logs an error message.
+ *
+ * @param fmtMsg The log message including any format specifiers.
+ * @param ... Arguments for the format specifiers.
+ */
+#define LOG_ERROR(fmtMsg, ...) LOG_MESSAGE_(0, "ERROR", fmtMsg, ##__VA_ARGS__)
 
 #ifndef NDEBUG
 /**
@@ -38,24 +60,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @param fmtMsg The log message including any format specifiers.
  * @param ... Arguments for the format specifiers.
  */
-#define LOG_DEBUG(delay, fmtMsg, ...)                                                                        \
-    do {                                                                                                     \
-        SceDateTime _time;                                                                                   \
-        sceRtcGetCurrentClockLocalTime(&_time);                                                              \
-        sceClibPrintf("[%02d:%02d:%02d.%03d] [DEBUG] [" MODULE_NAME "] [%s:%d:%s] " fmtMsg "\n", _time.hour, \
-                      _time.minute, _time.second, _time.microsecond / 1000, __FILE__, __LINE__, __func__,    \
-                      ##__VA_ARGS__);                                                                        \
-        if (!__builtin_constant_p(delay) || (delay) > 0) sceKernelDelayThread((delay));                      \
-    } while (0)
+#define LOG_DEBUG(delay, fmtMsg, ...) LOG_MESSAGE_(delay, "DEBUG", fmtMsg, ##__VA_ARGS__)
 #else
-/**
- * No-op in release builds.
- */
-#define LOG_DEBUG(delay, fmtMsg, ...)                \
-    do {                                             \
-        (void)(delay);                               \
-        if (0) sceClibPrintf(fmtMsg, ##__VA_ARGS__); \
-    } while (0)
+#define LOG_DEBUG(delay, fmtMsg, ...) LOG_MESSAGE_NOOP_(delay, fmtMsg, ##__VA_ARGS__)
 #endif  // NDEBUG
 
 #endif  // LOG_H
