@@ -40,9 +40,9 @@ static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];
  */
 static void connect_or_disconnect(int device_index) {
     SceBtRegisteredInfo* device_info = &paired_devices[device_index];
-    const unsigned char* m = (const unsigned char*)&device_info->mac;
-    unsigned int mac0 = (m[3] << 24) | (m[2] << 16) | (m[1] << 8) | m[0];
-    unsigned int mac1 = (m[5] << 8) | m[4];
+    const unsigned char* mac = (const unsigned char*)&device_info->mac;
+    unsigned int mac0 = (mac[3] << 24) | (mac[2] << 16) | (mac[1] << 8) | mac[0];
+    unsigned int mac1 = (mac[5] << 8) | mac[4];
 
     // Sanity check.
     int ret;
