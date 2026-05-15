@@ -40,9 +40,9 @@ static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];
  */
 void connect_or_disconnect(int device_index) {
     SceBtRegisteredInfo* device_info = &paired_devices[device_index];
-    const unsigned char* m = (const unsigned char*)&device_info->mac;
-    unsigned int mac0 = (m[3] << 24) | (m[2] << 16) | (m[1] << 8) | m[0];
-    unsigned int mac1 = (m[5] << 8) | m[4];
+    const unsigned char* mac = (const unsigned char*)&device_info->mac;
+    unsigned int mac0 = (mac[3] << 24) | (mac[2] << 16) | (mac[1] << 8) | mac[0];
+    unsigned int mac1 = (mac[5] << 8) | mac[4];
 
     // Sanity check.
     int ret;
@@ -50,7 +50,7 @@ void connect_or_disconnect(int device_index) {
     ret = ksceBtGetDeviceName(mac0, mac1, name);
     LOG_DEBUG(0, "ksceBtGetDeviceName: ret=%d name=\"%s\" mac0=0x%08X mac1=0x%08X", ret, name, mac0, mac1);
     if (ret != 0) {
-        LOG_DEBUG(0, "UNKNOWN DEVICE");
+        LOG_ERROR("UNKNOWN DEVICE");
         return;
     }
 
@@ -65,7 +65,7 @@ void connect_or_disconnect(int device_index) {
         LOG_DEBUG(0, "Connecting \"%s\"", device_info->name);
         ret = ksceBtStartConnect(mac0, mac1);
         if (ret < 0) {
-            LOG_DEBUG(0, "ksceBtStartConnect returned error: 0x%08X", ret);
+            LOG_ERROR("ksceBtStartConnect returned error: 0x%08X", ret);
         } else {
             LOG_DEBUG(0, "ksceBtStartConnect returned: %d", ret);
         }
@@ -73,12 +73,12 @@ void connect_or_disconnect(int device_index) {
         LOG_DEBUG(0, "Disconnecting \"%s\"", device_info->name);
         ret = ksceBtStartDisconnect(mac0, mac1);
         if (ret < 0) {
-            LOG_DEBUG(0, "ksceBtStartDisconnect returned error: 0x%08X", ret);
+            LOG_ERROR("ksceBtStartDisconnect returned error: 0x%08X", ret);
         } else {
             LOG_DEBUG(0, "ksceBtStartDisconnect returned: %d", ret);
         }
     } else {
-        LOG_DEBUG(0, "Unknown state");
+        LOG_ERROR("Unknown state: %d", state);
     }
 }
 

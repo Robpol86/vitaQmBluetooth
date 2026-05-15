@@ -52,7 +52,7 @@ BUTTON_HANDLER(on_press) {
             LOG_DEBUG(0, "idx=%d name=\"%s\" mac0=0x%08X mac1=0x%08X", idx, dev->name, dev->mac0, dev->mac1);
         }
     } else {
-        LOG_DEBUG(0, "kvqmbtGetPairedDevices returned error: 0x%08X", count);
+        LOG_ERROR("kvqmbtGetPairedDevices returned error: 0x%08X", count);
     }
 
     LOG_DEBUG(0, "Done calling kernel function.");
