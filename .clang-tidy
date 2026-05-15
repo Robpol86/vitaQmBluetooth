@@ -5,6 +5,7 @@ Checks: >
   portability-*,
   readability-*,
   -bugprone-easily-swappable-parameters,
+  -bugprone-macro-parentheses,
   -bugprone-narrowing-conversions,
   -bugprone-reserved-identifier,
   -clang-analyzer-deadcode.DeadStores,
@@ -14,9 +15,8 @@ Checks: >
   -readability-identifier-length,
   -readability-isolate-declaration,
   -readability-magic-numbers,
-  -readability-use-concise-preprocessor-directives,
-  -bugprone-macro-parentheses,
   -readability-non-const-parameter,
+  -readability-use-concise-preprocessor-directives,
 CheckOptions:
   readability-function-cognitive-complexity.IgnoreMacros: true
 HeaderFilterRegex: '.*'
