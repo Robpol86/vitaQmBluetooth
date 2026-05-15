@@ -79,7 +79,7 @@ static void connect_or_disconnect(int device_index) {
             LOG_DEBUG(0, "ksceBtStartDisconnect returned: %d", ret);
         }
     } else {
-        LOG_ERROR("Unknown state");
+        LOG_ERROR("Unknown state: %d", state);
     }
 }
 
@@ -118,7 +118,7 @@ void log_paired_devices(void) {
 
         // Log known device info fields.
         const unsigned char* mac = (const unsigned char*)&device_info->mac;
-        LOG_DEBUG(50000, "idx=%d name=\"%s\" mac=%02X:%02X:%02X:%02X:%02X:%02X class=0x%08X vid=0x%04X pid=0x%04X", idx,
+        LOG_DEBUG(0, "idx=%d name=\"%s\" mac=%02X:%02X:%02X:%02X:%02X:%02X class=0x%08X vid=0x%04X pid=0x%04X", idx,
                   device_info->name, mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], device_info->bt_class,
                   device_info->vid, device_info->pid);
 
@@ -129,8 +129,9 @@ void log_paired_devices(void) {
         // Log unk5 in rows of 16 bytes.
         for (int row = 0; row < 0x60; row += 16) {
             LOG_DEBUG(
-                0, "      unk5[0x%02X]=%02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X",
-                row, device_info->unk5[row + 0], device_info->unk5[row + 1], device_info->unk5[row + 2],
+                10000,
+                "      unk5[0x%02X]=%02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X", row,
+                device_info->unk5[row + 0], device_info->unk5[row + 1], device_info->unk5[row + 2],
                 device_info->unk5[row + 3], device_info->unk5[row + 4], device_info->unk5[row + 5],
                 device_info->unk5[row + 6], device_info->unk5[row + 7], device_info->unk5[row + 8],
                 device_info->unk5[row + 9], device_info->unk5[row + 10], device_info->unk5[row + 11],
