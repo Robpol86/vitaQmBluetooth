@@ -50,7 +50,7 @@ static void connect_or_disconnect(int device_index) {
     ret = ksceBtGetDeviceName(mac0, mac1, name);
     LOG_DEBUG(0, "ksceBtGetDeviceName: ret=%d name=\"%s\" mac0=0x%08X mac1=0x%08X", ret, name, mac0, mac1);
     if (ret != 0) {
-        LOG_DEBUG(0, "UNKNOWN DEVICE");
+        LOG_ERROR("UNKNOWN DEVICE");
         return;
     }
 
@@ -65,7 +65,7 @@ static void connect_or_disconnect(int device_index) {
         LOG_DEBUG(0, "Connecting \"%s\"", device_info->name);
         ret = ksceBtStartConnect(mac0, mac1);
         if (ret < 0) {
-            LOG_DEBUG(0, "ksceBtStartConnect returned error: 0x%08X", ret);
+            LOG_ERROR("ksceBtStartConnect returned error: 0x%08X", ret);
         } else {
             LOG_DEBUG(0, "ksceBtStartConnect returned: %d", ret);
         }
@@ -73,12 +73,12 @@ static void connect_or_disconnect(int device_index) {
         LOG_DEBUG(0, "Disconnecting \"%s\"", device_info->name);
         ret = ksceBtStartDisconnect(mac0, mac1);
         if (ret < 0) {
-            LOG_DEBUG(0, "ksceBtStartDisconnect returned error: 0x%08X", ret);
+            LOG_ERROR("ksceBtStartDisconnect returned error: 0x%08X", ret);
         } else {
             LOG_DEBUG(0, "ksceBtStartDisconnect returned: %d", ret);
         }
     } else {
-        LOG_DEBUG(0, "Unknown state");
+        LOG_ERROR("Unknown state");
     }
 }
 
@@ -101,7 +101,7 @@ void log_paired_devices(void) {
     int mac0 = 0, mac1 = 0;
     int count = ksceBtGetRegisteredInfo(mac0, mac1, paired_devices, VQMBT_MAX_DEVICES);
     if (count < 0) {
-        LOG_DEBUG(0, "ksceBtGetRegisteredInfo returned error: 0x%08X", count);
+        LOG_ERROR("ksceBtGetRegisteredInfo returned error: 0x%08X", count);
         return;
     }
     LOG_DEBUG(0, "count=%d max=%d", count, VQMBT_MAX_DEVICES);
