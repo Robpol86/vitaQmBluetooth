@@ -116,10 +116,10 @@ void log_paired_devices(void) {
         }
 
         // Log known device info fields.
-        const unsigned char* m = (const unsigned char*)&device_info->mac;
+        const unsigned char* mac = (const unsigned char*)&device_info->mac;
         LOG_DEBUG(50000, "num=%d mac=%02X:%02X:%02X:%02X:%02X:%02X name=\"%s\" class=0x%08X vid=0x%04X pid=0x%04X", i,
-                  m[0], m[1], m[2], m[3], m[4], m[5], device_info->name, device_info->bt_class, device_info->vid,
-                  device_info->pid);
+                  mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], device_info->name, device_info->bt_class,
+                  device_info->vid, device_info->pid);
 
         // Log unknown fields except unk5.
         LOG_DEBUG(0, "      unk0=0x%04X unk1=0x%08X unk2=0x%08X unk3=0x%08X unk4=0x%08X", device_info->unk0,
