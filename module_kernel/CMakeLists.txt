@@ -16,6 +16,7 @@ target_compile_definitions("${MODULE_NAME}" PRIVATE
 )
 
 target_include_directories("${MODULE_NAME}" PRIVATE
+  "${CMAKE_SOURCE_DIR}/include"
   "${CMAKE_BINARY_DIR}/cmake_gen"
 )
 

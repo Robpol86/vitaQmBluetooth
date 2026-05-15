@@ -14,9 +14,16 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef BLUETOOTH_H
-#define BLUETOOTH_H
+/******************************************************************************
+ * @file
+ * @brief Cross-module interface exposed by the kernel module.
+ ******************************************************************************/
+
+#ifndef VQMBT_H
+#define VQMBT_H
+
+#define VQMBT_MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with.
 
 void log_paired_devices(void);
 
-#endif  // BLUETOOTH_H
+#endif  // VQMBT_H
