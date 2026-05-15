@@ -37,6 +37,8 @@ static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];
  *
  * PoC confirmed! I have verified this function connects and disconnects my AirPods Pro from the Quick Menu whilst
  * RetroArch was running.
+ *
+ * TODO replace with kvqmbtConnectDevice and kvqmbtDisconnectDevice.
  */
 void connect_or_disconnect(int device_index) {
     SceBtRegisteredInfo* device_info = &paired_devices[device_index];
