@@ -49,7 +49,7 @@ static void connect_or_disconnect(int device_index) {
     int ret;
     char name[0x79];
     ret = ksceBtGetDeviceName(mac0, mac1, name);
-    LOG_DEBUG(0, "ksceBtGetDeviceName: ret=%d name=\"%s\" mac0=0x%08X mac1=0x%04X", ret, name, mac0, mac1);
+    LOG_DEBUG(0, "ksceBtGetDeviceName: ret=%d name=\"%s\" mac0=0x%08X mac1=0x%08X", ret, name, mac0, mac1);
     if (ret != 0) {
         LOG_ERROR("UNKNOWN DEVICE");
         return;
@@ -118,8 +118,8 @@ void log_paired_devices(void) {
 
         // Log known device info fields.
         const unsigned char* mac = (const unsigned char*)&device_info->mac;
-        LOG_DEBUG(50000, "idx=%d mac=%02X:%02X:%02X:%02X:%02X:%02X name=\"%s\" class=0x%08X vid=0x%04X pid=0x%04X", idx,
-                  mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], device_info->name, device_info->bt_class,
+        LOG_DEBUG(50000, "idx=%d name=\"%s\" mac=%02X:%02X:%02X:%02X:%02X:%02X class=0x%08X vid=0x%04X pid=0x%04X", idx,
+                  device_info->name, mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], device_info->bt_class,
                   device_info->vid, device_info->pid);
 
         // Log unknown fields except unk5.
