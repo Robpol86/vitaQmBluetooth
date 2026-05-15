@@ -108,16 +108,16 @@ void log_paired_devices(void) {
 
     // Log each device.
     int conn_disconn_dev = 0;
-    for (int i = 0; i < count; i++) {
-        SceBtRegisteredInfo* device_info = &paired_devices[i];
+    for (int idx = 0; idx < count; idx++) {
+        SceBtRegisteredInfo* device_info = &paired_devices[idx];
         if (strncmp(device_info->name, "APP Scuffed", 11) == 0) {
-            LOG_DEBUG(0, "Set conn_disconn_dev to %d for device \"%s\"", i, device_info->name);
-            conn_disconn_dev = i;
+            LOG_DEBUG(0, "Set conn_disconn_dev to %d for device \"%s\"", idx, device_info->name);
+            conn_disconn_dev = idx;
         }
 
         // Log known device info fields.
         const unsigned char* mac = (const unsigned char*)&device_info->mac;
-        LOG_DEBUG(50000, "num=%d mac=%02X:%02X:%02X:%02X:%02X:%02X name=\"%s\" class=0x%08X vid=0x%04X pid=0x%04X", i,
+        LOG_DEBUG(50000, "idx=%d mac=%02X:%02X:%02X:%02X:%02X:%02X name=\"%s\" class=0x%08X vid=0x%04X pid=0x%04X", idx,
                   mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], device_info->name, device_info->bt_class,
                   device_info->vid, device_info->pid);
 
