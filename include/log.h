@@ -42,7 +42,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 /**
  * Macro that logs an error message.
  *
- * @param msg The log message (supports %s and other format specifies).
+ * @param msg The log message (supports %s and other format specifiers).
  * @param ... Arguments for the format specifiers.
  */
 #define LOG_ERROR(msg, ...) LOG_MESSAGE_(0, LOG_FORMAT_(LOG_COLOR_RED_ "ERROR" LOG_COLOR_RESET_), msg, ##__VA_ARGS__)
@@ -54,7 +54,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * If log messages overwrite each other try setting the delay to 50000.
  *
  * @param delay Delay the thread for these many microseconds if >0 (mitigates clobbering).
- * @param msg The log message (supports %s and other format specifies).
+ * @param msg The log message (supports %s and other format specifiers).
  * @param ... Arguments for the format specifiers.
  */
 #define LOG_DEBUG(delay, msg, ...) LOG_MESSAGE_(delay, LOG_FORMAT_("DEBUG"), msg, ##__VA_ARGS__)
