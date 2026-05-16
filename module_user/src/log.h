@@ -26,20 +26,19 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2/kernel/threadmgr.h>
 #include <psp2/rtc.h>
 
-#define LOG_MESSAGE_(delay, category, fmtMsg, ...)                                                                  \
-    do {                                                                                                            \
-        SceDateTime _time;                                                                                          \
-        sceRtcGetCurrentClockLocalTime(&_time);                                                                     \
-        sceClibPrintf("[%02d:%02d:%02d.%03d] [" category "] [" MODULE_NAME "] [%s:%d:%s] " fmtMsg "\n", _time.hour, \
-                      _time.minute, _time.second, _time.microsecond / 1000, __FILE__, __LINE__, __func__,           \
-                      ##__VA_ARGS__);                                                                               \
-        if (!__builtin_constant_p(delay) || (delay) > 0) sceKernelDelayThread((delay));                             \
+#define LOG_MESSAGE_(delay, fmt, msg, ...)                                                                      \
+    do {                                                                                                        \
+        SceDateTime _time;                                                                                      \
+        sceRtcGetCurrentClockLocalTime(&_time);                                                                 \
+        sceClibPrintf(fmt msg "\n", _time.hour, _time.minute, _time.second, _time.microsecond / 1000, __FILE__, \
+                      __LINE__, __func__, ##__VA_ARGS__);                                                       \
+        if (!__builtin_constant_p(delay) || (delay) > 0) sceKernelDelayThread((delay));                         \
     } while (0)
 
-#define LOG_MESSAGE_NOOP_(delay, fmtMsg, ...)        \
-    do {                                             \
-        (void)(delay);                               \
-        if (0) sceClibPrintf(fmtMsg, ##__VA_ARGS__); \
+#define LOG_MESSAGE_NOOP_(delay, fmt, msg, ...)       \
+    do {                                              \
+        (void)(delay);                                \
+        if (0) sceClibPrintf(fmt msg, ##__VA_ARGS__); \
     } while (0)
 
 #include <log.h>  // Bring in LOG_DEBUG, LOG_ERROR, and other common macros.
