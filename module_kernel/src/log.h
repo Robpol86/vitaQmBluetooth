@@ -30,7 +30,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     do {                                                                                 \
         SceDateTime dt_;                                                                 \
         ksceRtcGetCurrentClockLocalTime(&dt_);                                           \
-        ksceKernelPrintf(fmt msg "\n", LOG_FORMAT_VALUES_, ##__VA_ARGS__);               \
+        ksceKernelPrintf(fmt msg "\n", LOG_FORMAT_VALUES_(dt_), ##__VA_ARGS__);          \
         if (!__builtin_constant_p(delay) || (delay) > 0) ksceKernelDelayThread((delay)); \
     } while (0)
 

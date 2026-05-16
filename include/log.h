@@ -37,7 +37,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define LOG_FORMAT_TIME_ LOG_COLOR_GRAY_ "[%02d:%02d:%02d.%03d]" LOG_COLOR_RESET_
 #define LOG_FORMAT_ORIGIN_ LOG_COLOR_BOLD_ "%s:%d:%s" LOG_COLOR_RESET_
 #define LOG_FORMAT_(category) LOG_FORMAT_TIME_ " [" category "] [" MODULE_NAME "] [" LOG_FORMAT_ORIGIN_ "] "
-#define LOG_FORMAT_VALUES_ dt_.hour, dt_.minute, dt_.second, dt_.microsecond / 1000, __FILE__, __LINE__, __func__
+#define LOG_FORMAT_VALUES_(dt) dt.hour, dt.minute, dt.second, dt.microsecond / 1000, __FILE__, __LINE__, __func__
 
 /**
  * Macro that logs an error message.
