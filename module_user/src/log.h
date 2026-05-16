@@ -30,7 +30,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     do {                                                                                \
         SceDateTime dt_;                                                                \
         sceRtcGetCurrentClockLocalTime(&dt_);                                           \
-        sceClibPrintf(fmt msg "\n", LOG_FORMAT_VALUES_, ##__VA_ARGS__);                 \
+        sceClibPrintf(fmt msg "\n", LOG_FORMAT_VALUES_(dt_), ##__VA_ARGS__);            \
         if (!__builtin_constant_p(delay) || (delay) > 0) sceKernelDelayThread((delay)); \
     } while (0)
 
