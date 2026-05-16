@@ -16,7 +16,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /******************************************************************************
  * @file
- * @brief Macros for logging. TODO
+ * @brief Module-specific macros for logging.
  ******************************************************************************/
 
 #ifndef LOG_H_MODULE
@@ -42,6 +42,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
         if (0) sceClibPrintf(fmtMsg, ##__VA_ARGS__); \
     } while (0)
 
-#include <log.h>  // TODO explain
+#include <log.h>  // Bring in LOG_DEBUG, LOG_ERROR, and other common macros.
 
 #endif  // LOG_H_MODULE

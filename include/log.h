@@ -16,7 +16,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /******************************************************************************
  * @file
- * @brief Macros for logging. TODO
+ * @brief Module-agnostic macros for logging.
  ******************************************************************************/
 
 #ifndef LOG_H
