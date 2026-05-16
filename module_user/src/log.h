@@ -26,13 +26,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2/kernel/threadmgr.h>
 #include <psp2/rtc.h>
 
-#define LOG_MESSAGE_(delay, fmt, msg, ...)                                                                      \
-    do {                                                                                                        \
-        SceDateTime _time;                                                                                      \
-        sceRtcGetCurrentClockLocalTime(&_time);                                                                 \
-        sceClibPrintf(fmt msg "\n", _time.hour, _time.minute, _time.second, _time.microsecond / 1000, __FILE__, \
-                      __LINE__, __func__, ##__VA_ARGS__);                                                       \
-        if (!__builtin_constant_p(delay) || (delay) > 0) sceKernelDelayThread((delay));                         \
+#define LOG_MESSAGE_(delay, fmt, msg, ...)                                              \
+    do {                                                                                \
+        SceDateTime _time;                                                              \
+        sceRtcGetCurrentClockLocalTime(&_time);                                         \
+        sceClibPrintf(fmt msg "\n", LOG_FORMAT_VALUES_, ##__VA_ARGS__);                 \
+        if (!__builtin_constant_p(delay) || (delay) > 0) sceKernelDelayThread((delay)); \
     } while (0)
 
 #define LOG_MESSAGE_NOOP_(delay, fmt, msg, ...)       \

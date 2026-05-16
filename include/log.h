@@ -26,6 +26,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define LOG_COLOR_RED_ "\033[31m"
 
 #define LOG_FORMAT_(category) "[%02d:%02d:%02d.%03d] [" category "] [" MODULE_NAME "] [%s:%d:%s] "
+#define LOG_FORMAT_VALUES_ _time.hour, _time.minute, _time.second, _time.microsecond / 1000, __FILE__, __LINE__, __func__
 
 /**
  * Macro that logs an error message.
