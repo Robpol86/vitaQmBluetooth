@@ -25,7 +25,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef NDEBUG
 #define LOG_COLOR_RESET_ "\033[0m"
 #define LOG_COLOR_BOLD_ "\033[1m"
-#define LOG_COLOR_RED_ "\033[91m"
+#define LOG_COLOR_RED_ "\033[1;91m"
 #define LOG_COLOR_GRAY_ "\033[90m"
 #else
 #define LOG_COLOR_RESET_ ""
