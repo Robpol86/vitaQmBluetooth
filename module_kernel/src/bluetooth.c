@@ -39,6 +39,23 @@ static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];
  * @param mac1 TODO.
  * @return TODO.
  */
+int kvqmbtIsConnected(unsigned int mac0, unsigned int mac1) {
+    uint32_t state SYSCALL_STATE = 0;
+    ENTER_SYSCALL(state);
+
+    // Validate.
+    // TODO
+
+    return 0;
+}
+
+/**
+ * TODO
+ *
+ * @param mac0 TODO.
+ * @param mac1 TODO.
+ * @return TODO.
+ */
 int kvqmbtConnectDevice(unsigned int mac0, unsigned int mac1) {
     uint32_t state SYSCALL_STATE = 0;
     ENTER_SYSCALL(state);

@@ -39,6 +39,8 @@ VITASDK_BUILD_ASSERT_EQ(0x88, VqmbtDeviceInfo);
 
 int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size);
 
+int kvqmbtIsConnected(unsigned int mac0, unsigned int mac1);
+
 int kvqmbtConnectDevice(unsigned int mac0, unsigned int mac1);
 
 int kvqmbtDisconnectDevice(unsigned int mac0, unsigned int mac1);
