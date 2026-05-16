@@ -28,8 +28,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #define LOG_MESSAGE_(delay, fmt, msg, ...)                                              \
     do {                                                                                \
-        SceDateTime _time;                                                              \
-        sceRtcGetCurrentClockLocalTime(&_time);                                         \
+        SceDateTime dt_;                                                                \
+        sceRtcGetCurrentClockLocalTime(&dt_);                                           \
         sceClibPrintf(fmt msg "\n", LOG_FORMAT_VALUES_, ##__VA_ARGS__);                 \
         if (!__builtin_constant_p(delay) || (delay) > 0) sceKernelDelayThread((delay)); \
     } while (0)
