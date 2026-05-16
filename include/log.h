@@ -22,6 +22,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef LOG_H
 #define LOG_H
 
+#define LOG_COLOR_RESET_ "\x033[0m"
+#define LOG_COLOR_RED_ "\x033[31m"
+
 #define LOG_FORMAT_(category) "[%02d:%02d:%02d.%03d] [" category "] [" MODULE_NAME "] [%s:%d:%s] "
 
 /**
@@ -30,7 +33,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @param msg The log message (supports %s and other format specifies).
  * @param ... Arguments for the format specifiers.
  */
-#define LOG_ERROR(msg, ...) LOG_MESSAGE_(0, LOG_FORMAT_("ERROR"), msg, ##__VA_ARGS__)
+#define LOG_ERROR(msg, ...) LOG_MESSAGE_(0, LOG_FORMAT_(LOG_COLOR_RED_ "ERROR" LOG_COLOR_RESET_), msg, ##__VA_ARGS__)
 
 #ifndef NDEBUG
 /**

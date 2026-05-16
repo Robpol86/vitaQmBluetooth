@@ -106,6 +106,7 @@ int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
 
     // Zero the kernel-side array to prevent ghost data.
     for (int i = 0; i < (int)sizeof(paired_devices); i++) ((unsigned char*)paired_devices)[i] = 0;
+    LOG_ERROR("Test");
 
     // Populate file-scoped array with all currently paired devices.
     int mac0 = 0, mac1 = 0;
