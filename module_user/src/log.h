@@ -16,11 +16,11 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /******************************************************************************
  * @file
- * @brief Macros for logging.
+ * @brief Module-specific macros for logging.
  ******************************************************************************/
 
-#ifndef LOG_H
-#define LOG_H
+#ifndef LOG_H_MODULE
+#define LOG_H_MODULE
 
 #include <psp2/kernel/clib.h>
 #include <psp2/kernel/threadmgr.h>
@@ -42,27 +42,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
         if (0) sceClibPrintf(fmtMsg, ##__VA_ARGS__); \
     } while (0)
 
-/**
- * Macro that logs an error message.
- *
- * @param fmtMsg The log message including any format specifiers.
- * @param ... Arguments for the format specifiers.
- */
-#define LOG_ERROR(fmtMsg, ...) LOG_MESSAGE_(0, "ERROR", fmtMsg, ##__VA_ARGS__)
+#include <log.h>  // Bring in LOG_DEBUG, LOG_ERROR, and other common macros.
 
-#ifndef NDEBUG
-/**
- * Macro that logs a debug message.
- *
- * If log messages overwrite each other try setting the delay to 50000.
- *
- * @param delay Delay the thread for these many microseconds if >0 (mitigates clobbering).
- * @param fmtMsg The log message including any format specifiers.
- * @param ... Arguments for the format specifiers.
- */
-#define LOG_DEBUG(delay, fmtMsg, ...) LOG_MESSAGE_(delay, "DEBUG", fmtMsg, ##__VA_ARGS__)
-#else
-#define LOG_DEBUG(delay, fmtMsg, ...) LOG_MESSAGE_NOOP_(delay, fmtMsg, ##__VA_ARGS__)
-#endif  // NDEBUG
-
-#endif  // LOG_H
+#endif  // LOG_H_MODULE
