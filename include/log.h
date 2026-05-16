@@ -22,8 +22,13 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef LOG_H
 #define LOG_H
 
+#ifndef NDEBUG
 #define LOG_COLOR_RESET_ "\033[0m"
 #define LOG_COLOR_RED_ "\033[31m"
+#else
+#define LOG_COLOR_RESET_ ""
+#define LOG_COLOR_RED_ ""
+#endif  // NDEBUG
 
 #define LOG_FORMAT_(category) "[%02d:%02d:%02d.%03d] [" category "] [" MODULE_NAME "] [%s:%d:%s] "
 #define LOG_FORMAT_VALUES_ dt_.hour, dt_.minute, dt_.second, dt_.microsecond / 1000, __FILE__, __LINE__, __func__
