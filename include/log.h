@@ -22,8 +22,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef LOG_H
 #define LOG_H
 
-#define LOG_COLOR_RESET_ "\x033[0m"
-#define LOG_COLOR_RED_ "\x033[31m"
+#define LOG_COLOR_RESET_ "\033[0m"
+#define LOG_COLOR_RED_ "\033[31m"
 
 #define LOG_FORMAT_(category) "[%02d:%02d:%02d.%03d] [" category "] [" MODULE_NAME "] [%s:%d:%s] "
 
