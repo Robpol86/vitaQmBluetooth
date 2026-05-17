@@ -15,18 +15,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Install dependencies (Linux)
-        if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get update && sudo apt-get install -y cmake
-
-      - name: Install Vita SDK
-        uses: ./.github/actions/vitasdk
-        timeout-minutes: 10
-
-      - name: Install clang tools
-        uses: ./.github/actions/clang
-        with:
-          version: "22"
+      - name: Setup Dependencies
+        uses: ./.github/actions/deps
 
       - name: Build
         run: make build
