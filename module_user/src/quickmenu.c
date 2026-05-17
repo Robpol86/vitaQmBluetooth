@@ -19,9 +19,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief Interface for the Quick Menu on the PS Vita.
  ******************************************************************************/
 
+#include <psp2/kernel/clib.h>
 #include <psp2/kernel/modulemgr.h>
 #include <quickmenureborn/qm_reborn.h>
-#include <string.h>
 
 #include "log.h"
 #include "vqmbt.h"
@@ -54,7 +54,7 @@ BUTTON_HANDLER(on_press) {
         for (int idx = 0; idx < count; idx++) {
             dev = &devices[idx];
             LOG_DEBUG(0, "idx=%d name=\"%s\" mac0=0x%08X mac1=0x%08X", idx, dev->name, dev->mac0, dev->mac1);
-            if (strncmp(dev->name, "APP Scuffed", 11) == 0) {
+            if (sceClibStrncmp(dev->name, "APP Scuffed", 11) == 0) {
                 LOG_DEBUG(0, "Set conn_disconn_dev to %d for device \"%s\"", idx, dev->name);
                 conn_disconn_idx = idx;
             }
