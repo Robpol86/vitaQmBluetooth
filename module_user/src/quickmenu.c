@@ -85,6 +85,15 @@ ONLOAD_HANDLER(on_load) {
 }
 
 /**
+ * Called when the quick menu is closed by the user.
+ */
+void on_unload(const char* id) {
+    (void)id;
+
+    LOG_DEBUG(0, "Quick menu closed.");
+}
+
+/**
  * Loads the plugin's quick menu items.
  *
  * TODOs:
@@ -123,8 +132,9 @@ void quickmenu_start(void) {
     QuickMenuRebornSetWidgetLabel(ID_BUTTON, "Emit Log");
     QuickMenuRebornRegisterEventHanlder(ID_BUTTON, QMR_BUTTON_RELEASE_ID, on_press, NULL);
 
-    // Register onload handler.
+    // Register handlers.
     QuickMenuRebornAssignOnLoadHandler(on_load, ID_PLANE_ROOT);
+    QuickMenuRebornAssignOnDeleteHandler(on_unload, ID_PLANE_ROOT);
 }
 
 /**
