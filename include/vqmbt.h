@@ -42,8 +42,8 @@ int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size);
 
 bool kvqmbtIsConnected(unsigned int mac0, unsigned int mac1);
 
-int kvqmbtConnectDevice(unsigned int mac0, unsigned int mac1);
+void kvqmbtConnectDevice(unsigned int mac0, unsigned int mac1);
 
-int kvqmbtDisconnectDevice(unsigned int mac0, unsigned int mac1);
+void kvqmbtDisconnectDevice(unsigned int mac0, unsigned int mac1);
 
 #endif  // VQMBT_H

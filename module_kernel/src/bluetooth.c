@@ -44,45 +44,46 @@ bool kvqmbtIsConnected(unsigned int mac0, unsigned int mac1) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
     ENTER_SYSCALL(syscall_state_);
 
-    LOG_DEBUG(0, "Reading connection state for mac0=%08X mac1=%08X", mac0, mac1);
     int state = ksceBtGetConnectingInfo(mac0, mac1);  // 1 == unknown/disconnected; 5/6 == connected
-    LOG_DEBUG(0, "ksceBtGetConnectingInfo returned state=%d", state);
+    LOG_DEBUG(0, "ksceBtGetConnectingInfo(mac0=%08X, mac1=%08X) returned state=%d", mac0, mac1, state);
 
     return (bool)(state == 5 || state == 6);
 }
 
 /**
- * TODO
+ * Tell the kernel to start connecting to the bluetooth device.
  *
- * @param mac0 TODO.
- * @param mac1 TODO.
- * @return TODO.
+ * @param mac0 First four bytes of the bluetooth device's MAC address.
+ * @param mac1 Last two bytes of the bluetooth device's MAC address.
  */
-int kvqmbtConnectDevice(unsigned int mac0, unsigned int mac1) {
+void kvqmbtConnectDevice(unsigned int mac0, unsigned int mac1) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
     ENTER_SYSCALL(syscall_state_);
 
-    // Validate.
-    // TODO
-
-    return 0;
+    int ret = ksceBtStartConnect(mac0, mac1);
+    if (ret < 0) {
+        LOG_ERROR("ksceBtStartConnect(mac0=%08X, mac1=%08X) returned error: 0x%08X", mac0, mac1, ret);
+    } else {
+        LOG_DEBUG(0, "ksceBtStartConnect(mac0=%08X, mac1=%08X) returned: %d", mac0, mac1, ret);
+    }
 }
 
 /**
- * TODO
+ * Tell the kernel to start disconnecting the bluetooth device.
  *
- * @param mac0 TODO.
- * @param mac1 TODO.
- * @return TODO.
+ * @param mac0 First four bytes of the bluetooth device's MAC address.
+ * @param mac1 Last two bytes of the bluetooth device's MAC address.
  */
-int kvqmbtDisconnectDevice(unsigned int mac0, unsigned int mac1) {
+void kvqmbtDisconnectDevice(unsigned int mac0, unsigned int mac1) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
     ENTER_SYSCALL(syscall_state_);
 
-    // Validate.
-    // TODO
-
-    return 0;
+    int ret = ksceBtStartDisconnect(mac0, mac1);
+    if (ret < 0) {
+        LOG_ERROR("ksceBtStartDisconnect(mac0=%08X, mac1=%08X) returned error: 0x%08X", mac0, mac1, ret);
+    } else {
+        LOG_DEBUG(0, "ksceBtStartDisconnect(mac0=%08X, mac1=%08X) returned: %d", mac0, mac1, ret);
+    }
 }
 
 /**
