@@ -5,37 +5,22 @@ on:
   push:
 
 jobs:
-  BuildTestLint:
+  Build:
     strategy:
       matrix:
-        os: [&artifact_os ubuntu-latest, macos-latest]
+        os: &platforms [&artifact_os ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
 
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Install dependencies (Linux)
-        if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get update && sudo apt-get install -y cmake
-
-      - name: Install Vita SDK
-        uses: ./.github/actions/vitasdk
-        timeout-minutes: 10
-
-      - name: Install clang tools
-        uses: ./.github/actions/clang
-        with:
-          version: "22"
+      - name: Setup Dependencies
+        uses: ./.github/actions/deps
+        timeout-minutes: 15
 
       - name: Build
         run: make build
-
-      - name: Test
-        run: make test
-
-      - name: Lint
-        run: make lint
 
       - name: Upload release artifact
         env:
@@ -56,3 +41,37 @@ jobs:
           name: debug
           path: build-debug/module_*/*.s?prx
           if-no-files-found: error
+
+  Test:
+    needs: Build
+    strategy:
+      matrix:
+        os: *platforms
+    runs-on: ${{ matrix.os }}
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Dependencies
+        uses: ./.github/actions/deps
+
+      - name: Test
+        run: make test
+
+  Lint:
+    needs: Build
+    strategy:
+      matrix:
+        os: *platforms
+    runs-on: ${{ matrix.os }}
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Dependencies
+        uses: ./.github/actions/deps
+
+      - name: Lint
+        run: make lint
