@@ -25,6 +25,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2kern/kernel/sysclib.h>
 #include <psp2kern/kernel/sysmem.h>
 #include <psp2kern/kernel/threadmgr.h>
+#include <stdbool.h>
 
 #include "common.h"
 #include "log.h"
@@ -33,54 +34,55 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];
 
 /**
- * Disconnect first bluetooth device if connected, and vice versa.
+ * Check if the device is currently connected.
  *
- * PoC confirmed! I have verified this function connects and disconnects my AirPods Pro from the Quick Menu whilst
- * RetroArch was running.
- *
- * TODO replace with kvqmbtConnectDevice and kvqmbtDisconnectDevice.
+ * @param mac0 First four bytes of the bluetooth device's MAC address.
+ * @param mac1 Last two bytes of the bluetooth device's MAC address.
+ * @return true if the device is connected.
  */
-void connect_or_disconnect(int device_index) {
-    SceBtRegisteredInfo* device_info = &paired_devices[device_index];
-    const unsigned char* mac = (const unsigned char*)&device_info->mac;
-    unsigned int mac0 = (mac[3] << 24) | (mac[2] << 16) | (mac[1] << 8) | mac[0];
-    unsigned int mac1 = (mac[5] << 8) | mac[4];
+bool kvqmbtIsConnected(unsigned int mac0, unsigned int mac1) {
+    uint32_t syscall_state_ SYSCALL_STATE = 0;
+    ENTER_SYSCALL(syscall_state_);
 
-    // Sanity check.
-    int ret;
-    char name[0x79];
-    ret = ksceBtGetDeviceName(mac0, mac1, name);
-    LOG_DEBUG(0, "ksceBtGetDeviceName: ret=%d name=\"%s\" mac0=0x%08X mac1=0x%08X", ret, name, mac0, mac1);
-    if (ret != 0) {
-        LOG_ERROR("UNKNOWN DEVICE");
-        return;
-    }
+    int state = ksceBtGetConnectingInfo(mac0, mac1);  // 1 == unknown/disconnected; 5/6 == connected
+    LOG_DEBUG(0, "ksceBtGetConnectingInfo(mac0=%08X, mac1=%08X) returned state=%d", mac0, mac1, state);
 
-    // Get current state
-    LOG_DEBUG(0, "Reading state for \"%s\"", device_info->name);
-    int state = ksceBtGetConnectingInfo(mac0, mac1);  // 1 == unknown/disconnected; 6 == connected
-    LOG_DEBUG(0, "Got state: %d", state);
+    return (bool)(state == 5 || state == 6);
+}
 
-    // Connect or disconnect.
-    if (state == 1) {
-        // Fails if Settings is open in the Bluetooth Devices view.
-        LOG_DEBUG(0, "Connecting \"%s\"", device_info->name);
-        ret = ksceBtStartConnect(mac0, mac1);
-        if (ret < 0) {
-            LOG_ERROR("ksceBtStartConnect returned error: 0x%08X", ret);
-        } else {
-            LOG_DEBUG(0, "ksceBtStartConnect returned: %d", ret);
-        }
-    } else if (state == 6 || state == 5) {  // 6=Ovaltine 5=APPScuffed
-        LOG_DEBUG(0, "Disconnecting \"%s\"", device_info->name);
-        ret = ksceBtStartDisconnect(mac0, mac1);
-        if (ret < 0) {
-            LOG_ERROR("ksceBtStartDisconnect returned error: 0x%08X", ret);
-        } else {
-            LOG_DEBUG(0, "ksceBtStartDisconnect returned: %d", ret);
-        }
+/**
+ * Tell the kernel to start connecting to the bluetooth device.
+ *
+ * @param mac0 First four bytes of the bluetooth device's MAC address.
+ * @param mac1 Last two bytes of the bluetooth device's MAC address.
+ */
+void kvqmbtConnectDevice(unsigned int mac0, unsigned int mac1) {
+    uint32_t syscall_state_ SYSCALL_STATE = 0;
+    ENTER_SYSCALL(syscall_state_);
+
+    int ret = ksceBtStartConnect(mac0, mac1);
+    if (ret < 0) {
+        LOG_ERROR("ksceBtStartConnect(mac0=%08X, mac1=%08X) returned error: 0x%08X", mac0, mac1, ret);
     } else {
-        LOG_ERROR("Unknown state: %d", state);
+        LOG_DEBUG(0, "ksceBtStartConnect(mac0=%08X, mac1=%08X) returned: %d", mac0, mac1, ret);
+    }
+}
+
+/**
+ * Tell the kernel to start disconnecting the bluetooth device.
+ *
+ * @param mac0 First four bytes of the bluetooth device's MAC address.
+ * @param mac1 Last two bytes of the bluetooth device's MAC address.
+ */
+void kvqmbtDisconnectDevice(unsigned int mac0, unsigned int mac1) {
+    uint32_t syscall_state_ SYSCALL_STATE = 0;
+    ENTER_SYSCALL(syscall_state_);
+
+    int ret = ksceBtStartDisconnect(mac0, mac1);
+    if (ret < 0) {
+        LOG_ERROR("ksceBtStartDisconnect(mac0=%08X, mac1=%08X) returned error: 0x%08X", mac0, mac1, ret);
+    } else {
+        LOG_DEBUG(0, "ksceBtStartDisconnect(mac0=%08X, mac1=%08X) returned: %d", mac0, mac1, ret);
     }
 }
 
@@ -95,8 +97,8 @@ void connect_or_disconnect(int device_index) {
  * @return Number of records written on success, or a negative error code on failure.
  */
 int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
-    uint32_t state SYSCALL_STATE = 0;
-    ENTER_SYSCALL(state);
+    uint32_t syscall_state_ SYSCALL_STATE = 0;
+    ENTER_SYSCALL(syscall_state_);
 
     // Validate.
     if (info == NULL || info_size < 1 || info_size > VQMBT_MAX_DEVICES) {

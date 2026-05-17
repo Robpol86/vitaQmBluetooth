@@ -19,6 +19,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief Interface for the Quick Menu on the PS Vita.
  ******************************************************************************/
 
+#include <psp2/kernel/clib.h>
 #include <psp2/kernel/modulemgr.h>
 #include <quickmenureborn/qm_reborn.h>
 
@@ -41,21 +42,37 @@ BUTTON_HANDLER(on_press) {
     (void)eventId;
     (void)userDat;
 
-    LOG_DEBUG(0, "Calling kernel function.");
+    LOG_DEBUG(0, "Calling kernel functions.");
 
     VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];
+    VqmbtDeviceInfo* dev;
     int count = kvqmbtGetPairedDevices(devices, VQMBT_MAX_DEVICES);
     if (count > 0) {
         LOG_DEBUG(0, "count=%d", count);
+        int conn_disconn_idx = 0;
+        // Log.
         for (int idx = 0; idx < count; idx++) {
-            VqmbtDeviceInfo* dev = &devices[idx];
+            dev = &devices[idx];
             LOG_DEBUG(0, "idx=%d name=\"%s\" mac0=0x%08X mac1=0x%08X", idx, dev->name, dev->mac0, dev->mac1);
+            if (sceClibStrncmp(dev->name, "APP Scuffed", 11) == 0) {
+                LOG_DEBUG(0, "Set conn_disconn_dev to %d for device \"%s\"", idx, dev->name);
+                conn_disconn_idx = idx;
+            }
+        }
+        // Connect/disconnect.
+        VqmbtDeviceInfo* dev = &devices[conn_disconn_idx];
+        if (kvqmbtIsConnected(dev->mac0, dev->mac1)) {
+            LOG_DEBUG(0, "Disconnecting \"%s\"", dev->name);
+            kvqmbtDisconnectDevice(dev->mac0, dev->mac1);
+        } else {
+            LOG_DEBUG(0, "Connecting \"%s\"", dev->name);
+            kvqmbtConnectDevice(dev->mac0, dev->mac1);
         }
     } else {
         LOG_ERROR("kvqmbtGetPairedDevices returned error: 0x%08X", count);
     }
 
-    LOG_DEBUG(0, "Done calling kernel function.");
+    LOG_DEBUG(0, "Done calling kernel functions.");
 }
 
 /**
