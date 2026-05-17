@@ -25,6 +25,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2kern/kernel/sysclib.h>
 #include <psp2kern/kernel/sysmem.h>
 #include <psp2kern/kernel/threadmgr.h>
+#include <stdbool.h>
 
 #include "common.h"
 #include "log.h"
@@ -33,20 +34,21 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];
 
 /**
- * TODO
+ * Check if the device is currently connected.
  *
- * @param mac0 TODO.
- * @param mac1 TODO.
- * @return TODO.
+ * @param mac0 First four bytes of the bluetooth device's MAC address.
+ * @param mac1 Last two bytes of the bluetooth device's MAC address.
+ * @return true if the device is connected.
  */
-int kvqmbtIsConnected(unsigned int mac0, unsigned int mac1) {
-    uint32_t state SYSCALL_STATE = 0;
-    ENTER_SYSCALL(state);
+bool kvqmbtIsConnected(unsigned int mac0, unsigned int mac1) {
+    uint32_t syscall_state_ SYSCALL_STATE = 0;
+    ENTER_SYSCALL(syscall_state_);
 
-    // Validate.
-    // TODO
+    LOG_DEBUG(0, "Reading connection state for mac0=%08X mac1=%08X", mac0, mac1);
+    int state = ksceBtGetConnectingInfo(mac0, mac1);  // 1 == unknown/disconnected; 5/6 == connected
+    LOG_DEBUG(0, "ksceBtGetConnectingInfo returned state=%d", state);
 
-    return 0;
+    return (bool)(state == 5 || state == 6);
 }
 
 /**
@@ -57,8 +59,8 @@ int kvqmbtIsConnected(unsigned int mac0, unsigned int mac1) {
  * @return TODO.
  */
 int kvqmbtConnectDevice(unsigned int mac0, unsigned int mac1) {
-    uint32_t state SYSCALL_STATE = 0;
-    ENTER_SYSCALL(state);
+    uint32_t syscall_state_ SYSCALL_STATE = 0;
+    ENTER_SYSCALL(syscall_state_);
 
     // Validate.
     // TODO
@@ -74,8 +76,8 @@ int kvqmbtConnectDevice(unsigned int mac0, unsigned int mac1) {
  * @return TODO.
  */
 int kvqmbtDisconnectDevice(unsigned int mac0, unsigned int mac1) {
-    uint32_t state SYSCALL_STATE = 0;
-    ENTER_SYSCALL(state);
+    uint32_t syscall_state_ SYSCALL_STATE = 0;
+    ENTER_SYSCALL(syscall_state_);
 
     // Validate.
     // TODO
@@ -146,8 +148,8 @@ void connect_or_disconnect(int device_index) {
  * @return Number of records written on success, or a negative error code on failure.
  */
 int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
-    uint32_t state SYSCALL_STATE = 0;
-    ENTER_SYSCALL(state);
+    uint32_t syscall_state_ SYSCALL_STATE = 0;
+    ENTER_SYSCALL(syscall_state_);
 
     // Validate.
     if (info == NULL || info_size < 1 || info_size > VQMBT_MAX_DEVICES) {
