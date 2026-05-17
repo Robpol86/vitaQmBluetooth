@@ -21,12 +21,6 @@ jobs:
       - name: Build
         run: make build
 
-      - name: Test
-        run: make test
-
-      - name: Lint
-        run: make lint
-
       - name: Upload release artifact
         env:
           artifact_os: *artifact_os
@@ -61,9 +55,6 @@ jobs:
       - name: Setup Dependencies
         uses: ./.github/actions/deps
 
-      - name: Build
-        run: make build
-
       - name: Test
         run: make test
 
@@ -80,9 +71,6 @@ jobs:
 
       - name: Setup Dependencies
         uses: ./.github/actions/deps
-
-      - name: Build
-        run: make build
 
       - name: Lint
         run: make lint
