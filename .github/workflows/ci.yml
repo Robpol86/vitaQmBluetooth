@@ -5,10 +5,10 @@ on:
   push:
 
 jobs:
-  BuildTestLint:
+  Build:
     strategy:
       matrix:
-        os: [&artifact_os ubuntu-latest, macos-latest]
+        os: &platforms [&artifact_os ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
 
@@ -46,3 +46,43 @@ jobs:
           name: debug
           path: build-debug/module_*/*.s?prx
           if-no-files-found: error
+
+  Test:
+    needs: Build
+    strategy:
+      matrix:
+        os: *platforms
+    runs-on: ${{ matrix.os }}
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Dependencies
+        uses: ./.github/actions/deps
+
+      - name: Build
+        run: make build
+
+      - name: Test
+        run: make test
+
+  Lint:
+    needs: Build
+    strategy:
+      matrix:
+        os: *platforms
+    runs-on: ${{ matrix.os }}
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Dependencies
+        uses: ./.github/actions/deps
+
+      - name: Build
+        run: make build
+
+      - name: Lint
+        run: make lint
