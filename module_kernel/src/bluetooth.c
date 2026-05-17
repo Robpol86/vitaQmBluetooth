@@ -87,58 +87,6 @@ void kvqmbtDisconnectDevice(unsigned int mac0, unsigned int mac1) {
 }
 
 /**
- * Disconnect first bluetooth device if connected, and vice versa.
- *
- * PoC confirmed! I have verified this function connects and disconnects my AirPods Pro from the Quick Menu whilst
- * RetroArch was running.
- *
- * TODO replace with kvqmbtConnectDevice and kvqmbtDisconnectDevice.
- */
-void connect_or_disconnect(int device_index) {
-    SceBtRegisteredInfo* device_info = &paired_devices[device_index];
-    const unsigned char* mac = (const unsigned char*)&device_info->mac;
-    unsigned int mac0 = (mac[3] << 24) | (mac[2] << 16) | (mac[1] << 8) | mac[0];
-    unsigned int mac1 = (mac[5] << 8) | mac[4];
-
-    // Sanity check.
-    int ret;
-    char name[0x79];
-    ret = ksceBtGetDeviceName(mac0, mac1, name);
-    LOG_DEBUG(0, "ksceBtGetDeviceName: ret=%d name=\"%s\" mac0=0x%08X mac1=0x%08X", ret, name, mac0, mac1);
-    if (ret != 0) {
-        LOG_ERROR("UNKNOWN DEVICE");
-        return;
-    }
-
-    // Get current state
-    LOG_DEBUG(0, "Reading state for \"%s\"", device_info->name);
-    int state = ksceBtGetConnectingInfo(mac0, mac1);  // 1 == unknown/disconnected; 6 == connected
-    LOG_DEBUG(0, "Got state: %d", state);
-
-    // Connect or disconnect.
-    if (state == 1) {
-        // Fails if Settings is open in the Bluetooth Devices view.
-        LOG_DEBUG(0, "Connecting \"%s\"", device_info->name);
-        ret = ksceBtStartConnect(mac0, mac1);
-        if (ret < 0) {
-            LOG_ERROR("ksceBtStartConnect returned error: 0x%08X", ret);
-        } else {
-            LOG_DEBUG(0, "ksceBtStartConnect returned: %d", ret);
-        }
-    } else if (state == 6 || state == 5) {  // 6=Ovaltine 5=APPScuffed
-        LOG_DEBUG(0, "Disconnecting \"%s\"", device_info->name);
-        ret = ksceBtStartDisconnect(mac0, mac1);
-        if (ret < 0) {
-            LOG_ERROR("ksceBtStartDisconnect returned error: 0x%08X", ret);
-        } else {
-            LOG_DEBUG(0, "ksceBtStartDisconnect returned: %d", ret);
-        }
-    } else {
-        LOG_ERROR("Unknown state: %d", state);
-    }
-}
-
-/**
  * Get all currently paired bluetooth devices.
  *
  * TODO:
