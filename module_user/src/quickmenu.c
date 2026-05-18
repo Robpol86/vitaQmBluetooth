@@ -102,9 +102,9 @@ void on_unload(const char* id) {
  * - Pixel perfect alignment.
  * - If kernel plugin isn't loaded notify user.
  *
- * @param error_no_kernel_module If true show an error message instead of the normal items.
+ * @param kernel_module_loaded If true show the normal items, otherwise show an error message TODO.
  */
-void quickmenu_start(bool error_no_kernel_module) {
+void quickmenu_start(bool kernel_module_loaded) {
     // Add horizontal line separator.
     QuickMenuRebornSeparator(ID_SEPARATOR, SCE_SEPARATOR_HEIGHT);
 
@@ -124,7 +124,7 @@ void quickmenu_start(bool error_no_kernel_module) {
     // TODO when user taps a button disable all buttons and wait for callback.
     // TODO refresh button labels and enable.
 
-    if (error_no_kernel_module) {
+    if (!kernel_module_loaded) {
         LOG_DEBUG(0, "TODO error");
         QuickMenuRebornRegisterWidget(ID_LOADING_TEXT, ID_PLANE_ROOT, text);
         QuickMenuRebornSetWidgetSize(ID_LOADING_TEXT, SCE_PLANE_WIDTH, 50, 0, 0);

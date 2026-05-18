@@ -23,6 +23,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "log.h"
 #include "quickmenu.h"
+#include "vqmbt.h"
 
 /**
  * Main entrypoint. Called when the module is started.
@@ -35,9 +36,17 @@ int module_start(SceSize args, const void* argp) {
     (void)args;
     (void)argp;
 
-    LOG_INFO("Initialized");
+    LOG_INFO("Start");
 
-    quickmenu_start(false);  // TODO hook up
+    // Check if kernel module is loaded.
+    bool kernel_module_loaded = true;
+    int ret = kvqmbtProbe();
+    if (ret != VQMBT_LOADED) {
+        LOG_ERROR("Kernel module not loaded. kvqmbtProbe() returned: 0x%08X", ret);
+        kernel_module_loaded = false;
+    }
+
+    quickmenu_start(kernel_module_loaded);  // TODO hook up
 
     return SCE_KERNEL_START_SUCCESS;
 }
@@ -55,7 +64,7 @@ int module_stop(SceSize args, const void* argp) {
 
     quickmenu_stop();
 
-    LOG_INFO("Deinitialized");
+    LOG_INFO("Stop");
 
     return SCE_KERNEL_STOP_SUCCESS;
 }

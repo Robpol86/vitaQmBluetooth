@@ -19,7 +19,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <stdbool.h>
 
-void quickmenu_start(bool error_no_kernel_module);
+void quickmenu_start(bool kernel_module_loaded);
 
 void quickmenu_stop(void);
 
