@@ -44,7 +44,7 @@ BUTTON_HANDLER(on_press) {
 
     LOG_DEBUG(0, "Calling kernel functions.");
 
-    VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];
+    VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];  // TODO file-scope like in kernel?
     VqmbtDeviceInfo* dev;
     int count = kvqmbtGetPairedDevices(devices, VQMBT_MAX_DEVICES);
     if (count > 0) {
