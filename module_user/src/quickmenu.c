@@ -24,7 +24,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <quickmenureborn/qm_reborn.h>
 
 #include "log.h"
-#include "vqmbt.h"
 
 // Widget IDs (prefixed because they must be unique across all plugins).
 #define ID_SEPARATOR PROJECT_NAME "Separator"
@@ -42,38 +41,7 @@ BUTTON_HANDLER(on_press) {
     (void)eventId;
     (void)userDat;
 
-    LOG_DEBUG(0, "Calling kernel functions.");
-
-    VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];
-    VqmbtDeviceInfo* dev;
-    int count = kvqmbtGetPairedDevices(devices, VQMBT_MAX_DEVICES);
-    if (count > 0) {
-        LOG_DEBUG(0, "count=%d", count);
-        int conn_disconn_idx = 0;
-        // Log.
-        for (int idx = 0; idx < count; idx++) {
-            dev = &devices[idx];
-            LOG_DEBUG(0, "idx=%d name=\"%s\" mac0=0x%08X mac1=0x%08X state=%d", idx, dev->name, dev->mac0, dev->mac1,
-                      dev->state);
-            if (sceClibStrncmp(dev->name, "APP Scuffed", 11) == 0) {
-                LOG_DEBUG(0, "Set conn_disconn_dev to %d for device \"%s\"", idx, dev->name);
-                conn_disconn_idx = idx;
-            }
-        }
-        // Connect/disconnect.
-        dev = &devices[conn_disconn_idx];
-        if (kvqmbtIsConnected(dev->mac0, dev->mac1)) {
-            LOG_DEBUG(0, "Disconnecting \"%s\"", dev->name);
-            kvqmbtDisconnectDevice(dev->mac0, dev->mac1);
-        } else {
-            LOG_DEBUG(0, "Connecting \"%s\"", dev->name);
-            kvqmbtConnectDevice(dev->mac0, dev->mac1);
-        }
-    } else {
-        LOG_ERROR("kvqmbtGetPairedDevices returned error: 0x%08X", count);
-    }
-
-    LOG_DEBUG(0, "Done calling kernel functions.");
+    LOG_DEBUG(0, "Button pressed.");
 }
 
 /**
@@ -130,7 +98,7 @@ void quickmenu_start(void) {
     QuickMenuRebornSetWidgetSize(ID_BUTTON, 200, 75, 0, 0);
     QuickMenuRebornSetWidgetPosition(ID_BUTTON, -220, -83, 0, 0);
     QuickMenuRebornSetWidgetColor(ID_BUTTON, 1, 1, 1, 1);
-    QuickMenuRebornSetWidgetLabel(ID_BUTTON, "Emit Log");
+    QuickMenuRebornSetWidgetLabel(ID_BUTTON, "Open Dialog");
     QuickMenuRebornRegisterEventHanlder(ID_BUTTON, QMR_BUTTON_RELEASE_ID, on_press, NULL);
 
     // Register handlers.
