@@ -13,3 +13,4 @@
         - kvqmbtDisconnectDevice
         - kvqmbtGetPairedDevices
         - kvqmbtIsConnected
+        - kvqmbtProbe

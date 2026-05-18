@@ -21,7 +21,18 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <psp2kern/kernel/modulemgr.h>
 
+#include "common.h"
 #include "log.h"
+#include "vqmbt.h"
+
+/**
+ * TODO
+ */
+int kvqmbtProbe(void) {
+    uint32_t syscall_state_ SYSCALL_STATE = 0;
+    ENTER_SYSCALL(syscall_state_);
+    return VQMBT_LOADED;
+}
 
 /**
  * Main entrypoint. Called when the module is started.
