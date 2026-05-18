@@ -57,10 +57,10 @@ vita_create_stubs(stubs
   KERNEL
 )
 
-add_library("${PROJECT_NAME}_stub" STATIC IMPORTED GLOBAL)
+add_library("${PROJECT_NAME}_stub_weak" STATIC IMPORTED GLOBAL)
 
-add_dependencies("${PROJECT_NAME}_stub" stubs)
+add_dependencies("${PROJECT_NAME}_stub_weak" stubs)
 
-set_target_properties("${PROJECT_NAME}_stub" PROPERTIES
-  IMPORTED_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/stubs/lib${PROJECT_NAME}_stub.a"
+set_target_properties("${PROJECT_NAME}_stub_weak" PROPERTIES
+  IMPORTED_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/stubs/lib${PROJECT_NAME}_stub_weak.a"
 )

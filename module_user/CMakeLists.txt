@@ -54,7 +54,7 @@ target_link_libraries("${MODULE_NAME}" PRIVATE
 
   QuickMenuReborn_stub_weak
 
-  "${PROJECT_NAME}_stub"
+  "${PROJECT_NAME}_stub_weak"
 )
 
 vita_create_self("${PROJECT_NAME}.suprx"
