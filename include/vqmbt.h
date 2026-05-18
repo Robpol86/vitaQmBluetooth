@@ -35,8 +35,9 @@ typedef struct VqmbtDeviceInfo {
     char name[128];
     unsigned int mac0;
     unsigned int mac1;
+    int state;
 } VqmbtDeviceInfo;
-VITASDK_BUILD_ASSERT_EQ(0x88, VqmbtDeviceInfo);
+VITASDK_BUILD_ASSERT_EQ(0x8C, VqmbtDeviceInfo);
 
 int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size);
 

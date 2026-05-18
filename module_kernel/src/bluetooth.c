@@ -36,6 +36,9 @@ static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];
 /**
  * Check if the device is currently connected.
  *
+ * TODO:
+ * - Change from bool to int, just reutrn the state. Rename function.
+ *
  * @param mac0 First four bytes of the bluetooth device's MAC address.
  * @param mac1 Last two bytes of the bluetooth device's MAC address.
  * @return true if the device is connected.
@@ -119,6 +122,7 @@ int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
     LOG_DEBUG(0, "ksceBtGetRegisteredInfo returned count=%d info_size=%d max=%d", count, info_size, VQMBT_MAX_DEVICES);
 
     // Copy each record across the kernel/user boundary.
+    int state = 0;
     for (int idx = 0; idx < count; idx++) {
         // Get kernel side.
         SceBtRegisteredInfo* sceDev = &paired_devices[idx];
@@ -138,6 +142,10 @@ int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
                 sceDev->unk5[row + 12], sceDev->unk5[row + 13], sceDev->unk5[row + 14], sceDev->unk5[row + 15]);
         }
 
+        // Get state.
+        state = ksceBtGetConnectingInfo(mac0, mac1);  // 1 == unknown/disconnected; 5/6 == connected
+        LOG_DEBUG(0, "ksceBtGetConnectingInfo(mac0=%08X, mac1=%08X) returned state=%d", mac0, mac1, state);
+
         // Populate user side.
         VqmbtDeviceInfo dev = {0};
         // name
@@ -146,6 +154,8 @@ int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
         // mac
         dev.mac0 = ((unsigned int)mac[3] << 24) | ((unsigned int)mac[2] << 16) | ((unsigned int)mac[1] << 8) | mac[0];
         dev.mac1 = ((unsigned int)mac[5] << 8) | mac[4];
+        // state
+        dev.state = state;
 
         // Export to user space.
         int ret = ksceKernelCopyToUser(&info[idx], &dev, sizeof(dev));

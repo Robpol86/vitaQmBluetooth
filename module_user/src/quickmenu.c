@@ -53,7 +53,8 @@ BUTTON_HANDLER(on_press) {
         // Log.
         for (int idx = 0; idx < count; idx++) {
             dev = &devices[idx];
-            LOG_DEBUG(0, "idx=%d name=\"%s\" mac0=0x%08X mac1=0x%08X", idx, dev->name, dev->mac0, dev->mac1);
+            LOG_DEBUG(0, "idx=%d name=\"%s\" mac0=0x%08X mac1=0x%08X state=%d", idx, dev->name, dev->mac0, dev->mac1,
+                      dev->state);
             if (sceClibStrncmp(dev->name, "APP Scuffed", 11) == 0) {
                 LOG_DEBUG(0, "Set conn_disconn_dev to %d for device \"%s\"", idx, dev->name);
                 conn_disconn_idx = idx;
