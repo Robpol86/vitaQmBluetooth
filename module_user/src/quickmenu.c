@@ -101,8 +101,10 @@ void on_unload(const char* id) {
  * - Add function to calculate position from top left instead of center.
  * - Pixel perfect alignment.
  * - If kernel plugin isn't loaded notify user.
+ *
+ * @param error_no_kernel_module If true show an error message instead of the normal items.
  */
-void quickmenu_start(void) {
+void quickmenu_start(bool error_no_kernel_module) {
     // Add horizontal line separator.
     QuickMenuRebornSeparator(ID_SEPARATOR, SCE_SEPARATOR_HEIGHT);
 
@@ -121,6 +123,16 @@ void quickmenu_start(void) {
     // TODO one button per device. Depending on state label it "Connect <device>" or "Disconnect <device>".
     // TODO when user taps a button disable all buttons and wait for callback.
     // TODO refresh button labels and enable.
+
+    if (error_no_kernel_module) {
+        LOG_DEBUG(0, "TODO error");
+        QuickMenuRebornRegisterWidget(ID_LOADING_TEXT, ID_PLANE_ROOT, text);
+        QuickMenuRebornSetWidgetSize(ID_LOADING_TEXT, SCE_PLANE_WIDTH, 50, 0, 0);
+        QuickMenuRebornSetWidgetPosition(ID_LOADING_TEXT, -220, -3, 0, 0);
+        QuickMenuRebornSetWidgetColor(ID_LOADING_TEXT, 1, 1, 1, 1);
+        QuickMenuRebornSetWidgetLabel(ID_LOADING_TEXT, "ERROR: Kernel module not loaded");
+        return;
+    }
 
     // Add placeholder "Loading" text.
     QuickMenuRebornRegisterWidget(ID_LOADING_TEXT, ID_PLANE_ROOT, text);
@@ -146,7 +158,7 @@ void quickmenu_start(void) {
  * Unloads the plugin's quick menu items.
  */
 void quickmenu_stop(void) {
-    QuickMenuRebornUnregisterWidget(ID_BUTTON);
+    QuickMenuRebornUnregisterWidget(ID_BUTTON);  // TODO ok with it not being registered on conditional?
     QuickMenuRebornUnregisterWidget(ID_LOADING_TEXT);
     QuickMenuRebornUnregisterWidget(ID_SECTION_TEXT);
     QuickMenuRebornUnregisterWidget(ID_PLANE_ROOT);

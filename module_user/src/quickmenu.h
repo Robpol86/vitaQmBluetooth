@@ -17,7 +17,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef QUICKMENU_H
 #define QUICKMENU_H
 
-void quickmenu_start(void);
+#include <stdbool.h>
+
+void quickmenu_start(bool error_no_kernel_module);
 
 void quickmenu_stop(void);
 

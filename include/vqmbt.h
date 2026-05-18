@@ -42,6 +42,8 @@ typedef struct VqmbtDeviceInfo {
 } VqmbtDeviceInfo;
 VITASDK_BUILD_ASSERT_EQ(0x8C, VqmbtDeviceInfo);
 
+int kvqmbtProbe(void);
+
 int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size);
 
 bool kvqmbtIsConnected(unsigned int mac0, unsigned int mac1);

@@ -37,7 +37,7 @@ int module_start(SceSize args, const void* argp) {
 
     LOG_INFO("Initialized");
 
-    quickmenu_start();
+    quickmenu_start(false);  // TODO hook up
 
     return SCE_KERNEL_START_SUCCESS;
 }
