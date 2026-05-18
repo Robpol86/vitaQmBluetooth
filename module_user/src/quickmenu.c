@@ -60,7 +60,7 @@ BUTTON_HANDLER(on_press) {
             }
         }
         // Connect/disconnect.
-        VqmbtDeviceInfo* dev = &devices[conn_disconn_idx];
+        dev = &devices[conn_disconn_idx];
         if (kvqmbtIsConnected(dev->mac0, dev->mac1)) {
             LOG_DEBUG(0, "Disconnecting \"%s\"", dev->name);
             kvqmbtDisconnectDevice(dev->mac0, dev->mac1);
