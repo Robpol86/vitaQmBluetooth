@@ -122,6 +122,13 @@ void quickmenu_start(void) {
     // TODO when user taps a button disable all buttons and wait for callback.
     // TODO refresh button labels and enable.
 
+    // Add placeholder "Loading" text.
+    QuickMenuRebornRegisterWidget(ID_LOADING_TEXT, ID_PLANE_ROOT, text);
+    QuickMenuRebornSetWidgetSize(ID_LOADING_TEXT, SCE_PLANE_WIDTH, 50, 0, 0);
+    QuickMenuRebornSetWidgetPosition(ID_LOADING_TEXT, -220, -3, 0, 0);
+    QuickMenuRebornSetWidgetColor(ID_LOADING_TEXT, 1, 1, 1, 1);
+    QuickMenuRebornSetWidgetLabel(ID_LOADING_TEXT, "Loading...");
+
     // Add button to test emitting logs.
     QuickMenuRebornRegisterWidget(ID_BUTTON, ID_PLANE_ROOT, button);
     QuickMenuRebornSetWidgetSize(ID_BUTTON, 200, 75, 0, 0);
