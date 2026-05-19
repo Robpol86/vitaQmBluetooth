@@ -112,7 +112,7 @@ ONLOAD_HANDLER(on_load) {
         } else {
             sceClibSnprintf(label, sizeof(label), "Connect %s", dev->name);
         }
-        QuickMenuRebornSetWidgetLabel(id, label);
+        // TODO QuickMenuRebornSetWidgetLabel(id, label); // 3:0x9cd098e26c7c132a:0x8c2ff5fd:[coredump] start ID=NPXS19999
     }
 
     // TODO pass idx to on_press via userDat
