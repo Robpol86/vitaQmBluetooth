@@ -113,8 +113,7 @@ int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
     for (int i = 0; i < (int)sizeof(paired_devices); i++) ((unsigned char*)paired_devices)[i] = 0;
 
     // Populate file-scoped array with all currently paired devices.
-    int mac0 = 0, mac1 = 0;
-    int count = ksceBtGetRegisteredInfo(mac0, mac1, paired_devices, info_size);
+    int count = ksceBtGetRegisteredInfo(0, 0, paired_devices, info_size);
     if (count < 0) {
         LOG_ERROR("ksceBtGetRegisteredInfo returned error: 0x%08X", count);
         return VQMBT_ERROR_KERNEL_SIDE;
@@ -122,7 +121,11 @@ int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
     LOG_DEBUG(0, "ksceBtGetRegisteredInfo returned count=%d info_size=%d max=%d", count, info_size, VQMBT_MAX_DEVICES);
 
     // Copy each record across the kernel/user boundary.
+    int state = 0;
     for (int idx = 0; idx < count; idx++) {
+        // Initialize user side.
+        VqmbtDeviceInfo dev = {0};
+
         // Get kernel side.
         SceBtRegisteredInfo* sceDev = &paired_devices[idx];
         const unsigned char* mac = (const unsigned char*)&sceDev->mac;
@@ -141,14 +144,16 @@ int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
                 sceDev->unk5[row + 12], sceDev->unk5[row + 13], sceDev->unk5[row + 14], sceDev->unk5[row + 15]);
         }
 
-        // Populate user side.
-        VqmbtDeviceInfo dev = {0};
-        // name
+        // Set name and uint macs.
         strncpy(dev.name, sceDev->name, sizeof(dev.name) - 1);
         dev.name[sizeof(dev.name) - 1] = '\0';
-        // mac
         dev.mac0 = ((unsigned int)mac[3] << 24) | ((unsigned int)mac[2] << 16) | ((unsigned int)mac[1] << 8) | mac[0];
         dev.mac1 = ((unsigned int)mac[5] << 8) | mac[4];
+
+        // Get/set state.
+        state = ksceBtGetConnectingInfo(dev.mac0, dev.mac1);  // 1 == unknown/disconnected; 5/6 == connected
+        LOG_DEBUG(0, "ksceBtGetConnectingInfo(mac0=%08X, mac1=%08X) returned state=%d", dev.mac0, dev.mac1, state);
+        dev.state = state;
 
         // Export to user space.
         int ret = ksceKernelCopyToUser(&info[idx], &dev, sizeof(dev));
