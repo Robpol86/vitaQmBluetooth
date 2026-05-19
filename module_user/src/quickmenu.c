@@ -30,8 +30,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define ID_SEPARATOR MODULE_NAME "Separator"
 #define ID_PLANE_ROOT MODULE_NAME "PlaneRoot"
 #define ID_SECTION_TEXT MODULE_NAME "SectionText"
-#define ID_LOADING_TEXT MODULE_NAME "LoadingText"
-#define ID_BUTTON MODULE_NAME "Button"
+static const char* const ID_BUTTONS[VQMBT_MAX_DEVICES] = {
+    MODULE_NAME "Button0", MODULE_NAME "Button1", MODULE_NAME "Button2", MODULE_NAME "Button3",
+    MODULE_NAME "Button4", MODULE_NAME "Button5", MODULE_NAME "Button6", MODULE_NAME "Button7",
+};
+_Static_assert(sizeof(ID_BUTTONS) / sizeof(ID_BUTTONS[0]) == VQMBT_MAX_DEVICES,
+               "ID_BUTTONS size must match VQMBT_MAX_DEVICES");
 
 /**
  * Called when the user taps on the button. Emits a log message.
@@ -42,38 +46,8 @@ BUTTON_HANDLER(on_press) {
     (void)eventId;
     (void)userDat;
 
-    LOG_DEBUG(0, "Calling kernel functions.");
-
-    VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];  // TODO file-scope like in kernel?
-    VqmbtDeviceInfo* dev;
-    int count = kvqmbtGetPairedDevices(devices, VQMBT_MAX_DEVICES);
-    if (count > 0) {
-        LOG_DEBUG(0, "count=%d", count);
-        int conn_disconn_idx = 0;
-        // Log.
-        for (int idx = 0; idx < count; idx++) {
-            dev = &devices[idx];
-            LOG_DEBUG(0, "idx=%d name=\"%s\" mac0=0x%08X mac1=0x%08X state=%d", idx, dev->name, dev->mac0, dev->mac1,
-                      dev->state);
-            if (sceClibStrncmp(dev->name, "APP Scuffed", 11) == 0) {
-                LOG_DEBUG(0, "Set conn_disconn_dev to %d for device \"%s\"", idx, dev->name);
-                conn_disconn_idx = idx;
-            }
-        }
-        // Connect/disconnect.
-        dev = &devices[conn_disconn_idx];
-        if (kvqmbtIsConnected(dev->mac0, dev->mac1)) {
-            LOG_DEBUG(0, "Disconnecting \"%s\"", dev->name);
-            kvqmbtDisconnectDevice(dev->mac0, dev->mac1);
-        } else {
-            LOG_DEBUG(0, "Connecting \"%s\"", dev->name);
-            kvqmbtConnectDevice(dev->mac0, dev->mac1);
-        }
-    } else {
-        LOG_ERROR("kvqmbtGetPairedDevices returned error: 0x%08X", count);
-    }
-
-    LOG_DEBUG(0, "Done calling kernel functions.");
+    // name(const char *id, SceInt32 hash, SceInt32 eventId, void *userDat)
+    LOG_DEBUG(0, "Button pressed TODO log all params");
 }
 
 /**
@@ -90,20 +64,16 @@ void load_everything_todo(void) {
     // TODO when user taps a button disable all buttons and wait for callback.
     // ^TODO refresh button labels and enable.
 
-    // Add placeholder "Loading" text.
-    QuickMenuRebornRegisterWidget(ID_LOADING_TEXT, ID_PLANE_ROOT, text);
-    QuickMenuRebornSetWidgetSize(ID_LOADING_TEXT, SCE_PLANE_WIDTH, 50, 0, 0);
-    QuickMenuRebornSetWidgetPosition(ID_LOADING_TEXT, -220, -3, 0, 0);
-    QuickMenuRebornSetWidgetColor(ID_LOADING_TEXT, 1, 1, 1, 1);
-    QuickMenuRebornSetWidgetLabel(ID_LOADING_TEXT, "Loading...");
-
-    // Add button to test emitting logs.
-    QuickMenuRebornRegisterWidget(ID_BUTTON, ID_PLANE_ROOT, button);
-    QuickMenuRebornSetWidgetSize(ID_BUTTON, 200, 75, 0, 0);
-    QuickMenuRebornSetWidgetPosition(ID_BUTTON, -220, -83, 0, 0);
-    QuickMenuRebornSetWidgetColor(ID_BUTTON, 1, 1, 1, 1);
-    QuickMenuRebornSetWidgetLabel(ID_BUTTON, "Emit Log");
-    QuickMenuRebornRegisterEventHanlder(ID_BUTTON, QMR_BUTTON_RELEASE_ID, on_press, NULL);
+    // Add all buttons.
+    for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
+        const char* id = ID_BUTTONS[idx];
+        QuickMenuRebornRegisterWidget(id, ID_PLANE_ROOT, button);
+        QuickMenuRebornSetWidgetSize(id, 200, 75, 0, 0);
+        QuickMenuRebornSetWidgetPosition(id, -220, 243 - (idx * 80), 0, 0);
+        QuickMenuRebornSetWidgetColor(id, 1, 1, 1, 1);
+        QuickMenuRebornSetWidgetLabel(id, "No device");
+        QuickMenuRebornRegisterEventHanlder(id, QMR_BUTTON_RELEASE_ID, on_press, NULL);
+    }
 }
 
 /**
@@ -138,13 +108,13 @@ void quickmenu_start(void) {
 
     // Add the root plane that holds all other items.
     QuickMenuRebornRegisterWidget(ID_PLANE_ROOT, NULL, plane);
-    QuickMenuRebornSetWidgetSize(ID_PLANE_ROOT, SCE_PLANE_WIDTH, 200, 0, 0);
+    QuickMenuRebornSetWidgetSize(ID_PLANE_ROOT, SCE_PLANE_WIDTH, 700, 0, 0);
     QuickMenuRebornSetWidgetColor(ID_PLANE_ROOT, 1, 1, 1, 0);
 
     // Add section heading text.
     QuickMenuRebornRegisterWidget(ID_SECTION_TEXT, ID_PLANE_ROOT, text);
     QuickMenuRebornSetWidgetSize(ID_SECTION_TEXT, SCE_PLANE_WIDTH, 50, 0, 0);
-    QuickMenuRebornSetWidgetPosition(ID_SECTION_TEXT, -206, 62, 0, 0);
+    QuickMenuRebornSetWidgetPosition(ID_SECTION_TEXT, -206, 312, 0, 0);
     QuickMenuRebornSetWidgetColor(ID_SECTION_TEXT, 1, 1, 1, 1);
     QuickMenuRebornSetWidgetLabel(ID_SECTION_TEXT, "Bluetooth Devices");
 
@@ -160,8 +130,10 @@ void quickmenu_start(void) {
  * Unloads the plugin's quick menu items.
  */
 void quickmenu_stop(void) {
-    QuickMenuRebornUnregisterWidget(ID_BUTTON);
-    QuickMenuRebornUnregisterWidget(ID_LOADING_TEXT);
+    for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
+        const char* id = ID_BUTTONS[idx];
+        QuickMenuRebornUnregisterWidget(id);
+    }
     QuickMenuRebornUnregisterWidget(ID_SECTION_TEXT);
     QuickMenuRebornUnregisterWidget(ID_PLANE_ROOT);
     QuickMenuRebornRemoveSeparator(ID_SEPARATOR);
