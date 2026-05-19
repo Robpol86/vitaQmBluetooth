@@ -95,6 +95,14 @@ void on_unload(const char* id) {
     (void)id;
 
     LOG_DEBUG(0, "Quick menu closed.");
+
+    // Reset button labels.
+    for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
+        const char* id = ID_BUTTONS[idx];
+        char label[32];
+        sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
+        QuickMenuRebornSetWidgetLabel(id, label);
+    }
 }
 
 /**
