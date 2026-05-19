@@ -44,7 +44,7 @@ BUTTON_HANDLER(on_press) {
 
     LOG_DEBUG(0, "Calling kernel functions.");
 
-    VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];
+    VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];  // TODO file-scope like in kernel?
     VqmbtDeviceInfo* dev;
     int count = kvqmbtGetPairedDevices(devices, VQMBT_MAX_DEVICES);
     if (count > 0) {
@@ -60,7 +60,7 @@ BUTTON_HANDLER(on_press) {
             }
         }
         // Connect/disconnect.
-        VqmbtDeviceInfo* dev = &devices[conn_disconn_idx];
+        dev = &devices[conn_disconn_idx];
         if (kvqmbtIsConnected(dev->mac0, dev->mac1)) {
             LOG_DEBUG(0, "Disconnecting \"%s\"", dev->name);
             kvqmbtDisconnectDevice(dev->mac0, dev->mac1);
@@ -116,6 +116,10 @@ void quickmenu_start(void) {
     QuickMenuRebornSetWidgetPosition(ID_SECTION_TEXT, -206, 62, 0, 0);
     QuickMenuRebornSetWidgetColor(ID_SECTION_TEXT, 1, 1, 1, 1);
     QuickMenuRebornSetWidgetLabel(ID_SECTION_TEXT, "Bluetooth Devices");
+
+    // TODO one button per device. Depending on state label it "Connect <device>" or "Disconnect <device>".
+    // TODO when user taps a button disable all buttons and wait for callback.
+    // TODO refresh button labels and enable.
 
     // Add placeholder "Loading" text.
     QuickMenuRebornRegisterWidget(ID_LOADING_TEXT, ID_PLANE_ROOT, text);

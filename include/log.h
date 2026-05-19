@@ -26,11 +26,15 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define LOG_COLOR_RESET_ "\033[0m"
 #define LOG_COLOR_BOLD_ "\033[1m"
 #define LOG_COLOR_RED_ "\033[1;91m"
+#define LOG_COLOR_CYAN_ "\033[1;96m"
+#define LOG_COLOR_YELLOW_ "\033[1;93m"
 #define LOG_COLOR_GRAY_ "\033[90m"
 #else
 #define LOG_COLOR_RESET_ ""
 #define LOG_COLOR_BOLD_ ""
 #define LOG_COLOR_RED_ ""
+#define LOG_COLOR_CYAN_ ""
+#define LOG_COLOR_YELLOW_ ""
 #define LOG_COLOR_GRAY_ ""
 #endif  // NDEBUG
 
@@ -46,6 +50,22 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @param ... Arguments for the format specifiers.
  */
 #define LOG_ERROR(msg, ...) LOG_MESSAGE_(0, LOG_FORMAT_(LOG_COLOR_RED_ "ERROR" LOG_COLOR_RESET_), msg, ##__VA_ARGS__)
+
+/**
+ * Macro that logs an info message.
+ *
+ * @param msg The log message (supports %s and other format specifiers).
+ * @param ... Arguments for the format specifiers.
+ */
+#define LOG_INFO(msg, ...) LOG_MESSAGE_(0, LOG_FORMAT_(LOG_COLOR_CYAN_ "INFO " LOG_COLOR_RESET_), msg, ##__VA_ARGS__)
+
+/**
+ * Macro that logs a warning message.
+ *
+ * @param msg The log message (supports %s and other format specifiers).
+ * @param ... Arguments for the format specifiers.
+ */
+#define LOG_WARN(msg, ...) LOG_MESSAGE_(0, LOG_FORMAT_(LOG_COLOR_YELLOW_ "WARN " LOG_COLOR_RESET_), msg, ##__VA_ARGS__)
 
 #ifndef NDEBUG
 /**
