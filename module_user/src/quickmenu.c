@@ -39,6 +39,9 @@ _Static_assert(sizeof(ID_BUTTONS) / sizeof(ID_BUTTONS[0]) == VQMBT_MAX_DEVICES,
 
 /**
  * Called when the user taps on the button. Emits a log message.
+ * TODO:
+ * - on_press: if button is No Device do nothing; else connect/disconnect; relabel button "Connecting <name>..."
+ * - when user taps a button disable all buttons and wait for callback.
  */
 BUTTON_HANDLER(on_press) {
     (void)id;
@@ -54,18 +57,10 @@ BUTTON_HANDLER(on_press) {
  * TODO
  *
  * TODO:
- * - Show 8 buttons, static plane size, placeholder text: No Device
- * - on_load: query kernel, update button text with Con/Disc prefix based on state
- * - on_press: if button is No Device do nothing; else connect/disconnect; relabel button "Connecting <name>..."
  * - callback: relabel button with new state. Surface error in button as close/reopen resets labels
  * - update screenshot
  */
-void load_everything_todo(void) {
-    // ^TODO one button per device. Depending on state label it "Connect <device>" or "Disconnect <device>".
-    // TODO when user taps a button disable all buttons and wait for callback.
-    // ^TODO refresh button labels and enable.
-
-    // Add all buttons.
+void add_buttons(void) {
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
         const char* id = ID_BUTTONS[idx];
         QuickMenuRebornRegisterWidget(id, ID_PLANE_ROOT, button);
@@ -81,6 +76,9 @@ void load_everything_todo(void) {
 
 /**
  * Called when the quick menu is opened by the user.
+ * TODO:
+ * - on_load: query kernel, update button text with Con/Disc prefix based on state
+ * - Depending on state label it "Connect <device>" or "Disconnect <device>".
  */
 ONLOAD_HANDLER(on_load) {
     (void)id;
@@ -130,7 +128,7 @@ void quickmenu_start(void) {
     QuickMenuRebornSetWidgetLabel(ID_SECTION_TEXT, "Bluetooth Devices");
 
     // TODO.
-    load_everything_todo();
+    add_buttons();
 
     // Register handlers.
     QuickMenuRebornAssignOnLoadHandler(on_load, ID_PLANE_ROOT);
