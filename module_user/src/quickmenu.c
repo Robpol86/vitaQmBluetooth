@@ -84,6 +84,9 @@ ONLOAD_HANDLER(on_load) {
     (void)id;
 
     LOG_DEBUG(0, "Quick menu opened.");
+
+    // Query kernel.
+    // TODO query, update label, pass mac0/1 or idx (static?) to on_press via userDat?
 }
 
 /**
