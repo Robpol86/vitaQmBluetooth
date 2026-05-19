@@ -77,6 +77,35 @@ BUTTON_HANDLER(on_press) {
 }
 
 /**
+ * TODO
+ * TODO:
+ * - Show 8 buttons, static plane size, placeholder text: No Device
+ * - on_load: query kernel, update button text with Con/Disc prefix based on state
+ * - on_press: if button is No Device do nothing; else connect/disconnect; relabel button "Connecting <name>..."
+ * - callback: relabel button with new state. Surface error in button as close/reopen resets labels
+ */
+void load_everything_todo(void) {
+    // ^TODO one button per device. Depending on state label it "Connect <device>" or "Disconnect <device>".
+    // TODO when user taps a button disable all buttons and wait for callback.
+    // ^TODO refresh button labels and enable.
+
+    // Add placeholder "Loading" text.
+    QuickMenuRebornRegisterWidget(ID_LOADING_TEXT, ID_PLANE_ROOT, text);
+    QuickMenuRebornSetWidgetSize(ID_LOADING_TEXT, SCE_PLANE_WIDTH, 50, 0, 0);
+    QuickMenuRebornSetWidgetPosition(ID_LOADING_TEXT, -220, -3, 0, 0);
+    QuickMenuRebornSetWidgetColor(ID_LOADING_TEXT, 1, 1, 1, 1);
+    QuickMenuRebornSetWidgetLabel(ID_LOADING_TEXT, "Loading...");
+
+    // Add button to test emitting logs.
+    QuickMenuRebornRegisterWidget(ID_BUTTON, ID_PLANE_ROOT, button);
+    QuickMenuRebornSetWidgetSize(ID_BUTTON, 200, 75, 0, 0);
+    QuickMenuRebornSetWidgetPosition(ID_BUTTON, -220, -83, 0, 0);
+    QuickMenuRebornSetWidgetColor(ID_BUTTON, 1, 1, 1, 1);
+    QuickMenuRebornSetWidgetLabel(ID_BUTTON, "Emit Log");
+    QuickMenuRebornRegisterEventHanlder(ID_BUTTON, QMR_BUTTON_RELEASE_ID, on_press, NULL);
+}
+
+/**
  * Called when the quick menu is opened by the user.
  */
 ONLOAD_HANDLER(on_load) {
@@ -97,7 +126,7 @@ void on_unload(const char* id) {
 /**
  * Loads the plugin's quick menu items.
  *
- * TODOs:
+ * TODO:
  * - Add function to calculate position from top left instead of center.
  * - Pixel perfect alignment.
  * - If kernel plugin isn't loaded notify user.
@@ -118,24 +147,8 @@ void quickmenu_start(void) {
     QuickMenuRebornSetWidgetColor(ID_SECTION_TEXT, 1, 1, 1, 1);
     QuickMenuRebornSetWidgetLabel(ID_SECTION_TEXT, "Bluetooth Devices");
 
-    // TODO one button per device. Depending on state label it "Connect <device>" or "Disconnect <device>".
-    // TODO when user taps a button disable all buttons and wait for callback.
-    // TODO refresh button labels and enable.
-
-    // Add placeholder "Loading" text.
-    QuickMenuRebornRegisterWidget(ID_LOADING_TEXT, ID_PLANE_ROOT, text);
-    QuickMenuRebornSetWidgetSize(ID_LOADING_TEXT, SCE_PLANE_WIDTH, 50, 0, 0);
-    QuickMenuRebornSetWidgetPosition(ID_LOADING_TEXT, -220, -3, 0, 0);
-    QuickMenuRebornSetWidgetColor(ID_LOADING_TEXT, 1, 1, 1, 1);
-    QuickMenuRebornSetWidgetLabel(ID_LOADING_TEXT, "Loading...");
-
-    // Add button to test emitting logs.
-    QuickMenuRebornRegisterWidget(ID_BUTTON, ID_PLANE_ROOT, button);
-    QuickMenuRebornSetWidgetSize(ID_BUTTON, 200, 75, 0, 0);
-    QuickMenuRebornSetWidgetPosition(ID_BUTTON, -220, -83, 0, 0);
-    QuickMenuRebornSetWidgetColor(ID_BUTTON, 1, 1, 1, 1);
-    QuickMenuRebornSetWidgetLabel(ID_BUTTON, "Emit Log");
-    QuickMenuRebornRegisterEventHanlder(ID_BUTTON, QMR_BUTTON_RELEASE_ID, on_press, NULL);
+    // TODO.
+    load_everything_todo();
 
     // Register handlers.
     QuickMenuRebornAssignOnLoadHandler(on_load, ID_PLANE_ROOT);
