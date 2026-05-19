@@ -79,9 +79,6 @@ void add_buttons(void) {
 
 /**
  * Called when the quick menu is opened by the user.
- * TODO:
- * - on_load: query kernel, update button text with Con/Disc prefix based on state
- * - Depending on state label it "Connect <device>" or "Disconnect <device>".
  */
 ONLOAD_HANDLER(on_load) {
     (void)id;
@@ -115,7 +112,7 @@ ONLOAD_HANDLER(on_load) {
         QuickMenuRebornSetWidgetLabel(id, label);
     }
 
-    // TODO pass idx to on_press via userDat
+    // TODO next TODO TODO pass idx to on_press via userDat; register callback on non-empty slots.
 }
 
 /**
@@ -129,9 +126,10 @@ void on_unload(const char* id) {
     // Reset button labels.
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
         const char* id = ID_BUTTONS[idx];
-        char label[32];  // TODO 32 define?
+        char label[32];  // TODO 32 define in macro?
         sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
         QuickMenuRebornSetWidgetLabel(id, label);
+        // TODO unregister callback.
     }
 }
 
@@ -163,7 +161,7 @@ void quickmenu_start(void) {
     add_buttons();
 
     // Register handlers.
-    const char *last = ID_BUTTONS[VQMBT_MAX_DEVICES - 1];  // TODO restyle?
+    const char* last = ID_BUTTONS[VQMBT_MAX_DEVICES - 1];  // TODO restyle?
     QuickMenuRebornAssignOnLoadHandler(on_load, last);
     QuickMenuRebornAssignOnDeleteHandler(on_unload, last);
 }
