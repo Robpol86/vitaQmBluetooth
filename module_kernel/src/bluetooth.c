@@ -36,6 +36,9 @@ static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];
 /**
  * Check if the device is currently connected.
  *
+ * TODO:
+ * - Change from bool to int, just reutrn the state. Rename function.
+ *
  * @param mac0 First four bytes of the bluetooth device's MAC address.
  * @param mac1 Last two bytes of the bluetooth device's MAC address.
  * @return true if the device is connected.
