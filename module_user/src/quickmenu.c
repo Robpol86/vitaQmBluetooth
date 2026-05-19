@@ -112,7 +112,7 @@ ONLOAD_HANDLER(on_load) {
         } else {
             sceClibSnprintf(label, sizeof(label), "Connect %s", dev->name);
         }
-        // TODO QuickMenuRebornSetWidgetLabel(id, label); // 3:0x9cd098e26c7c132a:0x8c2ff5fd:[coredump] start ID=NPXS19999
+        QuickMenuRebornSetWidgetLabel(id, label);
     }
 
     // TODO pass idx to on_press via userDat
@@ -163,8 +163,9 @@ void quickmenu_start(void) {
     add_buttons();
 
     // Register handlers.
-    QuickMenuRebornAssignOnLoadHandler(on_load, ID_PLANE_ROOT);
-    QuickMenuRebornAssignOnDeleteHandler(on_unload, ID_PLANE_ROOT);
+    const char *last = ID_BUTTONS[VQMBT_MAX_DEVICES - 1];  // TODO restyle?
+    QuickMenuRebornAssignOnLoadHandler(on_load, last);
+    QuickMenuRebornAssignOnDeleteHandler(on_unload, last);
 }
 
 /**
