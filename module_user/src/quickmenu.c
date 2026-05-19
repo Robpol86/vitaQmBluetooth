@@ -26,6 +26,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "log.h"
 #include "vqmbt.h"
 
+static VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];
+
 // Widget IDs (prefixed because they must be unique across all plugins).
 #define ID_SEPARATOR MODULE_NAME "Separator"
 #define ID_PLANE_ROOT MODULE_NAME "PlaneRoot"
@@ -58,6 +60,7 @@ BUTTON_HANDLER(on_press) {
  *
  * TODO:
  * - callback: relabel button with new state. Surface error in button as close/reopen resets labels
+ * - button_reset() button_disable() button_enable() functions
  * - update screenshot
  */
 void add_buttons(void) {
@@ -86,7 +89,33 @@ ONLOAD_HANDLER(on_load) {
     LOG_DEBUG(0, "Quick menu opened.");
 
     // Query kernel.
-    // TODO query, update label, pass mac0/1 or idx (static?) to on_press via userDat?
+    VqmbtDeviceInfo* dev;
+    int count = kvqmbtGetPairedDevices(devices, VQMBT_MAX_DEVICES);
+    if (count < 0) {
+        LOG_ERROR("kvqmbtGetPairedDevices returned error: 0x%08X", count);
+        return;
+    }
+    if (count < 1) {
+        LOG_DEBUG(0, "No paired devices.");
+        return;
+    }
+    LOG_DEBUG(0, "count=%d", count);
+
+    // Update button labels.
+    for (int idx = 0; idx < count; idx++) {
+        dev = &devices[idx];
+        LOG_DEBUG(0, "idx=%d name=\"%s\" mac0=0x%08X mac1=0x%08X", idx, dev->name, dev->mac0, dev->mac1);
+        const char* id = ID_BUTTONS[idx];
+        char label[32];
+        if (dev->state == 5 || dev->state == 6) {
+            sceClibSnprintf(label, sizeof(label), "Disconnect %s", dev->name);
+        } else {
+            sceClibSnprintf(label, sizeof(label), "Connect %s", dev->name);
+        }
+        QuickMenuRebornSetWidgetLabel(id, label);
+    }
+
+    // TODO pass idx to on_press via userDat
 }
 
 /**
@@ -100,7 +129,7 @@ void on_unload(const char* id) {
     // Reset button labels.
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
         const char* id = ID_BUTTONS[idx];
-        char label[32];
+        char label[32];  // TODO 32 define?
         sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
         QuickMenuRebornSetWidgetLabel(id, label);
     }
