@@ -58,6 +58,7 @@ BUTTON_HANDLER(on_press) {
  * - on_load: query kernel, update button text with Con/Disc prefix based on state
  * - on_press: if button is No Device do nothing; else connect/disconnect; relabel button "Connecting <name>..."
  * - callback: relabel button with new state. Surface error in button as close/reopen resets labels
+ * - update screenshot
  */
 void load_everything_todo(void) {
     // ^TODO one button per device. Depending on state label it "Connect <device>" or "Disconnect <device>".
@@ -68,10 +69,12 @@ void load_everything_todo(void) {
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
         const char* id = ID_BUTTONS[idx];
         QuickMenuRebornRegisterWidget(id, ID_PLANE_ROOT, button);
-        QuickMenuRebornSetWidgetSize(id, 200, 75, 0, 0);
-        QuickMenuRebornSetWidgetPosition(id, -220, 243 - (idx * 80), 0, 0);
+        QuickMenuRebornSetWidgetSize(id, 600, 75, 0, 0);
+        QuickMenuRebornSetWidgetPosition(id, -20, 243 - (idx * 80), 0, 0);
         QuickMenuRebornSetWidgetColor(id, 1, 1, 1, 1);
-        QuickMenuRebornSetWidgetLabel(id, "No device");
+        char label[32];
+        sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
+        QuickMenuRebornSetWidgetLabel(id, label);
         QuickMenuRebornRegisterEventHanlder(id, QMR_BUTTON_RELEASE_ID, on_press, NULL);
     }
 }
