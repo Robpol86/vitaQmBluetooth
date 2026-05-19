@@ -65,7 +65,7 @@ void add_buttons(void) {
         const char* id = ID_BUTTONS[idx];
         QuickMenuRebornRegisterWidget(id, ID_PLANE_ROOT, button);
         QuickMenuRebornSetWidgetSize(id, 600, 75, 0, 0);
-        QuickMenuRebornSetWidgetPosition(id, -20, 243 - (idx * 80), 0, 0);
+        QuickMenuRebornSetWidgetPosition(id, 20, 243 - (idx * 80), 0, 0);
         QuickMenuRebornSetWidgetColor(id, 1, 1, 1, 1);
         char label[32];
         sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
