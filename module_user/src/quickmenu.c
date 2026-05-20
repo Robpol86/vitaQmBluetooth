@@ -27,11 +27,11 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "vqmbt.h"
 
 // Widget IDs (prefixed because they must be unique across all plugins).
-#define ID_SEPARATOR PROJECT_NAME "Separator"
-#define ID_PLANE_ROOT PROJECT_NAME "PlaneRoot"
-#define ID_SECTION_TEXT PROJECT_NAME "SectionText"
-#define ID_LOADING_TEXT PROJECT_NAME "LoadingText"
-#define ID_BUTTON PROJECT_NAME "Button"
+#define ID_SEPARATOR MODULE_NAME "Separator"
+#define ID_PLANE_ROOT MODULE_NAME "PlaneRoot"
+#define ID_SECTION_TEXT MODULE_NAME "SectionText"
+#define ID_LOADING_TEXT MODULE_NAME "LoadingText"
+#define ID_BUTTON MODULE_NAME "Button"
 
 /**
  * Called when the user taps on the button. Emits a log message.
