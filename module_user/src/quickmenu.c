@@ -134,7 +134,9 @@ void on_unload(const char* id) {
 }
 
 /**
- * TODO
+ * Add connect/disconnect buttons to quick menu. One button per paired device.
+ *
+ * For now buttons are fixed and so is the plane.
  *
  * TODO:
  * - callback: relabel button with new state. Surface error in button as close/reopen resets labels
