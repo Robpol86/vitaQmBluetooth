@@ -26,6 +26,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "log.h"
 #include "vqmbt.h"
 
+#define BUTTON_LABEL_MAX (sizeof(((VqmbtDeviceInfo*)0)->name) + 16)
+
 static VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];  // TODO locking/semaphore?
 
 // Widget IDs (prefixed because they must be unique across all plugins).
@@ -86,7 +88,7 @@ void add_buttons(void) {
         QuickMenuRebornSetWidgetSize(id, 600, 75, 0, 0);
         QuickMenuRebornSetWidgetPosition(id, 20, 243 - (idx * 80), 0, 0);
         QuickMenuRebornSetWidgetColor(id, 1, 1, 1, 1);
-        char label[32];
+        char label[BUTTON_LABEL_MAX];
         sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
         QuickMenuRebornSetWidgetLabel(id, label);
         QuickMenuRebornRegisterEventHanlder(id, QMR_BUTTON_RELEASE_ID, on_press, (void*)(intptr_t)idx);
@@ -124,7 +126,7 @@ ONLOAD_HANDLER(on_load) {
         dev = &devices[idx];
         LOG_DEBUG(0, "idx=%d name=\"%s\" mac0=0x%08X mac1=0x%08X", idx, dev->name, dev->mac0, dev->mac1);
         const char* id = ID_BUTTONS[idx];
-        char label[32];
+        char label[BUTTON_LABEL_MAX];
         if (dev->state == 5 || dev->state == 6) {  // TODO dedupe magic numbers with enum?
             sceClibSnprintf(label, sizeof(label), "Disconnect %s", dev->name);
         } else {
@@ -145,7 +147,7 @@ void on_unload(const char* id) {
     // Reset button labels.
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
         const char* id = ID_BUTTONS[idx];
-        char label[32];  // TODO 32 define in macro?
+        char label[BUTTON_LABEL_MAX];
         sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
         QuickMenuRebornSetWidgetLabel(id, label);
     }
