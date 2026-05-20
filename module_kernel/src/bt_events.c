@@ -136,7 +136,6 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
 }
 
 static SceUID bt_cb_uid = -1;
-static int bt_thread_run = 1;
 
 /**
  * TODO
@@ -150,7 +149,7 @@ static int kvqmbtEventThread(SceSize args, void* argp) {
     ksceKernelDelayThreadCB(4 * 1000 * 1000);
     ksceBtStopInquiry();
 
-    while (bt_thread_run) {
+    while (1) {
         ksceKernelDelayThreadCB(200 * 1000);
     }
 
