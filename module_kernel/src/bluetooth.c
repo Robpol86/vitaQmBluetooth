@@ -16,7 +16,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /******************************************************************************
  * @file
- * @brief Interface with the bluetooth subsystem.
+ * @brief Interface with the bluetooth subsystem. TODO.
  ******************************************************************************/
 
 #include <psp2kern/bt.h>
