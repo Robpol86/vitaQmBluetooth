@@ -40,9 +40,12 @@ _Static_assert(sizeof(ID_BUTTONS) / sizeof(ID_BUTTONS[0]) == VQMBT_MAX_DEVICES,
                "ID_BUTTONS size must match VQMBT_MAX_DEVICES");
 
 /**
- * Called when the user taps on the button. Emits a log message.
+ * Connect or disconnect the device associated with the button.
+ *
+ * Called when the user taps on the button.
+ *
  * TODO:
- * - on_press: if button is No Device do nothing; else connect/disconnect; relabel button "Connecting <name>..."
+ * - Relabel button "Connecting <name>...".
  * - when user taps a button disable all buttons and wait for callback.
  */
 BUTTON_HANDLER(on_press) {
@@ -59,7 +62,13 @@ BUTTON_HANDLER(on_press) {
         return;
     }
 
-    LOG_DEBUG(0, "Button pressed for idx=%d", idx);
+    if (dev->state == 5 || dev->state == 6) {
+        LOG_DEBUG(0, "Disconnecting \"%s\"", dev->name);
+        kvqmbtDisconnectDevice(dev->mac0, dev->mac1);
+    } else {
+        LOG_DEBUG(0, "Connecting \"%s\"", dev->name);
+        kvqmbtConnectDevice(dev->mac0, dev->mac1);
+    }
 }
 
 /**
@@ -116,15 +125,13 @@ ONLOAD_HANDLER(on_load) {
         LOG_DEBUG(0, "idx=%d name=\"%s\" mac0=0x%08X mac1=0x%08X", idx, dev->name, dev->mac0, dev->mac1);
         const char* id = ID_BUTTONS[idx];
         char label[32];
-        if (dev->state == 5 || dev->state == 6) {
+        if (dev->state == 5 || dev->state == 6) {  // TODO dedupe magic numbers with enum?
             sceClibSnprintf(label, sizeof(label), "Disconnect %s", dev->name);
         } else {
             sceClibSnprintf(label, sizeof(label), "Connect %s", dev->name);
         }
         QuickMenuRebornSetWidgetLabel(id, label);
     }
-
-    // TODO next TODO TODO pass idx to on_press via userDat; register callback on non-empty slots.
 }
 
 /**
