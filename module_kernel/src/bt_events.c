@@ -38,6 +38,9 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
     (void)notifyArg;
     (void)userData;
 
+    LOG_DEBUG(0, "Called with notifyId=%d notifyCount=%d notifyArg=%d userData=%p", notifyId, notifyCount, notifyArg,
+              userData);
+
     // static SceBtHidRequest hid_request;
     static unsigned char recv_buff[0x100];
 
