@@ -49,10 +49,17 @@ BUTTON_HANDLER(on_press) {
     (void)id;
     (void)hash;
     (void)eventId;
-    (void)userDat;
+    int idx = (int)(intptr_t)userDat;
 
-    // name(const char *id, SceInt32 hash, SceInt32 eventId, void *userDat)
-    LOG_DEBUG(0, "Button pressed TODO log all params");
+    VqmbtDeviceInfo* dev = &devices[idx];
+
+    // Do nothing if slot is empty.
+    if ((dev->mac0 | dev->mac1) == 0) {  // TODO make more robust, use `static int devices_count`?
+        LOG_DEBUG(0, "button idx=%d is empty: no-op", idx);
+        return;
+    }
+
+    LOG_DEBUG(0, "Button pressed for idx=%d", idx);
 }
 
 /**
@@ -73,7 +80,7 @@ void add_buttons(void) {
         char label[32];
         sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
         QuickMenuRebornSetWidgetLabel(id, label);
-        QuickMenuRebornRegisterEventHanlder(id, QMR_BUTTON_RELEASE_ID, on_press, NULL);
+        QuickMenuRebornRegisterEventHanlder(id, QMR_BUTTON_RELEASE_ID, on_press, (void*)(intptr_t)idx);
     }
 }
 
@@ -134,7 +141,6 @@ void on_unload(const char* id) {
         char label[32];  // TODO 32 define in macro?
         sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
         QuickMenuRebornSetWidgetLabel(id, label);
-        // TODO unregister callback.
     }
 }
 
