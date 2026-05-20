@@ -79,7 +79,6 @@ BUTTON_HANDLER(on_press) {
  * TODO:
  * - callback: relabel button with new state. Surface error in button as close/reopen resets labels
  * - button_reset() button_disable() button_enable() functions
- * - update screenshot
  */
 void add_buttons(void) {
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
