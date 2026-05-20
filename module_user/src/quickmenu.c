@@ -86,7 +86,7 @@ ONLOAD_HANDLER(on_load) {
     LOG_DEBUG(0, "Quick menu opened.");
 
     // Zero the struct array to prevent ghost data.
-    for (int i = 0; i < (int)sizeof(devices); i++) ((unsigned char*)devices)[i] = 0;
+    sceClibMemset(devices, 0, sizeof(devices));
 
     // Query kernel.
     VqmbtDeviceInfo* dev;
