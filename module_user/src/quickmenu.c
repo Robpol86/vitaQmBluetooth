@@ -74,30 +74,11 @@ BUTTON_HANDLER(on_press) {
 }
 
 /**
- * TODO
- *
- * TODO:
- * - callback: relabel button with new state. Surface error in button as close/reopen resets labels
- * - button_reset() button_disable() button_enable() functions
- */
-void add_buttons(void) {
-    for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
-        const char* id = ID_BUTTONS[idx];
-        QuickMenuRebornRegisterWidget(id, ID_PLANE_ROOT, button);
-        QuickMenuRebornSetWidgetSize(id, 600, 75, 0, 0);
-        QuickMenuRebornSetWidgetPosition(id, 20, 243 - (idx * 80), 0, 0);
-        QuickMenuRebornSetWidgetColor(id, 1, 1, 1, 1);
-        char label[BUTTON_LABEL_MAX];
-        sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
-        QuickMenuRebornSetWidgetLabel(id, label);
-        QuickMenuRebornRegisterEventHanlder(id, QMR_BUTTON_RELEASE_ID, on_press, (void*)(intptr_t)idx);
-    }
-}
-
-/**
  * Called when the quick menu is opened by the user.
  *
- * TODO performance? delay opening qm? async?
+ * TODO:
+ * - Performance? delay opening qm? async?
+ * - Hide empty slots and resize plane to eliminate ghost scrolling.
  */
 ONLOAD_HANDLER(on_load) {
     (void)id;
@@ -153,6 +134,27 @@ void on_unload(const char* id) {
 }
 
 /**
+ * TODO
+ *
+ * TODO:
+ * - callback: relabel button with new state. Surface error in button as close/reopen resets labels
+ * - button_reset() button_disable() button_enable() functions
+ */
+void add_buttons(void) {
+    for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
+        const char* id = ID_BUTTONS[idx];
+        QuickMenuRebornRegisterWidget(id, ID_PLANE_ROOT, button);
+        QuickMenuRebornSetWidgetSize(id, 600, 75, 0, 0);
+        QuickMenuRebornSetWidgetPosition(id, 20, 243 - (idx * 80), 0, 0);
+        QuickMenuRebornSetWidgetColor(id, 1, 1, 1, 1);
+        char label[BUTTON_LABEL_MAX];
+        sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
+        QuickMenuRebornSetWidgetLabel(id, label);
+        QuickMenuRebornRegisterEventHanlder(id, QMR_BUTTON_RELEASE_ID, on_press, (void*)(intptr_t)idx);
+    }
+}
+
+/**
  * Loads the plugin's quick menu items.
  *
  * TODO:
@@ -176,11 +178,11 @@ void quickmenu_start(void) {
     QuickMenuRebornSetWidgetColor(ID_SECTION_TEXT, 1, 1, 1, 1);
     QuickMenuRebornSetWidgetLabel(ID_SECTION_TEXT, "Bluetooth Devices");
 
-    // TODO.
+    // Add device slot buttons.
     add_buttons();
 
     // Register handlers.
-    const char* last = ID_BUTTONS[VQMBT_MAX_DEVICES - 1];  // TODO restyle?
+    const char* last = ID_BUTTONS[VQMBT_MAX_DEVICES - 1];
     QuickMenuRebornAssignOnLoadHandler(on_load, last);
     QuickMenuRebornAssignOnDeleteHandler(on_unload, last);
 }
