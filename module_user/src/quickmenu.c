@@ -79,14 +79,16 @@ void add_buttons(void) {
 
 /**
  * Called when the quick menu is opened by the user.
- * todo performance? delay opening qm? async?
+ *
+ * TODO performance? delay opening qm? async?
  */
 ONLOAD_HANDLER(on_load) {
     (void)id;
 
     LOG_DEBUG(0, "Quick menu opened.");
-    
-    // Zero struct array todo. 
+
+    // Zero the struct array to prevent ghost data.
+    for (int i = 0; i < (int)sizeof(devices); i++) ((unsigned char*)devices)[i] = 0;
 
     // Query kernel.
     VqmbtDeviceInfo* dev;
