@@ -31,7 +31,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "log.h"
 #include "vqmbt.h"
 
-static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];
+static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];  // TODO locking/semaphore?
 
 /**
  * Check if the device is currently connected.
