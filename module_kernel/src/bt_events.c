@@ -143,20 +143,14 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
  */
 static int kvqmbtEventThread(SceSize args, void* argp) {
     uid_callback = ksceKernelCreateCallback("kvqmbtEventCallback", 0, kvqmbtEventCallback, NULL);
+    LOG_DEBUG(0, "ksceKernelCreateCallback() returned 0x%08X", uid_callback);
+    int ret = ksceBtRegisterCallback(uid_callback, 0, 0xFFFFFFFF, 0xFFFFFFFF);
+    LOG_DEBUG(0, "ksceBtRegisterCallback() returned 0x%08X", ret);
 
-    ksceBtRegisterCallback(uid_callback, 0, 0xFFFFFFFF, 0xFFFFFFFF);
-
-    ksceBtStartInquiry();
-    ksceKernelDelayThreadCB(4 * 1000 * 1000);
-    ksceBtStopInquiry();
-
-    while (1) {
-        ksceKernelDelayThreadCB(200 * 1000);
+    // Sleep indefinitely.
+    while (true) {                            // TODO check variable instead
+        ksceKernelDelayThreadCB(200 * 1000);  // TODO switch to event?
     }
-
-    ksceBtUnregisterCallback(uid_callback);
-
-    ksceKernelDeleteCallback(uid_callback);
 
     return 0;
 }
@@ -169,7 +163,8 @@ void kvqmbtEventStart(void) {
     uid_thread = ksceKernelCreateThread("kvqmbtEventThread", kvqmbtEventThread, 0x96, 0x1000, 0,
                                         SCE_KERNEL_THREAD_CPU_AFFINITY_MASK_DEFAULT, NULL);
     LOG_DEBUG(0, "ksceKernelCreateThread() returned 0x%08X", uid_thread);
-    ksceKernelStartThread(uid_thread, 0, NULL);
+    int ret = ksceKernelStartThread(uid_thread, 0, NULL);
+    LOG_DEBUG(0, "ksceKernelStartThread() returned 0x%08X", ret);
 }
 
 /**
@@ -177,4 +172,8 @@ void kvqmbtEventStart(void) {
  */
 void kvqmbtEventStop(void) {
     // TODO
+    /*
+    ksceBtUnregisterCallback(uid_callback);
+    ksceKernelDeleteCallback(uid_callback);
+    */
 }
