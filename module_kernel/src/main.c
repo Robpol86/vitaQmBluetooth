@@ -54,7 +54,7 @@ int module_stop(SceSize args, const void* argp) {
     (void)argp;
 
     LOG_INFO("Stopping");
-    // TODO unload components.
+    kvqmbtEventStop();
     LOG_INFO("Stopped");
 
     return SCE_KERNEL_STOP_SUCCESS;

@@ -23,5 +23,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define BT_EVENTS_H
 
 void kvqmbtEventStart(void);
+void kvqmbtEventStop(void);
 
 #endif  // BT_EVENTS_H

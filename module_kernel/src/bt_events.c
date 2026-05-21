@@ -29,6 +29,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "log.h"
 
+static SceUID uid_callback = -1;
+static SceUID uid_thread = -1;
+
 /**
  * TODO.
  */
@@ -135,15 +138,13 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
     return 0;
 }
 
-static SceUID bt_cb_uid = -1;
-
 /**
  * TODO
  */
 static int kvqmbtEventThread(SceSize args, void* argp) {
-    bt_cb_uid = ksceKernelCreateCallback("kvqmbtEventCallback", 0, kvqmbtEventCallback, NULL);
+    uid_callback = ksceKernelCreateCallback("kvqmbtEventCallback", 0, kvqmbtEventCallback, NULL);
 
-    ksceBtRegisterCallback(bt_cb_uid, 0, 0xFFFFFFFF, 0xFFFFFFFF);
+    ksceBtRegisterCallback(uid_callback, 0, 0xFFFFFFFF, 0xFFFFFFFF);
 
     ksceBtStartInquiry();
     ksceKernelDelayThreadCB(4 * 1000 * 1000);
@@ -153,21 +154,25 @@ static int kvqmbtEventThread(SceSize args, void* argp) {
         ksceKernelDelayThreadCB(200 * 1000);
     }
 
-    ksceBtUnregisterCallback(bt_cb_uid);
+    ksceBtUnregisterCallback(uid_callback);
 
-    ksceKernelDeleteCallback(bt_cb_uid);
+    ksceKernelDeleteCallback(uid_callback);
 
     return 0;
 }
-
-static SceUID bt_thread_uid = -1;
 
 /**
  * TODO
  */
 void kvqmbtEventStart(void) {
-    LOG_DEBUG(0, "CALLED");
-    bt_thread_uid = ksceKernelCreateThread("kvqmbtEventThread", kvqmbtEventThread, 0x3C, 0x1000, 0, 0x10000, 0);
-    LOG_DEBUG(0, "Bluetooth thread UID: 0x%08X", bt_thread_uid);
-    ksceKernelStartThread(bt_thread_uid, 0, NULL);
+    uid_thread = ksceKernelCreateThread("kvqmbtEventThread", kvqmbtEventThread, 0x3C, 0x1000, 0, 0x10000, 0);  // TODO
+    LOG_DEBUG(0, "ksceKernelCreateThread() returned 0x%08X", uid_thread);
+    ksceKernelStartThread(uid_thread, 0, NULL);
+}
+
+/**
+ * TODO
+ */
+void kvqmbtEventStop(void) {
+    // TODO
 }
