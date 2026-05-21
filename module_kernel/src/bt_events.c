@@ -35,6 +35,11 @@ static bool run_thread = false;
 
 /**
  * TODO.
+
+get these events to forward:
+- add and remove bt devices
+- connect and disconnect states
+- connect and disconnect event timeouts and conpletion
  */
 static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, void* userData) {
     (void)notifyId;
