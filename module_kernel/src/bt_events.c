@@ -165,7 +165,9 @@ static int kvqmbtEventThread(SceSize args, void* argp) {
  * TODO
  */
 void kvqmbtEventStart(void) {
-    uid_thread = ksceKernelCreateThread("kvqmbtEventThread", kvqmbtEventThread, 0x3C, 0x1000, 0, 0x10000, 0);  // TODO
+    // TODO priority too low (inverted)?
+    uid_thread = ksceKernelCreateThread("kvqmbtEventThread", kvqmbtEventThread, 0x96, 0x1000, 0,
+                                        SCE_KERNEL_THREAD_CPU_AFFINITY_MASK_DEFAULT, NULL);
     LOG_DEBUG(0, "ksceKernelCreateThread() returned 0x%08X", uid_thread);
     ksceKernelStartThread(uid_thread, 0, NULL);
 }
