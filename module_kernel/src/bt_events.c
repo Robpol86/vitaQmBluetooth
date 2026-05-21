@@ -158,8 +158,10 @@ static int kvqmbtEventThread(SceSize args, void* argp) {
     }
 
     // Thread is stopping, clean up.
-    ksceBtUnregisterCallback(uid_callback);
-    ksceKernelDeleteCallback(uid_callback);
+    ret = ksceBtUnregisterCallback(uid_callback);
+    LOG_DEBUG(0, "ksceBtUnregisterCallback() returned 0x%08X", ret);
+    ret = ksceKernelDeleteCallback(uid_callback);
+    LOG_DEBUG(0, "ksceKernelDeleteCallback() returned 0x%08X", ret);
     uid_callback = -1;
 
     return 0;
@@ -169,9 +171,13 @@ static int kvqmbtEventThread(SceSize args, void* argp) {
  * TODO
  *
  * TODO:
- * - priority too low? (initPriority is inverted)
+ * - priority too low? (lower value == higher priority)
  */
 void kvqmbtEventStart(void) {
+    if (uid_thread >= 0) {
+        return;
+    }
+
     run_thread = true;
 
     // Create and start the thread.
@@ -190,10 +196,14 @@ void kvqmbtEventStop(void) {
         return;
     }
 
+    // Tell the thread to stop.
     run_thread = false;
-    int ret;
-    ret = ksceKernelWaitThreadEnd(uid_thread, NULL, NULL);
+
+    // Wait for thread to stop.
+    int ret = ksceKernelWaitThreadEnd(uid_thread, NULL, NULL);
     LOG_DEBUG(0, "ksceKernelWaitThreadEnd() returned 0x%08X", ret);
+
+    // Delete the thread.
     ret = ksceKernelDeleteThread(uid_thread);
     LOG_DEBUG(0, "ksceKernelDeleteThread() returned 0x%08X", ret);
 
