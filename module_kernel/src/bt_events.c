@@ -31,6 +31,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 static SceUID uid_callback = -1;
 static SceUID uid_thread = -1;
+static bool run_thread = false;
 
 /**
  * TODO.
@@ -147,19 +148,30 @@ static int kvqmbtEventThread(SceSize args, void* argp) {
     int ret = ksceBtRegisterCallback(uid_callback, 0, 0xFFFFFFFF, 0xFFFFFFFF);
     LOG_DEBUG(0, "ksceBtRegisterCallback() returned 0x%08X", ret);
 
-    // Sleep indefinitely.
-    while (true) {                            // TODO check variable instead
-        ksceKernelDelayThreadCB(200 * 1000);  // TODO switch to event?
+    // Sleep until thread is stopped.
+    while (run_thread) {
+        // TODO switch to event?
+        ksceKernelDelayThreadCB(200 * 1000);
     }
+
+    // Thread is stopping, clean up.
+    ksceBtUnregisterCallback(uid_callback);
+    ksceKernelDeleteCallback(uid_callback);
+    uid_callback = -1;
 
     return 0;
 }
 
 /**
  * TODO
+ *
+ * TODO:
+ * - priority too low? (initPriority is inverted)
  */
 void kvqmbtEventStart(void) {
-    // TODO priority too low (inverted)?
+    run_thread = true;
+
+    // Create and start the thread.
     uid_thread = ksceKernelCreateThread("kvqmbtEventThread", kvqmbtEventThread, 0x96, 0x1000, 0,
                                         SCE_KERNEL_THREAD_CPU_AFFINITY_MASK_DEFAULT, NULL);
     LOG_DEBUG(0, "ksceKernelCreateThread() returned 0x%08X", uid_thread);
@@ -171,9 +183,16 @@ void kvqmbtEventStart(void) {
  * TODO
  */
 void kvqmbtEventStop(void) {
-    // TODO
-    /*
-    ksceBtUnregisterCallback(uid_callback);
-    ksceKernelDeleteCallback(uid_callback);
-    */
+    if (uid_thread < 0) {
+        return;
+    }
+
+    run_thread = false;
+    int ret;
+    ret = ksceKernelWaitThreadEnd(uid_thread, NULL, NULL);
+    LOG_DEBUG(0, "ksceKernelWaitThreadEnd() returned 0x%08X", ret);
+    ret = ksceKernelDeleteThread(uid_thread);
+    LOG_DEBUG(0, "ksceKernelDeleteThread() returned 0x%08X", ret);
+
+    uid_thread = -1;
 }
