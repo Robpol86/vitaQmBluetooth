@@ -47,13 +47,13 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
     (void)notifyArg;
     (void)userData;
 
-    LOG_DEBUG(0, "Called with notifyId=%d notifyCount=%d notifyArg=%d userData=%p", notifyId, notifyCount, notifyArg,
+    LOG_DEBUG(0, "Called: notifyId=%d notifyCount=%d notifyArg=%d userData=%p", notifyId, notifyCount, notifyArg,
               userData);
 
     // static SceBtHidRequest hid_request;
     static unsigned char recv_buff[0x100];
 
-    while (1) {
+    while (true) {  // TODO better way?
         int ret;
         SceBtEvent hid_event;
 
@@ -66,6 +66,8 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
         if (ret <= 0) {
             break;
         }
+
+        // TODO filter out noisy hotel bluetooth devices. Move "Called:" here after the conditional temporarily.
 
         LOG_DEBUG(0, "SceBtEvent: id=0x%02hhX mac0=%08X mac1=%08X", hid_event.id, hid_event.mac0, hid_event.mac1);
         LOG_DEBUG(0, "            unk1=0x%02hhX unk2=0x%04hX unk3=0x%08X", hid_event.unk1, hid_event.unk2,
