@@ -90,7 +90,7 @@ int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
     }
 
     // Zero the kernel-side array to prevent ghost data.
-    for (int i = 0; i < (int)sizeof(paired_devices); i++) ((unsigned char*)paired_devices)[i] = 0;
+    memset(paired_devices, 0, sizeof(paired_devices));
 
     // Populate file-scoped array with all currently paired devices.
     int count = ksceBtGetRegisteredInfo(0, 0, paired_devices, info_size);
