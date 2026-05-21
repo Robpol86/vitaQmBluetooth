@@ -67,10 +67,9 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
             break;
         }
 
-        LOG_DEBUG(0, "->Event:");
-        for (int i = 0; i < 0x10; i++) LOG_DEBUG(0, " %02X", hid_event.data[i]);
-
-        LOG_DEBUG(0, "hid_event.mac0=%08X hid_event.mac1=%08X", hid_event.mac0, hid_event.mac1);
+        LOG_DEBUG(0, "SceBtEvent: id=0x%02hhX mac0=%08X mac1=%08X", hid_event.id, hid_event.mac0, hid_event.mac1);
+        LOG_DEBUG(0, "            unk1=0x%02hhX unk2=0x%04hX unk3=0x%08X", hid_event.unk1, hid_event.unk2,
+                  hid_event.unk3);
 
         switch (hid_event.id) {
             case 0x01: { /* Inquiry result event */
