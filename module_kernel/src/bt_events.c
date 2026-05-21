@@ -143,6 +143,9 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
  * TODO
  */
 static int kvqmbtEventThread(SceSize args, void* argp) {
+    (void)args;
+    (void)argp;
+
     uid_callback = ksceKernelCreateCallback("kvqmbtEventCallback", 0, kvqmbtEventCallback, NULL);
     LOG_DEBUG(0, "ksceKernelCreateCallback() returned 0x%08X", uid_callback);
     int ret = ksceBtRegisterCallback(uid_callback, 0, 0xFFFFFFFF, 0xFFFFFFFF);
