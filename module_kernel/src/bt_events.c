@@ -38,7 +38,7 @@ static bool run_thread = false;
 
 get these events to forward:
 - add and remove bt devices
-- connect and disconnect states
+- connect and disconnect states (remote and user driven)
 - connect and disconnect event timeouts and conpletion
  */
 static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, void* userData) {
