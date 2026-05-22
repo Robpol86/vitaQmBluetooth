@@ -212,6 +212,7 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
     (void)userData;
 
     while (true) {
+        // TODO Search Claude RE for unkX
         SceBtEvent event = {0};
         int ret;
 
@@ -251,6 +252,7 @@ static int kvqmbtEventThread(SceSize args, void* argp) {
 
     uid_callback = ksceKernelCreateCallback("kvqmbtEventCallback", 0, kvqmbtEventCallback, NULL);
     LOG_DEBUG(0, "ksceKernelCreateCallback returned 0x%08X", uid_callback);
+    // TODO Search Claude RE for flags
     int ret = ksceBtRegisterCallback(uid_callback, 0, 0xFFFFFFFF, 0xFFFFFFFF);
     LOG_DEBUG(0, "ksceBtRegisterCallback returned 0x%08X", ret);
 
