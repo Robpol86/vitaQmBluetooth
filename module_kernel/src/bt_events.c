@@ -126,7 +126,10 @@ static bool run_thread = false;
  * - restyle
  * - Significant fields: id, unk1 (event status code?), unk3 (event payload?)
  */
-static void kvqmbtHandleAnEvent(const SceBtEvent* event) {
+static void kvqmbtHandleEvent(const SceBtEvent* event) {
+    LOG_DEBUG(0, "SceBtEvent: id=0x%02hhX mac0=0x%08X mac1=0x%08X unk1=0x%02hhX unk2=0x%04hX unk3=0x%08X", event->id,
+              event->mac0, event->mac1, event->unk1, event->unk2, event->unk3);
+
     // static SceBtHidRequest hid_request;
     static unsigned char recv_buff[0x100];
 
@@ -232,9 +235,7 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
         // TODO remove ^
 
         // Continue in handler.
-        LOG_DEBUG(0, "SceBtEvent: id=0x%02hhX mac0=0x%08X mac1=0x%08X unk1=0x%02hhX unk2=0x%04hX unk3=0x%08X", event.id,
-                  event.mac0, event.mac1, event.unk1, event.unk2, event.unk3);
-        kvqmbtHandleAnEvent(&event);
+        kvqmbtHandleEvent(&event);
     }
 
     return 0;
@@ -252,9 +253,8 @@ static int kvqmbtEventThread(SceSize args, void* argp) {
 
     uid_callback = ksceKernelCreateCallback("kvqmbtEventCallback", 0, kvqmbtEventCallback, NULL);
     LOG_DEBUG(0, "ksceKernelCreateCallback returned 0x%08X", uid_callback);
-    // TODO Search Claude RE for flags
-    // TODO set flags2 to 0?
     // TODO flags1 is probably a mask for SceBtEvent id's. Mask out unused IDs in release builds, keep all in debug.
+    // TODO set flags2 to 0?
     int ret = ksceBtRegisterCallback(uid_callback, 0, 0xFFFFFFFF, 0xFFFFFFFF);
     LOG_DEBUG(0, "ksceBtRegisterCallback returned 0x%08X", ret);
 
