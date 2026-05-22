@@ -64,9 +64,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  *              SceBtEvent: id=0x10 mac0=0xF26B3406 mac1=0x0000708C unk1=0x00 unk2=0x0000 unk3=0x00000008
  *                          Name: "AirPods Pro"
  * Device delete event:
- *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *              SceBtEvent: id=0x07 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
- *                          Name: ""
+ *      SceBtEvent: id=0x07 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
  * Device connect successful events:
  *      NOTE: 0x07 sometimes
  *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
@@ -122,7 +120,7 @@ static bool run_thread = false;
  *
  * TODO:
  * - #define indent?
- * - revisit enum, was AI generated.
+ * - Remove enum
  * - restyle
  * - Significant fields: id, unk1 (event status code?), unk3 (event payload?)
  */
@@ -130,70 +128,20 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
     LOG_DEBUG(0, "SceBtEvent: id=0x%02hhX mac0=0x%08X mac1=0x%08X unk1=0x%02hhX unk2=0x%04hX unk3=0x%08X", event->id,
               event->mac0, event->mac1, event->unk1, event->unk2, event->unk3);
 
-    // static SceBtHidRequest hid_request;
-    static unsigned char recv_buff[0x100];
-
     switch (event->id) {
-        case VQMBT_BT_EVENT_INQUIRY_RESULT: {
-            unsigned short vid_pid[2];
-            ksceBtGetVidPid(event->mac0, event->mac1, vid_pid);
-            LOG_DEBUG(0, "            inquiry vid_pid=%04X:%04X", vid_pid[0], vid_pid[1]);
+        case VQMBT_BT_EVENT_ADD_REMOVE_DEVICE:
+            LOG_DEBUG(0, "            Device added/removed event");
             break;
-        }
-
-        case VQMBT_BT_EVENT_INQUIRY_STOP:
-            LOG_DEBUG(0, "            Inquiry stop event");
-            break;
-
-        case VQMBT_BT_EVENT_LINK_KEY_REQUEST:
-            LOG_DEBUG(0, "            link key request event");
-            ksceBtReplyUserConfirmation(event->mac0, event->mac1, 1);
-            break;
-
-        case VQMBT_BT_EVENT_CONNECT_ACCEPTED: {
-            unsigned short vid_pid[2];
-            ksceBtGetVidPid(event->mac0, event->mac1, vid_pid);
-            LOG_DEBUG(0, "            connect accepted vid_pid=%04X:%04X", vid_pid[0], vid_pid[1]);
-            break;
-        }
 
         case VQMBT_BT_EVENT_DISCONNECT:
-            LOG_DEBUG(0, "            device disconnect event");
-            break;
-
-        case VQMBT_BT_EVENT_CONNECT_REQUESTED:
-            /*
-             * Do nothing since we will get a 0x05 event afterwards.
-             */
-            LOG_DEBUG(0, "            connection requested event");
-            break;
-
-        case VQMBT_BT_EVENT_CONNECT_UNPAIRED:
-            /*
-             * The Vita needs to have a pairing with the DS4,
-             * otherwise it won't connect.
-             */
-            LOG_DEBUG(0, "            connection request without being paired event");
-            break;
-
-        case VQMBT_BT_EVENT_HID_REPLY_TYPE0:
-
-            LOG_DEBUG(0, "            DS4 0x0A event: 0x%02X", recv_buff[0]);
-
-            switch (recv_buff[0]) {
-                case 0x11:
-                    LOG_DEBUG(0, "            DS4 0x11 event: battery level %d%%", recv_buff[1]);
+            switch (event->unk1) {
+                case 0x13:  // TODO this in the sdk? AI seemed to say so.
+                    LOG_DEBUG(0, "            Device disconnected remotely event");
                     break;
-
                 default:
-                    LOG_DEBUG(0, "            Unknown DS4 event: 0x%02X", recv_buff[0]);
+                    LOG_DEBUG(0, "            Device disconnected event");
                     break;
             }
-
-            break;
-
-        case VQMBT_BT_EVENT_HID_REPLY_TYPE1:
-            LOG_DEBUG(0, "            DS4 0x0B event: 0x%02X", recv_buff[0]);
             break;
 
         default:
@@ -223,7 +171,15 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
         do {
             ret = ksceBtReadEvent(&event, 1);
         } while (ret == SCE_BT_ERROR_CB_OVERFLOW);
-        if (ret <= 0) {
+
+        // Handle errors.
+        if (ret < 0) {
+            LOG_ERROR("ksceBtReadEvent returned error: 0x%08X", ret);
+            break;
+        }
+
+        // Handle no more events to read.
+        if (ret == 0) {
             break;
         }
 
