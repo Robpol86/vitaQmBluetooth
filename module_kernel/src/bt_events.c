@@ -42,7 +42,10 @@ static bool run_thread = false;
  *      notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
  *      SceBtEvent: id=0x07 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
  * Device connect successful events:
- *      notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *      notifyId=-1 notifyCount=2 notifyArg=0 userData=0x00000000
+ *      SceBtEvent: id=0x07 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000 (sometimes omitted)
+ *      Name: ""
+ *      notifyId=-1 notifyCount=2 notifyArg=0 userData=0x00000000
  *      SceBtEvent: id=0x02 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
  *      Name: ""
  *      notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
@@ -62,6 +65,9 @@ static bool run_thread = false;
  *      Name: "AirPods Pro"
  * Device remote disconnect event:
  *      TODO
+ *
+ * TODO:
+ * - event ID enum?
  */
 static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, void* userData) {
     (void)notifyId;
