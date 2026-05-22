@@ -42,11 +42,24 @@ static bool run_thread = false;
  *      notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
  *      SceBtEvent: id=0x07 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
  * Device connect successful events:
- *      TODO
+ *      notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *      SceBtEvent: id=0x02 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
+ *      Name: ""
+ *      notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *      SceBtEvent: id=0x05 mac0=0xF26B3406 mac1=0x0000708C unk1=0x00 unk2=0x0000 unk3=0x00000039
+ *      Name: "AirPods Pro"
+ *      notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *      SceBtEvent: id=0x0E mac0=0xF26B3406 mac1=0x0000708C unk1=0x00 unk2=0x0000 unk3=0x00000066
+ *      Name: "AirPods Pro"
+ *      notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *      SceBtEvent: id=0x10 mac0=0xF26B3406 mac1=0x0000708C unk1=0x00 unk2=0x0000 unk3=0x00000008
+ *      Name: "AirPods Pro"
  * Device connect timeout events:
  *      TODO
  * Device local disconnect event:
- *      TODO
+ *      notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *      SceBtEvent: id=0x06 mac0=0xF26B3406 mac1=0x0000708C unk1=0x16 unk2=0x0000 unk3=0x00000000
+ *      Name: "AirPods Pro"
  * Device remote disconnect event:
  *      TODO
  */
