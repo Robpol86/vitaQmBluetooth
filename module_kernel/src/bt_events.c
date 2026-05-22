@@ -38,31 +38,28 @@ static bool run_thread = false;
  *
  * Disable bluetooth subsystem:
  *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *              SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000
- *                          unk1=0x00 unk2=0x0000 unk3=0x00000020
+ *              SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000020
  *              Name: ""
  *              Unknown event id: 0x15
  *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *              SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000
- *                          unk1=0x00 unk2=0x0000 unk3=0x00000000
+ *              SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
  *              Name: ""
  *              Unknown event id: 0x15
  * Enable bluetooth subsystem:
  *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *              SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000
- *                          unk1=0x00 unk2=0x0000 unk3=0x00000019
+ *              SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000019
  *              Name: ""
  *              Unknown event id: 0x15
  *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *              SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000
- *                          unk1=0x00 unk2=0x0000 unk3=0x00000009
+ *              SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000009
  *              Name: ""
  *              Unknown event id: 0x15
  * Device add event:
  *      TODO
  * Device delete event:
- *      notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *      SceBtEvent: id=0x07 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
+ *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *              SceBtEvent: id=0x07 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
+ *              Name: ""
  * Device connect successful events:
  *      notifyId=-1 notifyCount=2 notifyArg=0 userData=0x00000000
  *      SceBtEvent: id=0x07 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000 (sometimes omitted)
@@ -86,12 +83,13 @@ static bool run_thread = false;
  *      SceBtEvent: id=0x06 mac0=0xF26B3406 mac1=0x0000708C unk1=0x16 unk2=0x0000 unk3=0x00000000
  *      Name: "AirPods Pro"
  * Device remote disconnect event:
- *      notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *      SceBtEvent: id=0x06 mac0=0xF26B3406 mac1=0x0000708C unk1=0x13 unk2=0x0000 unk3=0x00000000
- *      Name: "AirPods Pro"
+ *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *              SceBtEvent: id=0x06 mac0=0xF26B3406 mac1=0x0000708C unk1=0x13 unk2=0x0000 unk3=0x00000000
+ *                          Name: "AirPods Pro"
  *
  * TODO:
  * - event ID enum?
+ * - rerun events to collect logging for different times and devices
  */
 static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, void* userData) {
     (void)notifyId;
@@ -138,7 +136,7 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
         char name[128];
         ret = ksceBtGetDeviceName(hid_event.mac0, hid_event.mac1, name);
         if (ret == 0) {
-            LOG_DEBUG(0, "        Name: \"%s\"", name);
+            LOG_DEBUG(0, "                    Name: \"%s\"", name);
         } else {
             LOG_DEBUG(0, "ksceBtGetDeviceName(mac0=0x%08X, mac1=0x%08X) returned error: 0x%08X", hid_event.mac0,
                       hid_event.mac1, ret);
@@ -149,35 +147,35 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
             case 0x01: { /* Inquiry result event */
                 unsigned short vid_pid[2];
                 ksceBtGetVidPid(hid_event.mac0, hid_event.mac1, vid_pid);
-                LOG_DEBUG(0, "        inquiry vid_pid=%04X:%04X", vid_pid[0], vid_pid[1]);
+                LOG_DEBUG(0, "                    inquiry vid_pid=%04X:%04X", vid_pid[0], vid_pid[1]);
                 break;
             }
 
             case 0x02: /* Inquiry stop event */
-                LOG_DEBUG(0, "        Inquiry stop event");
+                LOG_DEBUG(0, "                    Inquiry stop event");
                 break;
 
             case 0x04: /* Link key request? event */
-                LOG_DEBUG(0, "        link key request event");
+                LOG_DEBUG(0, "                    link key request event");
                 ksceBtReplyUserConfirmation(hid_event.mac0, hid_event.mac1, 1);
                 break;
 
             case 0x05: { /* Connection accepted event */
                 unsigned short vid_pid[2];
                 ksceBtGetVidPid(hid_event.mac0, hid_event.mac1, vid_pid);
-                LOG_DEBUG(0, "        connect accepted vid_pid=%04X:%04X", vid_pid[0], vid_pid[1]);
+                LOG_DEBUG(0, "                    connect accepted vid_pid=%04X:%04X", vid_pid[0], vid_pid[1]);
                 break;
             }
 
             case 0x06: /* Device disconnect event*/
-                LOG_DEBUG(0, "        device disconnect event");
+                LOG_DEBUG(0, "                    device disconnect event");
                 break;
 
             case 0x08: /* Connection requested event */
                 /*
                  * Do nothing since we will get a 0x05 event afterwards.
                  */
-                LOG_DEBUG(0, "        connection requested event");
+                LOG_DEBUG(0, "                    connection requested event");
                 break;
 
             case 0x09: /* Connection request without being paired? event */
@@ -185,31 +183,31 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
                  * The Vita needs to have a pairing with the DS4,
                  * otherwise it won't connect.
                  */
-                LOG_DEBUG(0, "        connection request without being paired event");
+                LOG_DEBUG(0, "                    connection request without being paired event");
                 break;
 
             case 0x0A: /* HID reply to 0-type request */
 
-                LOG_DEBUG(0, "        DS4 0x0A event: 0x%02X", recv_buff[0]);
+                LOG_DEBUG(0, "                    DS4 0x0A event: 0x%02X", recv_buff[0]);
 
                 switch (recv_buff[0]) {
                     case 0x11:
-                        LOG_DEBUG(0, "        DS4 0x11 event: battery level %d%%", recv_buff[1]);
+                        LOG_DEBUG(0, "                    DS4 0x11 event: battery level %d%%", recv_buff[1]);
                         break;
 
                     default:
-                        LOG_DEBUG(0, "        Unknown DS4 event: 0x%02X", recv_buff[0]);
+                        LOG_DEBUG(0, "                    Unknown DS4 event: 0x%02X", recv_buff[0]);
                         break;
                 }
 
                 break;
 
             case 0x0B: /* HID reply to 1-type request */
-                LOG_DEBUG(0, "        DS4 0x0B event: 0x%02X", recv_buff[0]);
+                LOG_DEBUG(0, "                    DS4 0x0B event: 0x%02X", recv_buff[0]);
                 break;
 
             default:
-                LOG_DEBUG(0, "        Unknown event id: 0x%02X", hid_event.id);
+                LOG_DEBUG(0, "                    Unknown event id: 0x%02X", hid_event.id);
                 break;
         }
     }
