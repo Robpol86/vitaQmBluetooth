@@ -35,11 +35,20 @@ static bool run_thread = false;
 
 /**
  * TODO.
-
-get these events to forward:
-- add and remove bt devices
-- connect and disconnect states (remote and user driven)
-- connect and disconnect event timeouts and conpletion
+ *
+ * Device add event:
+ *      TODO
+ * Device delete event:
+ *      notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *      SceBtEvent: id=0x07 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
+ * Device connect successful events:
+ *      TODO
+ * Device connect timeout events:
+ *      TODO
+ * Device local disconnect event:
+ *      TODO
+ * Device remote disconnect event:
+ *      TODO
  */
 static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, void* userData) {
     (void)notifyId;
