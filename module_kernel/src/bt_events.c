@@ -125,19 +125,9 @@ static bool run_thread = false;
  * - revisit enum, was AI generated.
  * - restyle
  */
-static void kvqmbtHandleEvent(const SceBtEvent* event) {
+static void kvqmbtHandleAnEvent(const SceBtEvent* event) {
     // static SceBtHidRequest hid_request;
     static unsigned char recv_buff[0x100];
-
-#ifndef NDEBUG
-    char name[128];
-    int ret = ksceBtGetDeviceName(event->mac0, event->mac1, name);
-    if (ret == 0) {
-        LOG_DEBUG(0, "      Name: \"%s\"", name);
-    } else {
-        LOG_ERROR("ksceBtGetDeviceName(mac0=0x%08X, mac1=0x%08X) returned error: 0x%08X", event->mac0, event->mac1, ret);
-    }
-#endif  // NDEBUG
 
     switch (event->id) {
         case VQMBT_BT_EVENT_INQUIRY_RESULT: {
@@ -243,7 +233,7 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
         // Continue in handler.
         LOG_DEBUG(0, "SceBtEvent: id=0x%02hhX mac0=0x%08X mac1=0x%08X unk1=0x%02hhX unk2=0x%04hX unk3=0x%08X", event.id,
                   event.mac0, event.mac1, event.unk1, event.unk2, event.unk3);
-        kvqmbtHandleEvent(&event);
+        kvqmbtHandleAnEvent(&event);
     }
 
     return 0;
