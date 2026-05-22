@@ -133,7 +133,7 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
     char name[128];
     int ret = ksceBtGetDeviceName(event->mac0, event->mac1, name);
     if (ret == 0) {
-        LOG_DEBUG(0, "            Name: \"%s\"", name);
+        LOG_DEBUG(0, "      Name: \"%s\"", name);
     } else {
         LOG_DEBUG(0, "ksceBtGetDeviceName(mac0=0x%08X, mac1=0x%08X) returned error: 0x%08X", event->mac0, event->mac1,
                   ret);
@@ -141,41 +141,41 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
 #endif  // NDEBUG
 
     switch (event->id) {
-        case VQMBT_BT_EVENT_INQUIRY_RESULT: { /* Inquiry result event */
+        case VQMBT_BT_EVENT_INQUIRY_RESULT: {
             unsigned short vid_pid[2];
             ksceBtGetVidPid(event->mac0, event->mac1, vid_pid);
             LOG_DEBUG(0, "            inquiry vid_pid=%04X:%04X", vid_pid[0], vid_pid[1]);
             break;
         }
 
-        case VQMBT_BT_EVENT_INQUIRY_STOP: /* Inquiry stop event */
+        case VQMBT_BT_EVENT_INQUIRY_STOP:
             LOG_DEBUG(0, "            Inquiry stop event");
             break;
 
-        case VQMBT_BT_EVENT_LINK_KEY_REQUEST: /* Link key request? event */
+        case VQMBT_BT_EVENT_LINK_KEY_REQUEST:
             LOG_DEBUG(0, "            link key request event");
             ksceBtReplyUserConfirmation(event->mac0, event->mac1, 1);
             break;
 
-        case VQMBT_BT_EVENT_CONNECT_ACCEPTED: { /* Connection accepted event */
+        case VQMBT_BT_EVENT_CONNECT_ACCEPTED: {
             unsigned short vid_pid[2];
             ksceBtGetVidPid(event->mac0, event->mac1, vid_pid);
             LOG_DEBUG(0, "            connect accepted vid_pid=%04X:%04X", vid_pid[0], vid_pid[1]);
             break;
         }
 
-        case VQMBT_BT_EVENT_DISCONNECT: /* Device disconnect event*/
+        case VQMBT_BT_EVENT_DISCONNECT:
             LOG_DEBUG(0, "            device disconnect event");
             break;
 
-        case VQMBT_BT_EVENT_CONNECT_REQUESTED: /* Connection requested event */
+        case VQMBT_BT_EVENT_CONNECT_REQUESTED:
             /*
              * Do nothing since we will get a 0x05 event afterwards.
              */
             LOG_DEBUG(0, "            connection requested event");
             break;
 
-        case VQMBT_BT_EVENT_CONNECT_UNPAIRED: /* Connection request without being paired? event */
+        case VQMBT_BT_EVENT_CONNECT_UNPAIRED:
             /*
              * The Vita needs to have a pairing with the DS4,
              * otherwise it won't connect.
@@ -183,7 +183,7 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
             LOG_DEBUG(0, "            connection request without being paired event");
             break;
 
-        case VQMBT_BT_EVENT_HID_REPLY_TYPE0: /* HID reply to 0-type request */
+        case VQMBT_BT_EVENT_HID_REPLY_TYPE0:
 
             LOG_DEBUG(0, "            DS4 0x0A event: 0x%02X", recv_buff[0]);
 
@@ -199,7 +199,7 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
 
             break;
 
-        case VQMBT_BT_EVENT_HID_REPLY_TYPE1: /* HID reply to 1-type request */
+        case VQMBT_BT_EVENT_HID_REPLY_TYPE1:
             LOG_DEBUG(0, "            DS4 0x0B event: 0x%02X", recv_buff[0]);
             break;
 
@@ -231,7 +231,6 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
             ret = ksceBtReadEvent(&event, 1);
         } while (ret == SCE_BT_ERROR_CB_OVERFLOW);
         if (ret <= 0) {
-            LOG_DEBUG(0, "ksceBtReadEvent returned 0x%08X", ret);  // TODO remove
             break;
         }
 
