@@ -253,6 +253,9 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
 
 /**
  * TODO
+ *
+ * TODO:
+ * - ksceBtRegisterCallback flags, see if they filter events or macs. Ignore inquiry events.
  */
 static int kvqmbtEventThread(SceSize args, void* argp) {
     (void)args;
