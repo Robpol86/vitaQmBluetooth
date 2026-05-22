@@ -117,25 +117,118 @@ static SceUID uid_thread = -1;
 static bool run_thread = false;
 
 /**
+ * TODO
+ *
+ * TODO:
+ * - #define indent?
+ */
+static void kvqmbtHandleEvent(const SceBtEvent* event) {
+    int ret;
+
+    // static SceBtHidRequest hid_request;
+    static unsigned char recv_buff[0x100];
+
+    // TODO remove v (ginza hotel noise)
+    if (event->mac0 == 0x64D34C28 && event->mac1 == 0x0000ACD5) return;
+    if (event->mac0 == 0x6462C838 && event->mac1 == 0x0000ACD5) return;
+    if (event->mac0 == 0x4321847E && event->mac1 == 0x00004023) return;
+    if (event->mac0 == 0x432185BA && event->mac1 == 0x00004023) return;
+    // TODO remove ^
+
+#ifndef NDEBUG
+    char name[128];
+    ret = ksceBtGetDeviceName(event->mac0, event->mac1, name);
+    if (ret == 0) {
+        LOG_DEBUG(0, "            Name: \"%s\"", name);
+    } else {
+        LOG_DEBUG(0, "ksceBtGetDeviceName(mac0=0x%08X, mac1=0x%08X) returned error: 0x%08X", event->mac0, event->mac1,
+                  ret);
+    }
+#endif  // NDEBUG
+
+    switch (event->id) {
+        case 0x01: { /* Inquiry result event */
+            unsigned short vid_pid[2];
+            ksceBtGetVidPid(event->mac0, event->mac1, vid_pid);
+            LOG_DEBUG(0, "            inquiry vid_pid=%04X:%04X", vid_pid[0], vid_pid[1]);
+            break;
+        }
+
+        case 0x02: /* Inquiry stop event */
+            LOG_DEBUG(0, "            Inquiry stop event");
+            break;
+
+        case 0x04: /* Link key request? event */
+            LOG_DEBUG(0, "            link key request event");
+            ksceBtReplyUserConfirmation(event->mac0, event->mac1, 1);
+            break;
+
+        case 0x05: { /* Connection accepted event */
+            unsigned short vid_pid[2];
+            ksceBtGetVidPid(event->mac0, event->mac1, vid_pid);
+            LOG_DEBUG(0, "            connect accepted vid_pid=%04X:%04X", vid_pid[0], vid_pid[1]);
+            break;
+        }
+
+        case 0x06: /* Device disconnect event*/
+            LOG_DEBUG(0, "            device disconnect event");
+            break;
+
+        case 0x08: /* Connection requested event */
+            /*
+             * Do nothing since we will get a 0x05 event afterwards.
+             */
+            LOG_DEBUG(0, "            connection requested event");
+            break;
+
+        case 0x09: /* Connection request without being paired? event */
+            /*
+             * The Vita needs to have a pairing with the DS4,
+             * otherwise it won't connect.
+             */
+            LOG_DEBUG(0, "            connection request without being paired event");
+            break;
+
+        case 0x0A: /* HID reply to 0-type request */
+
+            LOG_DEBUG(0, "            DS4 0x0A event: 0x%02X", recv_buff[0]);
+
+            switch (recv_buff[0]) {
+                case 0x11:
+                    LOG_DEBUG(0, "            DS4 0x11 event: battery level %d%%", recv_buff[1]);
+                    break;
+
+                default:
+                    LOG_DEBUG(0, "            Unknown DS4 event: 0x%02X", recv_buff[0]);
+                    break;
+            }
+
+            break;
+
+        case 0x0B: /* HID reply to 1-type request */
+            LOG_DEBUG(0, "            DS4 0x0B event: 0x%02X", recv_buff[0]);
+            break;
+
+        default:
+            LOG_DEBUG(0, "            Unknown event id: 0x%02X", event->id);
+            break;
+    }
+}
+
+/**
  * TODO.
  *
  * TODO:
  * - event ID enum? SDK has one?
  * - rerun events to collect logging for different times and devices
  * - unsatisfactory timeout events
+ * - restyle
  */
 static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, void* userData) {
     (void)notifyId;
     (void)notifyCount;
     (void)notifyArg;
     (void)userData;
-
-    bool logged = false;  // TODO remove
-    // LOG_DEBUG(0, "Called: notifyId=%d notifyCount=%d notifyArg=%d userData=%p", notifyId, notifyCount, notifyArg,
-    //           userData);
-
-    // static SceBtHidRequest hid_request;
-    static unsigned char recv_buff[0x100];
 
     while (true) {
         int ret;
@@ -151,100 +244,9 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
             break;
         }
 
-        // TODO kvqmbtHandleEvent()?
-
-        // TODO remove v (ginza hotel noise)
-        if (event.mac0 == 0x64D34C28 && event.mac1 == 0x0000ACD5) continue;
-        if (event.mac0 == 0x6462C838 && event.mac1 == 0x0000ACD5) continue;
-        if (event.mac0 == 0x4321847E && event.mac1 == 0x00004023) continue;
-        if (event.mac0 == 0x432185BA && event.mac1 == 0x00004023) continue;
-        if (!logged) {
-            LOG_DEBUG(0, "Called: notifyId=%d notifyCount=%d notifyArg=%d userData=%p", notifyId, notifyCount, notifyArg,
-                      userData);
-            logged = true;
-        }
-        // TODO remove ^
-
-        LOG_DEBUG(0, "        SceBtEvent: id=0x%02hhX mac0=0x%08X mac1=0x%08X unk1=0x%02hhX unk2=0x%04hX unk3=0x%08X",
-                  event.id, event.mac0, event.mac1, event.unk1, event.unk2, event.unk3);
-#ifndef NDEBUG
-        char name[128];
-        ret = ksceBtGetDeviceName(event.mac0, event.mac1, name);
-        if (ret == 0) {
-            LOG_DEBUG(0, "                    Name: \"%s\"", name);
-        } else {
-            LOG_DEBUG(0, "ksceBtGetDeviceName(mac0=0x%08X, mac1=0x%08X) returned error: 0x%08X", event.mac0, event.mac1,
-                      ret);
-        }
-#endif  // NDEBUG
-
-        switch (event.id) {
-            case 0x01: { /* Inquiry result event */
-                unsigned short vid_pid[2];
-                ksceBtGetVidPid(event.mac0, event.mac1, vid_pid);
-                LOG_DEBUG(0, "                    inquiry vid_pid=%04X:%04X", vid_pid[0], vid_pid[1]);
-                break;
-            }
-
-            case 0x02: /* Inquiry stop event */
-                LOG_DEBUG(0, "                    Inquiry stop event");
-                break;
-
-            case 0x04: /* Link key request? event */
-                LOG_DEBUG(0, "                    link key request event");
-                ksceBtReplyUserConfirmation(event.mac0, event.mac1, 1);
-                break;
-
-            case 0x05: { /* Connection accepted event */
-                unsigned short vid_pid[2];
-                ksceBtGetVidPid(event.mac0, event.mac1, vid_pid);
-                LOG_DEBUG(0, "                    connect accepted vid_pid=%04X:%04X", vid_pid[0], vid_pid[1]);
-                break;
-            }
-
-            case 0x06: /* Device disconnect event*/
-                LOG_DEBUG(0, "                    device disconnect event");
-                break;
-
-            case 0x08: /* Connection requested event */
-                /*
-                 * Do nothing since we will get a 0x05 event afterwards.
-                 */
-                LOG_DEBUG(0, "                    connection requested event");
-                break;
-
-            case 0x09: /* Connection request without being paired? event */
-                /*
-                 * The Vita needs to have a pairing with the DS4,
-                 * otherwise it won't connect.
-                 */
-                LOG_DEBUG(0, "                    connection request without being paired event");
-                break;
-
-            case 0x0A: /* HID reply to 0-type request */
-
-                LOG_DEBUG(0, "                    DS4 0x0A event: 0x%02X", recv_buff[0]);
-
-                switch (recv_buff[0]) {
-                    case 0x11:
-                        LOG_DEBUG(0, "                    DS4 0x11 event: battery level %d%%", recv_buff[1]);
-                        break;
-
-                    default:
-                        LOG_DEBUG(0, "                    Unknown DS4 event: 0x%02X", recv_buff[0]);
-                        break;
-                }
-
-                break;
-
-            case 0x0B: /* HID reply to 1-type request */
-                LOG_DEBUG(0, "                    DS4 0x0B event: 0x%02X", recv_buff[0]);
-                break;
-
-            default:
-                LOG_DEBUG(0, "                    Unknown event id: 0x%02X", event.id);
-                break;
-        }
+        LOG_DEBUG(0, "SceBtEvent: id=0x%02hhX mac0=0x%08X mac1=0x%08X unk1=0x%02hhX unk2=0x%04hX unk3=0x%08X", event.id,
+                  event.mac0, event.mac1, event.unk1, event.unk2, event.unk3);
+        kvqmbtHandleEvent(&event);
     }
 
     return 0;
