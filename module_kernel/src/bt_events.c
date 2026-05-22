@@ -115,7 +115,7 @@ static bool run_thread = false;
  *                          Name: "AirPods Pro"
  *
  * TODO:
- * - event ID enum?
+ * - event ID enum? SDK has one?
  * - rerun events to collect logging for different times and devices
  * - unsatisfactory timeout events
  */
