@@ -36,6 +36,28 @@ static bool run_thread = false;
 /**
  * TODO.
  *
+ * Disable bluetooth subsystem:
+ *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *              SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000
+ *                          unk1=0x00 unk2=0x0000 unk3=0x00000020
+ *              Name: ""
+ *              Unknown event id: 0x15
+ *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *              SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000
+ *                          unk1=0x00 unk2=0x0000 unk3=0x00000000
+ *              Name: ""
+ *              Unknown event id: 0x15
+ * Enable bluetooth subsystem:
+ *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *              SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000
+ *                          unk1=0x00 unk2=0x0000 unk3=0x00000019
+ *              Name: ""
+ *              Unknown event id: 0x15
+ *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *              SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000
+ *                          unk1=0x00 unk2=0x0000 unk3=0x00000009
+ *              Name: ""
+ *              Unknown event id: 0x15
  * Device add event:
  *      TODO
  * Device delete event:
@@ -64,7 +86,9 @@ static bool run_thread = false;
  *      SceBtEvent: id=0x06 mac0=0xF26B3406 mac1=0x0000708C unk1=0x16 unk2=0x0000 unk3=0x00000000
  *      Name: "AirPods Pro"
  * Device remote disconnect event:
- *      TODO
+ *      notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *      SceBtEvent: id=0x06 mac0=0xF26B3406 mac1=0x0000708C unk1=0x13 unk2=0x0000 unk3=0x00000000
+ *      Name: "AirPods Pro"
  *
  * TODO:
  * - event ID enum?
@@ -75,6 +99,7 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
     (void)notifyArg;
     (void)userData;
 
+    bool logged = false;  // TODO remove
     // LOG_DEBUG(0, "Called: notifyId=%d notifyCount=%d notifyArg=%d userData=%p", notifyId, notifyCount, notifyArg,
     //           userData);
 
@@ -95,19 +120,20 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
             break;
         }
 
-        // TODO remove v
+        // TODO remove v (ginza hotel noise)
         if (hid_event.mac0 == 0x64D34C28 && hid_event.mac1 == 0x0000ACD5) continue;
         if (hid_event.mac0 == 0x6462C838 && hid_event.mac1 == 0x0000ACD5) continue;
         if (hid_event.mac0 == 0x4321847E && hid_event.mac1 == 0x00004023) continue;
         if (hid_event.mac0 == 0x432185BA && hid_event.mac1 == 0x00004023) continue;
-        LOG_DEBUG(0, "Called: notifyId=%d notifyCount=%d notifyArg=%d userData=%p", notifyId, notifyCount, notifyArg,
-                  userData);
+        if (!logged) {
+            LOG_DEBUG(0, "Called: notifyId=%d notifyCount=%d notifyArg=%d userData=%p", notifyId, notifyCount, notifyArg,
+                      userData);
+            logged = true;
+        }
         // TODO remove ^
 
-        LOG_DEBUG(0, "        SceBtEvent: id=0x%02hhX mac0=0x%08X mac1=0x%08X", hid_event.id, hid_event.mac0,
-                  hid_event.mac1);
-        LOG_DEBUG(0, "                    unk1=0x%02hhX unk2=0x%04hX unk3=0x%08X", hid_event.unk1, hid_event.unk2,
-                  hid_event.unk3);
+        LOG_DEBUG(0, "        SceBtEvent: id=0x%02hhX mac0=0x%08X mac1=0x%08X unk1=0x%02hhX unk2=0x%04hX unk3=0x%08X",
+                  hid_event.id, hid_event.mac0, hid_event.mac1, hid_event.unk1, hid_event.unk2, hid_event.unk3);
 #ifndef NDEBUG
         char name[128];
         ret = ksceBtGetDeviceName(hid_event.mac0, hid_event.mac1, name);
