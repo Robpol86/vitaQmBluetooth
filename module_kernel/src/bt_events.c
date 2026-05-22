@@ -145,8 +145,8 @@ static bool run_thread = false;
  * - Log all events again with latest logs. Log multiple devices looking for differences in event fields.
  */
 static void kvqmbtHandleEvent(const SceBtEvent* event) {
-    LOG_DEBUG(0, "SceBtEvent: id=0x%02hhX mac0=0x%08X mac1=0x%08X unk1=0x%02hhX unk2=0x%04hX unk3=0x%08X", event->id,
-              event->mac0, event->mac1, event->unk1, event->unk2, event->unk3);
+    LOG_DEBUG(0, "SceBtEvent: id=0x%02X unk1=0x%02X unk3=0x%08X mac0=0x%08X mac1=0x%08X unk2=0x%04X", event->id,
+              event->unk1, event->unk3, event->mac0, event->mac1, event->unk2);
 
 #ifndef NDEBUG
     if (event->mac0 > 0 && event->mac1 > 0) {
