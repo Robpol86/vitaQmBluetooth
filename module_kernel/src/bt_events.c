@@ -81,23 +81,30 @@ static bool run_thread = false;
  *              SceBtEvent: id=0x07 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
  *                          Name: ""
  * Device connect successful events:
- *      notifyId=-1 notifyCount=2 notifyArg=0 userData=0x00000000
- *      SceBtEvent: id=0x07 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000 (sometimes omitted)
- *      Name: ""
- *      notifyId=-1 notifyCount=2 notifyArg=0 userData=0x00000000
- *      SceBtEvent: id=0x02 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
- *      Name: ""
- *      notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *      SceBtEvent: id=0x05 mac0=0xF26B3406 mac1=0x0000708C unk1=0x00 unk2=0x0000 unk3=0x00000039
- *      Name: "AirPods Pro"
- *      notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *      SceBtEvent: id=0x0E mac0=0xF26B3406 mac1=0x0000708C unk1=0x00 unk2=0x0000 unk3=0x00000066
- *      Name: "AirPods Pro"
- *      notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *      SceBtEvent: id=0x10 mac0=0xF26B3406 mac1=0x0000708C unk1=0x00 unk2=0x0000 unk3=0x00000008
- *      Name: "AirPods Pro"
+ *      NOTE: 0x07 sometimes
+ *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *              SceBtEvent: id=0x02 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
+ *                          Name: ""
+ *                          Inquiry stop event
+ *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *              SceBtEvent: id=0x05 mac0=0xF26B3406 mac1=0x0000708C unk1=0x00 unk2=0x0000 unk3=0x00000039
+ *                          Name: "AirPods Pro"
+ *                          connect accepted vid_pid=0000:0000
+ *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *              SceBtEvent: id=0x0E mac0=0xF26B3406 mac1=0x0000708C unk1=0x00 unk2=0x0000 unk3=0x00000066
+ *                          Name: "AirPods Pro"
+ *                          Unknown event id: 0x0E
+ *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *              SceBtEvent: id=0x10 mac0=0xF26B3406 mac1=0x0000708C unk1=0x00 unk2=0x0000 unk3=0x00000008
+ *                          Name: "AirPods Pro"
+ *                          Unknown event id: 0x10
  * Device connect timeout events:
- *      TODO
+ *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *              SceBtEvent: id=0x02 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
+ *                          Name: ""
+ *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *              SceBtEvent: id=0x05 mac0=0xF26B3406 mac1=0x0000708C unk1=0x04 unk2=0x0000 unk3=0x00000000
+ *                          Name: "AirPods Pro"
  * Device local disconnect event:
  *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
  *              SceBtEvent: id=0x06 mac0=0xF26B3406 mac1=0x0000708C unk1=0x16 unk2=0x0000 unk3=0x00000000
@@ -110,6 +117,7 @@ static bool run_thread = false;
  * TODO:
  * - event ID enum?
  * - rerun events to collect logging for different times and devices
+ * - unsatisfactory timeout events
  */
 static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, void* userData) {
     (void)notifyId;
