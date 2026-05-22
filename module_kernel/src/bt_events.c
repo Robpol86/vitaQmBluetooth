@@ -137,7 +137,7 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
     // static SceBtHidRequest hid_request;
     static unsigned char recv_buff[0x100];
 
-    while (true) {  // TODO better way?
+    while (true) {
         int ret;
         SceBtEvent event;
 
@@ -150,6 +150,8 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
         if (ret <= 0) {
             break;
         }
+
+        // TODO kvqmbtHandleEvent()?
 
         // TODO remove v (ginza hotel noise)
         if (event.mac0 == 0x64D34C28 && event.mac1 == 0x0000ACD5) continue;
