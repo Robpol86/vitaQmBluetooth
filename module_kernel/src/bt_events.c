@@ -124,6 +124,7 @@ static bool run_thread = false;
  * - #define indent?
  * - revisit enum, was AI generated.
  * - restyle
+ * - Significant fields: id, unk1 (event status code?), unk3 (event payload?)
  */
 static void kvqmbtHandleAnEvent(const SceBtEvent* event) {
     // static SceBtHidRequest hid_request;
@@ -212,7 +213,6 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
     (void)userData;
 
     while (true) {
-        // TODO Search Claude RE for unkX
         SceBtEvent event = {0};
         int ret;
 
