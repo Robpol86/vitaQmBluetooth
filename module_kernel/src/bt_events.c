@@ -140,10 +140,9 @@ static bool run_thread = false;
  * TODO
  *
  * TODO:
- * - #define indent?
- * - Remove enum
- * - restyle
+ * - Review enum
  * - Significant fields: id, unk1 (event status code?), unk3 (event payload?)
+ * - Log all events again with latest logs. Log multiple devices looking for differences in event fields.
  */
 static void kvqmbtHandleEvent(const SceBtEvent* event) {
     LOG_DEBUG(0, "SceBtEvent: id=0x%02hhX mac0=0x%08X mac1=0x%08X unk1=0x%02hhX unk2=0x%04hX unk3=0x%08X", event->id,
@@ -169,7 +168,7 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
 
         case VQMBT_BT_EVENT_DISCONNECT:
             switch (event->unk1) {
-                case 0x13:  // TODO this in the sdk? AI seemed to say so.
+                case 0x13:
                     LOG_DEBUG(0, "            Device disconnected remotely event");
                     break;
                 default:
