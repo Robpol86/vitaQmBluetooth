@@ -22,6 +22,27 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 /***************************************************************************************************************************
 # Logs
 
+## Disable bluetooth subsystem from Settings
+
+SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000020
+SceBtEvent: id=0x06 mac0=0xF26B3406 mac1=0x0000708C unk1=0x16 unk2=0x0000 unk3=0x00000000
+SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
+
+### Enable
+
+SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000019
+SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000009
+
+## Disable bluetooth subsystem from Quick Menu
+
+SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000020
+SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
+
+### Enable
+
+SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000019
+SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000009
+
 ## Disable bluetooth subsystem:
  *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
  *              SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000020
@@ -128,6 +149,8 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
     LOG_DEBUG(0, "SceBtEvent: id=0x%02hhX mac0=0x%08X mac1=0x%08X unk1=0x%02hhX unk2=0x%04hX unk3=0x%08X", event->id,
               event->mac0, event->mac1, event->unk1, event->unk2, event->unk3);
 
+    // TODO restore logging Name in !NDEBUG but add mac0/1!=0 check.
+
     switch (event->id) {
         case VQMBT_BT_EVENT_ADD_REMOVE_DEVICE:
             LOG_DEBUG(0, "            Device added/removed event");
@@ -145,7 +168,7 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
             break;
 
         default:
-            LOG_DEBUG(0, "            Unknown event id: 0x%02X", event->id);
+            LOG_DEBUG(0, "            Unhandled event id: 0x%02X", event->id);
             break;
     }
 }
