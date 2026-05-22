@@ -123,6 +123,7 @@ static bool run_thread = false;
  * TODO:
  * - #define indent?
  * - revisit enum, was AI generated.
+ * - restyle
  */
 static void kvqmbtHandleEvent(const SceBtEvent* event) {
     // static SceBtHidRequest hid_request;
@@ -214,7 +215,6 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
  * TODO:
  * - rerun events to collect logging for different times and devices
  * - unsatisfactory timeout events
- * - restyle
  */
 static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, void* userData) {
     (void)notifyId;
@@ -223,16 +223,15 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
     (void)userData;
 
     while (true) {
+        SceBtEvent event = {0};
         int ret;
-        SceBtEvent event;
 
-        memset(&event, 0, sizeof(event));
-
+        // Fetch event data.
         do {
             ret = ksceBtReadEvent(&event, 1);
         } while (ret == SCE_BT_ERROR_CB_OVERFLOW);
-
         if (ret <= 0) {
+            LOG_DEBUG(0, "ksceBtReadEvent returned 0x%08X", ret);  // TODO remove
             break;
         }
 
@@ -243,6 +242,7 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
         if (event.mac0 == 0x432185BA && event.mac1 == 0x00004023) continue;
         // TODO remove ^
 
+        // Continue in handler.
         LOG_DEBUG(0, "SceBtEvent: id=0x%02hhX mac0=0x%08X mac1=0x%08X unk1=0x%02hhX unk2=0x%04hX unk3=0x%08X", event.id,
                   event.mac0, event.mac1, event.unk1, event.unk2, event.unk3);
         kvqmbtHandleEvent(&event);
