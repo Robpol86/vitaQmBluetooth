@@ -128,13 +128,6 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
     // static SceBtHidRequest hid_request;
     static unsigned char recv_buff[0x100];
 
-    // TODO remove v (ginza hotel noise)
-    if (event->mac0 == 0x64D34C28 && event->mac1 == 0x0000ACD5) return;
-    if (event->mac0 == 0x6462C838 && event->mac1 == 0x0000ACD5) return;
-    if (event->mac0 == 0x4321847E && event->mac1 == 0x00004023) return;
-    if (event->mac0 == 0x432185BA && event->mac1 == 0x00004023) return;
-    // TODO remove ^
-
 #ifndef NDEBUG
     char name[128];
     int ret = ksceBtGetDeviceName(event->mac0, event->mac1, name);
@@ -242,6 +235,13 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
         if (ret <= 0) {
             break;
         }
+
+        // TODO remove v (ginza hotel noise)
+        if (event.mac0 == 0x64D34C28 && event.mac1 == 0x0000ACD5) continue;
+        if (event.mac0 == 0x6462C838 && event.mac1 == 0x0000ACD5) continue;
+        if (event.mac0 == 0x4321847E && event.mac1 == 0x00004023) continue;
+        if (event.mac0 == 0x432185BA && event.mac1 == 0x00004023) continue;
+        // TODO remove ^
 
         LOG_DEBUG(0, "SceBtEvent: id=0x%02hhX mac0=0x%08X mac1=0x%08X unk1=0x%02hhX unk2=0x%04hX unk3=0x%08X", event.id,
                   event.mac0, event.mac1, event.unk1, event.unk2, event.unk3);
