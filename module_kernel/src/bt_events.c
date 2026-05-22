@@ -19,30 +19,17 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief Interface with the bluetooth subsystem. TODO.
  ******************************************************************************/
 
-#include <psp2kern/bt.h>
-#include <psp2kern/kernel/cpu.h>
-#include <psp2kern/kernel/modulemgr.h>
-#include <psp2kern/kernel/sysclib.h>
-#include <psp2kern/kernel/sysmem.h>
-#include <psp2kern/kernel/threadmgr.h>
-#include <stdbool.h>
+/***************************************************************************************************************************
+# Logs
 
-#include "log.h"
-
-static SceUID uid_callback = -1;
-static SceUID uid_thread = -1;
-static bool run_thread = false;
-
-/**
- * TODO.
- *
- * Disable bluetooth subsystem:
+## Disable bluetooth subsystem:
  *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
  *              SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000020
  *                          Name: ""
  *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
  *              SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
  *                          Name: ""
+
  * Enable bluetooth subsystem:
  *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
  *              SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000019
@@ -113,6 +100,24 @@ static bool run_thread = false;
  *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
  *              SceBtEvent: id=0x06 mac0=0xF26B3406 mac1=0x0000708C unk1=0x13 unk2=0x0000 unk3=0x00000000
  *                          Name: "AirPods Pro"
+****************************************************************************************************************************/
+
+#include <psp2kern/bt.h>
+#include <psp2kern/kernel/cpu.h>
+#include <psp2kern/kernel/modulemgr.h>
+#include <psp2kern/kernel/sysclib.h>
+#include <psp2kern/kernel/sysmem.h>
+#include <psp2kern/kernel/threadmgr.h>
+#include <stdbool.h>
+
+#include "log.h"
+
+static SceUID uid_callback = -1;
+static SceUID uid_thread = -1;
+static bool run_thread = false;
+
+/**
+ * TODO.
  *
  * TODO:
  * - event ID enum? SDK has one?
@@ -134,12 +139,12 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
 
     while (true) {  // TODO better way?
         int ret;
-        SceBtEvent hid_event;
+        SceBtEvent event;
 
-        memset(&hid_event, 0, sizeof(hid_event));
+        memset(&event, 0, sizeof(event));
 
         do {
-            ret = ksceBtReadEvent(&hid_event, 1);
+            ret = ksceBtReadEvent(&event, 1);
         } while (ret == SCE_BT_ERROR_CB_OVERFLOW);
 
         if (ret <= 0) {
@@ -147,10 +152,10 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
         }
 
         // TODO remove v (ginza hotel noise)
-        if (hid_event.mac0 == 0x64D34C28 && hid_event.mac1 == 0x0000ACD5) continue;
-        if (hid_event.mac0 == 0x6462C838 && hid_event.mac1 == 0x0000ACD5) continue;
-        if (hid_event.mac0 == 0x4321847E && hid_event.mac1 == 0x00004023) continue;
-        if (hid_event.mac0 == 0x432185BA && hid_event.mac1 == 0x00004023) continue;
+        if (event.mac0 == 0x64D34C28 && event.mac1 == 0x0000ACD5) continue;
+        if (event.mac0 == 0x6462C838 && event.mac1 == 0x0000ACD5) continue;
+        if (event.mac0 == 0x4321847E && event.mac1 == 0x00004023) continue;
+        if (event.mac0 == 0x432185BA && event.mac1 == 0x00004023) continue;
         if (!logged) {
             LOG_DEBUG(0, "Called: notifyId=%d notifyCount=%d notifyArg=%d userData=%p", notifyId, notifyCount, notifyArg,
                       userData);
@@ -159,22 +164,22 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
         // TODO remove ^
 
         LOG_DEBUG(0, "        SceBtEvent: id=0x%02hhX mac0=0x%08X mac1=0x%08X unk1=0x%02hhX unk2=0x%04hX unk3=0x%08X",
-                  hid_event.id, hid_event.mac0, hid_event.mac1, hid_event.unk1, hid_event.unk2, hid_event.unk3);
+                  event.id, event.mac0, event.mac1, event.unk1, event.unk2, event.unk3);
 #ifndef NDEBUG
         char name[128];
-        ret = ksceBtGetDeviceName(hid_event.mac0, hid_event.mac1, name);
+        ret = ksceBtGetDeviceName(event.mac0, event.mac1, name);
         if (ret == 0) {
             LOG_DEBUG(0, "                    Name: \"%s\"", name);
         } else {
-            LOG_DEBUG(0, "ksceBtGetDeviceName(mac0=0x%08X, mac1=0x%08X) returned error: 0x%08X", hid_event.mac0,
-                      hid_event.mac1, ret);
+            LOG_DEBUG(0, "ksceBtGetDeviceName(mac0=0x%08X, mac1=0x%08X) returned error: 0x%08X", event.mac0, event.mac1,
+                      ret);
         }
 #endif  // NDEBUG
 
-        switch (hid_event.id) {
+        switch (event.id) {
             case 0x01: { /* Inquiry result event */
                 unsigned short vid_pid[2];
-                ksceBtGetVidPid(hid_event.mac0, hid_event.mac1, vid_pid);
+                ksceBtGetVidPid(event.mac0, event.mac1, vid_pid);
                 LOG_DEBUG(0, "                    inquiry vid_pid=%04X:%04X", vid_pid[0], vid_pid[1]);
                 break;
             }
@@ -185,12 +190,12 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
 
             case 0x04: /* Link key request? event */
                 LOG_DEBUG(0, "                    link key request event");
-                ksceBtReplyUserConfirmation(hid_event.mac0, hid_event.mac1, 1);
+                ksceBtReplyUserConfirmation(event.mac0, event.mac1, 1);
                 break;
 
             case 0x05: { /* Connection accepted event */
                 unsigned short vid_pid[2];
-                ksceBtGetVidPid(hid_event.mac0, hid_event.mac1, vid_pid);
+                ksceBtGetVidPid(event.mac0, event.mac1, vid_pid);
                 LOG_DEBUG(0, "                    connect accepted vid_pid=%04X:%04X", vid_pid[0], vid_pid[1]);
                 break;
             }
@@ -235,7 +240,7 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
                 break;
 
             default:
-                LOG_DEBUG(0, "                    Unknown event id: 0x%02X", hid_event.id);
+                LOG_DEBUG(0, "                    Unknown event id: 0x%02X", event.id);
                 break;
         }
     }
