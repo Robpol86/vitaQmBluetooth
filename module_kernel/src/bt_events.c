@@ -39,27 +39,47 @@ static bool run_thread = false;
  * Disable bluetooth subsystem:
  *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
  *              SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000020
- *              Name: ""
- *              Unknown event id: 0x15
+ *                          Name: ""
  *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
  *              SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
- *              Name: ""
- *              Unknown event id: 0x15
+ *                          Name: ""
  * Enable bluetooth subsystem:
  *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
  *              SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000019
- *              Name: ""
- *              Unknown event id: 0x15
+ *                          Name: ""
  *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
  *              SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000009
- *              Name: ""
- *              Unknown event id: 0x15
+ *                          Name: ""
  * Device add event:
- *      TODO
+ *      Called: notifyId=-1 notifyCount=2 notifyArg=0 userData=0x00000000
+ *              SceBtEvent: id=0x07 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
+ *                          Name: ""
+ *              SceBtEvent: id=0x02 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
+ *                          Name: ""
+ *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *              SceBtEvent: id=0x07 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
+ *                          Name: ""
+ *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *              SceBtEvent: id=0x04 mac0=0xF26B3406 mac1=0x0000708C unk1=0x03 unk2=0x0000 unk3=0x000A0D75
+ *                          Name: "AirPods Pro"
+ *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *              SceBtEvent: id=0x07 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
+ *                          Name: ""
+ *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *              SceBtEvent: id=0x07 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
+ *                          Name: ""
+ *              SceBtEvent: id=0x05 mac0=0xF26B3406 mac1=0x0000708C unk1=0x00 unk2=0x0000 unk3=0x00000039
+ *                          Name: "AirPods Pro"
+ *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *              SceBtEvent: id=0x0E mac0=0xF26B3406 mac1=0x0000708C unk1=0x00 unk2=0x0000 unk3=0x00000066
+ *                          Name: "AirPods Pro"
+ *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *              SceBtEvent: id=0x10 mac0=0xF26B3406 mac1=0x0000708C unk1=0x00 unk2=0x0000 unk3=0x00000008
+ *                          Name: "AirPods Pro"
  * Device delete event:
  *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
  *              SceBtEvent: id=0x07 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
- *              Name: ""
+ *                          Name: ""
  * Device connect successful events:
  *      notifyId=-1 notifyCount=2 notifyArg=0 userData=0x00000000
  *      SceBtEvent: id=0x07 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000 (sometimes omitted)
@@ -79,9 +99,9 @@ static bool run_thread = false;
  * Device connect timeout events:
  *      TODO
  * Device local disconnect event:
- *      notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *      SceBtEvent: id=0x06 mac0=0xF26B3406 mac1=0x0000708C unk1=0x16 unk2=0x0000 unk3=0x00000000
- *      Name: "AirPods Pro"
+ *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
+ *              SceBtEvent: id=0x06 mac0=0xF26B3406 mac1=0x0000708C unk1=0x16 unk2=0x0000 unk3=0x00000000
+ *                          Name: "AirPods Pro"
  * Device remote disconnect event:
  *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
  *              SceBtEvent: id=0x06 mac0=0xF26B3406 mac1=0x0000708C unk1=0x13 unk2=0x0000 unk3=0x00000000
