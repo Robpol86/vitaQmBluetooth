@@ -136,7 +136,6 @@ TODO
 #include <stdbool.h>
 
 #include "log.h"
-#include "vqmbt.h"
 
 #define PREFIX "SceBtEvent: "
 #define INDENT "            "
@@ -145,6 +144,21 @@ _Static_assert(sizeof(PREFIX) == sizeof(INDENT), "INDENT width must match PREFIX
 static SceUID uid_callback = -1;
 static SceUID uid_thread = -1;
 static bool run_thread = false;
+
+typedef enum VqmbtBtEventId {
+    VQMBT_BT_EVENT_INQUIRY_RESULT = 0x01,
+    VQMBT_BT_EVENT_INQUIRY_STOP = 0x02,
+    VQMBT_BT_EVENT_DISCONNECT = 0x06,
+    VQMBT_BT_EVENT_ADD_REMOVE_CONNECTING_DEVICE = 0x07,
+    VQMBT_BT_EVENT_TOGGLE_BLUETOOTH = 0x15,
+    // AI
+    VQMBT_BT_EVENT_LINK_KEY_REQUEST = 0x04,
+    VQMBT_BT_EVENT_CONNECT_ACCEPTED = 0x05,
+    VQMBT_BT_EVENT_CONNECT_REQUESTED = 0x08,
+    VQMBT_BT_EVENT_CONNECT_UNPAIRED = 0x09,
+    VQMBT_BT_EVENT_HID_REPLY_TYPE0 = 0x0A,
+    VQMBT_BT_EVENT_HID_REPLY_TYPE1 = 0x0B,
+} VqmbtBtEventId;
 
 /**
  * TODO
@@ -172,20 +186,21 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
     }
 #endif  // NDEBUG
 
+    // Handle events.
     switch (event->id) {
         case VQMBT_BT_EVENT_DISCONNECT:
             switch (event->unk1) {
                 case 0x13:
-                    LOG_DEBUG(0, INDENT "Device disconnected remotely event");
+                    LOG_DEBUG(0, INDENT "Device disconnected remotely");
                     break;
                 default:
-                    LOG_DEBUG(0, INDENT "Device disconnected event");
+                    LOG_DEBUG(0, INDENT "Device disconnected by host");
                     break;
             }
             break;
 
-        case VQMBT_BT_EVENT_ADD_REMOVE_DEVICE:
-            LOG_DEBUG(0, INDENT "Device added/removed event");
+        case VQMBT_BT_EVENT_ADD_REMOVE_CONNECTING_DEVICE:
+            LOG_DEBUG(0, INDENT "Device added/removed/connecting");
             break;
 
         case VQMBT_BT_EVENT_TOGGLE_BLUETOOTH:

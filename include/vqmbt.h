@@ -31,21 +31,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define VQMBT_ERROR_INVALID_ARGUMENT ((int)0x80690001)
 #define VQMBT_ERROR_KERNEL_SIDE ((int)0x80690002)
 
-typedef enum VqmbtBtEventId {
-    VQMBT_BT_EVENT_INQUIRY_RESULT = 0x01,
-    VQMBT_BT_EVENT_INQUIRY_STOP = 0x02,
-    VQMBT_BT_EVENT_DISCONNECT = 0x06,
-    VQMBT_BT_EVENT_ADD_REMOVE_DEVICE = 0x07,
-    VQMBT_BT_EVENT_TOGGLE_BLUETOOTH = 0x15,
-    // AI
-    VQMBT_BT_EVENT_LINK_KEY_REQUEST = 0x04,
-    VQMBT_BT_EVENT_CONNECT_ACCEPTED = 0x05,
-    VQMBT_BT_EVENT_CONNECT_REQUESTED = 0x08,
-    VQMBT_BT_EVENT_CONNECT_UNPAIRED = 0x09,
-    VQMBT_BT_EVENT_HID_REPLY_TYPE0 = 0x0A,
-    VQMBT_BT_EVENT_HID_REPLY_TYPE1 = 0x0B,
-} VqmbtBtEventId;
-
 typedef struct VqmbtDeviceInfo {
     char name[128];
     unsigned int mac0;
