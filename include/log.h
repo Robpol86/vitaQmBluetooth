@@ -21,7 +21,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * TODO:
- * - On module load mkdir ux0:/data/vitaQmBluetooth/logs
+ * - In module_load mkdir ux0:/data/vitaQmBluetooth/logs
  * - If low disk space disable file logging and show error in notifications or dialog (custom error code?).
  * - Performant to touch file on boot intead of on log message? What about date change in the middle of logging?
  * - Log file name format: vitaQmBluetooth-YYYYMMDD.log
@@ -29,6 +29,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - no colors in logfile
  * - make fetched-logs tail-last
  * - make fetched-screenshots
+ * - delete logs older than 7 days in module_load
  */
 
 #ifndef LOG_H
