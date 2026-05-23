@@ -176,6 +176,9 @@ typedef enum VqmbtBtEventId {
  * - Review enum
  * - Significant fields: id, unk1 (event status code?), unk3 (event payload?)
  * - Log all events again with latest logs. Log multiple devices looking for differences in event fields.
+ * - Test with ovaltine
+ * - Test with iphone
+ * - Test with ds3
  */
 static void kvqmbtHandleEvent(const SceBtEvent* event) {
     LOG_DEBUG(0, PREFIX "id=0x%02X unk1=0x%02X unk3=0x%08X mac0=0x%08X mac1=0x%08X unk2=0x%04X", event->id, event->unk1,
@@ -200,10 +203,14 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
         case VQMBT_BT_EVENT_DISCONNECT:
             switch (event->unk1) {
                 case 0x13:
-                    LOG_DEBUG(0, INDENT "Device disconnected remotely");
+                    LOG_DEBUG(0, INDENT "Device disconnected remotely mac0=0x%08X mac1=0x%08X", event->mac0, event->mac1);
+                    break;
+                case 0x16:
+                    LOG_DEBUG(0, INDENT "Device disconnected by host mac0=0x%08X mac1=0x%08X", event->mac0, event->mac1);
                     break;
                 default:
-                    LOG_DEBUG(0, INDENT "Device disconnected by host");
+                    LOG_DEBUG(0, INDENT "Unhandled disconnect event mac0=0x%08X mac1=0x%08X unk1=0x%02X", event->mac0,
+                              event->mac1, event->unk1);
                     break;
             }
             break;
