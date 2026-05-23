@@ -138,6 +138,10 @@ TODO
 #include "log.h"
 #include "vqmbt.h"
 
+#define PREFIX "SceBtEvent: "
+#define INDENT "            "
+_Static_assert(sizeof(PREFIX) == sizeof(INDENT), "INDENT width must match PREFIX");
+
 static SceUID uid_callback = -1;
 static SceUID uid_thread = -1;
 static bool run_thread = false;
@@ -151,15 +155,16 @@ static bool run_thread = false;
  * - Log all events again with latest logs. Log multiple devices looking for differences in event fields.
  */
 static void kvqmbtHandleEvent(const SceBtEvent* event) {
-    LOG_DEBUG(0, "SceBtEvent: id=0x%02X unk1=0x%02X unk3=0x%08X mac0=0x%08X mac1=0x%08X unk2=0x%04X", event->id,
-              event->unk1, event->unk3, event->mac0, event->mac1, event->unk2);
+    LOG_DEBUG(0, PREFIX "id=0x%02X unk1=0x%02X unk3=0x%08X mac0=0x%08X mac1=0x%08X unk2=0x%04X", event->id, event->unk1,
+              event->unk3, event->mac0, event->mac1, event->unk2);
 
+    // Log device name in debug builds.
 #ifndef NDEBUG
     if (event->mac0 > 0 && event->mac1 > 0) {
         char name[128];
         int ret = ksceBtGetDeviceName(event->mac0, event->mac1, name);
         if (ret == 0) {
-            LOG_DEBUG(0, "            Name: \"%s\"", name);
+            LOG_DEBUG(0, INDENT "Name: \"%s\"", name);
         } else {
             LOG_ERROR("ksceBtGetDeviceName(mac0=0x%08X, mac1=0x%08X) returned error: 0x%08X", event->mac0, event->mac1,
                       ret);
@@ -171,16 +176,16 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
         case VQMBT_BT_EVENT_DISCONNECT:
             switch (event->unk1) {
                 case 0x13:
-                    LOG_DEBUG(0, "            Device disconnected remotely event");
+                    LOG_DEBUG(0, INDENT "Device disconnected remotely event");
                     break;
                 default:
-                    LOG_DEBUG(0, "            Device disconnected event");
+                    LOG_DEBUG(0, INDENT "Device disconnected event");
                     break;
             }
             break;
 
         case VQMBT_BT_EVENT_ADD_REMOVE_DEVICE:
-            LOG_DEBUG(0, "            Device added/removed event");
+            LOG_DEBUG(0, INDENT "Device added/removed event");
             break;
 
         case VQMBT_BT_EVENT_TOGGLE_BLUETOOTH:
@@ -189,22 +194,22 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
                     // Ignore
                     break;
                 case 0x09:
-                    LOG_DEBUG(0, "            Bluetooth turned on");
+                    LOG_DEBUG(0, INDENT "Bluetooth turned on");
                     break;
                 case 0x19:
                     // Ignore
                     break;
                 case 0x20:
-                    LOG_DEBUG(0, "            Bluetooth turned off");
+                    LOG_DEBUG(0, INDENT "Bluetooth turned off");
                     break;
                 default:
-                    LOG_DEBUG(0, "            Unhandled toggle bluetooth event unk3=0x%08X", event->unk3);
+                    LOG_DEBUG(0, INDENT "Unhandled toggle bluetooth event unk3=0x%08X", event->unk3);
                     break;
             }
             break;
 
         default:
-            LOG_DEBUG(0, "            Unhandled event id=0x%02X", event->id);
+            LOG_DEBUG(0, INDENT "Unhandled event id=0x%02X", event->id);
             break;
     }
 }
