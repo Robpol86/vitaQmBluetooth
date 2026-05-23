@@ -25,6 +25,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - If low disk space disable file logging and show error in notifications or dialog (custom error code?).
  * - Performant to touch file on boot intead of on log message? What about date change in the middle of logging?
  * - Log file name format: vitaQmBluetooth-YYYYMMDD.log
+ * - logfile.h
+ * - no colors in logfile
  */
 
 #ifndef LOG_H
