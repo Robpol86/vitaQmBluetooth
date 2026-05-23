@@ -197,10 +197,6 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
 
 /**
  * TODO.
- *
- * TODO:
- * - rerun events to collect logging for different times and devices
- * - unsatisfactory timeout events
  */
 static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, void* userData) {
     (void)notifyId;
@@ -228,13 +224,6 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
             break;
         }
 
-        // TODO remove v (ginza hotel noise)
-        if (event.mac0 == 0x64D34C28 && event.mac1 == 0x0000ACD5) continue;
-        if (event.mac0 == 0x6462C838 && event.mac1 == 0x0000ACD5) continue;
-        if (event.mac0 == 0x4321847E && event.mac1 == 0x00004023) continue;
-        if (event.mac0 == 0x432185BA && event.mac1 == 0x00004023) continue;
-        // TODO remove ^
-
         // Continue in handler.
         kvqmbtHandleEvent(&event);
     }
@@ -252,11 +241,13 @@ static int kvqmbtEventThread(SceSize args, void* argp) {
     (void)args;
     (void)argp;
 
+    // Create callback.
     uid_callback = ksceKernelCreateCallback("kvqmbtEventCallback", 0, kvqmbtEventCallback, NULL);
     LOG_DEBUG(0, "ksceKernelCreateCallback returned 0x%08X", uid_callback);
-    // TODO flags1 is probably a mask for SceBtEvent id's. Mask out unused IDs in release builds, keep all in debug.
-    // TODO set flags2 to 0?
-    int ret = ksceBtRegisterCallback(uid_callback, 0, 0xFFFFFFFF, 0xFFFFFFFF);
+
+    // Register callback.
+    const unsigned int id_mask = 0xFFFFFFFFU & ~(1U << VQMBT_BT_EVENT_INQUIRY_RESULT);  // TODO make inclusive instead
+    int ret = ksceBtRegisterCallback(uid_callback, 0, id_mask, 0xFFFFFFFF);             // TODO test flags2 0x0
     LOG_DEBUG(0, "ksceBtRegisterCallback returned 0x%08X", ret);
 
     // Sleep until thread is stopped.
