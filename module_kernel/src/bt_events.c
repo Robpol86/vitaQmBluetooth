@@ -22,29 +22,45 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 /***************************************************************************************************************************
 # Logs
 
-## Disable bluetooth subsystem from Settings
+## Enable/Disable/Add(Pair)/Remove #######################################################
+
+### Disable bluetooth subsystem from Settings
 
 SceBtEvent: id=0x15 unk1=0x00 unk3=0x00000020 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
 SceBtEvent: id=0x15 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
 
-### Enable
+#### Enable
 
 SceBtEvent: id=0x15 unk1=0x00 unk3=0x00000019 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
 SceBtEvent: id=0x15 unk1=0x00 unk3=0x00000009 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
 
-## Disable bluetooth subsystem from Quick Menu
+### Disable bluetooth subsystem from Quick Menu
 
 SceBtEvent: id=0x15 unk1=0x00 unk3=0x00000020 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
 SceBtEvent: id=0x06 unk1=0x16 unk3=0x00000000 mac0=0xF26B3406 mac1=0x0000708C unk2=0x0000
             Name: "AirPods Pro"
 SceBtEvent: id=0x15 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
 
-### Enable
+#### Enable
 
 SceBtEvent: id=0x15 unk1=0x00 unk3=0x00000019 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
 SceBtEvent: id=0x15 unk1=0x00 unk3=0x00000009 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
 
-## Connect Airpods Pro 2 successfully
+### Delete APP2
+
+TODO
+
+### Add APP2 success
+
+TODO
+
+### Add APP2 timeout
+
+TODO
+
+## Connect/Disconnect ####################################################################
+
+### Connect Airpods Pro 2 successfully
 
 SceBtEvent: id=0x07 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000  (sometimes)
 SceBtEvent: id=0x02 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
@@ -55,99 +71,23 @@ SceBtEvent: id=0x0E unk1=0x00 unk3=0x00000066 mac0=0xF26B3406 mac1=0x0000708C un
 SceBtEvent: id=0x10 unk1=0x00 unk3=0x00000008 mac0=0xF26B3406 mac1=0x0000708C unk2=0x0000
             Name: "AirPods Pro"
 
-### Disconnect by user
+#### Disconnect by user
 
 SceBtEvent: id=0x06 unk1=0x16 unk3=0x00000000 mac0=0xF26B3406 mac1=0x0000708C unk2=0x0000
             Name: "AirPods Pro"
 
-### Disconnect by closing case
+#### Disconnect by closing case
 
 SceBtEvent: id=0x06 unk1=0x13 unk3=0x00000000 mac0=0xF26B3406 mac1=0x0000708C unk2=0x0000
             Name: "AirPods Pro"
 
-## Connect APP2 timeout
+### Connect APP2 timeout
 
 SceBtEvent: id=0x07 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
 SceBtEvent: id=0x02 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
 SceBtEvent: id=0x06 unk1=0x94 unk3=0x00000000 mac0=0xF26B3406 mac1=0x0000708C unk2=0x0000
             Name: "AirPods Pro"
 
-## Disable bluetooth subsystem:
- *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *              SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000020
- *                          Name: ""
- *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *              SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
- *                          Name: ""
-
- * Enable bluetooth subsystem:
- *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *              SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000019
- *                          Name: ""
- *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *              SceBtEvent: id=0x15 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000009
- *                          Name: ""
- * Device add event:
- *      Called: notifyId=-1 notifyCount=2 notifyArg=0 userData=0x00000000
- *              SceBtEvent: id=0x07 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
- *                          Name: ""
- *              SceBtEvent: id=0x02 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
- *                          Name: ""
- *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *              SceBtEvent: id=0x07 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
- *                          Name: ""
- *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *              SceBtEvent: id=0x04 mac0=0xF26B3406 mac1=0x0000708C unk1=0x03 unk2=0x0000 unk3=0x000A0D75
- *                          Name: "AirPods Pro"
- *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *              SceBtEvent: id=0x07 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
- *                          Name: ""
- *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *              SceBtEvent: id=0x07 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
- *                          Name: ""
- *              SceBtEvent: id=0x05 mac0=0xF26B3406 mac1=0x0000708C unk1=0x00 unk2=0x0000 unk3=0x00000039
- *                          Name: "AirPods Pro"
- *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *              SceBtEvent: id=0x0E mac0=0xF26B3406 mac1=0x0000708C unk1=0x00 unk2=0x0000 unk3=0x00000066
- *                          Name: "AirPods Pro"
- *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *              SceBtEvent: id=0x10 mac0=0xF26B3406 mac1=0x0000708C unk1=0x00 unk2=0x0000 unk3=0x00000008
- *                          Name: "AirPods Pro"
- * Device delete event:
- *      SceBtEvent: id=0x07 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
- * Device connect successful events:
- *      NOTE: 0x07 sometimes
- *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *              SceBtEvent: id=0x02 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
- *                          Name: ""
- *                          Inquiry stop event
- *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *              SceBtEvent: id=0x05 mac0=0xF26B3406 mac1=0x0000708C unk1=0x00 unk2=0x0000 unk3=0x00000039
- *                          Name: "AirPods Pro"
- *                          connect accepted vid_pid=0000:0000
- *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *              SceBtEvent: id=0x0E mac0=0xF26B3406 mac1=0x0000708C unk1=0x00 unk2=0x0000 unk3=0x00000066
- *                          Name: "AirPods Pro"
- *                          Unknown event id: 0x0E
- *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *              SceBtEvent: id=0x10 mac0=0xF26B3406 mac1=0x0000708C unk1=0x00 unk2=0x0000 unk3=0x00000008
- *                          Name: "AirPods Pro"
- *                          Unknown event id: 0x10
- * Device connect timeout events:
- *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *              SceBtEvent: id=0x02 mac0=0x00000000 mac1=0x00000000 unk1=0x00 unk2=0x0000 unk3=0x00000000
- *                          Name: ""
- *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *              SceBtEvent: id=0x05 mac0=0xF26B3406 mac1=0x0000708C unk1=0x04 unk2=0x0000 unk3=0x00000000
- *                          Name: "AirPods Pro"
- * Device local disconnect event:
- *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *              SceBtEvent: id=0x06 mac0=0xF26B3406 mac1=0x0000708C unk1=0x16 unk2=0x0000 unk3=0x00000000
- *                          Name: "AirPods Pro"
- * Device remote disconnect event:
- *      Called: notifyId=-1 notifyCount=1 notifyArg=0 userData=0x00000000
- *              SceBtEvent: id=0x06 mac0=0xF26B3406 mac1=0x0000708C unk1=0x13 unk2=0x0000 unk3=0x00000000
- *                          Name: "AirPods Pro"
 ****************************************************************************************************************************/
 
 #include <psp2kern/bt.h>
