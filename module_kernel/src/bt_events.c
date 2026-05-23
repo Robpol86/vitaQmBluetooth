@@ -48,15 +48,48 @@ SceBtEvent: id=0x15 unk1=0x00 unk3=0x00000009 mac0=0x00000000 mac1=0x00000000 un
 
 ### Delete APP2
 
-TODO
+SceBtEvent: id=0x07 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
+
+### Add APP2 cancelled
+
+SceBtEvent: id=0x02 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
+SceBtEvent: id=0x07 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
+SceBtEvent: id=0x04 unk1=0x03 unk3=0x000D55A6 mac0=0xF26B3406 mac1=0x0000708C unk2=0x0000
+            Name: "AirPods Pro"
+*TAPPED CANCEL*
+SceBtEvent: id=0x05 unk1=0x05 unk3=0x00000000 mac0=0xF26B3406 mac1=0x0000708C unk2=0x0000
+            Name: "AirPods Pro"
+SceBtEvent: id=0x06 unk1=0x16 unk3=0x00000000 mac0=0xF26B3406 mac1=0x0000708C unk2=0x0000
+            Name: "AirPods Pro"
 
 ### Add APP2 success
 
-TODO
+SceBtEvent: id=0x02 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
+SceBtEvent: id=0x04 unk1=0x03 unk3=0x0007AC81 mac0=0xF26B3406 mac1=0x0000708C unk2=0x0000
+            Name: "AirPods Pro"
+*Confirm with user*
+SceBtEvent: id=0x07 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
+SceBtEvent: id=0x07 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
+SceBtEvent: id=0x05 unk1=0x00 unk3=0x00000039 mac0=0xF26B3406 mac1=0x0000708C unk2=0x0000
+            Name: "AirPods Pro"
+SceBtEvent: id=0x0E unk1=0x00 unk3=0x00000066 mac0=0xF26B3406 mac1=0x0000708C unk2=0x0000
+            Name: "AirPods Pro"
+SceBtEvent: id=0x10 unk1=0x00 unk3=0x00000008 mac0=0xF26B3406 mac1=0x0000708C unk2=0x0000
+            Name: "AirPods Pro"
+
+### Add APP2 failed
+
+SceBtEvent: id=0x02 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
+*Failed immediately with "An error has occurred"*
+SceBtEvent: id=0x06 unk1=0x14 unk3=0x00000000 mac0=0xF26B3406 mac1=0x0000708C unk2=0x0000
+            Name: "AirPods Pro"
 
 ### Add APP2 timeout
 
-TODO
+SceBtEvent: id=0x02 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
+*WAITING... TIMED OUT*
+SceBtEvent: id=0x05 unk1=0x04 unk3=0x00000000 mac0=0xF26B3406 mac1=0x0000708C unk2=0x0000
+            Name: "AirPods Pro"
 
 ## Connect/Disconnect ####################################################################
 
