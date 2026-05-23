@@ -282,7 +282,8 @@ static int kvqmbtEventThread(SceSize args, void* argp) {
     LOG_DEBUG(0, "ksceKernelCreateCallback returned 0x%08X", uid_callback);
 
     // Register callback.
-    const unsigned int id_mask = 0xFFFFFFFFU & ~(1U << VQMBT_BT_EVENT_INQUIRY_RESULT);  // TODO make inclusive instead
+    const unsigned int id_mask = 0xFFFFFFFFU & ~((1U << VQMBT_BT_EVENT_INQUIRY_RESULT) |
+                                                 (1U << VQMBT_BT_EVENT_INQUIRY_STOP));  // TODO make inclusive instead
     int ret = ksceBtRegisterCallback(uid_callback, 0, id_mask, 0xFFFFFFFF);             // TODO test flags2 0x0
     LOG_DEBUG(0, "ksceBtRegisterCallback returned 0x%08X", ret);
 
