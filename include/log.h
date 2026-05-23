@@ -30,6 +30,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - make fetched-logs tail-last
  * - make fetched-screenshots
  * - delete logs older than 7 days in module_load
+ * - https://github.com/Ibrahim778/QuickMenuReborn/blob/vdsuite/src/user/main.cpp
  */
 
 #ifndef LOG_H
