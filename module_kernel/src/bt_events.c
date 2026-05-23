@@ -44,15 +44,32 @@ SceBtEvent: id=0x15 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 un
 SceBtEvent: id=0x15 unk1=0x00 unk3=0x00000019 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
 SceBtEvent: id=0x15 unk1=0x00 unk3=0x00000009 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
 
-## Connect Airpods Pro 2
+## Connect Airpods Pro 2 successfully
 
-SceBtEvent: id=0x07 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
+SceBtEvent: id=0x07 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000  (sometimes)
 SceBtEvent: id=0x02 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
 SceBtEvent: id=0x05 unk1=0x00 unk3=0x00000039 mac0=0xF26B3406 mac1=0x0000708C unk2=0x0000
             Name: "AirPods Pro"
 SceBtEvent: id=0x0E unk1=0x00 unk3=0x00000066 mac0=0xF26B3406 mac1=0x0000708C unk2=0x0000
             Name: "AirPods Pro"
 SceBtEvent: id=0x10 unk1=0x00 unk3=0x00000008 mac0=0xF26B3406 mac1=0x0000708C unk2=0x0000
+            Name: "AirPods Pro"
+
+### Disconnect by user
+
+SceBtEvent: id=0x06 unk1=0x16 unk3=0x00000000 mac0=0xF26B3406 mac1=0x0000708C unk2=0x0000
+            Name: "AirPods Pro"
+
+### Disconnect by closing case
+
+SceBtEvent: id=0x06 unk1=0x13 unk3=0x00000000 mac0=0xF26B3406 mac1=0x0000708C unk2=0x0000
+            Name: "AirPods Pro"
+
+## Connect APP2 timeout
+
+SceBtEvent: id=0x07 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
+SceBtEvent: id=0x02 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
+SceBtEvent: id=0x06 unk1=0x94 unk3=0x00000000 mac0=0xF26B3406 mac1=0x0000708C unk2=0x0000
             Name: "AirPods Pro"
 
 ## Disable bluetooth subsystem:
