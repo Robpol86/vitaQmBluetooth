@@ -185,20 +185,26 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
 
         case VQMBT_BT_EVENT_TOGGLE_BLUETOOTH:
             switch (event->unk3) {
-                case 0x20:
-                    LOG_DEBUG(0, "            Bluetooth turned off");
+                case 0x00:
+                    // Ignore
                     break;
                 case 0x09:
                     LOG_DEBUG(0, "            Bluetooth turned on");
                     break;
+                case 0x19:
+                    // Ignore
+                    break;
+                case 0x20:
+                    LOG_DEBUG(0, "            Bluetooth turned off");
+                    break;
                 default:
-                    LOG_DEBUG(0, "            Unhandled toggle bluetooth event: unk3=0x%08X", event->unk3);
+                    LOG_DEBUG(0, "            Unhandled toggle bluetooth event unk3=0x%08X", event->unk3);
                     break;
             }
             break;
 
         default:
-            LOG_DEBUG(0, "            Unhandled event id: 0x%02X", event->id);
+            LOG_DEBUG(0, "            Unhandled event id=0x%02X", event->id);
             break;
     }
 }
@@ -241,6 +247,8 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
 
 /**
  * TODO
+ *
+ * Note: set id_mask to 0xFFFFFFFF to receive and log all events.
  *
  * TODO:
  * - ksceBtRegisterCallback flags, see if they filter events or macs. Ignore inquiry events.
