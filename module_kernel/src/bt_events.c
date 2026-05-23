@@ -121,6 +121,10 @@ SceBtEvent: id=0x02 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 un
 SceBtEvent: id=0x06 unk1=0x94 unk3=0x00000000 mac0=0xF26B3406 mac1=0x0000708C unk2=0x0000
             Name: "AirPods Pro"
 
+### Connect bad state hangs
+
+TODO
+
 ****************************************************************************************************************************/
 
 #include <psp2kern/bt.h>
