@@ -168,10 +168,6 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
 #endif  // NDEBUG
 
     switch (event->id) {
-        case VQMBT_BT_EVENT_ADD_REMOVE_DEVICE:
-            LOG_DEBUG(0, "            Device added/removed event");
-            break;
-
         case VQMBT_BT_EVENT_DISCONNECT:
             switch (event->unk1) {
                 case 0x13:
@@ -179,6 +175,24 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
                     break;
                 default:
                     LOG_DEBUG(0, "            Device disconnected event");
+                    break;
+            }
+            break;
+
+        case VQMBT_BT_EVENT_ADD_REMOVE_DEVICE:
+            LOG_DEBUG(0, "            Device added/removed event");
+            break;
+
+        case VQMBT_BT_EVENT_TOGGLE_BLUETOOTH:
+            switch (event->unk3) {
+                case 0x20:
+                    LOG_DEBUG(0, "            Bluetooth turned off");
+                    break;
+                case 0x09:
+                    LOG_DEBUG(0, "            Bluetooth turned on");
+                    break;
+                default:
+                    LOG_DEBUG(0, "            Unhandled toggle bluetooth event: unk3=0x%08X", event->unk3);
                     break;
             }
             break;
