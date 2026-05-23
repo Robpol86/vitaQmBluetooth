@@ -27,6 +27,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - Log file name format: vitaQmBluetooth-YYYYMMDD.log
  * - logfile.h
  * - no colors in logfile
+ * - make fetched-logs
+ * - make fetched-screenshots
  */
 
 #ifndef LOG_H
