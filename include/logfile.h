@@ -23,6 +23,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * TODO:
  * - In module_load mkdir ux0:/data/vitaQmBluetooth/logs
  * - If low disk space disable file logging and show error in notifications or dialog (custom error code?).
+ * - static int increment every write. Every n write check free space and disable. Check again after n and re-enable if
+ *   enough space.
  * - Performant to touch file on boot intead of on log message? What about date change in the middle of logging?
  * - Log file name format: vitaQmBluetooth-YYYYMMDD.log
  * - logfile.h
@@ -31,14 +33,20 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - make fetched-screenshots
  * - delete logs older than 7 days in module_load
  * - https://github.com/Ibrahim778/QuickMenuReborn/blob/vdsuite/src/user/main.cpp
+ * - Support timezone change (filename change).
+ * - Handle error: dir is file
  */
 
 #ifndef LOGFILE_H
 #define LOGFILE_H
 
-#define VQMBT_LOG_ROOT1 "ux0:"
-#define VQMBT_LOG_ROOT2 "uma0:"
-#define VQMBT_LOG_DIR1 VQMBT_LOG_ROOT1 PROJECT_NAME "/logs/"
-#define VQMBT_LOG_DIR2 VQMBT_LOG_ROOT2 PROJECT_NAME "/logs/"
+#define VQMBT_LOGFILE_ROOT1 "ux0:"
+#define VQMBT_LOGFILE_ROOT2 "uma0:"
+#define VQMBT_LOGFILE_PARENT1 VQMBT_LOGFILE_ROOT1 PROJECT_NAME
+#define VQMBT_LOGFILE_PARENT2 VQMBT_LOGFILE_ROOT2 PROJECT_NAME
+#define VQMBT_LOGFILE_DIR1 VQMBT_LOGFILE_PARENT1 "/logs/"
+#define VQMBT_LOGFILE_DIR2 VQMBT_LOGFILE_PARENT2 "/logs/"
+
+#define VQMBT_LOGFILE_NAME PROJECT_NAME ".log"
 
 #endif  // LOGFILE_H

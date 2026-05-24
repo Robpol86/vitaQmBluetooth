@@ -19,9 +19,15 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief TODO.
  ******************************************************************************/
 
+// static char log_file_path[256] = {0};
+
 /**
  * TODO.
  */
 void vqmbt_logfile_init(void) {
+    // Look for existing parent directory and use it if it exists. Else fallback to dir1.
+    // TODO
+
+    // Create directories.
     // TODO
 }
