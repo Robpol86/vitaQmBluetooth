@@ -26,18 +26,21 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2kern/kernel/rtc.h>
 #include <psp2kern/kernel/threadmgr.h>
 
-#define LOG_MESSAGE_(delay, fmt, msg, ...)                                               \
-    do {                                                                                 \
-        SceDateTime dt_;                                                                 \
-        ksceRtcGetCurrentClockLocalTime(&dt_);                                           \
-        ksceKernelPrintf(fmt msg "\n", LOG_FORMAT_VALUES_(dt_), ##__VA_ARGS__);          \
-        if (!__builtin_constant_p(delay) || (delay) > 0) ksceKernelDelayThread((delay)); \
+#include "logfile.h"
+
+#define LOG_MESSAGE_(delay, fmt_color, fmt_sans, msg, ...)                                   \
+    do {                                                                                     \
+        SceDateTime dt_;                                                                     \
+        ksceRtcGetCurrentClockLocalTime(&dt_);                                               \
+        ksceKernelPrintf(fmt_color msg "\n", LOG_FORMAT_VALUES_(dt_), ##__VA_ARGS__);        \
+        logfile_write_line(&dt_, fmt_sans msg "\n", LOG_FORMAT_VALUES_(dt_), ##__VA_ARGS__); \
+        if (!__builtin_constant_p(delay) || (delay) > 0) ksceKernelDelayThread((delay));     \
     } while (0)
 
-#define LOG_MESSAGE_NOOP_(delay, fmt, msg, ...)          \
-    do {                                                 \
-        (void)(delay);                                   \
-        if (0) ksceKernelPrintf(fmt msg, ##__VA_ARGS__); \
+#define LOG_MESSAGE_NOOP_(delay, fmt_color, fmt_sans, msg, ...) \
+    do {                                                        \
+        (void)(delay);                                          \
+        if (0) ksceKernelPrintf(fmt msg, ##__VA_ARGS__);        \
     } while (0)
 
 #include <log.h>  // Bring in LOG_DEBUG, LOG_ERROR, and other common macros.

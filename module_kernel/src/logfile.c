@@ -25,6 +25,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 // static char logfile_path_[256] = {0};
 
+void logfile_write_line(SceDateTime* time, const char* line, ...) {
+    // TODO
+    (void)time;
+    (void)line;
+}
+
 /**
  * TODO.
  *

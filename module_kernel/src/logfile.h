@@ -34,6 +34,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef LOGFILE_H
 #define LOGFILE_H
 
+#include <psp2common/types.h>
+
 #define LOGFILE_ROOT1_ "ux0:"
 #define LOGFILE_ROOT2_ "uma0:"
 #define LOGFILE_PROJECT1_ LOGFILE_ROOT1_ PROJECT_NAME
@@ -42,5 +44,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define LOGFILE_DIR2_ LOGFILE_PROJECT2_ "/logs/"
 
 #define LOGFILE_NAME_FORMAT_ PROJECT_NAME "-%04u%02u%02u.log"
+
+void logfile_write_line(SceDateTime* time, const char* line, ...);
 
 #endif  // LOGFILE_H
