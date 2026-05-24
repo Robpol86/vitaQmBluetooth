@@ -28,6 +28,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - no colors in logfile
  * - make fetched-logs tail-last
  * - make fetched-screenshots
+ * - Only write to log file (and mkdir) in debug builds. Release only printf to stdout.
  */
 
 #ifndef LOGFILE_H
