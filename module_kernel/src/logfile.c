@@ -16,37 +16,33 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /******************************************************************************
  * @file
- * @brief Module-agnostic macros for logging.
+ * @brief TODO.
  ******************************************************************************/
 
+#include "logfile.h"
+
+#include <psp2kern/io/stat.h>
+
+// static char logfile_path_[256] = {0};
+
 /**
+ * TODO.
+ *
  * TODO:
  * - In module_load mkdir ux0:/data/vitaQmBluetooth/logs
- * - If low disk space disable file logging and show error in notifications or dialog (custom error code?).
- * - static int increment every write. Every n write check free space and disable. Check again after n and re-enable if
- *   enough space.
- * - Performant to touch file on boot intead of on log message? What about date change in the middle of logging?
- * - Log file name format: vitaQmBluetooth-YYYYMMDD.log
- * - logfile.h
- * - no colors in logfile
- * - make fetched-logs tail-last
- * - make fetched-screenshots
  * - delete logs older than 7 days in module_load
- * - https://github.com/Ibrahim778/QuickMenuReborn/blob/vdsuite/src/user/main.cpp
- * - Support timezone change (filename change).
  * - Handle error: dir is file
+ * - https://github.com/Ibrahim778/QuickMenuReborn/blob/vdsuite/src/user/main.cpp
+ * - Log file name format: vitaQmBluetooth-YYYYMMDD.log
+ * - Support timezone change (filename change).
+ * - Support uma0.
  */
+void logfile_init(void) {
+    // Create directories.
+    ksceIoMkdir(LOGFILE_PROJECT1_, 0777);  // TODO better permissions
+    ksceIoMkdir(LOGFILE_DIR1_, 0777);
 
-#ifndef LOGFILE_H
-#define LOGFILE_H
+    // logfile_path_ = LOGFILE_DIR1_ "/" LOGFILE_NAME_FORMAT_;
 
-#define VQMBT_LOGFILE_ROOT1 "ux0:"
-#define VQMBT_LOGFILE_ROOT2 "uma0:"
-#define VQMBT_LOGFILE_PARENT1 VQMBT_LOGFILE_ROOT1 PROJECT_NAME
-#define VQMBT_LOGFILE_PARENT2 VQMBT_LOGFILE_ROOT2 PROJECT_NAME
-#define VQMBT_LOGFILE_DIR1 VQMBT_LOGFILE_PARENT1 "/logs/"
-#define VQMBT_LOGFILE_DIR2 VQMBT_LOGFILE_PARENT2 "/logs/"
-
-#define VQMBT_LOGFILE_NAME PROJECT_NAME ".log"
-
-#endif  // LOGFILE_H
+    // TODO
+}
