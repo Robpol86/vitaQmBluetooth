@@ -16,24 +16,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /******************************************************************************
  * @file
- * @brief Module-agnostic macros for logging.
+ * @brief TODO.
  ******************************************************************************/
 
-/**
- * TODO:
- * - If low disk space disable file logging and show error in notifications or dialog (custom error code?).
- * - static int increment every write. Every n write check free space and disable. Check again after n and re-enable if
- *   enough space.
- * - Performant to touch file on boot intead of on log message? What about date change in the middle of logging?
- * - no colors in logfile
- * - make fetched-logs tail-last
- * - make fetched-screenshots
- * - Only write to log file (and mkdir) in debug builds. Release only printf to stdout.
- */
-
-#ifndef LOGFILE_H_MODULE
-#define LOGFILE_H_MODULE
-
 // TODO
-
-#endif  // LOGFILE_H_MODULE

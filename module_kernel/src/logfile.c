@@ -19,21 +19,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief TODO.
  ******************************************************************************/
 
-#include "logfile.h"
-
-#include <psp2kern/io/stat.h>
-
-// static char logfile_path_[256] = {0};
-
-void logfile_write_line(SceDateTime* time, const char* line, ...) {
-    // TODO
-    (void)time;
-    (void)line;
-}
-
 /**
- * TODO.
- *
  * TODO:
  * - In module_load mkdir ux0:/data/vitaQmBluetooth/logs
  * - delete logs older than 7 days in module_load
@@ -43,12 +29,5 @@ void logfile_write_line(SceDateTime* time, const char* line, ...) {
  * - Support timezone change (filename change).
  * - Support uma0.
  */
-void logfile_init(void) {
-    // Create directories.
-    ksceIoMkdir(LOGFILE_PROJECT1_, 0777);  // TODO better permissions
-    ksceIoMkdir(LOGFILE_DIR1_, 0777);
 
-    // logfile_path_ = LOGFILE_DIR1_ "/" LOGFILE_NAME_FORMAT_;
-
-    // TODO
-}
+// TODO
