@@ -28,12 +28,18 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "logfile.h"  // IWYU pragma: keep
 
+#ifndef NDEBUG
+#define LOG_MESSAGE_TO_FILE_(fmt, ...) logfile_write_line(fmt, ##__VA_ARGS__)
+#else
+#define LOG_MESSAGE_TO_FILE_(fmt, ...) ((void)0)
+#endif  // NDEBUG
+
 #define LOG_MESSAGE_(delay, fmt, msg, ...)                                              \
     do {                                                                                \
         SceDateTime dt_;                                                                \
         sceRtcGetCurrentClockLocalTime(&dt_);                                           \
         sceClibPrintf(fmt msg "\n", LOG_FORMAT_VALUES_(dt_), ##__VA_ARGS__);            \
-        logfile_write_line(fmt msg "\n", LOG_FORMAT_VALUES_(dt_), ##__VA_ARGS__);       \
+        LOG_MESSAGE_TO_FILE_(fmt msg "\n", LOG_FORMAT_VALUES_(dt_), ##__VA_ARGS__);     \
         if (!__builtin_constant_p(delay) || (delay) > 0) sceKernelDelayThread((delay)); \
     } while (0)
 
