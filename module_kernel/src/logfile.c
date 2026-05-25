@@ -30,4 +30,15 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - Support uma0.
  */
 
-// TODO
+#include <psp2kern/kernel/debug.h>
+#include <stdarg.h>
+
+/**
+ * TODO
+ */
+void logfile_write_line(const char* line, ...) {
+    va_list ap;
+    va_start(ap, line);
+    ksceKernelVprintf(line, ap);
+    va_end(ap);
+}

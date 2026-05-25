@@ -19,4 +19,15 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief TODO.
  ******************************************************************************/
 
-// TODO
+#include <psp2/kernel/clib.h>
+#include <stdarg.h>
+
+/**
+ * TODO
+ */
+void logfile_write_line(const char* line, ...) {
+    va_list ap;
+    va_start(ap, line);
+    sceClibVprintf(line, ap);
+    va_end(ap);
+}

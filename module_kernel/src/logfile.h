@@ -34,6 +34,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef LOGFILE_H_MODULE
 #define LOGFILE_H_MODULE
 
-// TODO
+void logfile_write_line(const char* line, ...);
 
 #endif  // LOGFILE_H_MODULE
