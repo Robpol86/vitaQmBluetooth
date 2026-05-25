@@ -22,7 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 /**
  * TODO:
  * - In module_load mkdir ux0:/data/vitaQmBluetooth/logs
- * - delete logs older than 7 days in module_load
+ * - delete logs older than 7 days in module_load; NO, delete old logs if count > 7 including today.
  * - Handle error: dir is file
  * - https://github.com/Ibrahim778/QuickMenuReborn/blob/vdsuite/src/user/main.cpp
  * - Log file name format: vitaQmBluetooth-YYYYMMDD.log
