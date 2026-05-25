@@ -29,6 +29,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - make fetched-logs tail-last
  * - make fetched-screenshots
  * - Only write to log file (and mkdir) in debug builds. Release only printf to stdout.
+ * - spin off log.h and logfile.h into library to reuse in my projects
  */
 
 #ifndef LOGFILE_H_MODULE
