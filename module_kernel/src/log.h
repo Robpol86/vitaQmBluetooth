@@ -28,12 +28,19 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "logfile.h"  // IWYU pragma: keep
 
+/**
+ * Macro to write log message to log file only in debug builds.
+ */
 #ifndef NDEBUG
 #define LOG_MESSAGE_TO_FILE_(fmt, ...) logfile_write_line(fmt, ##__VA_ARGS__)
 #else
 #define LOG_MESSAGE_TO_FILE_(fmt, ...) ((void)0)
 #endif  // NDEBUG
 
+/**
+ * Main macro that handles getting the current time, logging to stdout, logging
+ * to log file via LOG_MESSAGE_TO_FILE_ macro, then optionally sleeping the thread.
+ */
 #define LOG_MESSAGE_(delay, fmt, msg, ...)                                               \
     do {                                                                                 \
         SceDateTime dt_;                                                                 \
@@ -43,6 +50,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
         if (!__builtin_constant_p(delay) || (delay) > 0) ksceKernelDelayThread((delay)); \
     } while (0)
 
+/**
+ * Macro that does nothing, used by include/log.h when logging should be disabled.
+ */
 #define LOG_MESSAGE_NOOP_(delay, fmt, msg, ...)          \
     do {                                                 \
         (void)(delay);                                   \
