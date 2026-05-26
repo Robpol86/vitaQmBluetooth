@@ -55,8 +55,8 @@ endif
 	wget --quiet -P $(@) -nH --cut-dirs=3 --mirror "ftp://$(PSVITA_IP):1337/ux0:/$(PROJECT_NAME)/logs/*.log"
 
 .PHONY: tail-todays-log
-tail-todays-log: _HELP = TODO
-tail-todays-log: NUMLINES = 100
+tail-todays-log: _HELP = Print the last $NUMLINES in today's log file (calls fetch-logs)
+tail-todays-log: NUMLINES = 50
 tail-todays-log: DATE = $(shell date +%Y%m%d)
 tail-todays-log: fetch-logs
 	tail -n$(NUMLINES) $(<)/vitaQmBluetooth-$(DATE).log
