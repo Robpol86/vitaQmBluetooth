@@ -26,8 +26,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  *   enough space.
  * - Performant to touch file on boot intead of on log message? What about date change in the middle of logging?
  * - no colors in logfile
- * - make fetched-logs tail-last
- * - make fetched-screenshots
  * - Only write to log file (and mkdir) in debug builds. Release only printf to stdout.
  * - spin off log.h and logfile.h into library to reuse in my projects. FetchContent. cache in ci for ratelimit? Support
  *   plugins (done) and apps. Support C and C++.
