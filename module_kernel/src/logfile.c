@@ -35,6 +35,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - Handle error: dir is file
  * - https://github.com/Ibrahim778/QuickMenuReborn/blob/vdsuite/src/user/main.cpp
  * - dedupe: include/logfile.h and common/logfile.c
+ * - drop unused includes
  */
 
 #include <psp2kern/io/fcntl.h>
