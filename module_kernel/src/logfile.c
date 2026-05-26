@@ -37,6 +37,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - dedupe: include/logfile.h and common/logfile.c
  * - drop unused includes
  * - handle collisions (user+kernel writing at the same time) with retry/exclusiveLock
+ * - fix timezone jump "bug" with ksceKernelGetSystemTimeWide
  */
 
 #include "logfile.h"
