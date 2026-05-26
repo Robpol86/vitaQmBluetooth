@@ -21,13 +21,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * TODO:
- * - In module_load mkdir ux0:/data/vitaQmBluetooth/logs
  * - delete logs older than 7 days in module_load; NO, delete old logs if count > 7 including today.
  * - Handle error: dir is file
  * - https://github.com/Ibrahim778/QuickMenuReborn/blob/vdsuite/src/user/main.cpp
- * - Log file name format: vitaQmBluetooth-YYYYMMDD.log
- * - Support timezone change (filename change).
- * - Support uma0.
  */
 
 #include <psp2kern/io/fcntl.h>
@@ -50,7 +46,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 static bool is_initialized = false;
 
 /**
- * TODO
+ * Initialize the log file dependencies.
  */
 void logfile_init(void) {
     int ret;
@@ -71,7 +67,16 @@ void logfile_init(void) {
 }
 
 /**
- * TODO
+ * Write a log statement to the log file.
+ *
+ * TODO:
+ * - Optimize
+ *
+ * @param y Current year (for the filename).
+ * @param m Current month (for the filename).
+ * @param d Current day (for the filename).
+ * @param line Log statement format string (supports %s and other format specifiers).
+ * @param ... Arguments for the format specifiers.
  */
 void logfile_write_line(int y, int m, int d, const char* line, ...) {
     if (!is_initialized) return;
