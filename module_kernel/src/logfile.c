@@ -39,6 +39,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - handle collisions (user+kernel writing at the same time) with retry/exclusiveLock
  */
 
+#include <logfile.h>
 #include <psp2kern/io/fcntl.h>
 #include <psp2kern/io/stat.h>
 #include <psp2kern/kernel/debug.h>
@@ -47,14 +48,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <stdbool.h>
 
 #include "log.h"
-
-#define SCE_ERROR_ERRNO_EEXIST 0x80010011
-
-#define LOG_DIR_PARENT_ "ux0:" PROJECT_NAME
-#define LOG_DIR_ LOG_DIR_PARENT_ "/logs/"
-#define LOG_FILENAME_FORMAT_ PROJECT_NAME "-%04d%02d%02d.log"
-
-#define LOG_LINE_BUFFER 512
 
 static bool is_initialized = false;
 

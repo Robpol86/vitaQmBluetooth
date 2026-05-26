@@ -19,6 +19,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief TODO.
  ******************************************************************************/
 
+#include <logfile.h>
 #include <psp2/io/fcntl.h>
 #include <psp2/io/stat.h>
 #include <psp2/kernel/clib.h>
@@ -26,14 +27,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <stdbool.h>
 
 #include "log.h"
-
-#define SCE_ERROR_ERRNO_EEXIST 0x80010011
-
-#define LOG_DIR_PARENT_ "ux0:" PROJECT_NAME
-#define LOG_DIR_ LOG_DIR_PARENT_ "/logs/"
-#define LOG_FILENAME_FORMAT_ PROJECT_NAME "-%04d%02d%02d.log"
-
-#define LOG_LINE_BUFFER 512
 
 static bool is_initialized = false;
 
