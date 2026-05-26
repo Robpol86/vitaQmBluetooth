@@ -30,6 +30,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - Support uma0.
  */
 
+#include <psp2kern/io/fcntl.h>
 #include <psp2kern/io/stat.h>
 #include <psp2kern/kernel/debug.h>
 #include <psp2kern/kernel/sysclib.h>
@@ -43,6 +44,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define LOG_DIR_PARENT_ "ux0:" PROJECT_NAME
 #define LOG_DIR_ LOG_DIR_PARENT_ "/logs/"
 #define LOG_FILENAME_FORMAT_ PROJECT_NAME "-%04d%02d%02d.log"
+
+#define LOG_LINE_BUFFER 512
 
 static bool is_initialized = false;
 
@@ -72,10 +75,11 @@ void logfile_init(void) {
  */
 void logfile_write_line(int y, int m, int d, const char* line, ...) {
     if (!is_initialized) return;
+    int ret;
 
     // Determine filename.
     char log_file_path[256] = {0};
-    int ret = snprintf(log_file_path, sizeof(log_file_path), LOG_DIR_ LOG_FILENAME_FORMAT_, y, m, d);
+    ret = snprintf(log_file_path, sizeof(log_file_path), LOG_DIR_ LOG_FILENAME_FORMAT_, y, m, d);
     if (ret < 0) {
         is_initialized = false;
         LOG_ERROR("snprintf returned error: 0x%08X", ret);
@@ -87,9 +91,32 @@ void logfile_write_line(int y, int m, int d, const char* line, ...) {
         return;
     }
 
-    // TODO change to write to log file.
-    va_list ap;
-    va_start(ap, line);
-    ksceKernelVprintf(line, ap);
-    va_end(ap);
+    // Format line.
+    char buffer[LOG_LINE_BUFFER];
+    va_list args;
+    va_start(args, line);
+    ret = vsnprintf(buffer, sizeof(buffer), line, args);
+    va_end(args);
+    if (ret < 0) {
+        LOG_ERROR("vsnprintf returned error: 0x%08X", ret);
+        return;
+    }
+    int buffer_len = ret;
+    if ((size_t)buffer_len >= sizeof(buffer)) {
+        // Truncated
+        static const char marker[] = " Truncated\n";
+        const size_t marker_len = sizeof(marker) - 1;  // exclude NUL
+        buffer_len = sizeof(buffer) - 1;
+        memcpy(&buffer[buffer_len - marker_len], marker, marker_len);
+    }
+
+    // Write to log file.
+    SceUID fd = ksceIoOpen(log_file_path, SCE_O_WRONLY | SCE_O_CREAT | SCE_O_APPEND, 0666);
+    if (fd < 0) {
+        is_initialized = false;
+        LOG_ERROR("ksceIoOpen(log_file_path=\"%s\") returned error: 0x%08X", log_file_path, fd);
+        return;
+    }
+    ksceIoWrite(fd, buffer, buffer_len);
+    ksceIoClose(fd);
 }
