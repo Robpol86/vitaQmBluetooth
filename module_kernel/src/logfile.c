@@ -32,6 +32,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <psp2kern/io/stat.h>
 #include <psp2kern/kernel/debug.h>
+#include <psp2kern/kernel/sysclib.h>
 #include <stdarg.h>
 #include <stdbool.h>
 
@@ -41,6 +42,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #define LOG_DIR_PARENT_ "ux0:" PROJECT_NAME
 #define LOG_DIR_ LOG_DIR_PARENT_ "/logs/"
+#define LOG_FILENAME_FORMAT_ PROJECT_NAME "-%04d%02d%02d.log"
 
 static bool is_initialized = false;
 
@@ -68,8 +70,19 @@ void logfile_init(void) {
 /**
  * TODO
  */
-void logfile_write_line(const char* line, ...) {
+void logfile_write_line(int y, int m, int d, const char* line, ...) {
     if (!is_initialized) return;
+
+    // Determine filename.
+    char log_file_path[256] = {0};
+    int ret = snprintf(log_file_path, sizeof(log_file_path), LOG_DIR_ LOG_FILENAME_FORMAT_, y, m, d);
+    if (ret < 0 || (size_t)ret >= sizeof(log_file_path)) {
+        is_initialized = false;
+        LOG_ERROR("snprintf returned error: 0x%08X", ret);
+        return;
+    }
+
+    // TODO change to write to log file.
     va_list ap;
     va_start(ap, line);
     ksceKernelVprintf(line, ap);
