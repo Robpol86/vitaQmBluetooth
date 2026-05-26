@@ -30,4 +30,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #define LOG_LINE_BUFFER 512
 
+#ifndef NDEBUG
+#define LOG_MESSAGE_TO_FILE_(y, m, d, fmt, ...) logfile_write_line(y, m, d, fmt, ##__VA_ARGS__)
+#else
+#define LOG_MESSAGE_TO_FILE_(y, m, d, fmt, ...) ((void)0)
+#endif  // NDEBUG
+
 #endif  // LOGFILE_H

@@ -22,6 +22,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef LOGFILE_H_MODULE
 #define LOGFILE_H_MODULE
 
+#include <logfile.h>
+
 void logfile_init(void);
 void logfile_write_line(int y, int m, int d, const char* line, ...) __attribute__((format(printf, 4, 5)));
 

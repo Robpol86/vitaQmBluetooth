@@ -39,7 +39,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - handle collisions (user+kernel writing at the same time) with retry/exclusiveLock
  */
 
-#include <logfile.h>
+#include "logfile.h"
+
 #include <psp2kern/io/fcntl.h>
 #include <psp2kern/io/stat.h>
 #include <psp2kern/kernel/debug.h>

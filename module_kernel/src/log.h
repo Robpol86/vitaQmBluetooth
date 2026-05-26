@@ -29,15 +29,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "logfile.h"  // IWYU pragma: keep
 
 /**
- * Macro to write log message to log file only in debug builds.
- */
-#ifndef NDEBUG
-#define LOG_MESSAGE_TO_FILE_(y, m, d, fmt, ...) logfile_write_line(y, m, d, fmt, ##__VA_ARGS__)
-#else
-#define LOG_MESSAGE_TO_FILE_(y, m, d, fmt, ...) ((void)0)
-#endif  // NDEBUG
-
-/**
  * Main macro that handles getting the current time, logging to stdout, logging
  * to log file via LOG_MESSAGE_TO_FILE_ macro, then optionally sleeping the thread.
  */
