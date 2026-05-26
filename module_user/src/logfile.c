@@ -19,22 +19,101 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief TODO.
  ******************************************************************************/
 
+#include <psp2/io/fcntl.h>
+#include <psp2/io/stat.h>
 #include <psp2/kernel/clib.h>
 #include <stdarg.h>
+#include <stdbool.h>
+
+#include "log.h"
+
+#define SCE_ERROR_ERRNO_EEXIST 0x80010011
+
+#define LOG_DIR_PARENT_ "ux0:" PROJECT_NAME
+#define LOG_DIR_ LOG_DIR_PARENT_ "/logs/"
+#define LOG_FILENAME_FORMAT_ PROJECT_NAME "-%04d%02d%02d.log"
+
+#define LOG_LINE_BUFFER 512
+
+static bool is_initialized = false;
 
 /**
- * TODO
+ * Initialize the log file dependencies.
  */
 void logfile_init(void) {
-    // TODO mkdir.
+    int ret;
+
+    // Create log directories.
+    ret = sceIoMkdir(LOG_DIR_PARENT_, 0777);
+    if (ret < 0 && ret != SCE_ERROR_ERRNO_EEXIST) {
+        LOG_ERROR("sceIoMkdir(log_dir=\"%s\") returned error: 0x%08X", LOG_DIR_PARENT_, ret);
+        return;
+    }
+    ret = sceIoMkdir(LOG_DIR_, 0777);
+    if (ret < 0 && ret != SCE_ERROR_ERRNO_EEXIST) {
+        LOG_ERROR("sceIoMkdir(log_dir=\"%s\") returned error: 0x%08X", LOG_DIR_, ret);
+        return;
+    }
+
+    is_initialized = true;
 }
 
 /**
- * TODO
+ * Write a log statement to the log file.
+ *
+ * TODO:
+ * - Optimize
+ *
+ * @param y Current year (for the filename).
+ * @param m Current month (for the filename).
+ * @param d Current day (for the filename).
+ * @param line Log statement format string (supports %s and other format specifiers).
+ * @param ... Arguments for the format specifiers.
  */
-void logfile_write_line(const char* line, ...) {
-    va_list ap;
-    va_start(ap, line);
-    sceClibVprintf(line, ap);
-    va_end(ap);
+void logfile_write_line(int y, int m, int d, const char* line, ...) {
+    if (!is_initialized) return;
+    int ret;
+
+    // Determine filename.
+    char log_file_path[256] = {0};
+    ret = sceClibSnprintf(log_file_path, sizeof(log_file_path), LOG_DIR_ LOG_FILENAME_FORMAT_, y, m, d);
+    if (ret < 0) {
+        is_initialized = false;
+        LOG_ERROR("sceClibSnprintf returned error: 0x%08X", ret);
+        return;
+    }
+    if ((size_t)ret >= sizeof(log_file_path)) {
+        is_initialized = false;
+        LOG_ERROR("sceClibSnprintf truncated the file path");
+        return;
+    }
+
+    // Format line.
+    char buffer[LOG_LINE_BUFFER];
+    va_list args;
+    va_start(args, line);
+    ret = sceClibVsnprintf(buffer, sizeof(buffer), line, args);
+    va_end(args);
+    if (ret < 0) {
+        LOG_ERROR("sceClibVsnprintf returned error: 0x%08X", ret);
+        return;
+    }
+    int buffer_len = ret;
+    if ((size_t)buffer_len >= sizeof(buffer)) {
+        // Truncated
+        static const char marker[] = " Truncated\n";
+        const size_t marker_len = sizeof(marker) - 1;  // exclude NUL
+        buffer_len = sizeof(buffer) - 1;
+        sceClibMemcpy(&buffer[buffer_len - marker_len], marker, marker_len);
+    }
+
+    // Write to log file.
+    SceUID fd = sceIoOpen(log_file_path, SCE_O_WRONLY | SCE_O_CREAT | SCE_O_APPEND, 0666);
+    if (fd < 0) {
+        is_initialized = false;
+        LOG_ERROR("sceIoOpen(log_file_path=\"%s\") returned error: 0x%08X", log_file_path, fd);
+        return;
+    }
+    sceIoWrite(fd, buffer, buffer_len);
+    sceIoClose(fd);
 }

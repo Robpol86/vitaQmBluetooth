@@ -32,22 +32,22 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * Macro to write log message to log file only in debug builds.
  */
 #ifndef NDEBUG
-#define LOG_MESSAGE_TO_FILE_(fmt, ...) logfile_write_line(fmt, ##__VA_ARGS__)
+#define LOG_MESSAGE_TO_FILE_(y, m, d, fmt, ...) logfile_write_line(y, m, d, fmt, ##__VA_ARGS__)
 #else
-#define LOG_MESSAGE_TO_FILE_(fmt, ...) ((void)0)
+#define LOG_MESSAGE_TO_FILE_(y, m, d, fmt, ...) ((void)0)
 #endif  // NDEBUG
 
 /**
  * Main macro that handles getting the current time, logging to stdout, logging
  * to log file via LOG_MESSAGE_TO_FILE_ macro, then optionally sleeping the thread.
  */
-#define LOG_MESSAGE_(delay, fmt, msg, ...)                                              \
-    do {                                                                                \
-        SceDateTime dt_;                                                                \
-        sceRtcGetCurrentClockLocalTime(&dt_);                                           \
-        sceClibPrintf(fmt msg "\n", LOG_FORMAT_VALUES_(dt_), ##__VA_ARGS__);            \
-        LOG_MESSAGE_TO_FILE_(fmt msg "\n", LOG_FORMAT_VALUES_(dt_), ##__VA_ARGS__);     \
-        if (!__builtin_constant_p(delay) || (delay) > 0) sceKernelDelayThread((delay)); \
+#define LOG_MESSAGE_(delay, fmt, msg, ...)                                                                        \
+    do {                                                                                                          \
+        SceDateTime dt_;                                                                                          \
+        sceRtcGetCurrentClockLocalTime(&dt_);                                                                     \
+        sceClibPrintf(fmt msg "\n", LOG_FORMAT_VALUES_(dt_), ##__VA_ARGS__);                                      \
+        LOG_MESSAGE_TO_FILE_(dt_.year, dt_.month, dt_.day, fmt msg "\n", LOG_FORMAT_VALUES_(dt_), ##__VA_ARGS__); \
+        if (!__builtin_constant_p(delay) || (delay) > 0) sceKernelDelayThread((delay));                           \
     } while (0)
 
 /**

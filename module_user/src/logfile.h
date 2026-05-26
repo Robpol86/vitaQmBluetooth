@@ -23,6 +23,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define LOGFILE_H_MODULE
 
 void logfile_init(void);
-void logfile_write_line(const char* line, ...);
+void logfile_write_line(int y, int m, int d, const char* line, ...) __attribute__((format(printf, 4, 5)));
 
 #endif  // LOGFILE_H_MODULE
