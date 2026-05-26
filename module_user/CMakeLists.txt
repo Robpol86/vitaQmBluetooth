@@ -46,6 +46,7 @@ target_link_directories("${MODULE_NAME}" PRIVATE
 target_link_libraries("${MODULE_NAME}" PRIVATE
   gcc
 
+  SceIofilemgr_stub
   SceKernelThreadMgr_stub
   SceLibKernel_stub
   SceRtc_stub

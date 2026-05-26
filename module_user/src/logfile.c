@@ -75,7 +75,7 @@ void logfile_write_line(int y, int m, int d, const char* line, ...) {
     int ret;
 
     // Determine filename.
-    char log_file_path[256] = {0};
+    char log_file_path[256];
     ret = sceClibSnprintf(log_file_path, sizeof(log_file_path), LOG_DIR_ LOG_FILENAME_FORMAT_, y, m, d);
     if (ret < 0) {
         is_initialized = false;
