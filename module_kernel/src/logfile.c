@@ -76,9 +76,14 @@ void logfile_write_line(int y, int m, int d, const char* line, ...) {
     // Determine filename.
     char log_file_path[256] = {0};
     int ret = snprintf(log_file_path, sizeof(log_file_path), LOG_DIR_ LOG_FILENAME_FORMAT_, y, m, d);
-    if (ret < 0 || (size_t)ret >= sizeof(log_file_path)) {
+    if (ret < 0) {
         is_initialized = false;
         LOG_ERROR("snprintf returned error: 0x%08X", ret);
+        return;
+    }
+    if ((size_t)ret >= sizeof(log_file_path)) {
+        is_initialized = false;
+        LOG_ERROR("snprintf truncated the file path");
         return;
     }
 
