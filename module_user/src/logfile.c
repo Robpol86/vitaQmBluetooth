@@ -16,7 +16,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /******************************************************************************
  * @file
- * @brief TODO.
+ * @brief Module-specific functions for log files.
  ******************************************************************************/
 
 #include "logfile.h"
