@@ -21,23 +21,22 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * TODO:
+ * - Only write to log file (and mkdir) in debug builds. Release only printf to stdout.
+ * - <logfile.h> needs LOGFILE_ prefixes. Also most/all macros are accessed in "logfile.h/c", so drop trailing _.
  * - If low disk space disable file logging and show error in notifications or dialog (custom error code?).
  * - static int increment every write. Every n write check free space and disable. Check again after n and re-enable if
  *   enough space.
  * - Performant to touch file on boot intead of on log message? What about date change in the middle of logging?
  * - no colors in logfile
- * - Only write to log file (and mkdir) in debug builds. Release only printf to stdout.
  * - spin off log.h and logfile.h into library to reuse in my projects. FetchContent. cache in ci for ratelimit? Support
  *   plugins (done) and apps. Support C and C++.
  *   https://github.com/dragonflylee/switchfin/blob/0adcf9f7473052aa695631a4dba4beb2252824ec/CMakeLists.txt#L105
  *   Move this to a vitaHomebrewTODO issue.
- * - delete logs older than 7 days in module_load; NO, delete old logs if count > 7 including today.
+ * - delete old logfiles if fileCount > 7 including today.
  * - Handle error: dir is file
- * - https://github.com/Ibrahim778/QuickMenuReborn/blob/vdsuite/src/user/main.cpp
- * - dedupe: include/logfile.h and common/logfile.c
  * - drop unused includes
  * - handle collisions (user+kernel writing at the same time) with retry/exclusiveLock
- * - fix timezone jump "bug" with ksceKernelGetSystemTimeWide
+ * - fix timezone jump "bug" with ksceKernelGetSystemTimeWide?
  */
 
 #include "logfile.h"
