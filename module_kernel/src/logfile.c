@@ -36,6 +36,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - https://github.com/Ibrahim778/QuickMenuReborn/blob/vdsuite/src/user/main.cpp
  * - dedupe: include/logfile.h and common/logfile.c
  * - drop unused includes
+ * - handle collisions (user+kernel writing at the same time) with retry/exclusiveLock
  */
 
 #include <psp2kern/io/fcntl.h>
