@@ -29,12 +29,14 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - make fetched-logs tail-last
  * - make fetched-screenshots
  * - Only write to log file (and mkdir) in debug builds. Release only printf to stdout.
- * - spin off log.h and logfile.h into library to reuse in my projects. FetchContent. cache in ci for ratelimit?
+ * - spin off log.h and logfile.h into library to reuse in my projects. FetchContent. cache in ci for ratelimit? Support
+ *   plugins (done) and apps. Support C and C++.
  */
 
 #ifndef LOGFILE_H_MODULE
 #define LOGFILE_H_MODULE
 
+void logfile_init(void);
 void logfile_write_line(const char* line, ...);
 
 #endif  // LOGFILE_H_MODULE

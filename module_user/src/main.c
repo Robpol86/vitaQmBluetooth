@@ -35,6 +35,7 @@ int module_start(SceSize args, const void* argp) {
     (void)args;
     (void)argp;
 
+    logfile_init();
     LOG_INFO("Start");
 
     quickmenu_start();

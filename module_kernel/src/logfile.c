@@ -36,6 +36,13 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 /**
  * TODO
  */
+void logfile_init(void) {
+    // TODO mkdir.
+}
+
+/**
+ * TODO
+ */
 void logfile_write_line(const char* line, ...) {
     va_list ap;
     va_start(ap, line);
