@@ -30,20 +30,46 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - Support uma0.
  */
 
+#include <psp2kern/io/stat.h>
 #include <psp2kern/kernel/debug.h>
 #include <stdarg.h>
+#include <stdbool.h>
+
+#include "log.h"
+
+#define SCE_ERROR_ERRNO_EEXIST 0x80010011
+
+#define LOG_DIR_PARENT_ "ux0:" PROJECT_NAME
+#define LOG_DIR_ LOG_DIR_PARENT_ "/logs/"
+
+static bool is_initialized = false;
 
 /**
  * TODO
  */
 void logfile_init(void) {
-    // TODO mkdir.
+    int ret;
+
+    // Create log directories.
+    ret = ksceIoMkdir(LOG_DIR_PARENT_, 0777);
+    if (ret < 0 && ret != SCE_ERROR_ERRNO_EEXIST) {
+        LOG_ERROR("ksceIoMkdir(log_dir=\"%s\") returned error: 0x%08X", LOG_DIR_PARENT_, ret);
+        return;
+    }
+    ret = ksceIoMkdir(LOG_DIR_, 0777);
+    if (ret < 0 && ret != SCE_ERROR_ERRNO_EEXIST) {
+        LOG_ERROR("ksceIoMkdir(log_dir=\"%s\") returned error: 0x%08X", LOG_DIR_, ret);
+        return;
+    }
+
+    is_initialized = true;
 }
 
 /**
  * TODO
  */
 void logfile_write_line(const char* line, ...) {
+    if (!is_initialized) return;
     va_list ap;
     va_start(ap, line);
     ksceKernelVprintf(line, ap);
