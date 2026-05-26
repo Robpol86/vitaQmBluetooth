@@ -47,12 +47,19 @@ endif
 	wget --quiet -P $(@) -nH --cut-dirs=3 --mirror "ftp://$(PSVITA_IP):1337/ux0:/picture/SCREENSHOT/*.png"
 
 .PHONY: fetch-logs
-fetch-logs: _HELP = Download project logs (requires vitacompanion)
+fetch-logs: _HELP = Download project log files (requires vitacompanion)
 fetch-logs:
 ifndef PSVITA_IP
 	$(error PSVITA_IP is not set. Install https://github.com/devnoname120/vitacompanion on the Vita and set PSVITA_IP.")
 endif
 	wget --quiet -P $(@) -nH --cut-dirs=3 --mirror "ftp://$(PSVITA_IP):1337/ux0:/$(PROJECT_NAME)/logs/*.log"
+
+.PHONY: tail-todays-log
+tail-todays-log: _HELP = TODO
+tail-todays-log: NUMLINES = 100
+tail-todays-log: DATE = $(shell date +%Y%m%d)
+tail-todays-log: fetch-logs
+	tail -n$(NUMLINES) $(<)/vitaQmBluetooth-$(DATE).log
 
 .PHONY: recv-logs
 recv-logs: _HELP = Listen for logs sent from the PS Vita, print to stdout (use with Cat-A-Log)
