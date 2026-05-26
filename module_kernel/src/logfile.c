@@ -29,6 +29,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - Only write to log file (and mkdir) in debug builds. Release only printf to stdout.
  * - spin off log.h and logfile.h into library to reuse in my projects. FetchContent. cache in ci for ratelimit? Support
  *   plugins (done) and apps. Support C and C++.
+ *   https://github.com/dragonflylee/switchfin/blob/0adcf9f7473052aa695631a4dba4beb2252824ec/CMakeLists.txt#L105
+ *   Move this to a vitaHomebrewTODO issue.
  * - delete logs older than 7 days in module_load; NO, delete old logs if count > 7 including today.
  * - Handle error: dir is file
  * - https://github.com/Ibrahim778/QuickMenuReborn/blob/vdsuite/src/user/main.cpp
