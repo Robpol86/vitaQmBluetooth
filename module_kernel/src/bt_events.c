@@ -302,8 +302,6 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
 /**
  * TODO
  *
- * Note: set id_mask to 0xFFFFFFFF to receive and log all events.
- *
  * TODO:
  * - ksceBtRegisterCallback flags, see if they filter events or macs. Ignore inquiry events.
  */
@@ -316,12 +314,12 @@ static int kvqmbtEventThread(SceSize args, void* argp) {
     LOG_DEBUG(0, "ksceKernelCreateCallback returned 0x%08X", uid_callback);
 
     // Register callback.
-    const unsigned int id_mask =
-        0xFFFFFFFFU &
-        ~((1U << VQMBT_BT_EVENT_INQUIRY_RESULT) | (1U << VQMBT_BT_EVENT_INQUIRY_STOP) |
-          (1U << VQMBT_BT_EVENT_PAIRING_REQUEST) | (1U << VQMBT_BT_EVENT_CONNECT_UNPAIRED) |
-          (1U << VQMBT_BT_EVENT_UNKNOWN1) | (1U << VQMBT_BT_EVENT_UNKNOWN2) | (1U << VQMBT_BT_EVENT_UNKNOWN3) |
-          (1U << VQMBT_BT_EVENT_CONNECT_REQUESTED));                         // Ignore irrelevant event IDs
+    const unsigned int id_mask = ~(
+        // Ignore irrelevant IDs. Set to 0xFFFFFFFF to receive and log all events.
+        (1U << VQMBT_BT_EVENT_INQUIRY_RESULT) | (1U << VQMBT_BT_EVENT_INQUIRY_STOP) |
+        (1U << VQMBT_BT_EVENT_PAIRING_REQUEST) | (1U << VQMBT_BT_EVENT_CONNECT_REQUESTED) |
+        (1U << VQMBT_BT_EVENT_CONNECT_UNPAIRED) | (1U << VQMBT_BT_EVENT_UNKNOWN1) | (1U << VQMBT_BT_EVENT_UNKNOWN2) |
+        (1U << VQMBT_BT_EVENT_UNKNOWN3));
     int ret = ksceBtRegisterCallback(uid_callback, 0, id_mask, 0xFFFFFFFF);  // TODO test flags2 0x0
     LOG_DEBUG(0, "ksceBtRegisterCallback returned 0x%08X", ret);
 
