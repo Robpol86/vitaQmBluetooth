@@ -179,17 +179,12 @@ typedef enum VqmbtBtEventId {
     VQMBT_BT_EVENT_UNKNOWN2 = 0x10,
     VQMBT_BT_EVENT_TOGGLE_BLUETOOTH = 0x15,
     VQMBT_BT_EVENT_UNKNOWN3 = 0x1C,
-    // AI
-    VQMBT_BT_EVENT_CONNECT_REQUESTED = 0x08,
-    VQMBT_BT_EVENT_HID_REPLY_TYPE0 = 0x0A,
-    VQMBT_BT_EVENT_HID_REPLY_TYPE1 = 0x0B,
 } VqmbtBtEventId;
 
 /**
  * TODO
  *
  * TODO:
- * - Review enum
  * - Significant fields: id, unk1 (event status code?), unk3 (event payload?)
  * - Log all events again with latest logs. Log multiple devices looking for differences in event fields.
  * - Test with ovaltine
@@ -234,17 +229,7 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
             break;
 
         case VQMBT_BT_EVENT_DISCONNECT:
-            switch (event->unk1) {
-                case 0x13:
-                    LOG_DEBUG(0, INDENT "Device disconnected remotely");
-                    break;
-                case 0x16:
-                    LOG_DEBUG(0, INDENT "Device disconnected by host");
-                    break;
-                default:
-                    LOG_DEBUG(0, INDENT "Unhandled disconnect event unk1=0x%02X", event->unk1);
-                    break;
-            }
+            LOG_DEBUG(0, INDENT "Device disconnected");
             break;
 
         case VQMBT_BT_EVENT_ADD_REMOVE_CONNECTING_DEVICE:
