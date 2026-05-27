@@ -19,7 +19,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief Interface with the bluetooth subsystem. TODO.
  ******************************************************************************/
 
-/***************************************************************************************************************************
+/****************************************************************************************
 # Logs
 
 ## Enable/Disable/Add(Pair)/Remove #######################################################
@@ -108,7 +108,7 @@ SceBtEvent: id=0x05 unk1=0x04 unk3=0x00000000 mac0=0xF26B3406 mac1=0x0000708C un
 
 ### Connect Airpods Pro 2 successfully
 
-SceBtEvent: id=0x07 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000  (sometimes)
+SceBtEvent: id=0x07 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
 SceBtEvent: id=0x02 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
 SceBtEvent: id=0x05 unk1=0x00 unk3=0x00000039 mac0=0xF26B3406 mac1=0x0000708C unk2=0x0000
             Name: "AirPods Pro"
@@ -143,11 +143,7 @@ SceBtEvent: id=0x05 unk1=0x04 unk3=0x00000000 mac0=0xF26B3406 mac1=0x0000708C un
             Name: "AirPods Pro"
             Unhandled event id=0x05
 
-### Connect bad state hangs
-
-TODO
-
-****************************************************************************************************************************/
+*****************************************************************************************/
 
 #include <psp2kern/bt.h>
 #include <psp2kern/kernel/cpu.h>
@@ -187,10 +183,10 @@ typedef enum VqmbtBtEventId {
  * TODO
  *
  * TODO:
- * - Log all events again with latest logs. Log multiple devices looking for differences in event fields.
- * - Test with ovaltine
- * - Test with iphone
+ * - Test with MacBook
+ * - Test with iPhone
  * - Test with ds3
+ * - Test with ds4
  */
 static void kvqmbtHandleEvent(const SceBtEvent* event) {
     LOG_DEBUG(0, PREFIX "id=0x%02X unk1=0x%02X unk3=0x%08X mac0=0x%08X mac1=0x%08X unk2=0x%04X", event->id, event->unk1,
