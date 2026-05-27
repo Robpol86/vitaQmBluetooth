@@ -16,7 +16,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /******************************************************************************
  * @file
- * @brief Interface with the bluetooth subsystem. TODO.
+ * @brief Syscalls for the user plugin to control with the bluetooth subsystem.
  ******************************************************************************/
 
 #include <psp2kern/bt.h>
