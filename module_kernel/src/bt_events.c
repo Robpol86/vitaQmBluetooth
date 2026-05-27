@@ -190,6 +190,7 @@ typedef enum VqmbtBtEventId {
  * - Test with ovaltine
  * - Test with iphone
  * - Test with ds3
+ * - ndebug flags1: 0xF in debug, inclusive on release
  */
 static void kvqmbtHandleEvent(const SceBtEvent* event) {
     LOG_DEBUG(0, PREFIX "id=0x%02X unk1=0x%02X unk3=0x%08X mac0=0x%08X mac1=0x%08X unk2=0x%04X", event->id, event->unk1,
