@@ -157,12 +157,12 @@ static bool run_thread = false;
 typedef enum VqmbtBtEventId {
     VQMBT_BT_EVENT_INQUIRY_RESULT = 0x01,
     VQMBT_BT_EVENT_INQUIRY_STOP = 0x02,
+    VQMBT_BT_EVENT_PAIRING_REQUEST = 0x04,
     VQMBT_BT_EVENT_CONNECT_RESULT = 0x05,
     VQMBT_BT_EVENT_DISCONNECT = 0x06,
     VQMBT_BT_EVENT_ADD_REMOVE_CONNECTING_DEVICE = 0x07,
     VQMBT_BT_EVENT_TOGGLE_BLUETOOTH = 0x15,
     // AI
-    VQMBT_BT_EVENT_LINK_KEY_REQUEST = 0x04,
     VQMBT_BT_EVENT_CONNECT_REQUESTED = 0x08,
     VQMBT_BT_EVENT_CONNECT_UNPAIRED = 0x09,
     VQMBT_BT_EVENT_HID_REPLY_TYPE0 = 0x0A,
@@ -314,9 +314,10 @@ static int kvqmbtEventThread(SceSize args, void* argp) {
     LOG_DEBUG(0, "ksceKernelCreateCallback returned 0x%08X", uid_callback);
 
     // Register callback.
-    const unsigned int id_mask = 0xFFFFFFFFU & ~((1U << VQMBT_BT_EVENT_INQUIRY_RESULT) |
-                                                 (1U << VQMBT_BT_EVENT_INQUIRY_STOP));  // TODO make inclusive instead
-    int ret = ksceBtRegisterCallback(uid_callback, 0, id_mask, 0xFFFFFFFF);             // TODO test flags2 0x0
+    const unsigned int id_mask =
+        0xFFFFFFFFU & ~((1U << VQMBT_BT_EVENT_INQUIRY_RESULT) | (1U << VQMBT_BT_EVENT_INQUIRY_STOP) |
+                        (1U << VQMBT_BT_EVENT_PAIRING_REQUEST));             // TODO make inclusive instead
+    int ret = ksceBtRegisterCallback(uid_callback, 0, id_mask, 0xFFFFFFFF);  // TODO test flags2 0x0
     LOG_DEBUG(0, "ksceBtRegisterCallback returned 0x%08X", ret);
 
     // Sleep until thread is stopped.
