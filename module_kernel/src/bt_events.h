@@ -16,7 +16,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /******************************************************************************
  * @file
- * @brief TODO.
+ * @brief Start and stop the bluetooth event handling thread.
  ******************************************************************************/
 
 #ifndef BT_EVENTS_H
