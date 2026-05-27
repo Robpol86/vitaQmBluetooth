@@ -163,6 +163,7 @@ void add_buttons(void) {
  * - Add function to calculate position from top left instead of center.
  * - Pixel perfect alignment.
  * - If kernel plugin isn't loaded notify user.
+ * - If kernel plugin loaded AFTER user plugin what happens? probably fails. Handle this too.
  */
 void quickmenu_start(void) {
     // Add horizontal line separator.
