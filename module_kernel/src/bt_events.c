@@ -157,12 +157,12 @@ static bool run_thread = false;
 typedef enum VqmbtBtEventId {
     VQMBT_BT_EVENT_INQUIRY_RESULT = 0x01,
     VQMBT_BT_EVENT_INQUIRY_STOP = 0x02,
+    VQMBT_BT_EVENT_CONNECT_RESULT = 0x05,
     VQMBT_BT_EVENT_DISCONNECT = 0x06,
     VQMBT_BT_EVENT_ADD_REMOVE_CONNECTING_DEVICE = 0x07,
     VQMBT_BT_EVENT_TOGGLE_BLUETOOTH = 0x15,
     // AI
     VQMBT_BT_EVENT_LINK_KEY_REQUEST = 0x04,
-    VQMBT_BT_EVENT_CONNECT_ACCEPTED = 0x05,
     VQMBT_BT_EVENT_CONNECT_REQUESTED = 0x08,
     VQMBT_BT_EVENT_CONNECT_UNPAIRED = 0x09,
     VQMBT_BT_EVENT_HID_REPLY_TYPE0 = 0x0A,
@@ -200,6 +200,25 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
 
     // Handle events.
     switch (event->id) {
+        case VQMBT_BT_EVENT_CONNECT_RESULT:
+            switch (event->unk1) {
+                case 0x00:
+                    LOG_DEBUG(0, INDENT "Device connected mac0=0x%08X mac1=0x%08X", event->mac0, event->mac1);
+                    break;
+                case 0x04:
+                    LOG_DEBUG(0, INDENT "Device connect failed mac0=0x%08X mac1=0x%08X", event->mac0, event->mac1);
+                    break;
+                case 0x05:
+                    LOG_DEBUG(0, INDENT "Device connect cancelled by host mac0=0x%08X mac1=0x%08X", event->mac0,
+                              event->mac1);
+                    break;
+                default:
+                    LOG_DEBUG(0, INDENT "Unhandled connect result event mac0=0x%08X mac1=0x%08X unk1=0x%02X", event->mac0,
+                              event->mac1, event->unk1);
+                    break;
+            }
+            break;
+
         case VQMBT_BT_EVENT_DISCONNECT:
             switch (event->unk1) {
                 case 0x13:
