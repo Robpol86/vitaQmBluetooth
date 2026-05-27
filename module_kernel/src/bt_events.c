@@ -320,7 +320,7 @@ static int kvqmbtEventThread(SceSize args, void* argp) {
         (1U << VQMBT_BT_EVENT_PAIRING_REQUEST) | (1U << VQMBT_BT_EVENT_CONNECT_REQUESTED) |
         (1U << VQMBT_BT_EVENT_CONNECT_UNPAIRED) | (1U << VQMBT_BT_EVENT_UNKNOWN1) | (1U << VQMBT_BT_EVENT_UNKNOWN2) |
         (1U << VQMBT_BT_EVENT_UNKNOWN3));
-    int ret = ksceBtRegisterCallback(uid_callback, 0, id_mask, 0xFFFFFFFF);  // TODO test flags2 0x0
+    int ret = ksceBtRegisterCallback(uid_callback, 0, id_mask, 0);
     LOG_DEBUG(0, "ksceBtRegisterCallback returned 0x%08X", ret);
 
     // Sleep until thread is stopped.
