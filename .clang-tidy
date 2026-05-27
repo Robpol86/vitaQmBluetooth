@@ -20,5 +20,6 @@ Checks: >
   -readability-use-concise-preprocessor-directives,
 CheckOptions:
   readability-function-cognitive-complexity.IgnoreMacros: true
+  readability-function-cognitive-complexity.Threshold: 25
 HeaderFilterRegex: '.*'
 WarningsAsErrors: '*'
