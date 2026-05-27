@@ -223,6 +223,9 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
                 case 0x05:
                     LOG_DEBUG(0, INDENT "Device connect cancelled by host");
                     break;
+                case 0x08:
+                    LOG_WARN(INDENT "TODO HANDLE THIS, FORCE CLOSE SETTINGS TO REPRODUCE?");
+                    break;
                 default:
                     LOG_WARN(INDENT "Unhandled connect result event status code unk1=0x%02X", event->unk1);
                     break;
