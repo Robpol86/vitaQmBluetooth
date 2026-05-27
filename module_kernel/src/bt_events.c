@@ -178,8 +178,9 @@ typedef enum VqmbtBtEventId {
     VQMBT_BT_EVENT_CONNECT_UNPAIRED = 0x09,
     VQMBT_BT_EVENT_UNKNOWN1 = 0x0E,
     VQMBT_BT_EVENT_UNKNOWN2 = 0x10,
+    VQMBT_BT_EVENT_UNKNOWN3 = 0x11,
     VQMBT_BT_EVENT_TOGGLE_BLUETOOTH = 0x15,
-    VQMBT_BT_EVENT_UNKNOWN3 = 0x1C,
+    VQMBT_BT_EVENT_UNKNOWN4 = 0x1C,
 } VqmbtBtEventId;
 
 /**
@@ -190,7 +191,6 @@ typedef enum VqmbtBtEventId {
  * - Test with ovaltine
  * - Test with iphone
  * - Test with ds3
- * - ndebug flags1: 0xF in debug, inclusive on release
  */
 static void kvqmbtHandleEvent(const SceBtEvent* event) {
     LOG_DEBUG(0, PREFIX "id=0x%02X unk1=0x%02X unk3=0x%08X mac0=0x%08X mac1=0x%08X unk2=0x%04X", event->id, event->unk1,
@@ -224,7 +224,7 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
                     LOG_DEBUG(0, INDENT "Device connect cancelled by host");
                     break;
                 default:
-                    LOG_DEBUG(0, INDENT "Unhandled connect result event status code unk1=0x%02X", event->unk1);
+                    LOG_WARN(INDENT "Unhandled connect result event status code unk1=0x%02X", event->unk1);
                     break;
             }
             break;
@@ -234,7 +234,7 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
             break;
 
         case VQMBT_BT_EVENT_ADD_REMOVE_CONNECTING_DEVICE:
-            LOG_DEBUG(0, INDENT "Device added/removed/connecting");
+            LOG_DEBUG(0, INDENT "Device added/removed/connecting");  // TODO relabel?
             break;
 
         case VQMBT_BT_EVENT_TOGGLE_BLUETOOTH:
@@ -252,13 +252,13 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
                     LOG_DEBUG(0, INDENT "Bluetooth turned off");
                     break;
                 default:
-                    LOG_DEBUG(0, INDENT "Unhandled toggle bluetooth event payload unk3=0x%08X", event->unk3);
+                    LOG_WARN(INDENT "Unhandled toggle bluetooth event payload unk3=0x%08X", event->unk3);
                     break;
             }
             break;
 
         default:
-            LOG_DEBUG(0, INDENT "Unhandled event id=0x%02X", event->id);
+            LOG_WARN(INDENT "Unhandled event id=0x%02X", event->id);
             break;
     }
 }
@@ -319,7 +319,7 @@ static int kvqmbtEventThread(SceSize args, void* argp) {
         (1U << VQMBT_BT_EVENT_INQUIRY_RESULT) | (1U << VQMBT_BT_EVENT_INQUIRY_STOP) |
         (1U << VQMBT_BT_EVENT_PAIRING_REQUEST) | (1U << VQMBT_BT_EVENT_CONNECT_REQUESTED) |
         (1U << VQMBT_BT_EVENT_CONNECT_UNPAIRED) | (1U << VQMBT_BT_EVENT_UNKNOWN1) | (1U << VQMBT_BT_EVENT_UNKNOWN2) |
-        (1U << VQMBT_BT_EVENT_UNKNOWN3));
+        (1U << VQMBT_BT_EVENT_UNKNOWN3) | (1U << VQMBT_BT_EVENT_UNKNOWN4));
     int ret = ksceBtRegisterCallback(uid_callback, 0, id_mask, 0);
     LOG_DEBUG(0, "ksceBtRegisterCallback returned 0x%08X", ret);
 
