@@ -19,24 +19,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief Module-specific functions for log files.
  ******************************************************************************/
 
-/**
- * TODO:
- * - If low disk space disable file logging and show error in notifications or dialog (custom error code?).
- * - static int increment every write. Every n write check free space and disable. Check again after n and re-enable if
- *   enough space.
- * - Performant to touch file on boot intead of on log message? What about date change in the middle of logging?
- * - no colors in logfile
- * - spin off log.h and logfile.h into library to reuse in my projects. FetchContent. cache in ci for ratelimit? Support
- *   plugins (done) and apps. Support C and C++.
- *   https://github.com/dragonflylee/switchfin/blob/0adcf9f7473052aa695631a4dba4beb2252824ec/CMakeLists.txt#L105
- *   Move this to a vitaHomebrewTODO issue.
- * - delete old logfiles if fileCount > 7 including today.
- * - Handle error: dir is file
- * - drop unused includes
- * - handle collisions (user+kernel writing at the same time) with retry/exclusiveLock
- * - fix timezone jump "bug" with ksceKernelGetSystemTimeWide? Or maybe if API possible logfile_wait_for_timezone()?
- */
-
 #include "logfile.h"
 
 #include <psp2kern/io/fcntl.h>
