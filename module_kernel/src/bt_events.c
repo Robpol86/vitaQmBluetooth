@@ -203,18 +203,16 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
         case VQMBT_BT_EVENT_CONNECT_RESULT:
             switch (event->unk1) {
                 case 0x00:
-                    LOG_DEBUG(0, INDENT "Device connected mac0=0x%08X mac1=0x%08X", event->mac0, event->mac1);
+                    LOG_DEBUG(0, INDENT "Device connected");
                     break;
                 case 0x04:
-                    LOG_DEBUG(0, INDENT "Device connect failed mac0=0x%08X mac1=0x%08X", event->mac0, event->mac1);
+                    LOG_DEBUG(0, INDENT "Device connect failed");
                     break;
                 case 0x05:
-                    LOG_DEBUG(0, INDENT "Device connect cancelled by host mac0=0x%08X mac1=0x%08X", event->mac0,
-                              event->mac1);
+                    LOG_DEBUG(0, INDENT "Device connect cancelled by host");
                     break;
                 default:
-                    LOG_DEBUG(0, INDENT "Unhandled connect result event mac0=0x%08X mac1=0x%08X unk1=0x%02X", event->mac0,
-                              event->mac1, event->unk1);
+                    LOG_DEBUG(0, INDENT "Unhandled connect result event unk1=0x%02X", event->unk1);
                     break;
             }
             break;
@@ -222,14 +220,13 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
         case VQMBT_BT_EVENT_DISCONNECT:
             switch (event->unk1) {
                 case 0x13:
-                    LOG_DEBUG(0, INDENT "Device disconnected remotely mac0=0x%08X mac1=0x%08X", event->mac0, event->mac1);
+                    LOG_DEBUG(0, INDENT "Device disconnected remotely");
                     break;
                 case 0x16:
-                    LOG_DEBUG(0, INDENT "Device disconnected by host mac0=0x%08X mac1=0x%08X", event->mac0, event->mac1);
+                    LOG_DEBUG(0, INDENT "Device disconnected by host");
                     break;
                 default:
-                    LOG_DEBUG(0, INDENT "Unhandled disconnect event mac0=0x%08X mac1=0x%08X unk1=0x%02X", event->mac0,
-                              event->mac1, event->unk1);
+                    LOG_DEBUG(0, INDENT "Unhandled disconnect event unk1=0x%02X", event->unk1);
                     break;
             }
             break;
