@@ -21,6 +21,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <psp2kern/kernel/modulemgr.h>
 
+#include "bt_events.h"
 #include "log.h"
 #include "logfile.h"
 
@@ -36,7 +37,9 @@ int module_start(SceSize args, const void* argp) {
     (void)argp;
 
     logfile_init();
-    LOG_INFO("Start");
+    LOG_INFO("Starting");
+    kvqmbtEventStart();
+    LOG_INFO("Started");
 
     return SCE_KERNEL_START_SUCCESS;
 }
@@ -52,9 +55,9 @@ int module_stop(SceSize args, const void* argp) {
     (void)args;
     (void)argp;
 
-    // TODO unload components.
-
-    LOG_INFO("Stop");
+    LOG_INFO("Stopping");
+    kvqmbtEventStop();
+    LOG_INFO("Stopped");
 
     return SCE_KERNEL_STOP_SUCCESS;
 }

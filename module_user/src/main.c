@@ -37,9 +37,9 @@ int module_start(SceSize args, const void* argp) {
     (void)argp;
 
     logfile_init();
-    LOG_INFO("Start");
-
+    LOG_INFO("Starting");
     quickmenu_start();
+    LOG_INFO("Started");
 
     return SCE_KERNEL_START_SUCCESS;
 }
@@ -55,9 +55,9 @@ int module_stop(SceSize args, const void* argp) {
     (void)args;
     (void)argp;
 
+    LOG_INFO("Stopping");
     quickmenu_stop();
-
-    LOG_INFO("Stop");
+    LOG_INFO("Stopped");
 
     return SCE_KERNEL_STOP_SUCCESS;
 }
