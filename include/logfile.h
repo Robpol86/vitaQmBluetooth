@@ -24,11 +24,11 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #define SCE_ERROR_ERRNO_EEXIST 0x80010011
 
-#define LOG_DIR_PARENT_ "ux0:" PROJECT_NAME
-#define LOG_DIR_ LOG_DIR_PARENT_ "/logs/"
-#define LOG_FILENAME_FORMAT_ PROJECT_NAME "-%04d%02d%02d.log"
+#define LOGFILE_DIR_PARENT "ux0:" PROJECT_NAME
+#define LOGFILE_DIR LOGFILE_DIR_PARENT "/logs/"
+#define LOGFILE_FILENAME_FORMAT PROJECT_NAME "-%04d%02d%02d.log"
 
-#define LOG_LINE_BUFFER 512
+#define LOGFILE_LINE_BUFFER 512
 
 #ifndef NDEBUG
 #define LOG_MESSAGE_TO_FILE(y, m, d, fmt, ...) logfile_write_line(y, m, d, fmt, ##__VA_ARGS__)

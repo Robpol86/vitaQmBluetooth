@@ -22,7 +22,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 /**
  * TODO:
  * - Only write to log file (and mkdir) in debug builds. Release only printf to stdout.
- * - <logfile.h> needs LOGFILE_ prefixes. Also most/all macros are accessed in "logfile.h/c", so drop trailing _.
  * - If low disk space disable file logging and show error in notifications or dialog (custom error code?).
  * - static int increment every write. Every n write check free space and disable. Check again after n and re-enable if
  *   enough space.
@@ -59,14 +58,14 @@ void logfile_init(void) {
     int ret;
 
     // Create log directories.
-    ret = ksceIoMkdir(LOG_DIR_PARENT_, 0777);
+    ret = ksceIoMkdir(LOGFILE_DIR_PARENT, 0777);
     if (ret < 0 && ret != SCE_ERROR_ERRNO_EEXIST) {
-        LOG_ERROR("ksceIoMkdir(log_dir=\"%s\") returned error: 0x%08X", LOG_DIR_PARENT_, ret);
+        LOG_ERROR("ksceIoMkdir(log_dir=\"%s\") returned error: 0x%08X", LOGFILE_DIR_PARENT, ret);
         return;
     }
-    ret = ksceIoMkdir(LOG_DIR_, 0777);
+    ret = ksceIoMkdir(LOGFILE_DIR, 0777);
     if (ret < 0 && ret != SCE_ERROR_ERRNO_EEXIST) {
-        LOG_ERROR("ksceIoMkdir(log_dir=\"%s\") returned error: 0x%08X", LOG_DIR_, ret);
+        LOG_ERROR("ksceIoMkdir(log_dir=\"%s\") returned error: 0x%08X", LOGFILE_DIR, ret);
         return;
     }
 
@@ -91,7 +90,7 @@ void logfile_write_line(int y, int m, int d, const char* line, ...) {
 
     // Determine filename.
     char log_file_path[256];
-    ret = snprintf(log_file_path, sizeof(log_file_path), LOG_DIR_ LOG_FILENAME_FORMAT_, y, m, d);
+    ret = snprintf(log_file_path, sizeof(log_file_path), LOGFILE_DIR LOGFILE_FILENAME_FORMAT, y, m, d);
     if (ret < 0) {
         is_initialized = false;
         LOG_ERROR("snprintf returned error: 0x%08X", ret);
@@ -104,7 +103,7 @@ void logfile_write_line(int y, int m, int d, const char* line, ...) {
     }
 
     // Format line.
-    char buffer[LOG_LINE_BUFFER];
+    char buffer[LOGFILE_LINE_BUFFER];
     va_list args;
     va_start(args, line);
     ret = vsnprintf(buffer, sizeof(buffer), line, args);

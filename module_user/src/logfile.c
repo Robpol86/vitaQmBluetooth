@@ -38,14 +38,14 @@ void logfile_init(void) {
     int ret;
 
     // Create log directories.
-    ret = sceIoMkdir(LOG_DIR_PARENT_, 0777);
+    ret = sceIoMkdir(LOGFILE_DIR_PARENT, 0777);
     if (ret < 0 && ret != SCE_ERROR_ERRNO_EEXIST) {
-        LOG_ERROR("sceIoMkdir(log_dir=\"%s\") returned error: 0x%08X", LOG_DIR_PARENT_, ret);
+        LOG_ERROR("sceIoMkdir(log_dir=\"%s\") returned error: 0x%08X", LOGFILE_DIR_PARENT, ret);
         return;
     }
-    ret = sceIoMkdir(LOG_DIR_, 0777);
+    ret = sceIoMkdir(LOGFILE_DIR, 0777);
     if (ret < 0 && ret != SCE_ERROR_ERRNO_EEXIST) {
-        LOG_ERROR("sceIoMkdir(log_dir=\"%s\") returned error: 0x%08X", LOG_DIR_, ret);
+        LOG_ERROR("sceIoMkdir(log_dir=\"%s\") returned error: 0x%08X", LOGFILE_DIR, ret);
         return;
     }
 
@@ -70,7 +70,7 @@ void logfile_write_line(int y, int m, int d, const char* line, ...) {
 
     // Determine filename.
     char log_file_path[256];
-    ret = sceClibSnprintf(log_file_path, sizeof(log_file_path), LOG_DIR_ LOG_FILENAME_FORMAT_, y, m, d);
+    ret = sceClibSnprintf(log_file_path, sizeof(log_file_path), LOGFILE_DIR LOGFILE_FILENAME_FORMAT, y, m, d);
     if (ret < 0) {
         is_initialized = false;
         LOG_ERROR("sceClibSnprintf returned error: 0x%08X", ret);
@@ -83,7 +83,7 @@ void logfile_write_line(int y, int m, int d, const char* line, ...) {
     }
 
     // Format line.
-    char buffer[LOG_LINE_BUFFER];
+    char buffer[LOGFILE_LINE_BUFFER];
     va_list args;
     va_start(args, line);
     ret = sceClibVsnprintf(buffer, sizeof(buffer), line, args);
