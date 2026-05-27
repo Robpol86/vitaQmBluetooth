@@ -26,14 +26,24 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2kern/kernel/rtc.h>
 #include <psp2kern/kernel/threadmgr.h>
 
-#define LOG_MESSAGE_(delay, fmt, msg, ...)                                               \
-    do {                                                                                 \
-        SceDateTime dt_;                                                                 \
-        ksceRtcGetCurrentClockLocalTime(&dt_);                                           \
-        ksceKernelPrintf(fmt msg "\n", LOG_FORMAT_VALUES_(dt_), ##__VA_ARGS__);          \
-        if (!__builtin_constant_p(delay) || (delay) > 0) ksceKernelDelayThread((delay)); \
+#include "logfile.h"  // IWYU pragma: keep
+
+/**
+ * Main macro that handles getting the current time, logging to stdout, logging
+ * to log file via LOG_MESSAGE_TO_FILE macro, then optionally sleeping the thread.
+ */
+#define LOG_MESSAGE_(delay, fmt, msg, ...)                                                                       \
+    do {                                                                                                         \
+        SceDateTime dt_;                                                                                         \
+        ksceRtcGetCurrentClockLocalTime(&dt_);                                                                   \
+        ksceKernelPrintf(fmt msg "\n", LOG_FORMAT_VALUES_(dt_), ##__VA_ARGS__);                                  \
+        LOG_MESSAGE_TO_FILE(dt_.year, dt_.month, dt_.day, fmt msg "\n", LOG_FORMAT_VALUES_(dt_), ##__VA_ARGS__); \
+        if (!__builtin_constant_p(delay) || (delay) > 0) ksceKernelDelayThread((delay));                         \
     } while (0)
 
+/**
+ * Macro that does nothing, used by include/log.h when logging should be disabled.
+ */
 #define LOG_MESSAGE_NOOP_(delay, fmt, msg, ...)          \
     do {                                                 \
         (void)(delay);                                   \

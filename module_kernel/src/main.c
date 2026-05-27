@@ -23,6 +23,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "bt_events.h"
 #include "log.h"
+#include "logfile.h"
 
 /**
  * Main entrypoint. Called when the module is started.
@@ -35,6 +36,7 @@ int module_start(SceSize args, const void* argp) {
     (void)args;
     (void)argp;
 
+    logfile_init();
     LOG_INFO("Starting");
     kvqmbtEventStart();
     LOG_INFO("Started");

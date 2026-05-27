@@ -9,6 +9,7 @@ add_executable("${MODULE_NAME}"
   src/main.c
   src/bluetooth.c
   src/bt_events.c
+  src/logfile.c
 )
 
 target_compile_definitions("${MODULE_NAME}" PRIVATE ENABLE_VITASDK_BUILD_ASSERT
@@ -40,6 +41,7 @@ target_link_libraries("${MODULE_NAME}" PRIVATE
 
   SceBtForDriver_stub
   SceDebugForDriver_stub
+  SceIofilemgrForDriver_stub
   SceRtcForDriver_stub
   SceSysclibForDriver_stub
   SceSysmemForDriver_stub
