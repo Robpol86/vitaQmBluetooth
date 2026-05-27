@@ -16,7 +16,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /******************************************************************************
  * @file
- * @brief Interface with the bluetooth subsystem. TODO.
+ * @brief Listen for and handle events emitted by the bluetooth subsystem.
  ******************************************************************************/
 
 /****************************************************************************************
@@ -155,6 +155,9 @@ SceBtEvent: id=0x05 unk1=0x04 unk3=0x00000000 mac0=0xF26B3406 mac1=0x0000708C un
 
 #include "log.h"
 
+#define THREAD_PRIORITY 0x96 /* Higher value = lower priority. */
+#define THREAD_STACK_SIZE 0x1000
+
 #define PREFIX "SceBtEvent: "
 #define INDENT "            "
 _Static_assert(sizeof(PREFIX) == sizeof(INDENT), "INDENT width must match PREFIX");
@@ -180,13 +183,15 @@ typedef enum VqmbtBtEventId {
 } VqmbtBtEventId;
 
 /**
- * TODO
+ * Handler for one event. Called once per bluetooth event.
  *
  * TODO:
  * - Test with MacBook
  * - Test with iPhone
  * - Test with ds3
  * - Test with ds4
+ *
+ * @param event Event details.
  */
 static void kvqmbtHandleEvent(const SceBtEvent* event) {
     LOG_DEBUG(0, PREFIX "id=0x%02X unk1=0x%02X unk3=0x%08X mac0=0x%08X mac1=0x%08X unk2=0x%04X", event->id, event->unk1,
@@ -342,10 +347,9 @@ static int kvqmbtEventThread(SceSize args, void* argp) {
 }
 
 /**
- * TODO
+ * Create a thread to handle bluetooth events and start it.
  *
  * TODO:
- * - priority too low? (lower value == higher priority)
  * - Handle ksceKernelStartThread error.
  * - Return errors so caller can return non-success.
  */
@@ -357,7 +361,7 @@ void kvqmbtEventStart(void) {
     run_thread = true;
 
     // Create the thread.
-    uid_thread = ksceKernelCreateThread("kvqmbtEventThread", kvqmbtEventThread, 0x96, 0x1000, 0,
+    uid_thread = ksceKernelCreateThread("kvqmbtEventThread", kvqmbtEventThread, THREAD_PRIORITY, THREAD_STACK_SIZE, 0,
                                         SCE_KERNEL_THREAD_CPU_AFFINITY_MASK_DEFAULT, NULL);
     if (uid_thread < 0) {
         LOG_ERROR("ksceKernelCreateThread returned error: 0x%08X", uid_thread);
@@ -371,7 +375,7 @@ void kvqmbtEventStart(void) {
 }
 
 /**
- * TODO
+ * Shut down the running event-handling thread.
  *
  * TODO:
  * - Return errors so caller can return non-success.
