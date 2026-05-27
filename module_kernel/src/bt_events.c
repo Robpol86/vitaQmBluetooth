@@ -224,10 +224,11 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
                     LOG_DEBUG(0, INDENT "Device connect cancelled by host");
                     break;
                 case 0x08:
-                    LOG_WARN(INDENT "TODO HANDLE THIS, FORCE CLOSE SETTINGS TO REPRODUCE?");
+                    LOG_DEBUG(0, INDENT "Device connect failed");
                     break;
                 default:
                     LOG_WARN(INDENT "Unhandled connect result event status code unk1=0x%02X", event->unk1);
+                    LOG_DEBUG(0, INDENT "Treating unk1=0x%02X as a failure", event->unk1);
                     break;
             }
             break;
@@ -256,12 +257,14 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
                     break;
                 default:
                     LOG_WARN(INDENT "Unhandled toggle bluetooth event payload unk3=0x%08X", event->unk3);
+                    LOG_DEBUG(0, INDENT "Ignoring unk3=0x%08X", event->unk3);
                     break;
             }
             break;
 
         default:
             LOG_WARN(INDENT "Unhandled event id=0x%02X", event->id);
+            LOG_DEBUG(0, INDENT "Ignoring id=0x%02X", event->id);
             break;
     }
 }
