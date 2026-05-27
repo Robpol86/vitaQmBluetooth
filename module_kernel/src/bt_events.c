@@ -186,7 +186,6 @@ typedef enum VqmbtBtEventId {
  * TODO
  *
  * TODO:
- * - Significant fields: id, unk1 (event status code?), unk3 (event payload?)
  * - Log all events again with latest logs. Log multiple devices looking for differences in event fields.
  * - Test with ovaltine
  * - Test with iphone
@@ -224,7 +223,7 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
                     LOG_DEBUG(0, INDENT "Device connect cancelled by host");
                     break;
                 default:
-                    LOG_DEBUG(0, INDENT "Unhandled connect result event unk1=0x%02X", event->unk1);
+                    LOG_DEBUG(0, INDENT "Unhandled connect result event status code unk1=0x%02X", event->unk1);
                     break;
             }
             break;
@@ -252,7 +251,7 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
                     LOG_DEBUG(0, INDENT "Bluetooth turned off");
                     break;
                 default:
-                    LOG_DEBUG(0, INDENT "Unhandled toggle bluetooth event unk3=0x%08X", event->unk3);
+                    LOG_DEBUG(0, INDENT "Unhandled toggle bluetooth event payload unk3=0x%08X", event->unk3);
                     break;
             }
             break;
