@@ -35,6 +35,7 @@ static bool is_initialized = false;
  * Initialize the log file dependencies.
  */
 void logfile_init(void) {
+#ifndef NDEBUG
     int ret;
 
     // Create log directories.
@@ -50,6 +51,7 @@ void logfile_init(void) {
     }
 
     is_initialized = true;
+#endif  // NDEBUG
 }
 
 /**

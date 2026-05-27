@@ -21,7 +21,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * TODO:
- * - Only write to log file (and mkdir) in debug builds. Release only printf to stdout.
  * - If low disk space disable file logging and show error in notifications or dialog (custom error code?).
  * - static int increment every write. Every n write check free space and disable. Check again after n and re-enable if
  *   enough space.
@@ -55,6 +54,7 @@ static bool is_initialized = false;
  * Initialize the log file dependencies.
  */
 void logfile_init(void) {
+#ifndef NDEBUG
     int ret;
 
     // Create log directories.
@@ -70,6 +70,7 @@ void logfile_init(void) {
     }
 
     is_initialized = true;
+#endif  // NDEBUG
 }
 
 /**
