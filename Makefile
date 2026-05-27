@@ -37,14 +37,29 @@ endif
 	@sleep 3
 	echo reboot |nc -v "$(PSVITA_IP)" 1338
 
-.PHONY: build-screenshots
-build-screenshots: _HELP = Remotely flatten screenshots dir then download (requires vitacompanion)
-build-screenshots:
+.PHONY: fetch-screenshots
+fetch-screenshots: _HELP = Remotely flatten screenshots dir then download (requires vitacompanion)
+fetch-screenshots:
 ifndef PSVITA_IP
 	$(error PSVITA_IP is not set. Install https://github.com/devnoname120/vitacompanion on the Vita and set PSVITA_IP.")
 endif
 	lftp -p 1337 "$(PSVITA_IP)" -e "set ftp:list-empty-ok yes; cd /ux0:/picture/SCREENSHOT/ && mmv */*.png .; bye"
 	wget --quiet -P $(@) -nH --cut-dirs=3 --mirror "ftp://$(PSVITA_IP):1337/ux0:/picture/SCREENSHOT/*.png"
+
+.PHONY: fetch-logs
+fetch-logs: _HELP = Download project log files (requires vitacompanion)
+fetch-logs:
+ifndef PSVITA_IP
+	$(error PSVITA_IP is not set. Install https://github.com/devnoname120/vitacompanion on the Vita and set PSVITA_IP.")
+endif
+	wget --quiet -P $(@) -nH --cut-dirs=3 --mirror "ftp://$(PSVITA_IP):1337/ux0:/$(PROJECT_NAME)/logs/*.log"
+
+.PHONY: tail-todays-log
+tail-todays-log: _HELP = Print the last $NUMLINES in today's log file (calls fetch-logs)
+tail-todays-log: NUMLINES = 50
+tail-todays-log: DATE = $(shell date +%Y%m%d)
+tail-todays-log: fetch-logs
+	tail -n$(NUMLINES) $(<)/vitaQmBluetooth-$(DATE).log
 
 .PHONY: recv-logs
 recv-logs: _HELP = Listen for logs sent from the PS Vita, print to stdout (use with Cat-A-Log)
@@ -78,7 +93,7 @@ all: test lint $(DEBUG_TARGETS) $(RELEASE_TARGETS)
 .PHONY: clean
 clean: _HELP = Remove build and temporary files
 clean:
-	rm -rfv build-debug/ build-release/ build-screenshots/
+	rm -rfv build-*/ fetch-*/
 
 define MAKEFILE_HELP_AWK
 BEGIN {

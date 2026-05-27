@@ -22,6 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2kern/kernel/modulemgr.h>
 
 #include "log.h"
+#include "logfile.h"
 
 /**
  * Main entrypoint. Called when the module is started.
@@ -34,6 +35,7 @@ int module_start(SceSize args, const void* argp) {
     (void)args;
     (void)argp;
 
+    logfile_init();
     LOG_INFO("Start");
 
     return SCE_KERNEL_START_SUCCESS;
