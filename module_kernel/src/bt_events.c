@@ -175,7 +175,10 @@ typedef enum VqmbtBtEventId {
     VQMBT_BT_EVENT_DISCONNECT = 0x06,
     VQMBT_BT_EVENT_ADD_REMOVE_CONNECTING_DEVICE = 0x07,
     VQMBT_BT_EVENT_CONNECT_UNPAIRED = 0x09,
+    VQMBT_BT_EVENT_UNKNOWN1 = 0x0E,
+    VQMBT_BT_EVENT_UNKNOWN2 = 0x10,
     VQMBT_BT_EVENT_TOGGLE_BLUETOOTH = 0x15,
+    VQMBT_BT_EVENT_UNKNOWN3 = 0x1C,
     // AI
     VQMBT_BT_EVENT_CONNECT_REQUESTED = 0x08,
     VQMBT_BT_EVENT_HID_REPLY_TYPE0 = 0x0A,
@@ -329,8 +332,9 @@ static int kvqmbtEventThread(SceSize args, void* argp) {
     // Register callback.
     const unsigned int id_mask =
         0xFFFFFFFFU & ~((1U << VQMBT_BT_EVENT_INQUIRY_RESULT) | (1U << VQMBT_BT_EVENT_INQUIRY_STOP) |
-                        (1U << VQMBT_BT_EVENT_PAIRING_REQUEST) |
-                        (1U << VQMBT_BT_EVENT_CONNECT_UNPAIRED));            // Ignore irrelevant event IDs
+                        (1U << VQMBT_BT_EVENT_PAIRING_REQUEST) | (1U << VQMBT_BT_EVENT_CONNECT_UNPAIRED) |
+                        (1U << VQMBT_BT_EVENT_UNKNOWN1) | (1U << VQMBT_BT_EVENT_UNKNOWN2) |
+                        (1U << VQMBT_BT_EVENT_UNKNOWN3));                    // Ignore irrelevant event IDs
     int ret = ksceBtRegisterCallback(uid_callback, 0, id_mask, 0xFFFFFFFF);  // TODO test flags2 0x0
     LOG_DEBUG(0, "ksceBtRegisterCallback returned 0x%08X", ret);
 
