@@ -23,9 +23,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <psp2kern/io/fcntl.h>
 #include <psp2kern/io/stat.h>
-#include <psp2kern/kernel/debug.h>
 #include <psp2kern/kernel/sysclib.h>
-#include <stdarg.h>
 #include <stdbool.h>
 
 #include "log.h"
