@@ -271,7 +271,9 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
 }
 
 /**
- * TODO.
+ * Bluetooth event callback for a batch of one or more events.
+ *
+ * @return Success always.
  */
 static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, void* userData) {
     (void)notifyId;
@@ -307,10 +309,11 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
 }
 
 /**
- * TODO
+ * Event thread that creates and registers a callback for bluetooth events.
  *
- * TODO:
- * - ksceBtRegisterCallback flags, see if they filter events or macs. Ignore inquiry events.
+ * The thread waits for and runs callbacks until run_thread signals it to stop.
+ *
+ * @return Success always.
  */
 static int kvqmbtEventThread(SceSize args, void* argp) {
     (void)args;
@@ -330,10 +333,10 @@ static int kvqmbtEventThread(SceSize args, void* argp) {
     int ret = ksceBtRegisterCallback(uid_callback, 0, id_mask, 0);
     LOG_DEBUG(0, "ksceBtRegisterCallback returned 0x%08X", ret);
 
-    // Sleep until thread is stopped.
+    // Run until thread is stopped.
     while (run_thread) {
-        // TODO switch to event?
-        ksceKernelDelayThreadCB(200 * 1000);
+        // TODO switch to ksceKernelWaitEventFlagCB?
+        ksceKernelDelayThreadCB(200 * 1000);  // Callback called in here.
     }
 
     // Thread is stopping, clean up.
