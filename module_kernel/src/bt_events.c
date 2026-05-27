@@ -62,6 +62,19 @@ SceBtEvent: id=0x05 unk1=0x05 unk3=0x00000000 mac0=0xF26B3406 mac1=0x0000708C un
 SceBtEvent: id=0x06 unk1=0x16 unk3=0x00000000 mac0=0xF26B3406 mac1=0x0000708C unk2=0x0000
             Name: "AirPods Pro"
 
+### Add MacBook success
+
+SceBtEvent: id=0x07 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
+SceBtEvent: id=0x07 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
+* CLICKED OK ON OVALTINE, NO ADDITIONAL LOGGING *
+* TAPPED CONNECT ON VITA, LOGGED BELOW *
+SceBtEvent: id=0x07 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
+SceBtEvent: id=0x07 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
+SceBtEvent: id=0x05 unk1=0x00 unk3=0x00080036 mac0=0x9726DB1C mac1=0x000080A9 unk2=0x0000
+            Name: "Ovaltine"
+SceBtEvent: id=0x1C unk1=0x00 unk3=0x0000AC44 mac0=0x9726DB1C mac1=0x000080A9 unk2=0x0000
+            Name: "Ovaltine"
+
 ### Add APP2 success
 
 SceBtEvent: id=0x02 unk1=0x00 unk3=0x00000000 mac0=0x00000000 mac1=0x00000000 unk2=0x0000
