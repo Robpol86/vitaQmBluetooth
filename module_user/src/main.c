@@ -22,6 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2/kernel/modulemgr.h>
 
 #include "log.h"
+#include "logfile.h"
 #include "quickmenu.h"
 
 /**
