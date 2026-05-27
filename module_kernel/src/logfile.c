@@ -34,7 +34,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - Handle error: dir is file
  * - drop unused includes
  * - handle collisions (user+kernel writing at the same time) with retry/exclusiveLock
- * - fix timezone jump "bug" with ksceKernelGetSystemTimeWide?
+ * - fix timezone jump "bug" with ksceKernelGetSystemTimeWide? Or maybe if API possible logfile_wait_for_timezone()?
  */
 
 #include "logfile.h"
