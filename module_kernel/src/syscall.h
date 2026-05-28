@@ -28,7 +28,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 /**
  * Call EXIT_SYSCALL on scope exit.
  */
-static inline void _syscall_state_cleanup(uint32_t* _state) { EXIT_SYSCALL(*_state); }
-#define SYSCALL_STATE __attribute__((cleanup(_syscall_state_cleanup)))
+static inline void syscall_state_cleanup(uint32_t* _state) { EXIT_SYSCALL(*_state); }
+#define SYSCALL_STATE __attribute__((cleanup(syscall_state_cleanup)))
 
 #endif  // COMMON_H

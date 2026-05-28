@@ -43,7 +43,7 @@ static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];  // TODO locking/s
  * @param mac1 Last two bytes of the bluetooth device's MAC address.
  * @return true if the device is connected.
  */
-bool kvqmbtIsConnected(unsigned int mac0, unsigned int mac1) {
+bool kvqmbt_is_connected(unsigned int mac0, unsigned int mac1) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
     ENTER_SYSCALL(syscall_state_);
 
@@ -59,7 +59,7 @@ bool kvqmbtIsConnected(unsigned int mac0, unsigned int mac1) {
  * @param mac0 First four bytes of the bluetooth device's MAC address.
  * @param mac1 Last two bytes of the bluetooth device's MAC address.
  */
-void kvqmbtConnectDevice(unsigned int mac0, unsigned int mac1) {
+void kvqmbt_connect_device(unsigned int mac0, unsigned int mac1) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
     ENTER_SYSCALL(syscall_state_);
 
@@ -77,7 +77,7 @@ void kvqmbtConnectDevice(unsigned int mac0, unsigned int mac1) {
  * @param mac0 First four bytes of the bluetooth device's MAC address.
  * @param mac1 Last two bytes of the bluetooth device's MAC address.
  */
-void kvqmbtDisconnectDevice(unsigned int mac0, unsigned int mac1) {
+void kvqmbt_disconnect_device(unsigned int mac0, unsigned int mac1) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
     ENTER_SYSCALL(syscall_state_);
 
@@ -99,7 +99,7 @@ void kvqmbtDisconnectDevice(unsigned int mac0, unsigned int mac1) {
  * @param info_size Capacity of the user array, in records.
  * @return Number of records written on success, or a negative error code on failure.
  */
-int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size) {
+int kvqmbt_get_paired_devices(VqmbtDeviceInfo* info, int info_size) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
     ENTER_SYSCALL(syscall_state_);
 

@@ -21,5 +21,6 @@ Checks: >
 CheckOptions:
   readability-function-cognitive-complexity.IgnoreMacros: true
   readability-function-cognitive-complexity.Threshold: 25
+  readability-identifier-naming.FunctionCase: lower_case
 HeaderFilterRegex: '.*'
 WarningsAsErrors: '*'

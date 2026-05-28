@@ -38,7 +38,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @param cb TODO
  * @return TODO
  */
-int kvqmbtRegisterCallback(SceUID cb) {
+int kvqmbt_register_callback(SceUID cb) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
     ENTER_SYSCALL(syscall_state_);
 
@@ -55,7 +55,7 @@ int kvqmbtRegisterCallback(SceUID cb) {
  * @param cb TODO
  * @return TODO
  */
-int kvqmbtUnregisterCallback(SceUID cb) {
+int kvqmbt_unregister_callback(SceUID cb) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
     ENTER_SYSCALL(syscall_state_);
 
@@ -72,7 +72,7 @@ int kvqmbtUnregisterCallback(SceUID cb) {
  * @param event TODO
  * @return TODO
  */
-int kvqmbtReadEvent(VqmbtEvent* event) {
+int kvqmbt_read_event(VqmbtEvent* event) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
     ENTER_SYSCALL(syscall_state_);
 
@@ -89,7 +89,7 @@ int kvqmbtReadEvent(VqmbtEvent* event) {
  * @param event TODO
  * @return TODO
  */
-int kvqmbtEmitEvent(VqmbtEvent* event) {
+int kvqmbt_emit_event(VqmbtEvent* event) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
     ENTER_SYSCALL(syscall_state_);
 

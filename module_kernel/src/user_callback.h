@@ -24,6 +24,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "vqmbt.h"
 
-int kvqmbtEmitEvent(VqmbtEvent* event);
+int kvqmbt_emit_event(VqmbtEvent* event);
 
 #endif  // USER_CALLBACK_H
