@@ -22,6 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef VQMBT_H
 #define VQMBT_H
 
+#include <psp2common/types.h>
 #include <stdbool.h>
 #include <vitasdk/build_utils.h>
 
@@ -39,12 +40,13 @@ typedef struct VqmbtDeviceInfo {
 } VqmbtDeviceInfo;
 VITASDK_BUILD_ASSERT_EQ(0x8C, VqmbtDeviceInfo);
 
+// bluetooth.c syscalls.
 int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size);
-
 bool kvqmbtIsConnected(unsigned int mac0, unsigned int mac1);
-
 void kvqmbtConnectDevice(unsigned int mac0, unsigned int mac1);
-
 void kvqmbtDisconnectDevice(unsigned int mac0, unsigned int mac1);
+
+// user_callback.c syscalls.
+int kvqmbtRegisterCallback(SceUID cb);
 
 #endif  // VQMBT_H
