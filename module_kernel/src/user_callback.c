@@ -74,5 +74,5 @@ int kvqmbtReadEvent(VqmbtEvent* event) {
 
     // TODO
 
-    return 0;  // TODO?
+    return 0;  // TODO? VQMBT_ERROR_CB_OVERFLOW? Return number of events read now (1 or 0 or <0 on error).
 }

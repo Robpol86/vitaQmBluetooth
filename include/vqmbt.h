@@ -31,6 +31,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 // Error codes.
 #define VQMBT_ERROR_INVALID_ARGUMENT ((int)0x80690001)
 #define VQMBT_ERROR_KERNEL_SIDE ((int)0x80690002)
+#define VQMBT_ERROR_CB_OVERFLOW ((int)0x80690003)
 
 // Events used for inter-module communication.
 typedef enum VqmbtEventId : unsigned int {

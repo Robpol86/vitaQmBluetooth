@@ -28,16 +28,22 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define THREAD_PRIORITY 0x96 /* Higher value = lower priority. */
 #define THREAD_STACK_SIZE 0x1000
 
+#define PREFIX "VqmbtEvent: "
+#define INDENT "            "
+_Static_assert(sizeof(PREFIX) == sizeof(INDENT), "INDENT width must match PREFIX");
+
 static SceUID uid_callback = -1;
 static SceUID uid_thread = -1;
 static bool run_thread = false;
 
 /**
  * TODO.
+ *
+ * @param event Event details.
  */
 static void vqmbtHandleEvent(const VqmbtEvent* event) {
     // TODO
-    LOG_DEBUG(0, "VqmbtEvent id=0x%08X", event->id);
+    LOG_DEBUG(0, PREFIX "id=0x%08X", event->id);
 }
 
 /**
@@ -52,13 +58,19 @@ static int vqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, void
     (void)userData;
 
     while (true) {
+        VqmbtEvent event = {0};
         int ret;
 
         // Fetch event data.
-        VqmbtEvent event = {0};  // TODO
+        do {
+            ret = kvqmbtReadEvent(&event);
+        } while (ret == VQMBT_ERROR_CB_OVERFLOW);
 
         // Handle errors.
-        ret = 0;  // TODO
+        if (ret < 0) {
+            LOG_ERROR("kvqmbtReadEvent returned error: 0x%08X", ret);
+            break;
+        }
 
         // Handle no more events to read.
         if (ret == 0) {
