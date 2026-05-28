@@ -166,7 +166,7 @@ static SceUID uid_callback = -1;
 static SceUID uid_thread = -1;
 static bool run_thread = false;
 
-typedef enum VqmbtBtEventId {
+typedef enum VqmbtInferredBtEventId {
     VQMBT_BT_EVENT_INQUIRY_RESULT = 0x01,
     VQMBT_BT_EVENT_INQUIRY_STOP = 0x02,
     VQMBT_BT_EVENT_PAIRING_REQUEST = 0x04,
@@ -180,7 +180,7 @@ typedef enum VqmbtBtEventId {
     VQMBT_BT_EVENT_UNKNOWN3 = 0x11,
     VQMBT_BT_EVENT_TOGGLE_BLUETOOTH = 0x15,
     VQMBT_BT_EVENT_UNKNOWN4 = 0x1C,
-} VqmbtBtEventId;
+} VqmbtInferredBtEventId;
 
 /**
  * Handler for one event. Called once per bluetooth event.

@@ -32,6 +32,17 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define VQMBT_ERROR_INVALID_ARGUMENT ((int)0x80690001)
 #define VQMBT_ERROR_KERNEL_SIDE ((int)0x80690002)
 
+// Events used for inter-module communication.
+typedef enum VqmbtEventId : unsigned int {
+    VQMBT_EVENT_NONE = 0x00,
+    VQMBT_EVENT_BLUETOOTH_ENABLED = 0x01,
+    VQMBT_EVENT_BLUETOOTH_DISABLED = 0x02,
+} VqmbtEventId;
+typedef struct VqmbtEvent {
+    VqmbtEventId id;
+} VqmbtEvent;
+VITASDK_BUILD_ASSERT_EQ(0x04, VqmbtEvent);
+
 typedef struct VqmbtDeviceInfo {
     char name[128];
     unsigned int mac0;

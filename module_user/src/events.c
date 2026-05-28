@@ -35,9 +35,9 @@ static bool run_thread = false;
 /**
  * TODO.
  */
-static void vqmbtHandleEvent(void) {
+static void vqmbtHandleEvent(const VqmbtEvent* event) {
     // TODO
-    LOG_DEBUG(0, "TODO");
+    LOG_DEBUG(0, "VqmbtEvent id=0x%08X", event->id);
 }
 
 /**
@@ -55,7 +55,7 @@ static int vqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, void
         int ret;
 
         // Fetch event data.
-        // TODO
+        VqmbtEvent event = {0};  // TODO
 
         // Handle errors.
         ret = 0;  // TODO
@@ -66,7 +66,7 @@ static int vqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, void
         }
 
         // Continue in handler.
-        vqmbtHandleEvent();
+        vqmbtHandleEvent(&event);
     }
 
     return 0;
