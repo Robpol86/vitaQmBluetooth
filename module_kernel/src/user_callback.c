@@ -36,7 +36,26 @@ int kvqmbtRegisterCallback(SceUID cb) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
     ENTER_SYSCALL(syscall_state_);
 
-    LOG_DEBUG(0, "TODO %08X", cb);
+    LOG_DEBUG(0, "Registering callback UID 0x%08X", cb);
+
+    // TODO
+
+    return 0;  // TODO?
+}
+
+/**
+ * TODO
+ *
+ * @param cb TODO
+ * @return TODO
+ */
+int kvqmbtUnregisterCallback(SceUID cb) {
+    uint32_t syscall_state_ SYSCALL_STATE = 0;
+    ENTER_SYSCALL(syscall_state_);
+
+    LOG_DEBUG(0, "Unregistering callback UID 0x%08X", cb);
+
+    // TODO
 
     return 0;  // TODO?
 }

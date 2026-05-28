@@ -23,6 +23,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <stdbool.h>
 
 #include "log.h"
+#include "vqmbt.h"
 
 #define THREAD_PRIORITY 0x96 /* Higher value = lower priority. */
 #define THREAD_STACK_SIZE 0x1000
@@ -87,7 +88,8 @@ static int vqmbtEventThread(SceSize args, void* argp) {
     LOG_DEBUG(0, "sceKernelCreateCallback returned 0x%08X", uid_callback);
 
     // Register callback.
-    // TODO
+    int ret = kvqmbtRegisterCallback(uid_callback);
+    LOG_DEBUG(0, "kvqmbtRegisterCallback returned 0x%08X", ret);
 
     // Run until thread is stopped.
     while (run_thread) {
@@ -96,8 +98,9 @@ static int vqmbtEventThread(SceSize args, void* argp) {
     }
 
     // Thread is stopping, clean up.
-    // TODO unregister
-    int ret = sceKernelDeleteCallback(uid_callback);
+    ret = kvqmbtUnregisterCallback(uid_callback);
+    LOG_DEBUG(0, "kvqmbtUnregisterCallback returned 0x%08X", ret);
+    ret = sceKernelDeleteCallback(uid_callback);
     LOG_DEBUG(0, "sceKernelDeleteCallback returned 0x%08X", ret);
     uid_callback = -1;
 

@@ -48,5 +48,6 @@ void kvqmbtDisconnectDevice(unsigned int mac0, unsigned int mac1);
 
 // user_callback.c syscalls.
 int kvqmbtRegisterCallback(SceUID cb);
+int kvqmbtUnregisterCallback(SceUID cb);
 
 #endif  // VQMBT_H

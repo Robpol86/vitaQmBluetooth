@@ -13,3 +13,5 @@
         - kvqmbtDisconnectDevice
         - kvqmbtGetPairedDevices
         - kvqmbtIsConnected
+        - kvqmbtRegisterCallback
+        - kvqmbtUnregisterCallback
