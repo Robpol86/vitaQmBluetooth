@@ -154,6 +154,8 @@ SceBtEvent: id=0x05 unk1=0x04 unk3=0x00000000 mac0=0xF26B3406 mac1=0x0000708C un
 #include <stdbool.h>
 
 #include "log.h"
+#include "user_callback.h"
+#include "vqmbt.h"
 
 #define THREAD_PRIORITY 0x96 /* Higher value = lower priority. */
 #define THREAD_STACK_SIZE 0x1000
@@ -247,17 +249,21 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
                 case 0x00:
                     // Ignore
                     break;
-                case 0x09:
+                case 0x09: {
                     LOG_DEBUG(0, INDENT "Bluetooth turned on");
-                    // TODO send VQMBT_EVENT_BLUETOOTH_ENABLED
+                    VqmbtEvent ev = {.id = VQMBT_EVENT_BLUETOOTH_ENABLED};
+                    kvqmbtEmitEvent(&ev);
                     break;
+                }
                 case 0x19:
                     // Ignore
                     break;
-                case 0x20:
+                case 0x20: {
                     LOG_DEBUG(0, INDENT "Bluetooth turned off");
-                    // TODO send VQMBT_EVENT_BLUETOOTH_DISABLED
+                    VqmbtEvent ev = {.id = VQMBT_EVENT_BLUETOOTH_DISABLED};
+                    kvqmbtEmitEvent(&ev);
                     break;
+                }
                 default:
                     LOG_WARN(INDENT "Unhandled toggle bluetooth event payload unk3=0x%08X", event->unk3);
                     LOG_DEBUG(0, INDENT "Ignoring unk3=0x%08X", event->unk3);
