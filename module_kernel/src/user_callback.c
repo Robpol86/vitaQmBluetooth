@@ -59,3 +59,20 @@ int kvqmbtUnregisterCallback(SceUID cb) {
 
     return 0;  // TODO?
 }
+
+/**
+ * TODO
+ *
+ * @param event TODO
+ * @return TODO
+ */
+int kvqmbtReadEvent(VqmbtEvent* event) {
+    uint32_t syscall_state_ SYSCALL_STATE = 0;
+    ENTER_SYSCALL(syscall_state_);
+
+    LOG_DEBUG(0, "TODO %p", event);
+
+    // TODO
+
+    return 0;  // TODO?
+}
