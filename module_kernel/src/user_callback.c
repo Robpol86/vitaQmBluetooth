@@ -26,6 +26,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "syscall.h"
 #include "vqmbt.h"
 
+// TODO
+// #define QUEUE_CAPACITY 16
+// static SceUID user_cb_uid = -1;
+// static VqmbtEvent event_queue[QUEUE_CAPACITY];
+// static SceUID event_queue_mutex = -1;
+
 /**
  * TODO
  *
