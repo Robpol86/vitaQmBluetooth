@@ -27,8 +27,49 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define THREAD_PRIORITY 0x96 /* Higher value = lower priority. */
 #define THREAD_STACK_SIZE 0x1000
 
+static SceUID uid_callback = -1;
 static SceUID uid_thread = -1;
 static bool run_thread = false;
+
+/**
+ * TODO.
+ */
+static void vqmbtHandleEvent(void) {
+    // TODO
+    LOG_DEBUG(0, "TODO");
+}
+
+/**
+ * TODO.
+ *
+ * @return Success always.
+ */
+static int vqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, void* userData) {
+    (void)notifyId;
+    (void)notifyCount;
+    (void)notifyArg;
+    (void)userData;
+
+    while (true) {
+        int ret;
+
+        // Fetch event data.
+        // TODO
+
+        // Handle errors.
+        ret = 0;  // TODO
+
+        // Handle no more events to read.
+        if (ret == 0) {
+            break;
+        }
+
+        // Continue in handler.
+        vqmbtHandleEvent();
+    }
+
+    return 0;
+}
 
 /**
  * Event thread that creates and registers a callback for bluetooth events.
@@ -41,16 +82,24 @@ static int vqmbtEventThread(SceSize args, void* argp) {
     (void)args;
     (void)argp;
 
-    // TODO create/register callback.
+    // Create callback.
+    uid_callback = sceKernelCreateCallback("vqmbtEventCallback", 0, vqmbtEventCallback, NULL);
+    LOG_DEBUG(0, "sceKernelCreateCallback returned 0x%08X", uid_callback);
+
+    // Register callback.
+    // TODO
 
     // Run until thread is stopped.
     while (run_thread) {
         // TODO switch to sceKernelWaitEventFlagCB?
-        sceKernelDelayThread(200 * 1000);  // Callback called in here.
+        sceKernelDelayThreadCB(200 * 1000);  // Callback called in here.
     }
 
     // Thread is stopping, clean up.
-    // TODO unregister/delete callback.
+    // TODO unregister
+    int ret = sceKernelDeleteCallback(uid_callback);
+    LOG_DEBUG(0, "sceKernelDeleteCallback returned 0x%08X", ret);
+    uid_callback = -1;
 
     return 0;
 }
