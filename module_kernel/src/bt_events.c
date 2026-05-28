@@ -249,12 +249,14 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
                     break;
                 case 0x09:
                     LOG_DEBUG(0, INDENT "Bluetooth turned on");
+                    // TODO send VQMBT_EVENT_BLUETOOTH_ENABLED
                     break;
                 case 0x19:
                     // Ignore
                     break;
                 case 0x20:
                     LOG_DEBUG(0, INDENT "Bluetooth turned off");
+                    // TODO send VQMBT_EVENT_BLUETOOTH_DISABLED
                     break;
                 default:
                     LOG_WARN(INDENT "Unhandled toggle bluetooth event payload unk3=0x%08X", event->unk3);
