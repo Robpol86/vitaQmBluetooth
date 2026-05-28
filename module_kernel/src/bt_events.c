@@ -193,7 +193,7 @@ typedef enum VqmbtBtEventId {
  *
  * @param event Event details.
  */
-static void kvqmbtHandleEvent(const SceBtEvent* event) {
+static void kvqmbt_handle_event(const SceBtEvent* event) {
     LOG_DEBUG(0, PREFIX "id=0x%02X unk1=0x%02X unk3=0x%08X mac0=0x%08X mac1=0x%08X unk2=0x%04X", event->id, event->unk1,
               event->unk3, event->mac0, event->mac1, event->unk2);
 
@@ -275,7 +275,7 @@ static void kvqmbtHandleEvent(const SceBtEvent* event) {
  *
  * @return Success always.
  */
-static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, void* userData) {
+static int kvqmbt_event_callback(int notifyId, int notifyCount, int notifyArg, void* userData) {
     (void)notifyId;
     (void)notifyCount;
     (void)notifyArg;
@@ -302,7 +302,7 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
         }
 
         // Continue in handler.
-        kvqmbtHandleEvent(&event);
+        kvqmbt_handle_event(&event);
     }
 
     return 0;
@@ -315,12 +315,12 @@ static int kvqmbtEventCallback(int notifyId, int notifyCount, int notifyArg, voi
  *
  * @return Success always.
  */
-static int kvqmbtEventThread(SceSize args, void* argp) {
+static int kvqmbt_event_thread(SceSize args, void* argp) {
     (void)args;
     (void)argp;
 
     // Create callback.
-    uid_callback = ksceKernelCreateCallback("kvqmbtEventCallback", 0, kvqmbtEventCallback, NULL);
+    uid_callback = ksceKernelCreateCallback("kvqmbt_event_callback", 0, kvqmbt_event_callback, NULL);
     LOG_DEBUG(0, "ksceKernelCreateCallback returned 0x%08X", uid_callback);
 
     // Register callback.
@@ -356,7 +356,7 @@ static int kvqmbtEventThread(SceSize args, void* argp) {
  * - Handle ksceKernelStartThread error.
  * - Return errors so caller can return non-success.
  */
-void kvqmbtEventStart(void) {
+void kvqmbt_event_start(void) {
     if (uid_thread >= 0) {
         return;
     }
@@ -364,7 +364,7 @@ void kvqmbtEventStart(void) {
     run_thread = true;
 
     // Create the thread.
-    uid_thread = ksceKernelCreateThread("kvqmbtEventThread", kvqmbtEventThread, THREAD_PRIORITY, THREAD_STACK_SIZE, 0,
+    uid_thread = ksceKernelCreateThread("kvqmbt_event_thread", kvqmbt_event_thread, THREAD_PRIORITY, THREAD_STACK_SIZE, 0,
                                         SCE_KERNEL_THREAD_CPU_AFFINITY_MASK_DEFAULT, NULL);
     if (uid_thread < 0) {
         LOG_ERROR("ksceKernelCreateThread returned error: 0x%08X", uid_thread);
@@ -383,7 +383,7 @@ void kvqmbtEventStart(void) {
  * TODO:
  * - Return errors so caller can return non-success.
  */
-void kvqmbtEventStop(void) {
+void kvqmbt_event_stop(void) {
     if (uid_thread < 0) {
         return;
     }

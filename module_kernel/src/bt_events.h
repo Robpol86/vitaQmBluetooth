@@ -22,7 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef BT_EVENTS_H
 #define BT_EVENTS_H
 
-void kvqmbtEventStart(void);
-void kvqmbtEventStop(void);
+void kvqmbt_event_start(void);
+void kvqmbt_event_stop(void);
 
 #endif  // BT_EVENTS_H

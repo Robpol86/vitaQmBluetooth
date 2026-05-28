@@ -66,10 +66,10 @@ BUTTON_HANDLER(on_press) {
 
     if (dev->state == 5 || dev->state == 6) {
         LOG_DEBUG(0, "Disconnecting \"%s\"", dev->name);
-        kvqmbtDisconnectDevice(dev->mac0, dev->mac1);
+        kvqmbt_disconnect_device(dev->mac0, dev->mac1);
     } else {
         LOG_DEBUG(0, "Connecting \"%s\"", dev->name);
-        kvqmbtConnectDevice(dev->mac0, dev->mac1);
+        kvqmbt_connect_device(dev->mac0, dev->mac1);
     }
 }
 
@@ -90,9 +90,9 @@ ONLOAD_HANDLER(on_load) {
 
     // Query kernel.
     VqmbtDeviceInfo* dev;
-    int count = kvqmbtGetPairedDevices(devices, VQMBT_MAX_DEVICES);
+    int count = kvqmbt_get_paired_devices(devices, VQMBT_MAX_DEVICES);
     if (count < 0) {
-        LOG_ERROR("kvqmbtGetPairedDevices returned error: 0x%08X", count);
+        LOG_ERROR("kvqmbt_get_paired_devices returned error: 0x%08X", count);
         return;
     }
     if (count < 1) {

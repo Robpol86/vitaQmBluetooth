@@ -39,12 +39,12 @@ typedef struct VqmbtDeviceInfo {
 } VqmbtDeviceInfo;
 VITASDK_BUILD_ASSERT_EQ(0x8C, VqmbtDeviceInfo);
 
-int kvqmbtGetPairedDevices(VqmbtDeviceInfo* info, int info_size);
+int kvqmbt_get_paired_devices(VqmbtDeviceInfo* info, int info_size);
 
-bool kvqmbtIsConnected(unsigned int mac0, unsigned int mac1);
+bool kvqmbt_is_connected(unsigned int mac0, unsigned int mac1);
 
-void kvqmbtConnectDevice(unsigned int mac0, unsigned int mac1);
+void kvqmbt_connect_device(unsigned int mac0, unsigned int mac1);
 
-void kvqmbtDisconnectDevice(unsigned int mac0, unsigned int mac1);
+void kvqmbt_disconnect_device(unsigned int mac0, unsigned int mac1);
 
 #endif  // VQMBT_H
