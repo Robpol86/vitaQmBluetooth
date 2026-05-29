@@ -19,6 +19,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief TODO.
  ******************************************************************************/
 
+#include "umod_callback.h"
+
 #include <psp2kern/kernel/threadmgr.h>
 #include <stdbool.h>
 

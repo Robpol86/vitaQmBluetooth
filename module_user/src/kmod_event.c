@@ -19,6 +19,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief TODO.
  ******************************************************************************/
 
+#include "kmod_event.h"
+
 #include <psp2/kernel/threadmgr.h>
 #include <stdbool.h>
 
