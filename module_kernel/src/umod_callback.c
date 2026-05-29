@@ -104,7 +104,7 @@ int kvqmbt_unregister_callback(SceUID cb) {
  */
 void user_callback_start(void) {
     // Create a mutex.
-    mutex = ksceKernelCreateMutex("vqmbt_todo_rename", 0, 0, NULL);
+    mutex = ksceKernelCreateMutex("kvqmbt-umod_callback-mutex", 0, 0, NULL);
 }
 
 /**

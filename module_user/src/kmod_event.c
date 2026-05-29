@@ -98,7 +98,7 @@ static int event_thread(SceSize args, void* argp) {
     (void)argp;
 
     // Create callback.
-    uid_callback = sceKernelCreateCallback("vqmbt_event_callback", 0, event_callback, NULL);
+    uid_callback = sceKernelCreateCallback("vqmbt-kmod_event-event_callback", 0, event_callback, NULL);
     LOG_DEBUG(0, "sceKernelCreateCallback returned 0x%08X", uid_callback);
 
     // Register callback.
@@ -136,8 +136,8 @@ void kmod_event_start(void) {
     run_thread = true;
 
     // Create the thread.
-    uid_thread = sceKernelCreateThread("vqmbt_event_thread", event_thread, THREAD_PRIORITY, THREAD_STACK_SIZE, 0,
-                                       SCE_KERNEL_THREAD_CPU_AFFINITY_MASK_DEFAULT, NULL);
+    uid_thread = sceKernelCreateThread("vqmbt-kmod_event-event_thread", event_thread, THREAD_PRIORITY, THREAD_STACK_SIZE,
+                                       0, SCE_KERNEL_THREAD_CPU_AFFINITY_MASK_DEFAULT, NULL);
     if (uid_thread < 0) {
         LOG_ERROR("sceKernelCreateThread returned error: 0x%08X", uid_thread);
         return;

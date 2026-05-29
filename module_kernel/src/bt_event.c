@@ -197,7 +197,7 @@ typedef enum VqmbtInferredBtEventId {
  *
  * @param event Event details.
  */
-static void bt_handle_event(const SceBtEvent* event) {
+static void handle_event(const SceBtEvent* event) {
     LOG_DEBUG(0, PREFIX "id=0x%02X unk1=0x%02X unk3=0x%08X mac0=0x%08X mac1=0x%08X unk2=0x%04X", event->id, event->unk1,
               event->unk3, event->mac0, event->mac1, event->unk2);
 
@@ -285,7 +285,7 @@ static void bt_handle_event(const SceBtEvent* event) {
  *
  * @return Success always.
  */
-static int bt_event_callback(int notifyId, int notifyCount, int notifyArg, void* userData) {
+static int event_callback(int notifyId, int notifyCount, int notifyArg, void* userData) {
     (void)notifyId;
     (void)notifyCount;
     (void)notifyArg;
@@ -312,7 +312,7 @@ static int bt_event_callback(int notifyId, int notifyCount, int notifyArg, void*
         }
 
         // Continue in handler.
-        bt_handle_event(&event);
+        handle_event(&event);
     }
 
     return 0;
@@ -325,12 +325,12 @@ static int bt_event_callback(int notifyId, int notifyCount, int notifyArg, void*
  *
  * @return Success always.
  */
-static int bt_event_thread(SceSize args, void* argp) {
+static int event_thread(SceSize args, void* argp) {
     (void)args;
     (void)argp;
 
     // Create callback.
-    uid_callback = ksceKernelCreateCallback("kvqmbt_event_callback", 0, bt_event_callback, NULL);
+    uid_callback = ksceKernelCreateCallback("kvqmbt-bt_event-event_callback", 0, event_callback, NULL);
     LOG_DEBUG(0, "ksceKernelCreateCallback returned 0x%08X", uid_callback);
 
     // Register callback.
@@ -374,8 +374,8 @@ void bt_event_start(void) {
     run_thread = true;
 
     // Create the thread.
-    uid_thread = ksceKernelCreateThread("kvqmbt_event_thread", bt_event_thread, THREAD_PRIORITY, THREAD_STACK_SIZE, 0,
-                                        SCE_KERNEL_THREAD_CPU_AFFINITY_MASK_DEFAULT, NULL);
+    uid_thread = ksceKernelCreateThread("kvqmbt-bt_event-event_thread", event_thread, THREAD_PRIORITY, THREAD_STACK_SIZE,
+                                        0, SCE_KERNEL_THREAD_CPU_AFFINITY_MASK_DEFAULT, NULL);
     if (uid_thread < 0) {
         LOG_ERROR("ksceKernelCreateThread returned error: 0x%08X", uid_thread);
         return;
