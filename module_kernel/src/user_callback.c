@@ -29,8 +29,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 // TODO
 // #define QUEUE_CAPACITY 16
 // static SceUID user_cb_uid = -1;
-// static VqmbtEvent event_queue[QUEUE_CAPACITY];
-// static SceUID event_queue_mutex = -1;
+// static VqmbtEvent ring_buffer[QUEUE_CAPACITY];
+static SceUID mutex = -1;
 
 /**
  * TODO
@@ -98,4 +98,25 @@ int kvqmbt_emit_event(VqmbtEvent* event) {
     // TODO
 
     return 0;  // TODO? VQMBT_ERROR_CB_OVERFLOW? Return number of events read now (1 or 0 or <0 on error).
+}
+
+/**
+ * TODO.
+ */
+void user_callback_start(void) {
+    // Create a mutex.
+    mutex = ksceKernelCreateMutex("vqmbt_todo_rename", 0, 0, NULL);
+}
+
+/**
+ * TODO.
+ */
+void user_callback_stop(void) {
+    // Delete the mutex.
+    int ret = ksceKernelDeleteMutex(mutex);
+    if (ret < 0) {
+        LOG_ERROR("ksceKernelDeleteMutex returned error 0x%08X", ret);
+    } else {
+        LOG_DEBUG(0, "ksceKernelDeleteMutex returned 0x%08X", ret);
+    }
 }
