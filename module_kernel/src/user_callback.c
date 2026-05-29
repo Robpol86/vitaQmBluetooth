@@ -35,6 +35,37 @@ static SceUID mutex = -1;
 /**
  * TODO
  *
+ * @param event TODO
+ * @return TODO
+ */
+int kvqmbt_read_event(VqmbtEvent* event) {
+    uint32_t syscall_state_ SYSCALL_STATE = 0;
+    ENTER_SYSCALL(syscall_state_);
+
+    LOG_DEBUG(0, "TODO %p", event);
+
+    // TODO
+
+    return 0;  // TODO? VQMBT_ERROR_CB_OVERFLOW? Return number of events read now (1 or 0 or <0 on error).
+}
+
+/**
+ * TODO
+ *
+ * @param event TODO
+ * @return TODO
+ */
+int kvqmbt_emit_event(VqmbtEvent* event) {
+    LOG_DEBUG(0, "TODO %p", event);
+
+    // TODO
+
+    return 0;  // TODO? VQMBT_ERROR_CB_OVERFLOW? Return number of events read now (1 or 0 or <0 on error).
+}
+
+/**
+ * TODO
+ *
  * @param cb TODO
  * @return TODO
  */
@@ -64,37 +95,6 @@ int kvqmbt_unregister_callback(SceUID cb) {
     // TODO
 
     return 0;  // TODO?
-}
-
-/**
- * TODO
- *
- * @param event TODO
- * @return TODO
- */
-int kvqmbt_read_event(VqmbtEvent* event) {
-    uint32_t syscall_state_ SYSCALL_STATE = 0;
-    ENTER_SYSCALL(syscall_state_);
-
-    LOG_DEBUG(0, "TODO %p", event);
-
-    // TODO
-
-    return 0;  // TODO? VQMBT_ERROR_CB_OVERFLOW? Return number of events read now (1 or 0 or <0 on error).
-}
-
-/**
- * TODO
- *
- * @param event TODO
- * @return TODO
- */
-int kvqmbt_emit_event(VqmbtEvent* event) {
-    LOG_DEBUG(0, "TODO %p", event);
-
-    // TODO
-
-    return 0;  // TODO? VQMBT_ERROR_CB_OVERFLOW? Return number of events read now (1 or 0 or <0 on error).
 }
 
 /**
