@@ -32,7 +32,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 // #define QUEUE_CAPACITY 16
 // static SceUID user_cb_uid = -1;
 // static VqmbtEvent ring_buffer[QUEUE_CAPACITY];
-static SceUID mutex = -1;
+static SceUID mutex_id = -1;
 
 /**
  * TODO
@@ -102,20 +102,29 @@ int kvqmbt_unregister_callback(SceUID cb) {
 /**
  * TODO.
  */
-void user_callback_start(void) {
+int user_callback_start(void) {
     // Create a mutex.
-    mutex = ksceKernelCreateMutex("kvqmbt-umod_callback-mutex", 0, 0, NULL);
+    mutex_id = ksceKernelCreateMutex("kvqmbt-umod_callback-mutex", 0, 0, NULL);
+    if (mutex_id < 0) {
+        LOG_ERROR("ksceKernelCreateMutex returned error 0x%08X", mutex_id);
+        return (int)mutex_id;
+    }
+    LOG_DEBUG(0, "ksceKernelCreateMutex returned mutex_id=0x%08X", mutex_id);
+
+    return 0;
 }
 
 /**
  * TODO.
  */
-void user_callback_stop(void) {
+int user_callback_stop(void) {
     // Delete the mutex.
-    int ret = ksceKernelDeleteMutex(mutex);
+    int ret = ksceKernelDeleteMutex(mutex_id);
     if (ret < 0) {
         LOG_ERROR("ksceKernelDeleteMutex returned error 0x%08X", ret);
-    } else {
-        LOG_DEBUG(0, "ksceKernelDeleteMutex returned 0x%08X", ret);
+        return ret;
     }
+    LOG_DEBUG(0, "ksceKernelDeleteMutex returned 0x%08X", ret);
+
+    return 0;
 }

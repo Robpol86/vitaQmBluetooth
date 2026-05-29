@@ -25,7 +25,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "vqmbt.h"
 
 int emit_event(VqmbtEvent* event);
-void user_callback_start(void);
-void user_callback_stop(void);
+int user_callback_start(void);
+int user_callback_stop(void);
 
 #endif  // USER_CALLBACK_H
