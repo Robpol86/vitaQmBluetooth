@@ -40,7 +40,7 @@ static SceUID mutex_id = -1;
  * @param event TODO
  * @return TODO
  */
-int umod_cb_emit_event(VqmbtEvent* event) {
+int umod_cb_emit_event(const VqmbtEvent* event) {
     LOG_DEBUG(0, "TODO %p", event);
 
     // TODO

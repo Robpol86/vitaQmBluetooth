@@ -24,7 +24,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "vqmbt.h"
 
-int umod_cb_emit_event(VqmbtEvent* event);
+int umod_cb_emit_event(const VqmbtEvent* event);
 int umod_cb_start(void);
 int umod_cb_stop(void);
 
