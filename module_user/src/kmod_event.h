@@ -19,10 +19,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief TODO.
  ******************************************************************************/
 
-#ifndef EVENTS_H
-#define EVENTS_H
+#ifndef KMOD_EVENT_H
+#define KMOD_EVENT_H
 
 void kmod_event_start(void);
 void kmod_event_stop(void);
 
-#endif  // EVENTS_H
+#endif  // KMOD_EVENT_H

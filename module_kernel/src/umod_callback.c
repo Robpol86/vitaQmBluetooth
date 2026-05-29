@@ -40,7 +40,7 @@ static SceUID mutex_id = -1;
  * @param event TODO
  * @return TODO
  */
-int emit_event(VqmbtEvent* event) {
+int umod_cb_emit_event(VqmbtEvent* event) {
     LOG_DEBUG(0, "TODO %p", event);
 
     // TODO
@@ -102,7 +102,7 @@ int kvqmbt_unregister_callback(SceUID cb) {
 /**
  * TODO.
  */
-int user_callback_start(void) {
+int umod_cb_start(void) {
     // Create a mutex.
     mutex_id = ksceKernelCreateMutex("kvqmbt-umod_callback-mutex", 0, 0, NULL);
     if (mutex_id < 0) {
@@ -117,7 +117,7 @@ int user_callback_start(void) {
 /**
  * TODO.
  */
-int user_callback_stop(void) {
+int umod_cb_stop(void) {
     // Delete the mutex.
     int ret = ksceKernelDeleteMutex(mutex_id);
     if (ret < 0) {

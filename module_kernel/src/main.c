@@ -39,7 +39,7 @@ int module_start(SceSize args, const void* argp) {
 
     logfile_init();
     LOG_INFO("Starting");
-    user_callback_start();
+    umod_cb_start();
     bt_event_start();
     LOG_INFO("Started");
 
@@ -59,7 +59,7 @@ int module_stop(SceSize args, const void* argp) {
 
     LOG_INFO("Stopping");
     bt_event_stop();
-    user_callback_stop();
+    umod_cb_stop();
     LOG_INFO("Stopped");
 
     return SCE_KERNEL_STOP_SUCCESS;

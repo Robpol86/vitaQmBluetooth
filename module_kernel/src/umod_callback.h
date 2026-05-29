@@ -19,13 +19,13 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief TODO.
  ******************************************************************************/
 
-#ifndef USER_CALLBACK_H
-#define USER_CALLBACK_H
+#ifndef UMOD_CALLBACK_H
+#define UMOD_CALLBACK_H
 
 #include "vqmbt.h"
 
-int emit_event(VqmbtEvent* event);
-int user_callback_start(void);
-int user_callback_stop(void);
+int umod_cb_emit_event(VqmbtEvent* event);
+int umod_cb_start(void);
+int umod_cb_stop(void);
 
-#endif  // USER_CALLBACK_H
+#endif  // UMOD_CALLBACK_H
