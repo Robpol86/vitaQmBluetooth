@@ -90,9 +90,6 @@ int kvqmbt_read_event(VqmbtEvent* event) {
  * @return TODO
  */
 int kvqmbt_emit_event(VqmbtEvent* event) {
-    uint32_t syscall_state_ SYSCALL_STATE = 0;
-    ENTER_SYSCALL(syscall_state_);
-
     LOG_DEBUG(0, "TODO %p", event);
 
     // TODO
