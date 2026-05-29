@@ -19,9 +19,15 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief TODO.
  ******************************************************************************/
 
+/**
+ * TODO:
+ * - On full buffer drop old events, but notify consumer (umod) of this happening so it can call
+ *   kvqmbt_get_paired_devices() to "reset".
+ */
 #include "umod_callback.h"
 
 #include <psp2kern/kernel/threadmgr.h>
+#include <psp2kern/kernel/threadmgr/mutex.h>
 #include <stdbool.h>
 
 #include "log.h"
@@ -29,9 +35,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "vqmbt.h"
 
 // TODO
-// #define QUEUE_CAPACITY 16
+// #define RINGBUF_CAPACITY 16
 // static SceUID user_cb_uid = -1;
-// static VqmbtEvent ring_buffer[QUEUE_CAPACITY];
+// static VqmbtEvent ring_buffer[RINGBUF_CAPACITY];
 static SceUID mutex_id = -1;
 
 /**
@@ -43,7 +49,21 @@ static SceUID mutex_id = -1;
 int umod_cb_emit_event(const VqmbtEvent* event) {
     LOG_DEBUG(0, "TODO %p", event);
 
+    // Obtain lock.
+    int ret = ksceKernelLockMutex(mutex_id, 1, NULL);
+    if (ret < 0) {
+        LOG_ERROR("ksceKernelLockMutex returned error: 0x%08X", ret);
+        return ret;
+    }
+
     // TODO
+
+    // Release lock.
+    ret = ksceKernelUnlockMutex(mutex_id, 1);
+    if (ret < 0) {
+        LOG_ERROR("ksceKernelUnlockMutex returned error: 0x%08X", ret);
+        return ret;
+    }
 
     return 0;  // TODO? VQMBT_ERROR_CB_OVERFLOW? Return number of events read now (1 or 0 or <0 on error).
 }
