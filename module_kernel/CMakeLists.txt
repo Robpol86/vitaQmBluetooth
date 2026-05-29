@@ -10,7 +10,7 @@ add_executable("${MODULE_NAME}"
   src/bluetooth.c
   src/bt_event.c
   src/logfile.c
-  src/user_callback.c
+  src/umod_callback.c
 )
 
 target_compile_definitions("${MODULE_NAME}" PRIVATE ENABLE_VITASDK_BUILD_ASSERT

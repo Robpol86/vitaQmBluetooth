@@ -154,7 +154,7 @@ SceBtEvent: id=0x05 unk1=0x04 unk3=0x00000000 mac0=0xF26B3406 mac1=0x0000708C un
 #include <stdbool.h>
 
 #include "log.h"
-#include "user_callback.h"
+#include "umod_callback.h"
 #include "vqmbt.h"
 
 #define THREAD_PRIORITY 0x96 /* Higher value = lower priority. */
@@ -252,7 +252,7 @@ static void bt_handle_event(const SceBtEvent* event) {
                 case 0x09: {
                     LOG_DEBUG(0, INDENT "Bluetooth turned on");
                     VqmbtEvent ev = {.id = VQMBT_EVENT_BLUETOOTH_ENABLED};
-                    kvqmbt_emit_event(&ev);
+                    emit_event(&ev);
                     break;
                 }
                 case 0x19:
@@ -261,7 +261,7 @@ static void bt_handle_event(const SceBtEvent* event) {
                 case 0x20: {
                     LOG_DEBUG(0, INDENT "Bluetooth turned off");
                     VqmbtEvent ev = {.id = VQMBT_EVENT_BLUETOOTH_DISABLED};
-                    kvqmbt_emit_event(&ev);
+                    emit_event(&ev);
                     break;
                 }
                 default:

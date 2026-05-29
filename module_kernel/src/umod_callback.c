@@ -55,7 +55,7 @@ int kvqmbt_read_event(VqmbtEvent* event) {
  * @param event TODO
  * @return TODO
  */
-int kvqmbt_emit_event(VqmbtEvent* event) {
+int emit_event(VqmbtEvent* event) {
     LOG_DEBUG(0, "TODO %p", event);
 
     // TODO

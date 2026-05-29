@@ -24,7 +24,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "bt_event.h"
 #include "log.h"
 #include "logfile.h"
-#include "user_callback.h"
+#include "umod_callback.h"
 
 /**
  * Main entrypoint. Called when the module is started.
