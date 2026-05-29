@@ -22,7 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef EVENTS_H
 #define EVENTS_H
 
-void vqmbt_event_start(void);
-void vqmbt_event_stop(void);
+void kmod_event_start(void);
+void kmod_event_stop(void);
 
 #endif  // EVENTS_H

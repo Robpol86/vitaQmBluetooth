@@ -43,7 +43,7 @@ static bool run_thread = false;
  *
  * @param event Event details.
  */
-static void vqmbt_handle_event(const VqmbtEvent* event) {
+static void handle_event(const VqmbtEvent* event) {
     // TODO
     LOG_DEBUG(0, PREFIX "id=0x%08X", event->id);
 }
@@ -53,7 +53,7 @@ static void vqmbt_handle_event(const VqmbtEvent* event) {
  *
  * @return Success always.
  */
-static int vqmbt_event_callback(int notifyId, int notifyCount, int notifyArg, void* userData) {
+static int event_callback(int notifyId, int notifyCount, int notifyArg, void* userData) {
     (void)notifyId;
     (void)notifyCount;
     (void)notifyArg;
@@ -80,7 +80,7 @@ static int vqmbt_event_callback(int notifyId, int notifyCount, int notifyArg, vo
         }
 
         // Continue in handler.
-        vqmbt_handle_event(&event);
+        handle_event(&event);
     }
 
     return 0;
@@ -93,12 +93,12 @@ static int vqmbt_event_callback(int notifyId, int notifyCount, int notifyArg, vo
  *
  * @return Success always.
  */
-static int vqmbt_event_thread(SceSize args, void* argp) {
+static int event_thread(SceSize args, void* argp) {
     (void)args;
     (void)argp;
 
     // Create callback.
-    uid_callback = sceKernelCreateCallback("vqmbt_event_callback", 0, vqmbt_event_callback, NULL);
+    uid_callback = sceKernelCreateCallback("vqmbt_event_callback", 0, event_callback, NULL);
     LOG_DEBUG(0, "sceKernelCreateCallback returned 0x%08X", uid_callback);
 
     // Register callback.
@@ -128,7 +128,7 @@ static int vqmbt_event_thread(SceSize args, void* argp) {
  * - Handle sceKernelStartThread error.
  * - Return errors so caller can return non-success.
  */
-void vqmbt_event_start(void) {
+void kmod_event_start(void) {
     if (uid_thread >= 0) {
         return;
     }
@@ -136,7 +136,7 @@ void vqmbt_event_start(void) {
     run_thread = true;
 
     // Create the thread.
-    uid_thread = sceKernelCreateThread("vqmbt_event_thread", vqmbt_event_thread, THREAD_PRIORITY, THREAD_STACK_SIZE, 0,
+    uid_thread = sceKernelCreateThread("vqmbt_event_thread", event_thread, THREAD_PRIORITY, THREAD_STACK_SIZE, 0,
                                        SCE_KERNEL_THREAD_CPU_AFFINITY_MASK_DEFAULT, NULL);
     if (uid_thread < 0) {
         LOG_ERROR("sceKernelCreateThread returned error: 0x%08X", uid_thread);
@@ -155,7 +155,7 @@ void vqmbt_event_start(void) {
  * TODO:
  * - Return errors so caller can return non-success.
  */
-void vqmbt_event_stop(void) {
+void kmod_event_stop(void) {
     if (uid_thread < 0) {
         return;
     }
