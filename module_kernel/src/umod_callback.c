@@ -40,10 +40,7 @@ static SceUID mutex_id = -1;
  * @param event TODO
  * @return TODO
  */
-int kvqmbt_read_event(VqmbtEvent* event) {
-    uint32_t syscall_state_ SYSCALL_STATE = 0;
-    ENTER_SYSCALL(syscall_state_);
-
+int emit_event(VqmbtEvent* event) {
     LOG_DEBUG(0, "TODO %p", event);
 
     // TODO
@@ -57,7 +54,10 @@ int kvqmbt_read_event(VqmbtEvent* event) {
  * @param event TODO
  * @return TODO
  */
-int emit_event(VqmbtEvent* event) {
+int kvqmbt_read_event(VqmbtEvent* event) {
+    uint32_t syscall_state_ SYSCALL_STATE = 0;
+    ENTER_SYSCALL(syscall_state_);
+
     LOG_DEBUG(0, "TODO %p", event);
 
     // TODO
