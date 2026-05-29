@@ -23,6 +23,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * TODO:
  * - On full buffer drop old events, but notify consumer (umod) of this happening so it can call
  *   kvqmbt_get_paired_devices() to "reset".
+ * - Increase consumer delay and confirm their notifyCount increases from 1 to 2 or whatever.
  */
 #include "umod_callback.h"
 
@@ -64,6 +65,9 @@ int umod_cb_emit_event(const VqmbtEvent* event) {
         LOG_ERROR("ksceKernelUnlockMutex returned error: 0x%08X", ret);
         return ret;
     }
+
+    // Notify consumer the event is ready.
+    // ksceKernelNotifyCallback(); // TODO explore arg2.
 
     return 0;  // TODO? VQMBT_ERROR_CB_OVERFLOW? Return number of events read now (1 or 0 or <0 on error).
 }
