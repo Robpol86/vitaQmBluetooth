@@ -86,11 +86,7 @@ int kvqmbt_read_event(VqmbtEvent* event) {
         return VQMBT_ERROR_INVALID_ARGUMENT;
     }
 
-    // TODO v
-
-    // Snapshot indices. Acquire on write_idx pairs with the producer's
-    // release store, ensuring ring slot data is visible if we observe
-    // the new index.
+    // Atomically read indices.
     unsigned int read_idx = atomic_load_explicit(&ring_buffer_read_idx, memory_order_relaxed);
     unsigned int write_idx = atomic_load_explicit(&ring_buffer_write_idx, memory_order_acquire);
     if (read_idx == write_idx) {
@@ -98,15 +94,14 @@ int kvqmbt_read_event(VqmbtEvent* event) {
         return 0;
     }
 
-    // Lap detection: producer wrote more than RING_BUFFER_SIZE events since
-    // our last drain. The slot at read_idx has been overwritten by newer
-    // data; we can't safely deliver an in-order event. Advance read_idx to
-    // the current write_idx so subsequent calls resume from the latest events.
+    // If producer wrote more since the last read than the size of the buffer, fault.
     if (write_idx - read_idx > RING_BUFFER_SIZE) {
-        LOG_WARN("ring buffer lapped: write_idx=%u read_idx=%u (diff=%u)", write_idx, read_idx, write_idx - read_idx);
+        LOG_WARN("Ring buffer overrun: write_idx=%u read_idx=%u (delta=%u)", write_idx, read_idx, write_idx - read_idx);
         atomic_store_explicit(&ring_buffer_read_idx, write_idx, memory_order_relaxed);
         return VQMBT_ERROR_CB_OVERFLOW;
     }
+
+    // TODO v
 
     // Read the event into a kernel-side local before copying to userspace.
     VqmbtEvent kevent = ring_buffer[read_idx % RING_BUFFER_SIZE];
