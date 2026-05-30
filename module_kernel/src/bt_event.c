@@ -281,6 +281,14 @@ static void handle_event(const SceBtEvent* event) {
 }
 
 /**
+ * TODO.
+ */
+static void handle_event_dropped(void) {
+    VqmbtEvent ev = {.id = VQMBT_EVENT_DROPPED_EVENTS};
+    umod_cb_emit_event(&ev);
+}
+
+/**
  * Bluetooth event callback for a batch of one or more events.
  *
  * @return Success always.
@@ -293,15 +301,16 @@ static int event_callback(int notifyId, int notifyCount, int notifyArg, void* us
 
     while (true) {
         SceBtEvent event = {0};
-        int ret;
 
         // Fetch event data.
-        do {
-            ret = ksceBtReadEvent(&event, 1);
-        } while (ret == SCE_BT_ERROR_CB_OVERFLOW);  // TODO REVISIT, notify umod to "reset"
-        // TODO notify via umod_cb_emit_event({.id=VQMBT_EVENT_DROPPED_EVENTS}) after kmod_event revisited-fix implemented
+        int ret = ksceBtReadEvent(&event, 1);
 
         // Handle errors.
+        if (ret == SCE_BT_ERROR_CB_OVERFLOW) {
+            LOG_WARN("ksceBtReadEvent reported dropped events, forwarding");
+            handle_event_dropped();
+            break;
+        }
         if (ret < 0) {
             LOG_ERROR("ksceBtReadEvent returned error: 0x%08X", ret);
             break;
