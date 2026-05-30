@@ -33,6 +33,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "umod_callback.h"
 
 #include <psp2kern/kernel/sysmem/data_transfers.h>
+#include <psp2kern/kernel/sysmem/uid_puid.h>
 #include <psp2kern/kernel/threadmgr.h>
 #include <stdatomic.h>
 
@@ -133,11 +134,16 @@ int kvqmbt_read_event(VqmbtEvent* event) {
  *
  * @return TODO
  */
-int kvqmbt_get_event_flag(void) {
+SceUID kvqmbt_get_event_flag(void) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
     ENTER_SYSCALL(syscall_state_);
 
-    return event_flag_uid;
+    SceUID pid = ksceKernelGetProcessId();  // the calling user process
+    SceUID puid = ksceKernelCreateUserUid(pid, event_flag_uid);
+    LOG_DEBUG(0, "TODO Created PUID 0x%08X for pid 0x%08X (guid 0x%08X)", puid, pid, event_flag_uid);
+    // TODO cleanup puid, same as register/unregister callback in HEAD^
+
+    return puid;
 }
 
 /**

@@ -61,6 +61,6 @@ void kvqmbt_disconnect_device(unsigned int mac0, unsigned int mac1);
 
 // umod_callback.c syscalls.
 int kvqmbt_read_event(VqmbtEvent* event);
-int kvqmbt_get_event_flag(void);
+SceUID kvqmbt_get_event_flag(void);
 
 #endif  // VQMBT_H
