@@ -26,6 +26,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - Confirm uint overflow scenario by setting intial value to MAX_INT - 5
  * - understand atomic functions
  * - On boot before user module is started kernel module does work. Make sure it's not sending to user before it's ready.
+ * - consistent LOG_DEBUG/ERROR(... "error 0x" or ... "returned %d"), no colon.
  */
 
 #include "umod_callback.h"
@@ -66,8 +67,12 @@ int umod_cb_emit_event(const VqmbtEvent* event) {
     // Tell the consumer an event is ready to be read.
     SceUID cb_uid = atomic_load_explicit(&registered_cb_uid, memory_order_relaxed);
     if (cb_uid >= 0) {
-        ksceKernelNotifyCallback(cb_uid, 0);
-        LOG_DEBUG(0, "Notified cb_uid=0x%08X", cb_uid);
+        int ret = ksceKernelNotifyCallback(cb_uid, 0);  // TODO explore arg2
+        if (ret < 0) {
+            LOG_ERROR("ksceKernelNotifyCallback(cb_uid=0x%08X) returned error 0x%08X", cb_uid, ret);
+        } else {
+            LOG_DEBUG(0, "ksceKernelNotifyCallback(cb_uid=0x%08X) returned %d", cb_uid, ret);
+        }
     }
 
     return 0;
