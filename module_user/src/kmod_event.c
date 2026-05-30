@@ -51,6 +51,10 @@ static bool run_thread = false;
 static void handle_event(const VqmbtEvent* event) {
     // TODO
     LOG_DEBUG(0, PREFIX "id=0x%08X", event->id);
+
+    if (event->id == VQMBT_EVENT_DROPPED_EVENTS) {
+        LOG_DEBUG(0, INDENT "TODO re-run kvqmbt_get_paired_devices()");
+    }
 }
 
 /**
