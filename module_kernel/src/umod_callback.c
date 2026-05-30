@@ -22,6 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 /**
  * TODO:
  * - Increase consumer delay and confirm their notifyCount increases from 1 to 2 or whatever.
+ * - Confirm ring buffer overrun scenario.
  */
 
 #include "umod_callback.h"
@@ -29,7 +30,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2kern/kernel/sysmem/data_transfers.h>
 #include <psp2kern/kernel/threadmgr.h>
 #include <stdatomic.h>
-#include <stdbool.h>
 
 #include "log.h"
 #include "syscall.h"
@@ -69,10 +69,6 @@ int umod_cb_emit_event(const VqmbtEvent* event) {
 
 /**
  * TODO
- *
- * TODO:
- * - Restyle
- * - Detect ring buffer lapping.
  *
  * @param event TODO
  * @return TODO
