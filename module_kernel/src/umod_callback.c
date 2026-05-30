@@ -28,7 +28,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <psp2kern/kernel/sysmem/data_transfers.h>
 #include <psp2kern/kernel/threadmgr.h>
-#include <psp2kern/kernel/threadmgr/mutex.h>
 #include <stdatomic.h>
 #include <stdbool.h>
 
