@@ -355,7 +355,6 @@ static int event_thread(SceSize args, void* argp) {
 
     // Run until thread is stopped.
     while (run_thread) {
-        // TODO switch to ksceKernelWaitEventFlagCB?
         ksceKernelDelayThreadCB(200 * 1000);  // Callback called in here.
     }
 
