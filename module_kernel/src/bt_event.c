@@ -298,7 +298,7 @@ static int event_callback(int notifyId, int notifyCount, int notifyArg, void* us
         // Fetch event data.
         do {
             ret = ksceBtReadEvent(&event, 1);
-        } while (ret == SCE_BT_ERROR_CB_OVERFLOW);
+        } while (ret == SCE_BT_ERROR_CB_OVERFLOW);  // TODO REVISIT, notify umod to "reset"
 
         // Handle errors.
         if (ret < 0) {

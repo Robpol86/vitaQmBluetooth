@@ -19,6 +19,11 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief TODO.
  ******************************************************************************/
 
+/**
+ * TODO:
+ * - Re-copy bt_event.c here for consistency check.
+ */
+
 #include "kmod_event.h"
 
 #include <psp2/kernel/threadmgr.h>
@@ -66,7 +71,7 @@ static int event_callback(int notifyId, int notifyCount, int notifyArg, void* us
         // Fetch event data.
         do {
             ret = kvqmbt_read_event(&event);
-        } while (ret == VQMBT_ERROR_CB_OVERFLOW);
+        } while (ret == VQMBT_ERROR_CB_OVERFLOW);  // TODO REVISIT
 
         // Handle errors.
         if (ret < 0) {
