@@ -13,6 +13,5 @@
         - kvqmbt_disconnect_device
         - kvqmbt_get_paired_devices
         - kvqmbt_is_connected
-        - kvqmbt_register_callback
-        - kvqmbt_unregister_callback
+        - kvqmbt_get_event_flag
         - kvqmbt_read_event

@@ -45,7 +45,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 static VqmbtEvent ring_buffer[RING_BUFFER_SIZE];
 static _Atomic unsigned int ring_buffer_write_idx = 0;
 static _Atomic unsigned int ring_buffer_read_idx = 0;
-static _Atomic SceUID registered_cb_uid = -1;
+static SceUID event_flag_uid = -1;
 
 /**
  * TODO
@@ -66,13 +66,12 @@ int umod_cb_emit_event(const VqmbtEvent* event) {
     LOG_DEBUG(0, "Wrote event to slot_no=%d", slot_no);
 
     // Tell the consumer an event is ready to be read.
-    SceUID cb_uid = atomic_load_explicit(&registered_cb_uid, memory_order_relaxed);
-    if (cb_uid >= 0) {
-        int ret = ksceKernelNotifyCallback(cb_uid, 0);  // TODO explore arg2
+    if (event_flag_uid >= 0) {
+        int ret = ksceKernelSetEventFlag(event_flag_uid, 1);
         if (ret < 0) {
-            LOG_ERROR("ksceKernelNotifyCallback(cb_uid=0x%08X) returned error 0x%08X", cb_uid, ret);
+            LOG_ERROR("ksceKernelSetEventFlag(event_flag_uid=0x%08X) returned error 0x%08X", event_flag_uid, ret);
         } else {
-            LOG_DEBUG(0, "ksceKernelNotifyCallback(cb_uid=0x%08X) returned %d", cb_uid, ret);
+            LOG_DEBUG(0, "ksceKernelSetEventFlag(event_flag_uid=0x%08X) returned %d", event_flag_uid, ret);
         }
     }
 
@@ -132,42 +131,26 @@ int kvqmbt_read_event(VqmbtEvent* event) {
 /**
  * TODO
  *
- * @param cb_uid TODO
  * @return TODO
  */
-int kvqmbt_register_callback(SceUID cb_uid) {
+int kvqmbt_get_event_flag(void) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
     ENTER_SYSCALL(syscall_state_);
 
-    if (cb_uid < 0) {
-        LOG_ERROR("Invalid callback UID: 0x%08X", cb_uid);
-        return VQMBT_ERROR_INVALID_ARGUMENT;
-    }
-
-    atomic_store_explicit(&registered_cb_uid, cb_uid, memory_order_relaxed);
-    LOG_DEBUG(0, "Registered callback UID 0x%08X", cb_uid);
-
-    return 0;
-}
-
-/**
- * TODO
- *
- * @return TODO
- */
-void kvqmbt_unregister_callback(void) {
-    uint32_t syscall_state_ SYSCALL_STATE = 0;
-    ENTER_SYSCALL(syscall_state_);
-
-    SceUID cb_uid_old = atomic_exchange_explicit(&registered_cb_uid, -1, memory_order_relaxed);
-    LOG_DEBUG(0, "Unregistered callback UID 0x%08X", cb_uid_old);
+    return event_flag_uid;
 }
 
 /**
  * TODO.
  */
 int umod_cb_start(void) {
-    // TODO
+    // Create an event flag.
+    event_flag_uid = ksceKernelCreateEventFlag("kvqmbt-umod_callback-event_flag", 0, 0, NULL);
+    if (event_flag_uid < 0) {
+        LOG_ERROR("ksceKernelCreateEventFlag returned error 0x%08X", event_flag_uid);
+        return event_flag_uid;
+    }
+    LOG_DEBUG(0, "ksceKernelCreateEventFlag returned event_flag_uid=0x%08X", event_flag_uid);
 
     return 0;
 }
@@ -176,7 +159,16 @@ int umod_cb_start(void) {
  * TODO.
  */
 int umod_cb_stop(void) {
-    // TODO
+    // Delete the event flag.
+    if (event_flag_uid >= 0) {
+        int ret = ksceKernelDeleteEventFlag(event_flag_uid);
+        if (ret < 0) {
+            LOG_ERROR("ksceKernelDeleteEventFlag returned error 0x%08X", ret);
+            return ret;
+        }
+        LOG_DEBUG(0, "ksceKernelDeleteEventFlag returned 0x%08X", ret);
+        event_flag_uid = -1;
+    }
 
     return 0;
 }

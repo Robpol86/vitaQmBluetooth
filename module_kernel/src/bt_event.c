@@ -187,6 +187,14 @@ typedef enum VqmbtInferredBtEventId {
 } VqmbtInferredBtEventId;
 
 /**
+ * TODO.
+ */
+static void handle_event_dropped(void) {
+    VqmbtEvent ev = {.id = VQMBT_EVENT_DROPPED_EVENTS};
+    umod_cb_emit_event(&ev);
+}
+
+/**
  * Handler for one event. Called once per bluetooth event.
  *
  * TODO:
@@ -278,14 +286,6 @@ static void handle_event(const SceBtEvent* event) {
             LOG_DEBUG(0, INDENT "Ignoring id=0x%02X", event->id);
             break;
     }
-}
-
-/**
- * TODO.
- */
-static void handle_event_dropped(void) {
-    VqmbtEvent ev = {.id = VQMBT_EVENT_DROPPED_EVENTS};
-    umod_cb_emit_event(&ev);
 }
 
 /**

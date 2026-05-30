@@ -22,10 +22,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 /**
  * TODO:
  * - Re-copy bt_event.c here for consistency check.
+ * - Optimize, only run the thread when quickmenu is opened.
  */
 
 #include "kmod_event.h"
 
+#include <psp2/kernel/error.h>
 #include <psp2/kernel/threadmgr.h>
 #include <stdbool.h>
 
@@ -39,9 +41,17 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define INDENT "            "
 _Static_assert(sizeof(PREFIX) == sizeof(INDENT), "INDENT width must match PREFIX");
 
-static SceUID uid_callback = -1;
+static SceUID uid_event_flag = -1;
 static SceUID uid_thread = -1;
 static bool run_thread = false;
+
+/**
+ * TODO.
+ */
+static void handle_event_dropped(void) {
+    // TODO
+    LOG_DEBUG(0, INDENT "TODO re-run kvqmbt_get_paired_devices().");
+}
 
 /**
  * TODO.
@@ -54,20 +64,14 @@ static void handle_event(const VqmbtEvent* event) {
 
     if (event->id == VQMBT_EVENT_DROPPED_EVENTS) {
         LOG_DEBUG(0, INDENT "TODO re-run kvqmbt_get_paired_devices()");
+        handle_event_dropped();
     }
 }
 
 /**
  * TODO.
- *
- * @return Success always.
  */
-static int event_callback(int notifyId, int notifyCount, int notifyArg, void* userData) {
-    (void)notifyId;
-    (void)notifyCount;
-    (void)notifyArg;
-    (void)userData;
-
+static void fetch_event(void) {
     while (true) {
         VqmbtEvent event = {0};
 
@@ -75,6 +79,11 @@ static int event_callback(int notifyId, int notifyCount, int notifyArg, void* us
         int ret = kvqmbt_read_event(&event);
 
         // Handle errors.
+        if (ret == VQMBT_ERROR_CB_OVERFLOW) {
+            LOG_WARN("kvqmbt_read_event reported dropped events");
+            handle_event_dropped();
+            break;
+        }
         if (ret < 0) {
             LOG_ERROR("kvqmbt_read_event returned error: 0x%08X", ret);
             break;
@@ -88,8 +97,6 @@ static int event_callback(int notifyId, int notifyCount, int notifyArg, void* us
         // Continue in handler.
         handle_event(&event);
     }
-
-    return 0;
 }
 
 /**
@@ -103,25 +110,30 @@ static int event_thread(SceSize args, void* argp) {
     (void)args;
     (void)argp;
 
-    // Create callback.
-    uid_callback = sceKernelCreateCallback("vqmbt-kmod_event-event_callback", 0, event_callback, NULL);
-    LOG_DEBUG(0, "sceKernelCreateCallback returned 0x%08X", uid_callback);
-
-    // Register callback.
-    int ret = kvqmbt_register_callback(uid_callback);
-    LOG_DEBUG(0, "kvqmbt_register_callback returned 0x%08X", ret);
+    // Get event flag.
+    uid_event_flag = kvqmbt_get_event_flag();
+    LOG_DEBUG(0, "kvqmbt_get_event_flag returned 0x%08X", uid_event_flag);
+    if (uid_event_flag < 0) {
+        LOG_ERROR("Kernel module not loaded");
+        return -1;  // TODO define
+    }
 
     // Run until thread is stopped.
     while (run_thread) {
-        // TODO switch to sceKernelWaitEventFlag.
-        sceKernelDelayThreadCB(200 * 1000);  // Callback called in here.
+        // Wait for kernel module event.
+        unsigned int timeout = 200 * 1000;
+        int ret = sceKernelWaitEventFlag(uid_event_flag, 1, SCE_EVENT_WAITOR | SCE_EVENT_WAITCLEAR_PAT, NULL, &timeout);
+        if (ret < 0 && ret != SCE_KERNEL_ERROR_WAIT_TIMEOUT) {
+            LOG_ERROR("sceKernelWaitEventFlag returned error 0x%08X", ret);
+            break;
+        }
+
+        // Fetch event.
+        fetch_event();
     }
 
     // Thread is stopping, clean up.
-    kvqmbt_unregister_callback();
-    ret = sceKernelDeleteCallback(uid_callback);
-    LOG_DEBUG(0, "sceKernelDeleteCallback returned 0x%08X", ret);
-    uid_callback = -1;
+    uid_event_flag = -1;
 
     return 0;
 }
