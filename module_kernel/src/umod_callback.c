@@ -93,33 +93,26 @@ int kvqmbt_read_event(VqmbtEvent* event) {
         // No new data.
         return 0;
     }
-
-    // If producer wrote more since the last read than the size of the buffer, fault.
     if (write_idx - read_idx > RING_BUFFER_SIZE) {
+        // Producer wrote more since the last read than the size of the buffer, fault.
         LOG_WARN("Ring buffer overrun: write_idx=%u read_idx=%u (delta=%u)", write_idx, read_idx, write_idx - read_idx);
         atomic_store_explicit(&ring_buffer_read_idx, write_idx, memory_order_relaxed);
         return VQMBT_ERROR_CB_OVERFLOW;
     }
 
-    // TODO v
-
-    // Read the event into a kernel-side local before copying to userspace.
-    VqmbtEvent kevent = ring_buffer[read_idx % RING_BUFFER_SIZE];
-
-    // Verify the producer didn't lap us during the read. If it did, the
-    // local copy may be torn; discard it and report overflow.
-    unsigned int write_idx_after = atomic_load_explicit(&ring_buffer_write_idx, memory_order_acquire);
-    if (write_idx_after - read_idx > RING_BUFFER_SIZE) {
-        LOG_WARN("ring buffer lapped during read: write_idx_after=%u read_idx=%u", write_idx_after, read_idx);
-        atomic_store_explicit(&ring_buffer_read_idx, write_idx_after, memory_order_relaxed);
+    // Read event from buffer, then check again if buffer was overrun during the read.
+    VqmbtEvent event_from_buffer = ring_buffer[read_idx % RING_BUFFER_SIZE];
+    write_idx = atomic_load_explicit(&ring_buffer_write_idx, memory_order_acquire);
+    if (write_idx - read_idx > RING_BUFFER_SIZE) {
+        LOG_WARN("Ring buffer overrun mid-read: write_idx=%u read_idx=%u (delta=%u)", write_idx, read_idx,
+                 write_idx - read_idx);
+        atomic_store_explicit(&ring_buffer_read_idx, write_idx, memory_order_relaxed);
         return VQMBT_ERROR_CB_OVERFLOW;
     }
+    atomic_store_explicit(&ring_buffer_read_idx, read_idx + 1, memory_order_relaxed);  // Commit.
 
-    // Commit the read.
-    atomic_store_explicit(&ring_buffer_read_idx, read_idx + 1, memory_order_relaxed);
-
-    // Copy event out to userspace.
-    int ret = ksceKernelCopyToUser(event, &kevent, sizeof(kevent));
+    // Export to user space.
+    int ret = ksceKernelCopyToUser(event, &event_from_buffer, sizeof(event_from_buffer));
     if (ret < 0) {
         LOG_ERROR("ksceKernelCopyToUser returned error: 0x%08X", ret);
         return VQMBT_ERROR_KERNEL_SIDE;
