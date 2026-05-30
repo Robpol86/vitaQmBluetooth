@@ -59,11 +59,13 @@ int umod_cb_emit_event(const VqmbtEvent* event) {
     unsigned int write_idx = atomic_load_explicit(&ring_buffer_write_idx, memory_order_relaxed);
     ring_buffer[write_idx % RING_BUFFER_SIZE] = *event;
     atomic_store_explicit(&ring_buffer_write_idx, write_idx + 1, memory_order_release);
+    LOG_DEBUG(0, "WROTE EVENT");
 
     // Tell the consumer an event is ready to be read.
     SceUID cb_uid = atomic_load_explicit(&registered_cb_uid, memory_order_relaxed);
     if (cb_uid >= 0) {
         ksceKernelNotifyCallback(cb_uid, 0);
+        LOG_DEBUG(0, "NOTIFIED");
     }
 
     return 0;
