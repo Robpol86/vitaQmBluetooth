@@ -24,6 +24,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - Increase consumer delay and confirm their notifyCount increases from 1 to 2 or whatever.
  * - Confirm ring buffer overrun scenario by lowering RING_BUFFER_SIZE
  * - Confirm uint overflow scenario by setting intial value to MAX_INT - 5
+ * - understand atomic functions
  */
 
 #include "umod_callback.h"
