@@ -27,6 +27,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - understand atomic functions
  * - On boot before user module is started kernel module does work. Make sure it's not sending to user before it's ready.
  * - consistent LOG_DEBUG/ERROR(... "error 0x" or ... "returned %d"), no colon.
+ * - FIX: revisit callback across kernel/user boundary.
  */
 
 #include "umod_callback.h"
