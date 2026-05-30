@@ -187,7 +187,7 @@ typedef enum VqmbtInferredBtEventId {
 } VqmbtInferredBtEventId;
 
 /**
- * TODO.
+ * Handle scenario where one or more events went missing.
  */
 static void handle_event_dropped(void) {
     VqmbtEvent ev = {.id = VQMBT_EVENT_DROPPED_EVENTS};

@@ -46,7 +46,7 @@ static SceUID uid_thread = -1;
 static bool run_thread = false;
 
 /**
- * TODO.
+ * Handle scenario where one or more events went missing.
  */
 static void handle_event_dropped(void) {
     // TODO
@@ -54,7 +54,7 @@ static void handle_event_dropped(void) {
 }
 
 /**
- * TODO.
+ * Handler for one event. Called once per bluetooth event.
  *
  * @param event Event details.
  */
