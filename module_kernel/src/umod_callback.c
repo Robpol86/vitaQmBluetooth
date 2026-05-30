@@ -26,6 +26,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "umod_callback.h"
 
+#include <psp2kern/kernel/sysmem/data_transfers.h>
 #include <psp2kern/kernel/threadmgr.h>
 #include <psp2kern/kernel/threadmgr/mutex.h>
 #include <stdatomic.h>
@@ -39,7 +40,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 static VqmbtEvent ring_buffer[RING_BUFFER_SIZE];
 static _Atomic unsigned int ring_buffer_write_idx = 0;
-// static _Atomic unsigned int ring_buffer_read_idx = 0;
+static _Atomic unsigned int ring_buffer_read_idx = 0;
 static _Atomic SceUID registered_cb_uid = -1;
 
 /**
@@ -71,6 +72,7 @@ int umod_cb_emit_event(const VqmbtEvent* event) {
  * TODO
  *
  * TODO:
+ * - Restyle
  * - Detect ring buffer lapping.
  *
  * @param event TODO
@@ -80,11 +82,56 @@ int kvqmbt_read_event(VqmbtEvent* event) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
     ENTER_SYSCALL(syscall_state_);
 
-    LOG_DEBUG(0, "TODO %p", event);
+    if (event == NULL) {
+        LOG_ERROR("Invalid event pointer: NULL");
+        return VQMBT_ERROR_INVALID_ARGUMENT;
+    }
 
-    // TODO
+    // TODO v
 
-    return 0;  // TODO? VQMBT_ERROR_CB_OVERFLOW? Return number of events read now (1 or 0 or <0 on error).
+    // Snapshot indices. Acquire on write_idx pairs with the producer's
+    // release store, ensuring ring slot data is visible if we observe
+    // the new index.
+    unsigned int read_idx = atomic_load_explicit(&ring_buffer_read_idx, memory_order_relaxed);
+    unsigned int write_idx = atomic_load_explicit(&ring_buffer_write_idx, memory_order_acquire);
+    if (read_idx == write_idx) {
+        // No new data.
+        return 0;
+    }
+
+    // Lap detection: producer wrote more than RING_BUFFER_SIZE events since
+    // our last drain. The slot at read_idx has been overwritten by newer
+    // data; we can't safely deliver an in-order event. Advance read_idx to
+    // the current write_idx so subsequent calls resume from the latest events.
+    if (write_idx - read_idx > RING_BUFFER_SIZE) {
+        LOG_WARN("ring buffer lapped: write_idx=%u read_idx=%u (diff=%u)", write_idx, read_idx, write_idx - read_idx);
+        atomic_store_explicit(&ring_buffer_read_idx, write_idx, memory_order_relaxed);
+        return VQMBT_ERROR_CB_OVERFLOW;
+    }
+
+    // Read the event into a kernel-side local before copying to userspace.
+    VqmbtEvent kevent = ring_buffer[read_idx % RING_BUFFER_SIZE];
+
+    // Verify the producer didn't lap us during the read. If it did, the
+    // local copy may be torn; discard it and report overflow.
+    unsigned int write_idx_after = atomic_load_explicit(&ring_buffer_write_idx, memory_order_acquire);
+    if (write_idx_after - read_idx > RING_BUFFER_SIZE) {
+        LOG_WARN("ring buffer lapped during read: write_idx_after=%u read_idx=%u", write_idx_after, read_idx);
+        atomic_store_explicit(&ring_buffer_read_idx, write_idx_after, memory_order_relaxed);
+        return VQMBT_ERROR_CB_OVERFLOW;
+    }
+
+    // Commit the read.
+    atomic_store_explicit(&ring_buffer_read_idx, read_idx + 1, memory_order_relaxed);
+
+    // Copy event out to userspace.
+    int ret = ksceKernelCopyToUser(event, &kevent, sizeof(kevent));
+    if (ret < 0) {
+        LOG_ERROR("ksceKernelCopyToUser returned error: 0x%08X", ret);
+        return VQMBT_ERROR_KERNEL_SIDE;
+    }
+
+    return 1;
 }
 
 /**
