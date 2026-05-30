@@ -67,7 +67,7 @@ void kvqmbt_connect_device(unsigned int mac0, unsigned int mac1) {
     if (ret < 0) {
         LOG_ERROR("ksceBtStartConnect(mac0=%08X, mac1=%08X) returned error 0x%08X", mac0, mac1, ret);
     } else {
-        LOG_DEBUG(0, "ksceBtStartConnect(mac0=%08X, mac1=%08X) returned: %d", mac0, mac1, ret);
+        LOG_DEBUG(0, "ksceBtStartConnect(mac0=%08X, mac1=%08X) returned %d", mac0, mac1, ret);
     }
 }
 
@@ -85,7 +85,7 @@ void kvqmbt_disconnect_device(unsigned int mac0, unsigned int mac1) {
     if (ret < 0) {
         LOG_ERROR("ksceBtStartDisconnect(mac0=%08X, mac1=%08X) returned error 0x%08X", mac0, mac1, ret);
     } else {
-        LOG_DEBUG(0, "ksceBtStartDisconnect(mac0=%08X, mac1=%08X) returned: %d", mac0, mac1, ret);
+        LOG_DEBUG(0, "ksceBtStartDisconnect(mac0=%08X, mac1=%08X) returned %d", mac0, mac1, ret);
     }
 }
 
