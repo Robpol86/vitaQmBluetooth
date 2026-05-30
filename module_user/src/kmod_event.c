@@ -88,6 +88,23 @@ static int event_callback(int notifyId, int notifyCount, int notifyArg, void* us
         handle_event(&event);
     }
 
+    // while (true) {
+    //     VqmbtEvent ev;
+    //     int ret = kvqmbt_read_event(&ev);
+    //     if (ret == 1) {
+    //         handle_event(&ev);
+    //     } else if (ret == 0) {
+    //         break;  // queue drained
+    //     } else if (ret == VQMBT_ERROR_CB_OVERFLOW) {
+    //         LOG_WARN("kernel ring lapped; resyncing state");
+    //         kvqmbt_get_paired_devices(&local_snapshot, ...);
+    //         // continue loop; next iteration starts fresh from current write_idx
+    //     } else {
+    //         LOG_ERROR("kvqmbt_read_event failed: 0x%08X", ret);
+    //         break;
+    //     }
+    // }
+
     return 0;
 }
 

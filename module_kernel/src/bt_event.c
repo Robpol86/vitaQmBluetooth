@@ -299,6 +299,7 @@ static int event_callback(int notifyId, int notifyCount, int notifyArg, void* us
         do {
             ret = ksceBtReadEvent(&event, 1);
         } while (ret == SCE_BT_ERROR_CB_OVERFLOW);  // TODO REVISIT, notify umod to "reset"
+        // TODO notify via umod_cb_emit_event({.id=VQMBT_EVENT_DROPPED_EVENTS}) after kmod_event revisited-fix implemented
 
         // Handle errors.
         if (ret < 0) {
