@@ -67,7 +67,7 @@ int umod_cb_emit_event(const VqmbtEvent* event) {
     SceUID cb_uid = atomic_load_explicit(&registered_cb_uid, memory_order_relaxed);
     if (cb_uid >= 0) {
         ksceKernelNotifyCallback(cb_uid, 0);
-        LOG_DEBUG(0, "Notified cb_uid=%d", cb_uid);
+        LOG_DEBUG(0, "Notified cb_uid=0x%08X", cb_uid);
     }
 
     return 0;
