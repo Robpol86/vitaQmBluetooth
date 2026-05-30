@@ -25,21 +25,24 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  *   kvqmbt_get_paired_devices() to "reset".
  * - Increase consumer delay and confirm their notifyCount increases from 1 to 2 or whatever.
  */
+
 #include "umod_callback.h"
 
 #include <psp2kern/kernel/threadmgr.h>
 #include <psp2kern/kernel/threadmgr/mutex.h>
+#include <stdatomic.h>
 #include <stdbool.h>
 
 #include "log.h"
 #include "syscall.h"
 #include "vqmbt.h"
 
-// TODO
-// #define RINGBUF_CAPACITY 16
-// static SceUID user_cb_uid = -1;
-// static VqmbtEvent ring_buffer[RINGBUF_CAPACITY];
-static SceUID mutex_id = -1;
+#define RING_BUFFER_SIZE 16
+
+static VqmbtEvent ring_buffer[RING_BUFFER_SIZE];
+static _Atomic unsigned int ring_buffer_write_idx = 0;
+// static _Atomic unsigned int ring_buffer_read_idx = 0;
+static _Atomic SceUID registered_cb_uid = -1;
 
 /**
  * TODO
@@ -48,28 +51,22 @@ static SceUID mutex_id = -1;
  * @return TODO
  */
 int umod_cb_emit_event(const VqmbtEvent* event) {
-    LOG_DEBUG(0, "TODO %p", event);
-
-    // Obtain lock.
-    int ret = ksceKernelLockMutex(mutex_id, 1, NULL);
-    if (ret < 0) {
-        LOG_ERROR("ksceKernelLockMutex returned error: 0x%08X", ret);
-        return ret;
+    if (event == NULL || event->id == VQMBT_EVENT_NONE) {
+        return VQMBT_ERROR_INVALID_ARGUMENT;
     }
 
-    // TODO
+    // Write event into ring buffer atomically.
+    unsigned int write_idx = atomic_load_explicit(&ring_buffer_write_idx, memory_order_relaxed);
+    ring_buffer[write_idx % RING_BUFFER_SIZE] = *event;
+    atomic_store_explicit(&ring_buffer_write_idx, write_idx + 1, memory_order_release);
 
-    // Release lock.
-    ret = ksceKernelUnlockMutex(mutex_id, 1);
-    if (ret < 0) {
-        LOG_ERROR("ksceKernelUnlockMutex returned error: 0x%08X", ret);
-        return ret;
+    // Tell the consumer an event is ready to be read.
+    SceUID cb_uid = atomic_load_explicit(&registered_cb_uid, memory_order_relaxed);
+    if (cb_uid >= 0) {
+        ksceKernelNotifyCallback(cb_uid, 0);
     }
 
-    // Notify consumer the event is ready.
-    // ksceKernelNotifyCallback(); // TODO explore arg2.
-
-    return 0;  // TODO? VQMBT_ERROR_CB_OVERFLOW? Return number of events read now (1 or 0 or <0 on error).
+    return 0;
 }
 
 /**
@@ -92,48 +89,42 @@ int kvqmbt_read_event(VqmbtEvent* event) {
 /**
  * TODO
  *
- * @param cb TODO
+ * @param cb_uid TODO
  * @return TODO
  */
-int kvqmbt_register_callback(SceUID cb) {
+int kvqmbt_register_callback(SceUID cb_uid) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
     ENTER_SYSCALL(syscall_state_);
 
-    LOG_DEBUG(0, "Registering callback UID 0x%08X", cb);
+    if (cb_uid < 0) {
+        LOG_ERROR("Invalid callback UID: 0x%08X", cb_uid);
+        return VQMBT_ERROR_INVALID_ARGUMENT;
+    }
 
-    // TODO
+    atomic_store_explicit(&registered_cb_uid, cb_uid, memory_order_relaxed);
+    LOG_DEBUG(0, "Registered callback UID 0x%08X", cb_uid);
 
-    return 0;  // TODO?
+    return 0;
 }
 
 /**
  * TODO
  *
- * @param cb TODO
  * @return TODO
  */
-int kvqmbt_unregister_callback(SceUID cb) {
+void kvqmbt_unregister_callback(void) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
     ENTER_SYSCALL(syscall_state_);
 
-    LOG_DEBUG(0, "Unregistering callback UID 0x%08X", cb);
-
-    // TODO
-
-    return 0;  // TODO?
+    SceUID cb_uid_old = atomic_exchange_explicit(&registered_cb_uid, -1, memory_order_relaxed);
+    LOG_DEBUG(0, "Unregistered callback UID 0x%08X", cb_uid_old);
 }
 
 /**
  * TODO.
  */
 int umod_cb_start(void) {
-    // Create a mutex.
-    mutex_id = ksceKernelCreateMutex("kvqmbt-umod_callback-mutex", 0, 0, NULL);
-    if (mutex_id < 0) {
-        LOG_ERROR("ksceKernelCreateMutex returned error 0x%08X", mutex_id);
-        return (int)mutex_id;
-    }
-    LOG_DEBUG(0, "ksceKernelCreateMutex returned mutex_id=0x%08X", mutex_id);
+    // TODO
 
     return 0;
 }
@@ -142,13 +133,7 @@ int umod_cb_start(void) {
  * TODO.
  */
 int umod_cb_stop(void) {
-    // Delete the mutex.
-    int ret = ksceKernelDeleteMutex(mutex_id);
-    if (ret < 0) {
-        LOG_ERROR("ksceKernelDeleteMutex returned error 0x%08X", ret);
-        return ret;
-    }
-    LOG_DEBUG(0, "ksceKernelDeleteMutex returned 0x%08X", ret);
+    // TODO
 
     return 0;
 }

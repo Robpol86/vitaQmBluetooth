@@ -112,8 +112,7 @@ static int event_thread(SceSize args, void* argp) {
     }
 
     // Thread is stopping, clean up.
-    ret = kvqmbt_unregister_callback(uid_callback);
-    LOG_DEBUG(0, "kvqmbt_unregister_callback returned 0x%08X", ret);
+    kvqmbt_unregister_callback();
     ret = sceKernelDeleteCallback(uid_callback);
     LOG_DEBUG(0, "sceKernelDeleteCallback returned 0x%08X", ret);
     uid_callback = -1;

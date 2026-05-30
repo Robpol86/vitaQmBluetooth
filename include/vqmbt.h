@@ -60,7 +60,7 @@ void kvqmbt_disconnect_device(unsigned int mac0, unsigned int mac1);
 
 // umod_callback.c syscalls.
 int kvqmbt_register_callback(SceUID cb);
-int kvqmbt_unregister_callback(SceUID cb);
+void kvqmbt_unregister_callback(void);
 int kvqmbt_read_event(VqmbtEvent* event);
 
 #endif  // VQMBT_H
