@@ -50,7 +50,7 @@ static bool run_thread = false;
  */
 static void handle_event_dropped(void) {
     // TODO
-    LOG_DEBUG(0, INDENT "TODO re-run kvqmbt_get_paired_devices().");
+    LOG_DEBUG(0, INDENT "TODO re-run kvqmbt_get_paired_devices()");
 }
 
 /**
@@ -59,13 +59,29 @@ static void handle_event_dropped(void) {
  * @param event Event details.
  */
 static void handle_event(const VqmbtEvent* event) {
-    // TODO
     LOG_DEBUG(0, PREFIX "id=0x%08X", event->id);
 
-    // TODO copy switch implementation in k/bt_event.c.
-    if (event->id == VQMBT_EVENT_DROPPED_EVENTS) {
-        LOG_DEBUG(0, INDENT "TODO re-run kvqmbt_get_paired_devices()");
-        handle_event_dropped();
+    // Handle events.
+    switch (event->id) {
+        case VQMBT_EVENT_DROPPED_EVENTS:
+            LOG_DEBUG(0, INDENT "Missing bluetooth events detected");
+            handle_event_dropped();
+            break;
+
+        case VQMBT_EVENT_BLUETOOTH_ENABLED:
+            LOG_DEBUG(0, INDENT "Bluetooth turned on");
+            // TODO
+            break;
+
+        case VQMBT_EVENT_BLUETOOTH_DISABLED:
+            LOG_DEBUG(0, INDENT "Bluetooth turned off");
+            // TODO
+            break;
+
+        default:
+            LOG_WARN(INDENT "Unhandled event id=0x%08X", event->id);
+            LOG_DEBUG(0, INDENT "Ignoring id=0x%08X", event->id);
+            break;
     }
 }
 
