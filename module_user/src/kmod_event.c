@@ -86,9 +86,9 @@ static void handle_event(const VqmbtEvent* event) {
 }
 
 /**
- * TODO.
+ * Retrieve events from the kernel module's ring buffer via syscall and pass them to handle_event().
  */
-static void fetch_event(void) {
+static void fetch_events(void) {
     while (true) {
         VqmbtEvent event = {0};
 
@@ -99,7 +99,7 @@ static void fetch_event(void) {
         if (ret == VQMBT_ERROR_CB_OVERFLOW) {
             LOG_WARN("kvqmbt_read_event reported dropped events");
             handle_event_dropped();
-            break;
+            continue;
         }
         if (ret < 0) {
             LOG_ERROR("kvqmbt_read_event returned error 0x%08X", ret);
@@ -117,7 +117,9 @@ static void fetch_event(void) {
 }
 
 /**
- * TODO
+ * Event thread that retrieves the event flag UID from a syscall and waits for bluetooth events from the kernel module.
+ *
+ * The thread waits for and runs fetch_events() until run_thread signals it to stop.
  *
  * @return Success always.
  */
@@ -144,7 +146,7 @@ static int event_thread(SceSize args, void* argp) {
         }
 
         // Fetch event.
-        fetch_event();
+        fetch_events();
     }
 
     // Thread is stopping, clean up.
