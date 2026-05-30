@@ -25,6 +25,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - Confirm ring buffer overrun scenario by lowering RING_BUFFER_SIZE
  * - Confirm uint overflow scenario by setting intial value to MAX_INT - 5
  * - understand atomic functions
+ * - On boot before user module is started kernel module does work. Make sure it's not sending to user before it's ready.
  */
 
 #include "umod_callback.h"
