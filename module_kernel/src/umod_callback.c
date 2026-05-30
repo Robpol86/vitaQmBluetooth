@@ -21,8 +21,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * TODO:
- * - On full buffer drop old events, but notify consumer (umod) of this happening so it can call
- *   kvqmbt_get_paired_devices() to "reset".
  * - Increase consumer delay and confirm their notifyCount increases from 1 to 2 or whatever.
  */
 
@@ -71,6 +69,9 @@ int umod_cb_emit_event(const VqmbtEvent* event) {
 
 /**
  * TODO
+ *
+ * TODO:
+ * - Detect ring buffer lapping.
  *
  * @param event TODO
  * @return TODO
