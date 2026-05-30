@@ -47,6 +47,8 @@ static VqmbtEvent ring_buffer[RING_BUFFER_SIZE];
 static _Atomic unsigned int ring_buffer_write_idx = 0;
 static _Atomic unsigned int ring_buffer_read_idx = 0;
 static SceUID event_flag_uid = -1;
+static SceUID event_flag_puid = -1;
+static SceUID event_flag_user_pid = -1;
 
 /**
  * TODO
@@ -134,16 +136,61 @@ int kvqmbt_read_event(VqmbtEvent* event) {
  *
  * @return TODO
  */
-SceUID kvqmbt_get_event_flag(void) {
+SceUID kvqmbt_get_wrapped_event_flag(void) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
     ENTER_SYSCALL(syscall_state_);
 
-    SceUID pid = ksceKernelGetProcessId();  // the calling user process
-    SceUID puid = ksceKernelCreateUserUid(pid, event_flag_uid);
-    LOG_DEBUG(0, "TODO Created PUID 0x%08X for pid 0x%08X (guid 0x%08X)", puid, pid, event_flag_uid);
-    // TODO cleanup puid, same as register/unregister callback in HEAD^
+    // Sanity check.
+    if (event_flag_uid < 0) {
+        LOG_ERROR("event_flag_uid is not initialized: 0x%08X", event_flag_uid);
+        return VQMBT_ERROR_NOT_READY;
+    }
+    if (event_flag_puid >= 0) {
+        // TODO already wrapped.
+        return -1;  // TODO
+    }
 
-    return puid;
+    // Get the caller's pid (e.g. the user module's pid when calling this via syscall).
+    event_flag_user_pid = ksceKernelGetProcessId();
+    if (event_flag_user_pid < 0) {
+        LOG_ERROR("ksceKernelGetProcessId returned error 0x%08X", event_flag_user_pid);
+        return event_flag_user_pid;
+    }
+    LOG_DEBUG(0, "ksceKernelGetProcessId returned pid=0x%08X", event_flag_user_pid);
+
+    // Wrap event_flag_uid into a uid the user module can access.
+    event_flag_puid = ksceKernelCreateUserUid(event_flag_user_pid, event_flag_uid);
+    if (event_flag_puid < 0) {
+        LOG_ERROR("ksceKernelCreateUserUid returned error 0x%08X", event_flag_puid);
+        return event_flag_puid;
+    }
+    LOG_DEBUG(0, "ksceKernelCreateUserUid returned event_flag_puid=0x%08X", event_flag_puid);
+
+    return event_flag_puid;
+}
+
+/**
+ * TODO
+ */
+void kvqmbt_unwrap_event_flag(void) {
+    uint32_t syscall_state_ SYSCALL_STATE = 0;
+    ENTER_SYSCALL(syscall_state_);
+
+    if (event_flag_puid < 0) {
+        return;
+    }
+
+    int ret = ksceKernelDeleteUserUid(event_flag_user_pid, event_flag_puid);
+    if (ret < 0) {
+        LOG_ERROR("ksceKernelDeleteUserUid(pid=0x%08X, puid=0x%08X) returned error 0x%08X", event_flag_user_pid,
+                  event_flag_puid, ret);
+        return;
+    }
+    LOG_DEBUG(0, "ksceKernelDeleteUserUid(pid=0x%08X, puid=0x%08X) returned 0x%08X", event_flag_user_pid, event_flag_puid,
+              ret);
+
+    event_flag_puid = -1;
+    event_flag_user_pid = -1;
 }
 
 /**
@@ -165,6 +212,9 @@ int umod_cb_start(void) {
  * TODO.
  */
 int umod_cb_stop(void) {
+    // Delete wrapped event flag uid.
+    kvqmbt_unwrap_event_flag();
+
     // Delete the event flag.
     if (event_flag_uid >= 0) {
         int ret = ksceKernelDeleteEventFlag(event_flag_uid);

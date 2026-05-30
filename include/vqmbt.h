@@ -32,6 +32,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define VQMBT_ERROR_INVALID_ARGUMENT ((int)0x80690001)
 #define VQMBT_ERROR_KERNEL_SIDE ((int)0x80690002)
 #define VQMBT_ERROR_CB_OVERFLOW ((int)0x80690003)
+#define VQMBT_ERROR_NOT_READY ((int)0x80690004)
 
 // Events used for inter-module communication.
 typedef enum VqmbtEventId : unsigned int {
@@ -61,6 +62,7 @@ void kvqmbt_disconnect_device(unsigned int mac0, unsigned int mac1);
 
 // umod_callback.c syscalls.
 int kvqmbt_read_event(VqmbtEvent* event);
-SceUID kvqmbt_get_event_flag(void);
+SceUID kvqmbt_get_wrapped_event_flag(void);
+void kvqmbt_unwrap_event_flag(void);
 
 #endif  // VQMBT_H
