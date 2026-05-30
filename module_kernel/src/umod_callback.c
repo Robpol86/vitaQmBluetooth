@@ -123,7 +123,7 @@ int kvqmbt_read_event(VqmbtEvent* event) {
     // Export to user space.
     int ret = ksceKernelCopyToUser(event, &event_from_buffer, sizeof(event_from_buffer));
     if (ret < 0) {
-        LOG_ERROR("ksceKernelCopyToUser returned error: 0x%08X", ret);
+        LOG_ERROR("ksceKernelCopyToUser returned error 0x%08X", ret);
         return VQMBT_ERROR_KERNEL_SIDE;
     }
 

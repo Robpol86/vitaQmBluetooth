@@ -102,7 +102,7 @@ static void fetch_event(void) {
             break;
         }
         if (ret < 0) {
-            LOG_ERROR("kvqmbt_read_event returned error: 0x%08X", ret);
+            LOG_ERROR("kvqmbt_read_event returned error 0x%08X", ret);
             break;
         }
 
@@ -172,7 +172,7 @@ void kmod_event_start(void) {
     uid_thread = sceKernelCreateThread("vqmbt-kmod_event-event_thread", event_thread, THREAD_PRIORITY, THREAD_STACK_SIZE,
                                        0, SCE_KERNEL_THREAD_CPU_AFFINITY_MASK_DEFAULT, NULL);
     if (uid_thread < 0) {
-        LOG_ERROR("sceKernelCreateThread returned error: 0x%08X", uid_thread);
+        LOG_ERROR("sceKernelCreateThread returned error 0x%08X", uid_thread);
         return;
     }
     LOG_DEBUG(0, "sceKernelCreateThread returned 0x%08X", uid_thread);
