@@ -117,9 +117,7 @@ static void fetch_event(void) {
 }
 
 /**
- * Event thread that creates and registers a callback for bluetooth events.
- *
- * The thread waits for and runs callbacks until run_thread signals it to stop.
+ * TODO
  *
  * @return Success always.
  */

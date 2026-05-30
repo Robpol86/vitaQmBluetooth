@@ -50,10 +50,10 @@ static SceUID event_flag_puid = -1;
 static SceUID event_flag_user_pid = -1;
 
 /**
- * TODO
+ * Write a new event into the ring buffer and notify the user module of the new event.
  *
- * @param event TODO
- * @return TODO
+ * @param event Event details.
+ * @return 0 on success, negative on error.
  */
 int umod_cb_emit_event(const VqmbtEvent* event) {
     if (event == NULL || event->id == VQMBT_EVENT_NONE) {
@@ -81,10 +81,10 @@ int umod_cb_emit_event(const VqmbtEvent* event) {
 }
 
 /**
- * TODO
+ * Syscall that the user module uses to read the next event from the ring buffer.
  *
- * @param event TODO
- * @return TODO
+ * @param event Write event details into this pointer.
+ * @return 0 on no new event, 1 on new event, negative on error.
  */
 int kvqmbt_read_event(VqmbtEvent* event) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
