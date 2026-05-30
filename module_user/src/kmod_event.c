@@ -115,8 +115,8 @@ static int event_thread(SceSize args, void* argp) {
     uid_event_flag = kvqmbt_get_wrapped_event_flag();
     LOG_DEBUG(0, "kvqmbt_get_event_flag returned 0x%08X", uid_event_flag);
     if (uid_event_flag < 0) {
-        LOG_ERROR("Kernel module not loaded");
-        return -1;  // TODO define
+        LOG_ERROR("BUG");  // TODO handle kernel module not loaded
+        return 0;
     }
 
     // Run until thread is stopped.
