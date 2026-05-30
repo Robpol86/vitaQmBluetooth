@@ -131,9 +131,9 @@ int kvqmbt_read_event(VqmbtEvent* event) {
 }
 
 /**
- * TODO
+ * Wrap the kernel-context event flag UID into a UID accessible from the user module's context.
  *
- * @return TODO
+ * @return The wrapped event flag UID on success, negative on error.
  */
 SceUID kvqmbt_get_wrapped_event_flag(void) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
@@ -145,8 +145,9 @@ SceUID kvqmbt_get_wrapped_event_flag(void) {
         return VQMBT_ERROR_NOT_READY;
     }
     if (event_flag_puid >= 0) {
-        // TODO already wrapped.
-        return -1;  // TODO
+        // Already wrapped.
+        LOG_DEBUG(0, "Already wrapped");
+        return event_flag_puid;
     }
 
     // Get the caller's pid (e.g. the user module's pid when calling this via syscall).
@@ -169,7 +170,7 @@ SceUID kvqmbt_get_wrapped_event_flag(void) {
 }
 
 /**
- * TODO
+ * Delete the wrapped event flag's "wrapping".
  */
 void kvqmbt_unwrap_event_flag(void) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
@@ -193,7 +194,9 @@ void kvqmbt_unwrap_event_flag(void) {
 }
 
 /**
- * TODO.
+ * Initialize the event flag used to send signals to the user module.
+ *
+ * @return 0 on success, negative on error.
  */
 int umod_cb_start(void) {
     // Create an event flag.
@@ -208,7 +211,9 @@ int umod_cb_start(void) {
 }
 
 /**
- * TODO.
+ * Cleanup and de-initialize the event flag.
+ *
+ * @return 0 on success, negative on error.
  */
 int umod_cb_stop(void) {
     // Delete wrapped event flag uid.
