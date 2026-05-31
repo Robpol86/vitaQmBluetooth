@@ -52,7 +52,7 @@ _Static_assert(sizeof(ID_BUTTONS) / sizeof(ID_BUTTONS[0]) == VQMBT_MAX_DEVICES,
  * - Relabel button "Connecting <name>...".
  * - when user taps a button disable all buttons and wait for callback.
  */
-BUTTON_HANDLER(on_press) {
+BUTTON_HANDLER(quickmenu_on_press) {
     (void)id;
     (void)hash;
     (void)eventId;
@@ -82,7 +82,7 @@ BUTTON_HANDLER(on_press) {
  * - Performance? delay opening qm? async?
  * - Hide empty slots and resize plane to eliminate ghost scrolling.
  */
-ONLOAD_HANDLER(on_load) {
+ONLOAD_HANDLER(quickmenu_on_load) {
     (void)id;
 
     LOG_DEBUG(0, "Quick menu opened.");
@@ -121,7 +121,7 @@ ONLOAD_HANDLER(on_load) {
 /**
  * Called when the quick menu is closed by the user.
  */
-void on_unload(const char* id) {
+void quickmenu_on_unload(const char* id) {
     (void)id;
 
     LOG_DEBUG(0, "Quick menu closed.");
@@ -144,7 +144,7 @@ void on_unload(const char* id) {
  * - callback: relabel button with new state. Surface error in button as close/reopen resets labels
  * - button_reset() button_disable() button_enable() functions
  */
-void add_buttons(void) {
+static void add_buttons(void) {
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
         const char* id = ID_BUTTONS[idx];
         QuickMenuRebornRegisterWidget(id, ID_PLANE_ROOT, button);
@@ -154,7 +154,7 @@ void add_buttons(void) {
         char label[BUTTON_LABEL_MAX];
         sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
         QuickMenuRebornSetWidgetLabel(id, label);
-        QuickMenuRebornRegisterEventHanlder(id, QMR_BUTTON_RELEASE_ID, on_press, (void*)(intptr_t)idx);
+        QuickMenuRebornRegisterEventHanlder(id, QMR_BUTTON_RELEASE_ID, quickmenu_on_press, (void*)(intptr_t)idx);
     }
 }
 
@@ -188,8 +188,8 @@ void quickmenu_start(void) {
 
     // Register handlers.
     const char* last = ID_BUTTONS[VQMBT_MAX_DEVICES - 1];
-    QuickMenuRebornAssignOnLoadHandler(on_load, last);
-    QuickMenuRebornAssignOnDeleteHandler(on_unload, last);
+    QuickMenuRebornAssignOnLoadHandler(quickmenu_on_load, last);
+    QuickMenuRebornAssignOnDeleteHandler(quickmenu_on_unload, last);
 }
 
 /**
