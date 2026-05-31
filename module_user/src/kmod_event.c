@@ -78,6 +78,31 @@ static void handle_event(const VqmbtEvent* event) {
             // TODO
             break;
 
+        case VQMBT_EVENT_DEVICE_ADDED_REMOVED_CONNECTING:
+            LOG_DEBUG(0, INDENT "Device added/removed/connecting");
+            // TODO
+            break;
+
+        case VQMBT_EVENT_DEVICE_DISCONNECTED:
+            LOG_DEBUG(0, INDENT "Device disconnected");
+            // TODO
+            break;
+
+        case VQMBT_EVENT_DEVICE_CONNECT_SUCCESS:
+            LOG_DEBUG(0, INDENT "Device connected");
+            // TODO
+            break;
+
+        case VQMBT_EVENT_DEVICE_CONNECT_FAILED:
+            LOG_DEBUG(0, INDENT "Device connect failed");
+            // TODO
+            break;
+
+        case VQMBT_EVENT_DEVICE_CONNECT_CANCELLED:
+            LOG_DEBUG(0, INDENT "Device connect cancelled");
+            // TODO
+            break;
+
         default:
             LOG_WARN(INDENT "Unhandled event id=0x%08X", event->id);
             LOG_DEBUG(0, INDENT "Ignoring id=0x%08X", event->id);
