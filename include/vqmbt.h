@@ -55,10 +55,10 @@ typedef struct VqmbtDeviceInfo {
 VITASDK_BUILD_ASSERT_EQ(0x8C, VqmbtDeviceInfo);
 
 // bluetooth.c syscalls.
-int kvqmbt_get_paired_devices(VqmbtDeviceInfo* info, int info_size);
 bool kvqmbt_is_connected(unsigned int mac0, unsigned int mac1);
 void kvqmbt_connect_device(unsigned int mac0, unsigned int mac1);
 void kvqmbt_disconnect_device(unsigned int mac0, unsigned int mac1);
+int kvqmbt_get_paired_devices(VqmbtDeviceInfo* info, int info_size);
 
 // umod_callback.c syscalls.
 int kvqmbt_read_event(VqmbtEvent* event);
