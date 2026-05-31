@@ -307,9 +307,9 @@ static int event_callback(int notifyId, int notifyCount, int notifyArg, void* us
 
         // Handle errors.
         if (ret == SCE_BT_ERROR_CB_OVERFLOW) {
-            LOG_WARN("ksceBtReadEvent reported dropped events, forwarding");
+            LOG_WARN("ksceBtReadEvent reported dropped events");
             handle_event_dropped();
-            break;
+            continue;
         }
         if (ret < 0) {
             LOG_ERROR("ksceBtReadEvent returned error 0x%08X", ret);
