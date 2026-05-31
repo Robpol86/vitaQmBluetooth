@@ -322,7 +322,7 @@ static int event_thread(SceSize args, void* argp) {
     (void)argp;
 
     // Create callback.
-    uid_callback = ksceKernelCreateCallback("kvqmbt_event_callback", 0, event_callback, NULL);
+    uid_callback = ksceKernelCreateCallback("kvqmbt-bt_event-event_callback", 0, event_callback, NULL);
     LOG_DEBUG(0, "ksceKernelCreateCallback returned 0x%08X", uid_callback);
 
     // Register callback.
@@ -366,8 +366,8 @@ void bt_event_start(void) {
     run_thread = true;
 
     // Create the thread.
-    uid_thread = ksceKernelCreateThread("kvqmbt_event_thread", event_thread, THREAD_PRIORITY, THREAD_STACK_SIZE, 0,
-                                        SCE_KERNEL_THREAD_CPU_AFFINITY_MASK_DEFAULT, NULL);
+    uid_thread = ksceKernelCreateThread("kvqmbt-bt_event-event_thread", event_thread, THREAD_PRIORITY, THREAD_STACK_SIZE,
+                                        0, SCE_KERNEL_THREAD_CPU_AFFINITY_MASK_DEFAULT, NULL);
     if (uid_thread < 0) {
         LOG_ERROR("ksceKernelCreateThread returned error 0x%08X", uid_thread);
         return;
