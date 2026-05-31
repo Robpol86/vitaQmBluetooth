@@ -229,36 +229,64 @@ static void handle_event(const SceBtEvent* event) {
             switch (event->unk1) {
                 case 0x00:
                     LOG_DEBUG(0, INDENT "Device connected");
-                    umod_cb_emit_event(&(VqmbtEvent){.id = VQMBT_EVENT_DEVICE_CONNECT_SUCCESS});
+                    umod_cb_emit_event(&(VqmbtEvent){
+                        .id = VQMBT_EVENT_DEVICE_CONNECT_SUCCESS,
+                        .mac0 = event->mac0,
+                        .mac1 = event->mac1,
+                    });
                     break;
                 case 0x04:
                     LOG_DEBUG(0, INDENT "Device connect failed");
-                    umod_cb_emit_event(&(VqmbtEvent){.id = VQMBT_EVENT_DEVICE_CONNECT_FAILED});
+                    umod_cb_emit_event(&(VqmbtEvent){
+                        .id = VQMBT_EVENT_DEVICE_CONNECT_FAILED,
+                        .mac0 = event->mac0,
+                        .mac1 = event->mac1,
+                    });
                     break;
                 case 0x05:
                     LOG_DEBUG(0, INDENT "Device connect cancelled by host");
-                    umod_cb_emit_event(&(VqmbtEvent){.id = VQMBT_EVENT_DEVICE_CONNECT_CANCELLED});
+                    umod_cb_emit_event(&(VqmbtEvent){
+                        .id = VQMBT_EVENT_DEVICE_CONNECT_CANCELLED,
+                        .mac0 = event->mac0,
+                        .mac1 = event->mac1,
+                    });
                     break;
                 case 0x08:
                     LOG_DEBUG(0, INDENT "Device connect failed");
-                    umod_cb_emit_event(&(VqmbtEvent){.id = VQMBT_EVENT_DEVICE_CONNECT_FAILED});
+                    umod_cb_emit_event(&(VqmbtEvent){
+                        .id = VQMBT_EVENT_DEVICE_CONNECT_FAILED,
+                        .mac0 = event->mac0,
+                        .mac1 = event->mac1,
+                    });
                     break;
                 default:
                     LOG_WARN(INDENT "Unhandled connect result event status code unk1=0x%02X", event->unk1);
                     LOG_DEBUG(0, INDENT "Treating unk1=0x%02X as a failure", event->unk1);
-                    umod_cb_emit_event(&(VqmbtEvent){.id = VQMBT_EVENT_DEVICE_CONNECT_FAILED});
+                    umod_cb_emit_event(&(VqmbtEvent){
+                        .id = VQMBT_EVENT_DEVICE_CONNECT_FAILED,
+                        .mac0 = event->mac0,
+                        .mac1 = event->mac1,
+                    });
                     break;
             }
             break;
 
         case VQMBT_BT_EVENT_DISCONNECT:
             LOG_DEBUG(0, INDENT "Device disconnected");
-            umod_cb_emit_event(&(VqmbtEvent){.id = VQMBT_EVENT_DEVICE_DISCONNECTED});
+            umod_cb_emit_event(&(VqmbtEvent){
+                .id = VQMBT_EVENT_DEVICE_DISCONNECTED,
+                .mac0 = event->mac0,
+                .mac1 = event->mac1,
+            });
             break;
 
         case VQMBT_BT_EVENT_ADD_REMOVE_CONNECTING_DEVICE:
             LOG_DEBUG(0, INDENT "Device added/removed/connecting");  // TODO relabel?
-            umod_cb_emit_event(&(VqmbtEvent){.id = VQMBT_EVENT_DEVICE_ADDED_REMOVED_CONNECTING});
+            umod_cb_emit_event(&(VqmbtEvent){
+                .id = VQMBT_EVENT_DEVICE_ADDED_REMOVED_CONNECTING,
+                .mac0 = event->mac0,
+                .mac1 = event->mac1,
+            });
             break;
 
         case VQMBT_BT_EVENT_TOGGLE_BLUETOOTH:

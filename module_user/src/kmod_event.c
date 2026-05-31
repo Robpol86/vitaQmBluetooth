@@ -59,7 +59,7 @@ static void handle_event_dropped(void) {
  * @param event Event details.
  */
 static void handle_event(const VqmbtEvent* event) {
-    LOG_DEBUG(0, PREFIX "id=0x%08X", event->id);
+    LOG_DEBUG(0, PREFIX "id=0x%08X mac0=0x%08X mac1=0x%08X", event->id, event->mac0, event->mac1);
 
     // Handle events.
     switch (event->id) {
