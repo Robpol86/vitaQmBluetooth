@@ -179,7 +179,6 @@ static int event_thread(SceSize args, void* argp) {
  * Create a thread to handle events from the kernel module and start it.
  *
  * TODO:
- * - Handle sceKernelStartThread error.
  * - Return errors so caller can return non-success.
  */
 void kmod_event_start(void) {
