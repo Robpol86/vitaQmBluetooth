@@ -34,18 +34,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define VQMBT_ERROR_CB_OVERFLOW ((int)0x80690003)
 #define VQMBT_ERROR_NOT_READY ((int)0x80690004)
 
-// Events used for inter-module communication.
-typedef enum VqmbtEventId : unsigned int {
-    VQMBT_EVENT_NONE,
-    VQMBT_EVENT_DROPPED_EVENTS,
-    VQMBT_EVENT_BLUETOOTH_ENABLED,
-    VQMBT_EVENT_BLUETOOTH_DISABLED,
-} VqmbtEventId;
-typedef struct VqmbtEvent {
-    VqmbtEventId id;
-} VqmbtEvent;
-VITASDK_BUILD_ASSERT_EQ(0x04, VqmbtEvent);
-
+// Device info.
 typedef struct VqmbtDeviceInfo {
     char name[128];
     unsigned int mac0;
@@ -53,6 +42,19 @@ typedef struct VqmbtDeviceInfo {
     int state;
 } VqmbtDeviceInfo;
 VITASDK_BUILD_ASSERT_EQ(0x8C, VqmbtDeviceInfo);
+
+// Inter-module events.
+typedef enum VqmbtEventId : unsigned int {
+    VQMBT_EVENT_NONE,
+    VQMBT_EVENT_DROPPED_EVENTS,
+    VQMBT_EVENT_BLUETOOTH_ENABLED,
+    VQMBT_EVENT_BLUETOOTH_DISABLED,
+} VqmbtEventId;
+
+typedef struct VqmbtEvent {
+    VqmbtEventId id;
+} VqmbtEvent;
+VITASDK_BUILD_ASSERT_EQ(0x04, VqmbtEvent);
 
 // bluetooth.c syscalls.
 bool kvqmbt_is_connected(unsigned int mac0, unsigned int mac1);

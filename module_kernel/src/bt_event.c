@@ -261,8 +261,7 @@ static void handle_event(const SceBtEvent* event) {
                     break;
                 case 0x09: {
                     LOG_DEBUG(0, INDENT "Bluetooth turned on");
-                    VqmbtEvent ev = {.id = VQMBT_EVENT_BLUETOOTH_ENABLED};
-                    umod_cb_emit_event(&ev);
+                    umod_cb_emit_event(&(VqmbtEvent){.id = VQMBT_EVENT_BLUETOOTH_ENABLED});
                     break;
                 }
                 case 0x19:
@@ -270,8 +269,7 @@ static void handle_event(const SceBtEvent* event) {
                     break;
                 case 0x20: {
                     LOG_DEBUG(0, INDENT "Bluetooth turned off");
-                    VqmbtEvent ev = {.id = VQMBT_EVENT_BLUETOOTH_DISABLED};
-                    umod_cb_emit_event(&ev);
+                    umod_cb_emit_event(&(VqmbtEvent){.id = VQMBT_EVENT_BLUETOOTH_DISABLED});
                     break;
                 }
                 default:
