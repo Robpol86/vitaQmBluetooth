@@ -403,7 +403,6 @@ static int event_thread(SceSize args, void* argp) {
  * Create a thread to handle bluetooth events and start it.
  *
  * TODO:
- * - Handle ksceKernelStartThread error.
  * - Return errors so caller can return non-success.
  */
 void bt_event_start(void) {

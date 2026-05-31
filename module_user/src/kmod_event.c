@@ -21,7 +21,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * TODO:
- * - Re-copy bt_event.c here for consistency check.
  * - Optimize, only run the thread when quickmenu is opened.
  */
 
@@ -164,7 +163,7 @@ static int event_thread(SceSize args, void* argp) {
             break;
         }
 
-        // Fetch event.
+        // Fetch and handle events.
         fetch_events();
     }
 
