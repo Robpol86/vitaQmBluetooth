@@ -16,7 +16,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /******************************************************************************
  * @file
- * @brief TODO.
+ * @brief Start and stop the user module event emitting thread.
  ******************************************************************************/
 
 #ifndef UMOD_CALLBACK_H
