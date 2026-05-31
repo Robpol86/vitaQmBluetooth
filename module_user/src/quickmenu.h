@@ -18,7 +18,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define QUICKMENU_H
 
 void quickmenu_start(void);
-
 void quickmenu_stop(void);
 
 #endif  // QUICKMENU_H
