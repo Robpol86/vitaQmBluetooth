@@ -21,7 +21,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <psp2kern/kernel/modulemgr.h>
 
-#include "bt_events.h"
+#include "bt_event.h"
 #include "log.h"
 #include "logfile.h"
 

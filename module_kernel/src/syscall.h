@@ -19,8 +19,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief Miscellaneous macros and functions.
  ******************************************************************************/
 
-#ifndef COMMON_H
-#define COMMON_H
+#ifndef SYSCALL_H
+#define SYSCALL_H
 
 #include <psp2kern/kernel/cpu.h>
 #include <stdint.h>
@@ -31,4 +31,4 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 static inline void syscall_state_cleanup(uint32_t* _state) { EXIT_SYSCALL(*_state); }
 #define SYSCALL_STATE __attribute__((cleanup(syscall_state_cleanup)))
 
-#endif  // COMMON_H
+#endif  // SYSCALL_H

@@ -27,8 +27,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2kern/kernel/threadmgr.h>
 #include <stdbool.h>
 
-#include "common.h"
 #include "log.h"
+#include "syscall.h"
 #include "vqmbt.h"
 
 static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];  // TODO locking/semaphore?

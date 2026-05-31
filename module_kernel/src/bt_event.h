@@ -19,10 +19,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief Start and stop the bluetooth event handling thread.
  ******************************************************************************/
 
-#ifndef BT_EVENTS_H
-#define BT_EVENTS_H
+#ifndef BT_EVENT_H
+#define BT_EVENT_H
 
 void kvqmbt_event_start(void);
 void kvqmbt_event_stop(void);
 
-#endif  // BT_EVENTS_H
+#endif  // BT_EVENT_H
