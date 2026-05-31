@@ -9,7 +9,7 @@
     @PROJECT_NAME@:
       syscall: true
       functions:
+        - kvqmbt_is_connected
         - kvqmbt_connect_device
         - kvqmbt_disconnect_device
         - kvqmbt_get_paired_devices
-        - kvqmbt_is_connected
