@@ -13,3 +13,6 @@
         - kvqmbt_connect_device
         - kvqmbt_disconnect_device
         - kvqmbt_get_paired_devices
+        - kvqmbt_read_event
+        - kvqmbt_get_wrapped_event_flag
+        - kvqmbt_unwrap_event_flag

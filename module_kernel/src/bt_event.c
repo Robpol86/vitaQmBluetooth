@@ -156,6 +156,8 @@ SceBtEvent: id=0x05 unk1=0x04 unk3=0x00000000 mac0=0xF26B3406 mac1=0x0000708C un
 #include <stdbool.h>
 
 #include "log.h"
+#include "umod_callback.h"
+#include "vqmbt.h"
 
 #define THREAD_PRIORITY 0x96 /* Higher value = lower priority. */
 #define THREAD_STACK_SIZE 0x1000
@@ -188,7 +190,8 @@ typedef enum VqmbtInferredBtEventId {
  * Handle scenario where one or more events went missing.
  */
 static void handle_event_dropped(void) {
-    // TODO
+    VqmbtEvent ev = {.id = VQMBT_EVENT_DROPPED_EVENTS};
+    umod_cb_emit_event(&ev);
 }
 
 /**
@@ -226,29 +229,72 @@ static void handle_event(const SceBtEvent* event) {
             switch (event->unk1) {
                 case 0x00:
                     LOG_DEBUG(0, INDENT "Device connected");
+                    umod_cb_emit_event(&(VqmbtEvent){
+                        .id = VQMBT_EVENT_DEVICE_CONNECT_SUCCESS,
+                        .mac0 = event->mac0,
+                        .mac1 = event->mac1,
+                    });
                     break;
                 case 0x04:
                     LOG_DEBUG(0, INDENT "Device connect failed");
+                    umod_cb_emit_event(&(VqmbtEvent){
+                        .id = VQMBT_EVENT_DEVICE_CONNECT_FAILED,
+                        .mac0 = event->mac0,
+                        .mac1 = event->mac1,
+                    });
+                    break;
+                case 0x02:
+                    LOG_DEBUG(0, INDENT "Device connect aborted");
+                    umod_cb_emit_event(&(VqmbtEvent){
+                        .id = VQMBT_EVENT_DEVICE_CONNECT_ABORTED,
+                        .mac0 = event->mac0,
+                        .mac1 = event->mac1,
+                    });
                     break;
                 case 0x05:
                     LOG_DEBUG(0, INDENT "Device connect cancelled by host");
+                    umod_cb_emit_event(&(VqmbtEvent){
+                        .id = VQMBT_EVENT_DEVICE_CONNECT_CANCELLED,
+                        .mac0 = event->mac0,
+                        .mac1 = event->mac1,
+                    });
                     break;
                 case 0x08:
                     LOG_DEBUG(0, INDENT "Device connect failed");
+                    umod_cb_emit_event(&(VqmbtEvent){
+                        .id = VQMBT_EVENT_DEVICE_CONNECT_FAILED,
+                        .mac0 = event->mac0,
+                        .mac1 = event->mac1,
+                    });
                     break;
                 default:
                     LOG_WARN(INDENT "Unhandled connect result event status code unk1=0x%02X", event->unk1);
                     LOG_DEBUG(0, INDENT "Treating unk1=0x%02X as a failure", event->unk1);
+                    umod_cb_emit_event(&(VqmbtEvent){
+                        .id = VQMBT_EVENT_DEVICE_CONNECT_FAILED,
+                        .mac0 = event->mac0,
+                        .mac1 = event->mac1,
+                    });
                     break;
             }
             break;
 
         case VQMBT_BT_EVENT_DISCONNECT:
             LOG_DEBUG(0, INDENT "Device disconnected");
+            umod_cb_emit_event(&(VqmbtEvent){
+                .id = VQMBT_EVENT_DEVICE_DISCONNECTED,
+                .mac0 = event->mac0,
+                .mac1 = event->mac1,
+            });
             break;
 
         case VQMBT_BT_EVENT_ADD_REMOVE_CONNECTING_DEVICE:
             LOG_DEBUG(0, INDENT "Device added/removed/connecting");  // TODO relabel?
+            umod_cb_emit_event(&(VqmbtEvent){
+                .id = VQMBT_EVENT_DEVICE_ADDED_REMOVED_CONNECTING,
+                .mac0 = event->mac0,
+                .mac1 = event->mac1,
+            });
             break;
 
         case VQMBT_BT_EVENT_TOGGLE_BLUETOOTH:
@@ -258,12 +304,14 @@ static void handle_event(const SceBtEvent* event) {
                     break;
                 case 0x09:
                     LOG_DEBUG(0, INDENT "Bluetooth turned on");
+                    umod_cb_emit_event(&(VqmbtEvent){.id = VQMBT_EVENT_BLUETOOTH_ENABLED});
                     break;
                 case 0x19:
                     // Ignore
                     break;
                 case 0x20:
                     LOG_DEBUG(0, INDENT "Bluetooth turned off");
+                    umod_cb_emit_event(&(VqmbtEvent){.id = VQMBT_EVENT_BLUETOOTH_DISABLED});
                     break;
                 default:
                     LOG_WARN(INDENT "Unhandled toggle bluetooth event payload unk3=0x%08X", event->unk3);
@@ -346,7 +394,6 @@ static int event_thread(SceSize args, void* argp) {
 
     // Run until thread is stopped.
     while (run_thread) {
-        // TODO switch to ksceKernelWaitEventFlagCB?
         ksceKernelDelayThreadCB(200 * 1000);  // Callback called in here.
     }
 
@@ -364,7 +411,6 @@ static int event_thread(SceSize args, void* argp) {
  * Create a thread to handle bluetooth events and start it.
  *
  * TODO:
- * - Handle ksceKernelStartThread error.
  * - Return errors so caller can return non-success.
  */
 void bt_event_start(void) {

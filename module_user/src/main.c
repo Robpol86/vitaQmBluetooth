@@ -21,6 +21,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <psp2/kernel/modulemgr.h>
 
+#include "kmod_event.h"
 #include "log.h"
 #include "logfile.h"
 #include "quickmenu.h"
@@ -38,6 +39,7 @@ int module_start(SceSize args, const void* argp) {
 
     logfile_init();
     LOG_INFO("Starting");
+    kmod_event_start();
     quickmenu_start();
     LOG_INFO("Started");
 
@@ -57,6 +59,7 @@ int module_stop(SceSize args, const void* argp) {
 
     LOG_INFO("Stopping");
     quickmenu_stop();
+    kmod_event_stop();
     LOG_INFO("Stopped");
 
     return SCE_KERNEL_STOP_SUCCESS;
