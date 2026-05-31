@@ -23,7 +23,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * TODO:
  * - Increase consumer delay and confirm their notifyCount increases from 1 to 2 or whatever.
  * - Confirm ring buffer overrun scenario by lowering RING_BUFFER_SIZE
- * - Confirm uint overflow scenario by setting intial value to MAX_INT - 5
  * - understand atomic functions
  * - On boot before user module is started kernel module does work. Make sure it's not sending to user before it's ready.
  */
@@ -64,7 +63,7 @@ int umod_cb_emit_event(const VqmbtEvent* event) {
     int slot_no = write_idx % RING_BUFFER_SIZE;
     ring_buffer[slot_no] = *event;
     atomic_store_explicit(&ring_buffer_write_idx, write_idx + 1, memory_order_release);
-    LOG_DEBUG(0, "Wrote event to slot_no=%d", slot_no);
+    LOG_DEBUG(0, "Wrote event to slot_no=%d (write_idx=0x%08X)", slot_no, write_idx);
 
     // Tell the consumer an event is ready to be read.
     if (event_flag_uid >= 0) {

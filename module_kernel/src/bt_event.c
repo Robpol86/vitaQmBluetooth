@@ -243,6 +243,14 @@ static void handle_event(const SceBtEvent* event) {
                         .mac1 = event->mac1,
                     });
                     break;
+                case 0x02:
+                    LOG_DEBUG(0, INDENT "Device connect aborted");
+                    umod_cb_emit_event(&(VqmbtEvent){
+                        .id = VQMBT_EVENT_DEVICE_CONNECT_ABORTED,
+                        .mac0 = event->mac0,
+                        .mac1 = event->mac1,
+                    });
+                    break;
                 case 0x05:
                     LOG_DEBUG(0, INDENT "Device connect cancelled by host");
                     umod_cb_emit_event(&(VqmbtEvent){
