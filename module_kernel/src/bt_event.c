@@ -185,6 +185,13 @@ typedef enum VqmbtInferredBtEventId {
 } VqmbtInferredBtEventId;
 
 /**
+ * Handle scenario where one or more events went missing.
+ */
+static void handle_event_dropped(void) {
+    // TODO
+}
+
+/**
  * Handler for one event. Called once per bluetooth event.
  *
  * TODO:
@@ -285,14 +292,16 @@ static int event_callback(int notifyId, int notifyCount, int notifyArg, void* us
 
     while (true) {
         SceBtEvent event = {0};
-        int ret;
 
         // Fetch event data.
-        do {
-            ret = ksceBtReadEvent(&event, 1);
-        } while (ret == SCE_BT_ERROR_CB_OVERFLOW);
+        int ret = ksceBtReadEvent(&event, 1);
 
         // Handle errors.
+        if (ret == SCE_BT_ERROR_CB_OVERFLOW) {
+            LOG_WARN("ksceBtReadEvent reported dropped events");
+            handle_event_dropped();
+            continue;
+        }
         if (ret < 0) {
             LOG_ERROR("ksceBtReadEvent returned error 0x%08X", ret);
             break;
