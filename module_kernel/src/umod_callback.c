@@ -19,13 +19,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief Send events to the user module.
  ******************************************************************************/
 
-/**
- * TODO:
- * - Increase consumer delay and confirm their notifyCount increases from 1 to 2 or whatever.
- * - understand atomic functions
- * - On boot before user module is started kernel module does work. Make sure it's not sending to user before it's ready.
- */
-
 #include "umod_callback.h"
 
 #include <psp2kern/kernel/sysmem/data_transfers.h>
