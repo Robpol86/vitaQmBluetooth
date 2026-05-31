@@ -16,7 +16,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /******************************************************************************
  * @file
- * @brief TODO.
+ * @brief Listen for and handle events emitted by the kernel module.
  ******************************************************************************/
 
 /**

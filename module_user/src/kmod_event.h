@@ -16,7 +16,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /******************************************************************************
  * @file
- * @brief TODO.
+ * @brief Start and stop the kernel module event handling thread.
  ******************************************************************************/
 
 #ifndef KMOD_EVENT_H
