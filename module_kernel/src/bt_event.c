@@ -145,6 +145,8 @@ SceBtEvent: id=0x05 unk1=0x04 unk3=0x00000000 mac0=0xF26B3406 mac1=0x0000708C un
 
 *****************************************************************************************/
 
+#include "bt_event.h"
+
 #include <psp2kern/bt.h>
 #include <psp2kern/kernel/cpu.h>
 #include <psp2kern/kernel/modulemgr.h>

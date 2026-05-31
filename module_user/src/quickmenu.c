@@ -19,6 +19,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief Interface for the Quick Menu on the PS Vita.
  ******************************************************************************/
 
+#include "quickmenu.h"
+
 #include <psp2/kernel/clib.h>
 #include <psp2/kernel/modulemgr.h>
 #include <quickmenureborn/qm_reborn.h>
