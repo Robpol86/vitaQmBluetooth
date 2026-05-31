@@ -294,19 +294,17 @@ static void handle_event(const SceBtEvent* event) {
                 case 0x00:
                     // Ignore
                     break;
-                case 0x09: {
+                case 0x09:
                     LOG_DEBUG(0, INDENT "Bluetooth turned on");
                     umod_cb_emit_event(&(VqmbtEvent){.id = VQMBT_EVENT_BLUETOOTH_ENABLED});
                     break;
-                }
                 case 0x19:
                     // Ignore
                     break;
-                case 0x20: {
+                case 0x20:
                     LOG_DEBUG(0, INDENT "Bluetooth turned off");
                     umod_cb_emit_event(&(VqmbtEvent){.id = VQMBT_EVENT_BLUETOOTH_DISABLED});
                     break;
-                }
                 default:
                     LOG_WARN(INDENT "Unhandled toggle bluetooth event payload unk3=0x%08X", event->unk3);
                     LOG_DEBUG(0, INDENT "Ignoring unk3=0x%08X", event->unk3);
