@@ -40,12 +40,12 @@ void logfile_init(void) {
     // Create log directories.
     ret = ksceIoMkdir(LOGFILE_DIR_PARENT, 0777);
     if (ret < 0 && ret != SCE_ERROR_ERRNO_EEXIST) {
-        LOG_ERROR("ksceIoMkdir(log_dir=\"%s\") returned error: 0x%08X", LOGFILE_DIR_PARENT, ret);
+        LOG_ERROR("ksceIoMkdir(log_dir=\"%s\") returned error 0x%08X", LOGFILE_DIR_PARENT, ret);
         return;
     }
     ret = ksceIoMkdir(LOGFILE_DIR, 0777);
     if (ret < 0 && ret != SCE_ERROR_ERRNO_EEXIST) {
-        LOG_ERROR("ksceIoMkdir(log_dir=\"%s\") returned error: 0x%08X", LOGFILE_DIR, ret);
+        LOG_ERROR("ksceIoMkdir(log_dir=\"%s\") returned error 0x%08X", LOGFILE_DIR, ret);
         return;
     }
 
@@ -74,7 +74,7 @@ void logfile_write_line(int y, int m, int d, const char* line, ...) {
     ret = snprintf(log_file_path, sizeof(log_file_path), LOGFILE_DIR LOGFILE_FILENAME_FORMAT, y, m, d);
     if (ret < 0) {
         is_initialized = false;
-        LOG_ERROR("snprintf returned error: 0x%08X", ret);
+        LOG_ERROR("snprintf returned error 0x%08X", ret);
         return;
     }
     if ((size_t)ret >= sizeof(log_file_path)) {
@@ -90,7 +90,7 @@ void logfile_write_line(int y, int m, int d, const char* line, ...) {
     ret = vsnprintf(buffer, sizeof(buffer), line, args);
     va_end(args);
     if (ret < 0) {
-        LOG_ERROR("vsnprintf returned error: 0x%08X", ret);
+        LOG_ERROR("vsnprintf returned error 0x%08X", ret);
         return;
     }
     int buffer_len = ret;
@@ -106,7 +106,7 @@ void logfile_write_line(int y, int m, int d, const char* line, ...) {
     SceUID fd = ksceIoOpen(log_file_path, SCE_O_WRONLY | SCE_O_CREAT | SCE_O_APPEND, 0666);
     if (fd < 0) {
         is_initialized = false;
-        LOG_ERROR("ksceIoOpen(log_file_path=\"%s\") returned error: 0x%08X", log_file_path, fd);
+        LOG_ERROR("ksceIoOpen(log_file_path=\"%s\") returned error 0x%08X", log_file_path, fd);
         return;
     }
     ksceIoWrite(fd, buffer, buffer_len);

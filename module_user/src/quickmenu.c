@@ -92,7 +92,7 @@ ONLOAD_HANDLER(on_load) {
     VqmbtDeviceInfo* dev;
     int count = kvqmbt_get_paired_devices(devices, VQMBT_MAX_DEVICES);
     if (count < 0) {
-        LOG_ERROR("kvqmbt_get_paired_devices returned error: 0x%08X", count);
+        LOG_ERROR("kvqmbt_get_paired_devices returned error 0x%08X", count);
         return;
     }
     if (count < 1) {

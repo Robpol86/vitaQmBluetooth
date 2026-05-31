@@ -205,7 +205,7 @@ static void kvqmbt_handle_event(const SceBtEvent* event) {
         if (ret == 0) {
             LOG_DEBUG(0, INDENT "Name: \"%s\"", name);
         } else {
-            LOG_ERROR("ksceBtGetDeviceName(mac0=0x%08X, mac1=0x%08X) returned error: 0x%08X", event->mac0, event->mac1,
+            LOG_ERROR("ksceBtGetDeviceName(mac0=0x%08X, mac1=0x%08X) returned error 0x%08X", event->mac0, event->mac1,
                       ret);
         }
     }
@@ -292,7 +292,7 @@ static int kvqmbt_event_callback(int notifyId, int notifyCount, int notifyArg, v
 
         // Handle errors.
         if (ret < 0) {
-            LOG_ERROR("ksceBtReadEvent returned error: 0x%08X", ret);
+            LOG_ERROR("ksceBtReadEvent returned error 0x%08X", ret);
             break;
         }
 
@@ -367,7 +367,7 @@ void kvqmbt_event_start(void) {
     uid_thread = ksceKernelCreateThread("kvqmbt_event_thread", kvqmbt_event_thread, THREAD_PRIORITY, THREAD_STACK_SIZE, 0,
                                         SCE_KERNEL_THREAD_CPU_AFFINITY_MASK_DEFAULT, NULL);
     if (uid_thread < 0) {
-        LOG_ERROR("ksceKernelCreateThread returned error: 0x%08X", uid_thread);
+        LOG_ERROR("ksceKernelCreateThread returned error 0x%08X", uid_thread);
         return;
     }
     LOG_DEBUG(0, "ksceKernelCreateThread returned 0x%08X", uid_thread);
