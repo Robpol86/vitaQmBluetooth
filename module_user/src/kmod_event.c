@@ -152,7 +152,7 @@ static int event_thread(SceSize args, void* argp) {
     uid_event_flag = kvqmbt_get_wrapped_event_flag();
     LOG_DEBUG(0, "kvqmbt_get_wrapped_event_flag returned 0x%08X", uid_event_flag);
     if (uid_event_flag < 0) {
-        // TODO https://github.com/Robpol86/vitaQmBluetooth/issues/108
+        // TODO handle when kmod not loaded https://github.com/Robpol86/vitaQmBluetooth/issues/108
         LOG_ERROR("kvqmbt_get_wrapped_event_flag returned error 0x%08X", uid_event_flag);
         return 0;
     }
