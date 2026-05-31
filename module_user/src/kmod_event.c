@@ -49,7 +49,7 @@ static bool run_thread = false;
  */
 static void handle_event_dropped(void) {
     // TODO
-    LOG_DEBUG(0, INDENT "TODO re-run kvqmbt_get_paired_devices()");
+    LOG_DEBUG(0, "TODO re-run kvqmbt_get_paired_devices()");
 }
 
 /**
@@ -89,6 +89,10 @@ static void handle_event(const VqmbtEvent* event) {
 
         case VQMBT_EVENT_DEVICE_CONNECT_FAILED:
             LOG_DEBUG(0, INDENT "Device connect failed");
+            break;
+
+        case VQMBT_EVENT_DEVICE_CONNECT_ABORTED:
+            LOG_DEBUG(0, INDENT "Device connect aborted");
             break;
 
         case VQMBT_EVENT_DEVICE_CONNECT_CANCELLED:

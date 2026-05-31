@@ -22,7 +22,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 /**
  * TODO:
  * - Increase consumer delay and confirm their notifyCount increases from 1 to 2 or whatever.
- * - Confirm ring buffer overrun scenario by lowering RING_BUFFER_SIZE
  * - understand atomic functions
  * - On boot before user module is started kernel module does work. Make sure it's not sending to user before it's ready.
  */
@@ -100,6 +99,7 @@ int kvqmbt_read_event(VqmbtEvent* event) {
         // No new data.
         return 0;
     }
+    LOG_DEBUG(0, "write_idx=0x%08X read_idx=0x%08X", write_idx, read_idx);  // Keep below "no new data" (logs a lot).
     if (write_idx - read_idx > RING_BUFFER_SIZE) {
         // Producer wrote more since the last read than the size of the buffer, fault.
         LOG_WARN("Ring buffer overrun: write_idx=%u read_idx=%u (delta=%u)", write_idx, read_idx, write_idx - read_idx);
