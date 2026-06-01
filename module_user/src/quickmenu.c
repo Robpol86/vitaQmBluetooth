@@ -38,6 +38,8 @@ static VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];  // TODO locking/semaphore?
 // Widget IDs (prefixed because they must be unique across all plugins).
 #define ID_SEPARATOR MODULE_NAME "Separator"
 #define ID_PLANE_ROOT MODULE_NAME "PlaneRoot"
+#define ID_PLANE_MESSAGE MODULE_NAME "PlaneMessage"
+#define ID_PLANE_BUTTONS MODULE_NAME "PlaneButtons"
 #define ID_SECTION_TEXT MODULE_NAME "SectionText"
 static const char* const ID_BUTTONS[VQMBT_MAX_DEVICES] = {
     MODULE_NAME "Button0", MODULE_NAME "Button1", MODULE_NAME "Button2", MODULE_NAME "Button3",
@@ -219,12 +221,12 @@ static int dim_thread(SceSize args, void* argp) {
             case 3:
                 // Hide button
                 // TODO make unselectable
-                // QuickMenuRebornUnregisterWidget(first_button_id); Works but probably wrong approach
+                // QuickMenuRebornUnregisterWidget(first_button_id);  // TODO Works but probably wrong approach
                 QuickMenuRebornSetWidgetColor(first_button_id, 1.0F, 1.0F, 1.0F, 0.0F);
                 break;
             case 4:
                 // Unhide button
-                // QuickMenuRebornRegisterWidget(first_button_id, ID_PLANE_ROOT, button);  COREDUMP
+                // QuickMenuRebornRegisterWidget(first_button_id, ID_PLANE_ROOT, button);  // TODO COREDUMP
                 QuickMenuRebornSetWidgetColor(first_button_id, 1.0F, 1.0F, 1.0F, 1.0F);
                 break;
             case 5:
