@@ -24,6 +24,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2/kernel/clib.h>
 #include <psp2/kernel/modulemgr.h>
 #include <psp2/kernel/threadmgr/thread.h>
+#include <quickmenureborn/c_types.h>
 #include <quickmenureborn/qm_reborn.h>
 
 #include "kmod_event.h"
@@ -218,20 +219,22 @@ static int dim_thread(SceSize args, void* argp) {
             case 3:
                 // Hide button
                 // TODO make unselectable
+                // QuickMenuRebornUnregisterWidget(first_button_id); Works but probably wrong approach
                 QuickMenuRebornSetWidgetColor(first_button_id, 1.0F, 1.0F, 1.0F, 0.0F);
                 break;
             case 4:
                 // Unhide button
+                // QuickMenuRebornRegisterWidget(first_button_id, ID_PLANE_ROOT, button);  COREDUMP
                 QuickMenuRebornSetWidgetColor(first_button_id, 1.0F, 1.0F, 1.0F, 1.0F);
                 break;
-            // case 5:
-            //     // Shrink root plane
-            //     // TODO
-            //     break;
-            // case 6:
-            //     // Unshrink root plane
-            //     // TODO
-            //     break;
+            case 5:
+                // Shrink root plane
+                QuickMenuRebornSetWidgetSize(ID_PLANE_ROOT, SCE_PLANE_WIDTH, 350.0F, 0, 0);
+                break;
+            case 6:
+                // Unshrink root plane
+                QuickMenuRebornSetWidgetSize(ID_PLANE_ROOT, SCE_PLANE_WIDTH, 700.0F, 0, 0);
+                break;
             // case 7:
             //     // Swap root plane with message plane
             //     // TODO
