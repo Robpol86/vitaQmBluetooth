@@ -141,6 +141,7 @@ void quickmenu_on_unload(const char* id) {
  * TODO:
  * - callback: relabel button with new state. Surface error in button as close/reopen resets labels
  * - button_reset() button_disable() button_enable() functions
+ * - TODO TODO TODO use a thread to dim/undim and size/resize widgets every 10s, can these be animated (e.g. fading)?
  */
 static void create_widgets(void) {
     // Add horizontal line separator.
