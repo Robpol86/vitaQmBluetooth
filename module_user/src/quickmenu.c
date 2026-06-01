@@ -142,7 +142,7 @@ void quickmenu_on_unload(const char* id) {
  * - callback: relabel button with new state. Surface error in button as close/reopen resets labels
  * - button_reset() button_disable() button_enable() functions
  */
-static void populate_qm(void) {
+static void create_widgets(void) {
     // Add horizontal line separator.
     QuickMenuRebornSeparator(ID_SEPARATOR, SCE_SEPARATOR_HEIGHT);
 
@@ -180,7 +180,7 @@ static void populate_qm(void) {
 /**
  * TODO
  */
-static void depopulate_qm(void) {
+static void remove_widgets(void) {
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
         const char* id = ID_BUTTONS[idx];
         QuickMenuRebornUnregisterWidget(id);
@@ -205,7 +205,7 @@ static void depopulate_qm(void) {
  */
 void quickmenu_start(void) {
     // TODO
-    populate_qm();
+    create_widgets();
 }
 
 /**
@@ -213,5 +213,5 @@ void quickmenu_start(void) {
  */
 void quickmenu_stop(void) {
     // TODO
-    depopulate_qm();
+    remove_widgets();
 }
