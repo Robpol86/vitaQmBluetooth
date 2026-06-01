@@ -199,45 +199,48 @@ static int dim_thread(SceSize args, void* argp) {
     (void)argp;
 
     int state = 0;
+    char label[BUTTON_LABEL_MAX];
+    const char* first_button_id = ID_BUTTONS[0];
 
     while (true) {
         state += 1;
+        sceClibSnprintf(label, sizeof(label), "Switch state: %d", state);
+        QuickMenuRebornSetWidgetLabel(first_button_id, label);
         switch (state) {
             case 1:
                 // Dim button 50%
-                // TODO
+                QuickMenuRebornSetWidgetColor(first_button_id, 0.5F, 0.5F, 0.5F, 1.0F);
                 break;
             case 2:
                 // Undim button
-                // TODO
+                QuickMenuRebornSetWidgetColor(first_button_id, 1.0F, 1.0F, 1.0F, 1.0F);
                 break;
-            case 3:
-                // Hide button
-                // TODO
-                break;
-            case 4:
-                // Unhide button
-                // TODO
-                break;
-            case 5:
-                // Shrink root plane
-                // TODO
-                break;
-            case 6:
-                // Unshrink root plane
-                // TODO
-                break;
-            case 7:
-                // Swap root plane with message plane
-                // TODO
-                break;
-            case 8:
-                // Swap back to root plane
-                // TODO
-                break;
+            // case 3:
+            //     // Hide button
+            //     // TODO
+            //     break;
+            // case 4:
+            //     // Unhide button
+            //     // TODO
+            //     break;
+            // case 5:
+            //     // Shrink root plane
+            //     // TODO
+            //     break;
+            // case 6:
+            //     // Unshrink root plane
+            //     // TODO
+            //     break;
+            // case 7:
+            //     // Swap root plane with message plane
+            //     // TODO
+            //     break;
+            // case 8:
+            //     // Swap back to root plane
+            //     // TODO
+            //     break;
             default:
                 state = 0;
-                // TODO relabel button with counter.
                 break;
         }
         sceKernelDelayThread(5 * 1000000);
