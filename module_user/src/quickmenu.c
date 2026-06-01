@@ -215,14 +215,15 @@ static int dim_thread(SceSize args, void* argp) {
                 // Undim button
                 QuickMenuRebornSetWidgetColor(first_button_id, 1.0F, 1.0F, 1.0F, 1.0F);
                 break;
-            // case 3:
-            //     // Hide button
-            //     // TODO
-            //     break;
-            // case 4:
-            //     // Unhide button
-            //     // TODO
-            //     break;
+            case 3:
+                // Hide button
+                // TODO make unselectable
+                QuickMenuRebornSetWidgetColor(first_button_id, 1.0F, 1.0F, 1.0F, 0.0F);
+                break;
+            case 4:
+                // Unhide button
+                QuickMenuRebornSetWidgetColor(first_button_id, 1.0F, 1.0F, 1.0F, 1.0F);
+                break;
             // case 5:
             //     // Shrink root plane
             //     // TODO
