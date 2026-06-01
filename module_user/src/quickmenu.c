@@ -220,7 +220,6 @@ static int dim_thread(SceSize args, void* argp) {
                 break;
             case 3:
                 // Hide button
-                // TODO make unselectable
                 // QuickMenuRebornUnregisterWidget(first_button_id);  // TODO Works but probably wrong approach
                 QuickMenuRebornSetWidgetColor(first_button_id, 1.0F, 1.0F, 1.0F, 0.0F);
                 break;
