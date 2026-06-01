@@ -136,43 +136,13 @@ void quickmenu_on_unload(const char* id) {
 }
 
 /**
- * Add connect/disconnect buttons to quick menu. One button per paired device.
- *
- * For now buttons are fixed and so is the plane.
+ * TODO.
  *
  * TODO:
  * - callback: relabel button with new state. Surface error in button as close/reopen resets labels
  * - button_reset() button_disable() button_enable() functions
  */
-static void add_buttons(void) {
-    for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
-        const char* id = ID_BUTTONS[idx];
-        QuickMenuRebornRegisterWidget(id, ID_PLANE_ROOT, button);
-        QuickMenuRebornSetWidgetSize(id, 600, 75, 0, 0);
-        QuickMenuRebornSetWidgetPosition(id, 20, 243 - (idx * 80), 0, 0);
-        QuickMenuRebornSetWidgetColor(id, 1, 1, 1, 1);
-        char label[BUTTON_LABEL_MAX];
-        sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
-        QuickMenuRebornSetWidgetLabel(id, label);
-        QuickMenuRebornRegisterEventHanlder(id, QMR_BUTTON_RELEASE_ID, quickmenu_on_press, (void*)(intptr_t)idx);
-    }
-}
-
-/**
- * Loads the plugin's quick menu items.
- *
- * TODO:
- * - Add function to calculate position from top left instead of center.
- * - Pixel perfect alignment.
- * - If kernel plugin isn't loaded notify user.
- * - If kernel plugin loaded AFTER user plugin what happens? probably fails. Handle this too.
- * TODO:
- * - Move this to populate_quickmenu()
- * - quickmenu_state struct array
- * - quickmenu_start will start event thread, stop will shut down the thread.
- * - Two body planes: one for the buttons, another with just a text message.
- */
-void quickmenu_start(void) {
+static void populate_qm(void) {
     // Add horizontal line separator.
     QuickMenuRebornSeparator(ID_SEPARATOR, SCE_SEPARATOR_HEIGHT);
 
@@ -189,7 +159,17 @@ void quickmenu_start(void) {
     QuickMenuRebornSetWidgetLabel(ID_SECTION_TEXT, "Bluetooth Devices");
 
     // Add device slot buttons.
-    add_buttons();
+    for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
+        const char* id = ID_BUTTONS[idx];
+        QuickMenuRebornRegisterWidget(id, ID_PLANE_ROOT, button);
+        QuickMenuRebornSetWidgetSize(id, 600, 75, 0, 0);
+        QuickMenuRebornSetWidgetPosition(id, 20, 243 - (idx * 80), 0, 0);
+        QuickMenuRebornSetWidgetColor(id, 1, 1, 1, 1);
+        char label[BUTTON_LABEL_MAX];
+        sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
+        QuickMenuRebornSetWidgetLabel(id, label);
+        QuickMenuRebornRegisterEventHanlder(id, QMR_BUTTON_RELEASE_ID, quickmenu_on_press, (void*)(intptr_t)idx);
+    }
 
     // Register handlers.
     const char* last = ID_BUTTONS[VQMBT_MAX_DEVICES - 1];
@@ -198,9 +178,9 @@ void quickmenu_start(void) {
 }
 
 /**
- * Unloads the plugin's quick menu items.
+ * TODO
  */
-void quickmenu_stop(void) {
+static void depopulate_qm(void) {
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
         const char* id = ID_BUTTONS[idx];
         QuickMenuRebornUnregisterWidget(id);
@@ -208,4 +188,30 @@ void quickmenu_stop(void) {
     QuickMenuRebornUnregisterWidget(ID_SECTION_TEXT);
     QuickMenuRebornUnregisterWidget(ID_PLANE_ROOT);
     QuickMenuRebornRemoveSeparator(ID_SEPARATOR);
+}
+
+/**
+ * Loads the plugin's quick menu items.
+ *
+ * TODO:
+ * - Add function to calculate position from top left instead of center.
+ * - Pixel perfect alignment.
+ * - If kernel plugin isn't loaded notify user.
+ * - If kernel plugin loaded AFTER user plugin what happens? probably fails. Handle this too.
+ * TODO:
+ * - quickmenu_state struct array
+ * - quickmenu_start will start event thread, stop will shut down the thread.
+ * - Two body planes: one for the buttons, another with just a text message.
+ */
+void quickmenu_start(void) {
+    // TODO
+    populate_qm();
+}
+
+/**
+ * Unloads the plugin's quick menu items.
+ */
+void quickmenu_stop(void) {
+    // TODO
+    depopulate_qm();
 }
