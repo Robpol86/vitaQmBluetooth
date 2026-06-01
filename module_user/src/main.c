@@ -39,7 +39,7 @@ int module_start(SceSize args, const void* argp) {
 
     logfile_init();
     LOG_INFO("Starting");
-    kmod_event_start();
+    kmod_event_start();  // TODO remove
     quickmenu_start();
     LOG_INFO("Started");
 
@@ -59,7 +59,7 @@ int module_stop(SceSize args, const void* argp) {
 
     LOG_INFO("Stopping");
     quickmenu_stop();
-    kmod_event_stop();
+    kmod_event_stop();  // TODO remove
     LOG_INFO("Stopped");
 
     return SCE_KERNEL_STOP_SUCCESS;

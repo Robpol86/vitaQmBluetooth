@@ -166,6 +166,11 @@ static void add_buttons(void) {
  * - Pixel perfect alignment.
  * - If kernel plugin isn't loaded notify user.
  * - If kernel plugin loaded AFTER user plugin what happens? probably fails. Handle this too.
+ * TODO:
+ * - Move this to populate_quickmenu()
+ * - Preprocessor array push of unregister function calls?
+ * - quickmenu_state struct array
+ * - quickmenu_start will start event thread, stop will shut down the thread.
  */
 void quickmenu_start(void) {
     // Add horizontal line separator.
