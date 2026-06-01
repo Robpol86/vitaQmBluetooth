@@ -198,6 +198,15 @@ static int dim_thread(SceSize args, void* argp) {
     (void)argp;
 
     while (true) {
+        // Dim button 50%
+        // TODO
+        // Hide and unhide button
+        // TODO
+        // Resize root plane
+        // TODO
+        // Dim root plane 50%
+        // TODO
+
         sceKernelDelayThread(5 * 1000000);
     }
 
