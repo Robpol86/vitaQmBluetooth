@@ -25,6 +25,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2/kernel/modulemgr.h>
 #include <quickmenureborn/qm_reborn.h>
 
+#include "kmod_event.h"
 #include "log.h"
 #include "vqmbt.h"
 
@@ -206,6 +207,9 @@ static void remove_widgets(void) {
  */
 void quickmenu_start(void) {
     // TODO
+    kmod_event_start();  // TODO move into quickmenu_on_load
+
+    // TODO
     create_widgets();
 }
 
@@ -215,4 +219,7 @@ void quickmenu_start(void) {
 void quickmenu_stop(void) {
     // TODO
     remove_widgets();
+
+    // TODO
+    kmod_event_stop();  // TODO move into quickmenu_on_unload
 }
