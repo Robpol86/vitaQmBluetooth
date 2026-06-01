@@ -23,6 +23,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <psp2/kernel/clib.h>
 #include <psp2/kernel/modulemgr.h>
+#include <psp2/kernel/threadmgr/thread.h>
 #include <quickmenureborn/qm_reborn.h>
 
 #include "kmod_event.h"
@@ -192,6 +193,27 @@ static void remove_widgets(void) {
     QuickMenuRebornRemoveSeparator(ID_SEPARATOR);
 }
 
+static int dim_thread(SceSize args, void* argp) {
+    (void)args;
+    (void)argp;
+
+    while (true) {
+        sceKernelDelayThread(5 * 1000000);
+    }
+
+    return 0;
+}
+
+static void dim_thread_start(void) {
+    int ret = sceKernelCreateThread("vqmbt-kmod_event-event_thread", dim_thread, 0x96, 0x1000, 0,
+                                    SCE_KERNEL_THREAD_CPU_AFFINITY_MASK_DEFAULT, NULL);
+    if (ret < 0) {
+        LOG_ERROR("sceKernelCreateThread returned error 0x%08X", ret);
+        return;
+    }
+    sceKernelStartThread(ret, 0, NULL);
+}
+
 /**
  * Loads the plugin's quick menu items.
  *
@@ -211,6 +233,9 @@ void quickmenu_start(void) {
 
     // TODO
     create_widgets();
+
+    // TODO remove
+    dim_thread_start();
 }
 
 /**
