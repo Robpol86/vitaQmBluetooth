@@ -201,10 +201,14 @@ static void remove_widgets(void) {
  * TODO
  *
  * TODO:
- * - Develop Dockerfile that will build my QMR fork
- * - Update redist here to use newly built fork, confirm on vita
- * - Attempt to patch in show/hide/enable/disable APIs
- * - Test new APIs in dim_thread().
+ * - Stick with QMR.
+ *      - Always show 8 buttons
+ *      - Write disable_button() enable_button() to grey and no-op callbacks
+ *      - When bt is disabled disable all buttons and relabel each with "bt is disabled"
+ * - Implement state, move thread start/stop into qmr_onload/unload
+ * - PR merge
+ * - Bring in QMR APIs into paf.cpp here (keep project C, paf.cpp will have C++ stubs) one by one
+ *      - Eventually add new APIs such as Show/Hide and Enable/Disable
  *      - Hide/show the root plane, confirm buttons are unselectable whilst hidden, and no scrollbars
  *      - Enable/disable first button. Should be selectable as-per big BT button at the top, but tap/X/O no-ops
  */
