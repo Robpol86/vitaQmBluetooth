@@ -202,6 +202,7 @@ static void handle_event_dropped(void) {
  * - Test with iPhone
  * - Test with ds3
  * - Test with ds4
+ * - single airpod switching to other one
  *
  * @param event Event details.
  */
