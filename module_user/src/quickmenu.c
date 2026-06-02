@@ -52,7 +52,7 @@ static VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];  // TODO locking/semaphore?
 // Widget IDs (prefixed because they must be unique across all plugins).
 #define ID_SEPARATOR MODULE_NAME "Separator"
 #define ID_PLANE_ROOT MODULE_NAME "PlaneRoot"
-#define ID_SECTION_TEXT MODULE_NAME "SectionText"
+#define ID_SECTION_TITLE MODULE_NAME "SectionTitle"
 
 // Button widget IDs.
 static const char* const ID_BUTTONS[VQMBT_MAX_DEVICES] = {
@@ -187,11 +187,11 @@ void quickmenu_start(void) {
     QuickMenuRebornSetWidgetColor(ID_PLANE_ROOT, 1, 1, 1, 0);
 
     // Add section heading text.
-    QuickMenuRebornRegisterWidget(ID_SECTION_TEXT, ID_PLANE_ROOT, text);
-    QuickMenuRebornSetWidgetSize(ID_SECTION_TEXT, SCE_PLANE_WIDTH, 50, 0, 0);
-    QuickMenuRebornSetWidgetPosition(ID_SECTION_TEXT, -206, 312, 0, 0);
-    QuickMenuRebornSetWidgetColor(ID_SECTION_TEXT, 1, 1, 1, 1);
-    QuickMenuRebornSetWidgetLabel(ID_SECTION_TEXT, "Bluetooth Devices");
+    QuickMenuRebornRegisterWidget(ID_SECTION_TITLE, ID_PLANE_ROOT, text);
+    QuickMenuRebornSetWidgetSize(ID_SECTION_TITLE, SCE_PLANE_WIDTH, 50, 0, 0);
+    QuickMenuRebornSetWidgetPosition(ID_SECTION_TITLE, -206, 312, 0, 0);
+    QuickMenuRebornSetWidgetColor(ID_SECTION_TITLE, 1, 1, 1, 1);
+    QuickMenuRebornSetWidgetLabel(ID_SECTION_TITLE, "Bluetooth Devices");
 
     // Add device slot buttons.
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
@@ -220,7 +220,7 @@ void quickmenu_stop(void) {
         const char* id = ID_BUTTONS[idx];
         QuickMenuRebornUnregisterWidget(id);
     }
-    QuickMenuRebornUnregisterWidget(ID_SECTION_TEXT);
+    QuickMenuRebornUnregisterWidget(ID_SECTION_TITLE);
     QuickMenuRebornUnregisterWidget(ID_PLANE_ROOT);
     QuickMenuRebornRemoveSeparator(ID_SEPARATOR);
 }
