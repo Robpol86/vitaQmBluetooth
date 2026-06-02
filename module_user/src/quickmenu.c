@@ -25,7 +25,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  *      - Always show 8 buttons
  *      - Write disable_button() enable_button() to grey and no-op callbacks
  *      - When bt is disabled disable all buttons and relabel each with "bt is disabled"
- * - Implement state, move thread start/stop into qmr_onload/unload
+ * - Implement button state struct array
  * - PR merge
  * - Bring in QMR APIs into paf.cpp here (keep project C, paf.cpp will have C++ stubs) one by one
  *      - Eventually add new APIs such as Show/Hide and Enable/Disable
@@ -106,6 +106,9 @@ ONLOAD_HANDLER(quickmenu_on_load) {
 
     LOG_DEBUG(0, "Quick menu opened.");
 
+    // Start event thread.
+    kmod_event_start();
+
     // Zero the struct array to prevent ghost data.
     sceClibMemset(devices, 0, sizeof(devices));
 
@@ -152,6 +155,9 @@ void quickmenu_on_unload(const char* id) {
         sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
         QuickMenuRebornSetWidgetLabel(id, label);
     }
+
+    // Stop event thread.
+    kmod_event_stop();
 }
 
 /**
@@ -225,9 +231,6 @@ static void remove_widgets(void) {
  */
 void quickmenu_start(void) {
     // TODO
-    kmod_event_start();  // TODO move into quickmenu_on_load
-
-    // TODO
     create_widgets();
 }
 
@@ -237,7 +240,4 @@ void quickmenu_start(void) {
 void quickmenu_stop(void) {
     // TODO
     remove_widgets();
-
-    // TODO
-    kmod_event_stop();  // TODO move into quickmenu_on_unload
 }
