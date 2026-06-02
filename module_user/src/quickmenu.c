@@ -53,6 +53,8 @@ static VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];  // TODO locking/semaphore?
 #define ID_SEPARATOR MODULE_NAME "Separator"
 #define ID_PLANE_ROOT MODULE_NAME "PlaneRoot"
 #define ID_SECTION_TEXT MODULE_NAME "SectionText"
+
+// Button widget IDs.
 static const char* const ID_BUTTONS[VQMBT_MAX_DEVICES] = {
     MODULE_NAME "Button0", MODULE_NAME "Button1", MODULE_NAME "Button2", MODULE_NAME "Button3",
     MODULE_NAME "Button4", MODULE_NAME "Button5", MODULE_NAME "Button6", MODULE_NAME "Button7",
