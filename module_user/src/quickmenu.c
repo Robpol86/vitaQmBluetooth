@@ -197,6 +197,17 @@ static void remove_widgets(void) {
     QuickMenuRebornRemoveSeparator(ID_SEPARATOR);
 }
 
+/**
+ * TODO
+ *
+ * TODO:
+ * - Develop Dockerfile that will build my QMR fork
+ * - Update redist here to use newly built fork, confirm on vita
+ * - Attempt to patch in show/hide/enable/disable APIs
+ * - Test new APIs in dim_thread().
+ *      - Hide/show the root plane, confirm buttons are unselectable whilst hidden, and no scrollbars
+ *      - Enable/disable first button. Should be selectable as-per big BT button at the top, but tap/X/O no-ops
+ */
 static int dim_thread(SceSize args, void* argp) {
     (void)args;
     (void)argp;
@@ -205,7 +216,7 @@ static int dim_thread(SceSize args, void* argp) {
     char label[BUTTON_LABEL_MAX];
     const char* first_button_id = ID_BUTTONS[0];
 
-    while (true) {
+    while (false) {  // TODO enable to test
         state += 1;
         sceClibSnprintf(label, sizeof(label), "Switch state: %d", state);
         QuickMenuRebornSetWidgetLabel(first_button_id, label);
