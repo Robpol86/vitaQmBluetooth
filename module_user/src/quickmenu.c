@@ -19,6 +19,20 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief Interface for the Quick Menu on the PS Vita.
  ******************************************************************************/
 
+/**
+ * TODO:
+ * - Stick with QMR.
+ *      - Always show 8 buttons
+ *      - Write disable_button() enable_button() to grey and no-op callbacks
+ *      - When bt is disabled disable all buttons and relabel each with "bt is disabled"
+ * - Implement state, move thread start/stop into qmr_onload/unload
+ * - PR merge
+ * - Bring in QMR APIs into paf.cpp here (keep project C, paf.cpp will have C++ stubs) one by one
+ *      - Eventually add new APIs such as Show/Hide and Enable/Disable
+ *      - Hide/show the root plane, confirm buttons are unselectable whilst hidden, and no scrollbars
+ *      - Enable/disable first button. Should be selectable as-per big BT button at the top, but tap/X/O no-ops
+ */
+
 #include "quickmenu.h"
 
 #include <psp2/kernel/clib.h>
@@ -38,8 +52,6 @@ static VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];  // TODO locking/semaphore?
 // Widget IDs (prefixed because they must be unique across all plugins).
 #define ID_SEPARATOR MODULE_NAME "Separator"
 #define ID_PLANE_ROOT MODULE_NAME "PlaneRoot"
-#define ID_PLANE_MESSAGE MODULE_NAME "PlaneMessage"
-#define ID_PLANE_BUTTONS MODULE_NAME "PlaneButtons"
 #define ID_SECTION_TEXT MODULE_NAME "SectionText"
 static const char* const ID_BUTTONS[VQMBT_MAX_DEVICES] = {
     MODULE_NAME "Button0", MODULE_NAME "Button1", MODULE_NAME "Button2", MODULE_NAME "Button3",
@@ -146,8 +158,7 @@ void quickmenu_on_unload(const char* id) {
  * TODO:
  * - callback: relabel button with new state. Surface error in button as close/reopen resets labels
  * - button_reset() button_disable() button_enable() functions
- * - TODO TODO TODO use a thread to dim/undim and size/resize widgets every 10s, can these be animated (e.g. fading)?
- * - long bt names shrink text not dissappear it
+ * - long bt names ellipses
  */
 static void create_widgets(void) {
     // Add horizontal line separator.
@@ -197,21 +208,6 @@ static void remove_widgets(void) {
     QuickMenuRebornRemoveSeparator(ID_SEPARATOR);
 }
 
-/**
- * TODO
- *
- * TODO:
- * - Stick with QMR.
- *      - Always show 8 buttons
- *      - Write disable_button() enable_button() to grey and no-op callbacks
- *      - When bt is disabled disable all buttons and relabel each with "bt is disabled"
- * - Implement state, move thread start/stop into qmr_onload/unload
- * - PR merge
- * - Bring in QMR APIs into paf.cpp here (keep project C, paf.cpp will have C++ stubs) one by one
- *      - Eventually add new APIs such as Show/Hide and Enable/Disable
- *      - Hide/show the root plane, confirm buttons are unselectable whilst hidden, and no scrollbars
- *      - Enable/disable first button. Should be selectable as-per big BT button at the top, but tap/X/O no-ops
- */
 static int dim_thread(SceSize args, void* argp) {
     (void)args;
     (void)argp;
@@ -269,7 +265,7 @@ static int dim_thread(SceSize args, void* argp) {
     return 0;
 }
 
-static void dim_thread_start(void) {
+void dim_thread_start(void) {
     int ret = sceKernelCreateThread("vqmbt-kmod_event-event_thread", dim_thread, 0x96, 0x1000, 0,
                                     SCE_KERNEL_THREAD_CPU_AFFINITY_MASK_DEFAULT, NULL);
     if (ret < 0) {
@@ -298,9 +294,6 @@ void quickmenu_start(void) {
 
     // TODO
     create_widgets();
-
-    // TODO remove
-    dim_thread_start();
 }
 
 /**
