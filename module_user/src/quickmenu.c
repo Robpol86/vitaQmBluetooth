@@ -31,7 +31,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  *      - Eventually add new APIs such as Show/Hide and Enable/Disable
  *      - Hide/show the root plane, confirm buttons are unselectable whilst hidden, and no scrollbars
  *      - Enable/disable first button. Should be selectable as-per big BT button at the top, but tap/X/O no-ops
- * - Slots always consecutive right?
  */
 
 #include "quickmenu.h"
@@ -143,6 +142,9 @@ static void reset(void) {
             LOG_DEBUG(0, "Nothing changed");
             return;
         }
+        LOG_DEBUG(0, "Change detected in one or more paired devices");
+    } else {
+        LOG_DEBUG(0, "Change detected: device added or removed");
     }
 
     // TODO mutex lock
