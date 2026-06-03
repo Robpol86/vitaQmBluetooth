@@ -37,12 +37,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 // Device states.
 typedef enum VqmbtInferredBtState : int {
     VQMBT_BT_STATE_UNKNOWN0 = 0,
-    VQMBT_BT_STATE_DISCONNECTED,
-    VQMBT_BT_STATE_CONNECTING,
-    VQMBT_BT_STATE_UNKNOWN3,
-    VQMBT_BT_STATE_UNKNOWN4,
-    VQMBT_BT_STATE_CONNECTED,
-    VQMBT_BT_STATE_REGISTERING,
+    VQMBT_BT_STATE_DISCONNECTED = 1,
+    VQMBT_BT_STATE_CONNECTING = 2,
+    VQMBT_BT_STATE_UNKNOWN3 = 3,
+    VQMBT_BT_STATE_DISCONNECTING = 4,
+    VQMBT_BT_STATE_CONNECTED = 5,
+    VQMBT_BT_STATE_REGISTERING = 6,
 } VqmbtInferredBtState;
 
 // Device info.
