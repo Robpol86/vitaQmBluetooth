@@ -171,8 +171,9 @@ static void quickmenu_on_unload(const char* id) {
 
     // Stop event thread.
     kmod_event_stop();
-    
-    // todo reset
+
+    // Reset struct array.
+    sceClibMemset(qm_buttons, 0, sizeof(qm_buttons));
 }
 
 /**
