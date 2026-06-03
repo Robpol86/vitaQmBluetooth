@@ -48,6 +48,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #define BUTTON_LABEL_MAX (VQMBT_DEVICE_NAME_MAX + 16)
 
+#define PREFIX "VqmbtEvent: "
+#define INDENT "            "
+_Static_assert(sizeof(PREFIX) == sizeof(INDENT), "INDENT width must match PREFIX");
+
 // Widget IDs (prefixed because they must be unique across all plugins).
 #define ID_SEPARATOR MODULE_NAME "Separator"
 #define ID_SECTION_TITLE MODULE_NAME "SectionTitle"
@@ -105,6 +109,68 @@ static void refresh_buttons(void) {
         }
         const char* id = ID_BUTTONS[idx];
         QuickMenuRebornSetWidgetLabel(id, label);
+    }
+}
+
+/**
+ * Handle scenario where one or more events went missing.
+ */
+static void handle_event_dropped(void) {
+    // TODO
+    LOG_DEBUG(0, "TODO re-run kvqmbt_get_paired_devices()");
+}
+
+/**
+ * Handler for one event. Called once per bluetooth event.
+ *
+ * @param event Event details.
+ */
+static void handle_event(const VqmbtEvent* event) {
+    LOG_DEBUG(0, PREFIX "id=0x%08X mac0=0x%08X mac1=0x%08X", event->id, event->mac0, event->mac1);
+
+    // Handle events.
+    switch (event->id) {
+        case VQMBT_EVENT_DROPPED_EVENTS:
+            LOG_DEBUG(0, INDENT "Missing bluetooth events detected");
+            handle_event_dropped();
+            break;
+
+        case VQMBT_EVENT_BLUETOOTH_ENABLED:
+            LOG_DEBUG(0, INDENT "Bluetooth turned on");
+            break;
+
+        case VQMBT_EVENT_BLUETOOTH_DISABLED:
+            LOG_DEBUG(0, INDENT "Bluetooth turned off");
+            break;
+
+        case VQMBT_EVENT_DEVICE_ADDED_REMOVED_CONNECTING:
+            LOG_DEBUG(0, INDENT "Device added/removed/connecting");
+            break;
+
+        case VQMBT_EVENT_DEVICE_DISCONNECTED:
+            LOG_DEBUG(0, INDENT "Device disconnected");
+            break;
+
+        case VQMBT_EVENT_DEVICE_CONNECT_SUCCESS:
+            LOG_DEBUG(0, INDENT "Device connected");
+            break;
+
+        case VQMBT_EVENT_DEVICE_CONNECT_FAILED:
+            LOG_DEBUG(0, INDENT "Device connect failed");
+            break;
+
+        case VQMBT_EVENT_DEVICE_CONNECT_ABORTED:
+            LOG_DEBUG(0, INDENT "Device connect aborted");
+            break;
+
+        case VQMBT_EVENT_DEVICE_CONNECT_CANCELLED:
+            LOG_DEBUG(0, INDENT "Device connect cancelled");
+            break;
+
+        default:
+            LOG_WARN(INDENT "Unhandled event id=0x%08X", event->id);
+            LOG_DEBUG(0, INDENT "Ignoring id=0x%08X", event->id);
+            break;
     }
 }
 
@@ -192,7 +258,7 @@ static ONLOAD_HANDLER(quickmenu_on_load) {
     LOG_DEBUG(0, "Quick menu opened.");
 
     // Start event thread.
-    kmod_event_start(reset);
+    kmod_event_start(reset, handle_event_dropped, handle_event);
 }
 
 /**

@@ -36,75 +36,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define THREAD_PRIORITY 0x96      /* Higher value = lower priority. */
 #define THREAD_STACK_SIZE 0x1000  // TODO tune?
 
-#define PREFIX "VqmbtEvent: "
-#define INDENT "            "
-_Static_assert(sizeof(PREFIX) == sizeof(INDENT), "INDENT width must match PREFIX");
-
+static KmeCallback cb_on_start = NULL;
+static KmeCallback cb_on_event_dropped = NULL;
+static KmeHandledCallback cb_on_event = NULL;
 static SceUID uid_event_flag = -1;
 static SceUID uid_thread = -1;
 static bool run_thread = false;
-
-/**
- * Handle scenario where one or more events went missing.
- */
-static void handle_event_dropped(void) {
-    // TODO
-    LOG_DEBUG(0, "TODO re-run kvqmbt_get_paired_devices()");
-}
-
-/**
- * Handler for one event. Called once per bluetooth event.
- *
- * @param event Event details.
- */
-static void handle_event(const VqmbtEvent* event) {
-    LOG_DEBUG(0, PREFIX "id=0x%08X mac0=0x%08X mac1=0x%08X", event->id, event->mac0, event->mac1);
-
-    // Handle events.
-    switch (event->id) {
-        case VQMBT_EVENT_DROPPED_EVENTS:
-            LOG_DEBUG(0, INDENT "Missing bluetooth events detected");
-            handle_event_dropped();
-            break;
-
-        case VQMBT_EVENT_BLUETOOTH_ENABLED:
-            LOG_DEBUG(0, INDENT "Bluetooth turned on");
-            break;
-
-        case VQMBT_EVENT_BLUETOOTH_DISABLED:
-            LOG_DEBUG(0, INDENT "Bluetooth turned off");
-            break;
-
-        case VQMBT_EVENT_DEVICE_ADDED_REMOVED_CONNECTING:
-            LOG_DEBUG(0, INDENT "Device added/removed/connecting");
-            break;
-
-        case VQMBT_EVENT_DEVICE_DISCONNECTED:
-            LOG_DEBUG(0, INDENT "Device disconnected");
-            break;
-
-        case VQMBT_EVENT_DEVICE_CONNECT_SUCCESS:
-            LOG_DEBUG(0, INDENT "Device connected");
-            break;
-
-        case VQMBT_EVENT_DEVICE_CONNECT_FAILED:
-            LOG_DEBUG(0, INDENT "Device connect failed");
-            break;
-
-        case VQMBT_EVENT_DEVICE_CONNECT_ABORTED:
-            LOG_DEBUG(0, INDENT "Device connect aborted");
-            break;
-
-        case VQMBT_EVENT_DEVICE_CONNECT_CANCELLED:
-            LOG_DEBUG(0, INDENT "Device connect cancelled");
-            break;
-
-        default:
-            LOG_WARN(INDENT "Unhandled event id=0x%08X", event->id);
-            LOG_DEBUG(0, INDENT "Ignoring id=0x%08X", event->id);
-            break;
-    }
-}
 
 /**
  * Retrieve events from the kernel module's ring buffer via syscall and pass them to handle_event().
@@ -119,7 +56,11 @@ static void fetch_events(void) {
         // Handle errors.
         if (ret == VQMBT_ERROR_CB_OVERFLOW) {
             LOG_WARN("kvqmbt_read_event reported dropped events");
-            handle_event_dropped();
+            if (cb_on_event_dropped == NULL) {
+                LOG_ERROR("cb_on_event_dropped is null");
+            } else {
+                cb_on_event_dropped();
+            }
             continue;
         }
         if (ret < 0) {
@@ -133,7 +74,11 @@ static void fetch_events(void) {
         }
 
         // Continue in handler.
-        handle_event(&event);
+        if (cb_on_event == NULL) {
+            LOG_ERROR("cb_on_event is null");
+        } else {
+            cb_on_event(&event);
+        }
     }
 }
 
@@ -145,16 +90,16 @@ static void fetch_events(void) {
  * @return Success always.
  */
 static int event_thread(SceSize args, void* argp) {
+    (void)args;
+    (void)argp;
+
     LOG_DEBUG(0, "Thread started");
 
     // Run the on_start function if passed.
-    if (args == sizeof(KmodEventCallback) && argp != NULL) {
-        KmodEventCallback on_start;
-        sceClibMemcpy((void*)&on_start, argp, sizeof(on_start));
-        if (on_start != NULL) {
-            LOG_DEBUG(0, "Running on_start callback");
-            on_start();
-        }
+    if (cb_on_start == NULL) {
+        LOG_ERROR("cb_on_start is null");
+    } else {
+        cb_on_start();
     }
 
     // Get event flag.
@@ -197,11 +142,14 @@ static int event_thread(SceSize args, void* argp) {
  * TODO:
  * - Return errors so caller can return non-success.
  */
-void kmod_event_start(KmodEventCallback on_start) {
+void kmod_event_start(KmeCallback on_start, KmeCallback on_event_dropped, KmeHandledCallback on_event) {
     if (uid_thread >= 0) {
         return;
     }
 
+    cb_on_start = on_start;
+    cb_on_event_dropped = on_event_dropped;
+    cb_on_event = on_event;
     run_thread = true;
 
     // Create the thread.
@@ -214,7 +162,7 @@ void kmod_event_start(KmodEventCallback on_start) {
     LOG_DEBUG(0, "sceKernelCreateThread returned 0x%08X", uid_thread);
 
     // Start the thread.
-    int ret = sceKernelStartThread(uid_thread, sizeof(on_start), (void*)&on_start);
+    int ret = sceKernelStartThread(uid_thread, 0, NULL);
     LOG_DEBUG(0, "sceKernelStartThread returned 0x%08X", ret);
 }
 

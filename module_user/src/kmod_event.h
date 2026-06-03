@@ -22,8 +22,11 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef KMOD_EVENT_H
 #define KMOD_EVENT_H
 
-typedef void (*KmodEventCallback)(void);
-void kmod_event_start(KmodEventCallback on_start);
+#include "vqmbt.h"
+
+typedef void (*KmeCallback)(void);
+typedef void (*KmeHandledCallback)(const VqmbtEvent* event);
+void kmod_event_start(KmeCallback on_start, KmeCallback on_event_dropped, KmeHandledCallback on_event);
 
 void kmod_event_stop(void);
 
