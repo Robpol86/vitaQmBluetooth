@@ -64,7 +64,6 @@ typedef struct QmButton {
     unsigned int mac0;
     unsigned int mac1;
     QmButtonState state;
-    bool enabled;
     char qm_widget_id[sizeof(MODULE_NAME "Button00")];
 } QmButton;
 static QmButton qm_buttons[VQMBT_MAX_DEVICES];
@@ -118,10 +117,18 @@ static void reset(void) {
         return;
     }
 
-    // Update buttons.
-    // TODO.
+    // Detect changes.
+    // TODO if no change return.
 
-    refresh_buttons();  // TODO lock in here? lock before editing struct array (include that)?
+    // TODO mutex lock
+
+    // Update qm_buttons.
+    // TODO
+
+    // Update UI.
+    refresh_buttons();
+
+    // TODO mutex release
 }
 
 /**
@@ -154,11 +161,8 @@ static ONLOAD_HANDLER(quickmenu_on_load) {
 
     LOG_DEBUG(0, "Quick menu opened.");
 
-    // Reset button states and fetch initial data.
-    reset();  // TODO do this from a thread to not block quickmenu? Maybe use SceKernelLwMutexWork?
-
-    // Start event thread for subsequent changes.
-    kmod_event_start(NULL);  // TODO pass run-once function that runs reset() in the thread.
+    // Start event thread.
+    kmod_event_start(reset);
 }
 
 /**
