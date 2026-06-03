@@ -121,7 +121,7 @@ static void reset(void) {
     // Update buttons.
     // TODO.
 
-    refresh_buttons();
+    refresh_buttons();  // TODO lock in here? lock before editing struct array (include that)?
 }
 
 /**
