@@ -116,7 +116,8 @@ static void reset(void) {
     }
 
     // Get all currently paired/registered bluetooth devices.
-    VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES] = {0};
+    VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];
+    sceClibMemset(devices, 0, sizeof(devices));
     int count = kvqmbt_get_paired_devices(devices, VQMBT_MAX_DEVICES);
     if (count < 0) {
         LOG_ERROR("kvqmbt_get_paired_devices returned error 0x%08X", count);
