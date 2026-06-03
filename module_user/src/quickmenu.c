@@ -31,6 +31,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  *      - Eventually add new APIs such as Show/Hide and Enable/Disable
  *      - Hide/show the root plane, confirm buttons are unselectable whilst hidden, and no scrollbars
  *      - Enable/disable first button. Should be selectable as-per big BT button at the top, but tap/X/O no-ops
+ * - Slots always consecutive right?
  */
 
 #include "quickmenu.h"
@@ -69,7 +70,7 @@ typedef enum QmButtonState : unsigned int {
 } QmButtonState;
 typedef struct QmButton {
     VqmbtDeviceInfo device;
-    QmButtonState state;
+    QmButtonState state;  // TODO detect and handle transitions from device.state to .state.
 } QmButton;
 static QmButton qm_buttons[VQMBT_MAX_DEVICES];
 static int qm_buttons_count = 0;
@@ -79,30 +80,32 @@ static int qm_buttons_count = 0;
  */
 static void refresh_buttons(void) {
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
-        // TODO revisit
-        // QmButton* qm_button = &qm_buttons[idx];
+        QmButton* qm_button = &qm_buttons[idx];
 
-        // // Update label.
-        // char label[BUTTON_LABEL_MAX];
-        // if (qm_button->device_name[0] == '\0') {
-        //     sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
-        // } else {
-        //     switch (qm_button->state) {
-        //         case BTNSTATE_DISCONNECTED:
-        //             sceClibSnprintf(label, sizeof(label), "Connect %s", qm_button->device_name);
-        //             break;
-        //         case BTNSTATE_DISCONNECTING:
-        //             sceClibSnprintf(label, sizeof(label), "Disconnecting %s", qm_button->device_name);
-        //             break;
-        //         case BTNSTATE_CONNECTED:
-        //             sceClibSnprintf(label, sizeof(label), "Disconnect %s", qm_button->device_name);
-        //             break;
-        //         case BTNSTATE_CONNECTING:
-        //             sceClibSnprintf(label, sizeof(label), "Connecting %s", qm_button->device_name);
-        //             break;
-        //     }
-        // }
-        // QuickMenuRebornSetWidgetLabel(id, label);
+        // Update label.
+        char label[BUTTON_LABEL_MAX];
+        if (qm_button->device.name[0] == '\0') {
+            sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
+        } else {
+            sceClibSnprintf(label, sizeof(label), "Connect %s", qm_button->device.name);
+            // TODO revisit
+            // switch (qm_button->state) {
+            //     case BTNSTATE_DISCONNECTED:
+            //         sceClibSnprintf(label, sizeof(label), "Connect %s", qm_button->device_name);
+            //         break;
+            //     case BTNSTATE_DISCONNECTING:
+            //         sceClibSnprintf(label, sizeof(label), "Disconnecting %s", qm_button->device_name);
+            //         break;
+            //     case BTNSTATE_CONNECTED:
+            //         sceClibSnprintf(label, sizeof(label), "Disconnect %s", qm_button->device_name);
+            //         break;
+            //     case BTNSTATE_CONNECTING:
+            //         sceClibSnprintf(label, sizeof(label), "Connecting %s", qm_button->device_name);
+            //         break;
+            // }
+        }
+        const char* id = ID_BUTTONS[idx];
+        QuickMenuRebornSetWidgetLabel(id, label);
     }
 }
 
@@ -144,9 +147,11 @@ static void reset(void) {
 
     // TODO mutex lock
 
-    // Update qm_buttons.
-    // TODO
-    // qm_buttons_count = count;
+    // Update qm_buttons[]->device.
+    for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
+        sceClibMemcpy(&qm_buttons[idx].device, &devices[idx], sizeof(devices[idx]));
+    }
+    qm_buttons_count = count;
 
     // Update UI.
     refresh_buttons();
