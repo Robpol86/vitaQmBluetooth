@@ -45,7 +45,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "log.h"
 #include "vqmbt.h"
 
-#define BUTTON_LABEL_MAX (sizeof(((VqmbtDeviceInfo*)0)->name) + 16)
+#define BUTTON_LABEL_MAX (VQMBT_DEVICE_NAME_MAX + 16)
 
 // Widget IDs (prefixed because they must be unique across all plugins).
 #define ID_SEPARATOR MODULE_NAME "Separator"
@@ -54,7 +54,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 // Buttons struct that maintains state of a button.
 typedef enum QmButtonState : unsigned int {
-    BTNSTATE_DISCONNECTED,
+    BTNSTATE_DISCONNECTED = 0,
     BTNSTATE_DISCONNECTING,
     BTNSTATE_CONNECTED,
     BTNSTATE_CONNECTING,
@@ -70,6 +70,61 @@ typedef struct QmButton {
 static QmButton qm_buttons[VQMBT_MAX_DEVICES];
 
 /**
+ * TODO
+ */
+static void refresh_buttons(void) {
+    for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
+        QmButton* qm_button = &qm_buttons[idx];
+
+        // Update label.
+        char label[BUTTON_LABEL_MAX];
+        if (qm_button->device_name[0] == '\0') {
+            sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
+        } else {
+            switch (qm_button->state) {
+                case BTNSTATE_DISCONNECTED:
+                    sceClibSnprintf(label, sizeof(label), "Connect %s", qm_button->device_name);
+                    break;
+                case BTNSTATE_DISCONNECTING:
+                    sceClibSnprintf(label, sizeof(label), "Disconnecting %s", qm_button->device_name);
+                    break;
+                case BTNSTATE_CONNECTED:
+                    sceClibSnprintf(label, sizeof(label), "Disconnect %s", qm_button->device_name);
+                    break;
+                case BTNSTATE_CONNECTING:
+                    sceClibSnprintf(label, sizeof(label), "Connecting %s", qm_button->device_name);
+                    break;
+            }
+        }
+        QuickMenuRebornSetWidgetLabel(qm_button->qm_widget_id, label);
+    }
+}
+
+/**
+ * TODO
+ */
+static void reset(void) {
+    // Flush kernel buffer.
+    int ret = kvqmbt_read_event(NULL, 0);
+    if (ret < 0) {
+        LOG_ERROR("kvqmbt_read_event returned error 0x%08X", ret);
+    }
+
+    // Get all currently paired/registered bluetooth devices.
+    VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];
+    int count = kvqmbt_get_paired_devices(devices, VQMBT_MAX_DEVICES);
+    if (count < 0) {
+        LOG_ERROR("kvqmbt_get_paired_devices returned error 0x%08X", count);
+        return;
+    }
+
+    // Update buttons.
+    // TODO.
+
+    refresh_buttons();
+}
+
+/**
  * Connect or disconnect the device associated with the button.
  *
  * Called when the user taps on the button.
@@ -78,7 +133,7 @@ static QmButton qm_buttons[VQMBT_MAX_DEVICES];
  * - Relabel button "Connecting <name>...".
  * - when user taps a button disable all buttons and wait for callback.
  */
-BUTTON_HANDLER(quickmenu_on_press) {
+static BUTTON_HANDLER(quickmenu_on_press) {
     (void)id;
     (void)hash;
     (void)eventId;
@@ -94,21 +149,22 @@ BUTTON_HANDLER(quickmenu_on_press) {
  * - Performance? delay opening qm? async?
  * - Hide empty slots and resize plane to eliminate ghost scrolling.
  */
-ONLOAD_HANDLER(quickmenu_on_load) {
+static ONLOAD_HANDLER(quickmenu_on_load) {
     (void)id;
 
     LOG_DEBUG(0, "Quick menu opened.");
-    
-    // TODO reset (get 0 events then syscall)
 
-    // Start event thread.
+    // Reset button states and fetch initial data.
+    reset();  // TODO do this from a thread to not block quickmenu?
+
+    // Start event thread for subsequent changes.
     kmod_event_start();
 }
 
 /**
  * Called when the quick menu is closed by the user.
  */
-void quickmenu_on_unload(const char* id) {
+static void quickmenu_on_unload(const char* id) {
     (void)id;
 
     LOG_DEBUG(0, "Quick menu closed.");
@@ -162,9 +218,6 @@ void quickmenu_start(void) {
         QuickMenuRebornSetWidgetSize(qm_button->qm_widget_id, 600, 75, 0, 0);
         QuickMenuRebornSetWidgetPosition(qm_button->qm_widget_id, 20, 280 - (idx * 80), 0, 0);
         QuickMenuRebornSetWidgetColor(qm_button->qm_widget_id, 1, 1, 1, 1);
-        char label[BUTTON_LABEL_MAX];  // TODO use struct.
-        sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
-        QuickMenuRebornSetWidgetLabel(qm_button->qm_widget_id, label);
         QuickMenuRebornRegisterEventHanlder(qm_button->qm_widget_id, QMR_BUTTON_RELEASE_ID, quickmenu_on_press,
                                             (void*)(intptr_t)idx);
     }

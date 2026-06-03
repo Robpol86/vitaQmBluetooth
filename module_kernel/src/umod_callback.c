@@ -81,12 +81,12 @@ int kvqmbt_read_event(VqmbtEvent* event, int num_events) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
     ENTER_SYSCALL(syscall_state_);
 
-    if (event == NULL) {
-        LOG_ERROR("Invalid event pointer: NULL");
-        return VQMBT_ERROR_INVALID_ARGUMENT;
-    }
     if (num_events > 1) {
         LOG_ERROR("num_events must be <=1: %d", num_events);
+        return VQMBT_ERROR_INVALID_ARGUMENT;
+    }
+    if (num_events > 0 && event == NULL) {
+        LOG_ERROR("Invalid event pointer: NULL");
         return VQMBT_ERROR_INVALID_ARGUMENT;
     }
 

@@ -94,6 +94,7 @@ void kvqmbt_disconnect_device(unsigned int mac0, unsigned int mac1) {
  *
  * TODO:
  * - Is 8 actually the max number of devices?
+ * - Refactor?
  *
  * @param info User-space pointer to an array of VqmbtDeviceInfo records.
  * @param info_size Capacity of the user array, in records.
