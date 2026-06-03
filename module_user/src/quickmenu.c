@@ -64,7 +64,7 @@ typedef struct QmButton {
     unsigned int mac0;
     unsigned int mac1;
     QmButtonState state;
-    char qm_widget_id[sizeof(MODULE_NAME "Button00")];
+    char qm_widget_id[sizeof(MODULE_NAME "Button00")];  // TODO move into hard-coded defines.
 } QmButton;
 static QmButton qm_buttons[VQMBT_MAX_DEVICES];
 
@@ -110,7 +110,7 @@ static void reset(void) {
     }
 
     // Get all currently paired/registered bluetooth devices.
-    VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];
+    VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES] = {0};
     int count = kvqmbt_get_paired_devices(devices, VQMBT_MAX_DEVICES);
     if (count < 0) {
         LOG_ERROR("kvqmbt_get_paired_devices returned error 0x%08X", count);
@@ -175,9 +175,6 @@ static void quickmenu_on_unload(const char* id) {
 
     // Stop event thread.
     kmod_event_stop();
-
-    // Reset struct array.
-    sceClibMemset(qm_buttons, 0, sizeof(qm_buttons));  // TODO move to start run-once.
 }
 
 /**
