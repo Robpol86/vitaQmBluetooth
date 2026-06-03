@@ -158,7 +158,7 @@ static ONLOAD_HANDLER(quickmenu_on_load) {
     reset();  // TODO do this from a thread to not block quickmenu? Maybe use SceKernelLwMutexWork?
 
     // Start event thread for subsequent changes.
-    kmod_event_start();  // TODO pass run-once function that runs reset() in the thread.
+    kmod_event_start(NULL);  // TODO pass run-once function that runs reset() in the thread.
 }
 
 /**

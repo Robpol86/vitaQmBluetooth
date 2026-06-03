@@ -145,10 +145,17 @@ static void fetch_events(void) {
  * @return Success always.
  */
 static int event_thread(SceSize args, void* argp) {
-    (void)args;
-    (void)argp;
-
     LOG_DEBUG(0, "Thread started");
+
+    // Run the on_start function if passed.
+    if (args == sizeof(KmodEventCallback) && argp != NULL) {
+        KmodEventCallback on_start;
+        sceClibMemcpy((void*)&on_start, argp, sizeof(on_start));
+        if (on_start != NULL) {
+            LOG_DEBUG(0, "Running on_start callback");
+            on_start();
+        }
+    }
 
     // Get event flag.
     uid_event_flag = kvqmbt_get_wrapped_event_flag();
@@ -185,10 +192,12 @@ static int event_thread(SceSize args, void* argp) {
 /**
  * Create a thread to handle events from the kernel module and start it.
  *
+ * @param on_start TODO
+ *
  * TODO:
  * - Return errors so caller can return non-success.
  */
-void kmod_event_start(void) {
+void kmod_event_start(KmodEventCallback on_start) {
     if (uid_thread >= 0) {
         return;
     }
@@ -205,7 +214,7 @@ void kmod_event_start(void) {
     LOG_DEBUG(0, "sceKernelCreateThread returned 0x%08X", uid_thread);
 
     // Start the thread.
-    int ret = sceKernelStartThread(uid_thread, 0, NULL);
+    int ret = sceKernelStartThread(uid_thread, sizeof(on_start), (void*)&on_start);
     LOG_DEBUG(0, "sceKernelStartThread returned 0x%08X", ret);
 }
 

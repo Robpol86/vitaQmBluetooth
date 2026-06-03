@@ -22,7 +22,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef KMOD_EVENT_H
 #define KMOD_EVENT_H
 
-void kmod_event_start(void);
+typedef void (*KmodEventCallback)(void);
+void kmod_event_start(KmodEventCallback on_start);
+
 void kmod_event_stop(void);
 
 #endif  // KMOD_EVENT_H
