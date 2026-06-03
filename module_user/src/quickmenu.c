@@ -52,7 +52,14 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define ID_SECTION_TITLE MODULE_NAME "SectionTitle"
 #define ID_PLANE_BUTTONS MODULE_NAME "PlaneButtons"
 
-// Quick Menu button states.
+// Button IDs.
+static const char* const ID_BUTTONS[VQMBT_MAX_DEVICES] = {
+    MODULE_NAME "Button0", MODULE_NAME "Button1", MODULE_NAME "Button2", MODULE_NAME "Button3",
+    MODULE_NAME "Button4", MODULE_NAME "Button5", MODULE_NAME "Button6", MODULE_NAME "Button7",
+};
+_Static_assert(sizeof(ID_BUTTONS) / sizeof(ID_BUTTONS[0]) == VQMBT_MAX_DEVICES, "ID_BUTTONS size != VQMBT_MAX_DEVICES");
+
+// Button states.
 typedef enum QmButtonState : unsigned int {
     BTNSTATE_DISCONNECTED = 0,
     BTNSTATE_DISCONNECTING,
@@ -62,7 +69,6 @@ typedef enum QmButtonState : unsigned int {
 typedef struct QmButton {
     VqmbtDeviceInfo device;
     QmButtonState state;
-    char qm_widget_id[sizeof(MODULE_NAME "Button00")];  // TODO move into hard-coded defines.
 } QmButton;
 static QmButton qm_buttons[VQMBT_MAX_DEVICES];
 static int qm_buttons_count = 0;
@@ -95,7 +101,7 @@ static void refresh_buttons(void) {
         //             break;
         //     }
         // }
-        // QuickMenuRebornSetWidgetLabel(qm_button->qm_widget_id, label);
+        // QuickMenuRebornSetWidgetLabel(id, label);
     }
 }
 
@@ -227,22 +233,16 @@ void quickmenu_start(void) {
 
     // Add device buttons.
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
-        QmButton* qm_button = &qm_buttons[idx];
-
-        // Set widget ID.
-        sceClibSnprintf(qm_button->qm_widget_id, sizeof(qm_button->qm_widget_id), MODULE_NAME "Button%d", idx);
-
-        // Create widget.
-        QuickMenuRebornRegisterWidget(qm_button->qm_widget_id, ID_PLANE_BUTTONS, button);
-        QuickMenuRebornSetWidgetSize(qm_button->qm_widget_id, 600, 75, 0, 0);
-        QuickMenuRebornSetWidgetPosition(qm_button->qm_widget_id, 20, 280 - (idx * 80), 0, 0);
-        QuickMenuRebornSetWidgetColor(qm_button->qm_widget_id, 1, 1, 1, 1);
-        QuickMenuRebornRegisterEventHanlder(qm_button->qm_widget_id, QMR_BUTTON_RELEASE_ID, quickmenu_on_press,
-                                            (void*)(intptr_t)idx);
+        const char* id = ID_BUTTONS[idx];
+        QuickMenuRebornRegisterWidget(id, ID_PLANE_BUTTONS, button);
+        QuickMenuRebornSetWidgetSize(id, 600, 75, 0, 0);
+        QuickMenuRebornSetWidgetPosition(id, 20, 280 - (idx * 80), 0, 0);
+        QuickMenuRebornSetWidgetColor(id, 1, 1, 1, 1);
+        QuickMenuRebornRegisterEventHanlder(id, QMR_BUTTON_RELEASE_ID, quickmenu_on_press, (void*)(intptr_t)idx);
     }
 
     // Register handlers.
-    const char* last_widget = qm_buttons[VQMBT_MAX_DEVICES - 1].qm_widget_id;
+    const char* last_widget = ID_BUTTONS[VQMBT_MAX_DEVICES - 1];
     QuickMenuRebornAssignOnLoadHandler(quickmenu_on_load, last_widget);
     QuickMenuRebornAssignOnDeleteHandler(quickmenu_on_unload, last_widget);
 }
@@ -252,7 +252,7 @@ void quickmenu_start(void) {
  */
 void quickmenu_stop(void) {
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
-        const char* id = qm_buttons[idx].qm_widget_id;
+        const char* id = ID_BUTTONS[idx];
         QuickMenuRebornUnregisterWidget(id);
     }
     QuickMenuRebornUnregisterWidget(ID_PLANE_BUTTONS);
