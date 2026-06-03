@@ -52,7 +52,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define ID_SECTION_TITLE MODULE_NAME "SectionTitle"
 #define ID_PLANE_BUTTONS MODULE_NAME "PlaneButtons"
 
-// Buttons struct that maintains state of a button.
+// Quick Menu button states.
 typedef enum QmButtonState : unsigned int {
     BTNSTATE_DISCONNECTED = 0,
     BTNSTATE_DISCONNECTING,
@@ -60,42 +60,42 @@ typedef enum QmButtonState : unsigned int {
     BTNSTATE_CONNECTING,
 } QmButtonState;
 typedef struct QmButton {
-    char device_name[VQMBT_DEVICE_NAME_MAX];
-    unsigned int mac0;
-    unsigned int mac1;
+    VqmbtDeviceInfo device;
     QmButtonState state;
     char qm_widget_id[sizeof(MODULE_NAME "Button00")];  // TODO move into hard-coded defines.
 } QmButton;
 static QmButton qm_buttons[VQMBT_MAX_DEVICES];
+static int qm_buttons_count = 0;
 
 /**
  * TODO
  */
 static void refresh_buttons(void) {
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
-        QmButton* qm_button = &qm_buttons[idx];
+        // TODO revisit
+        // QmButton* qm_button = &qm_buttons[idx];
 
-        // Update label.
-        char label[BUTTON_LABEL_MAX];
-        if (qm_button->device_name[0] == '\0') {
-            sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
-        } else {
-            switch (qm_button->state) {
-                case BTNSTATE_DISCONNECTED:
-                    sceClibSnprintf(label, sizeof(label), "Connect %s", qm_button->device_name);
-                    break;
-                case BTNSTATE_DISCONNECTING:
-                    sceClibSnprintf(label, sizeof(label), "Disconnecting %s", qm_button->device_name);
-                    break;
-                case BTNSTATE_CONNECTED:
-                    sceClibSnprintf(label, sizeof(label), "Disconnect %s", qm_button->device_name);
-                    break;
-                case BTNSTATE_CONNECTING:
-                    sceClibSnprintf(label, sizeof(label), "Connecting %s", qm_button->device_name);
-                    break;
-            }
-        }
-        QuickMenuRebornSetWidgetLabel(qm_button->qm_widget_id, label);
+        // // Update label.
+        // char label[BUTTON_LABEL_MAX];
+        // if (qm_button->device_name[0] == '\0') {
+        //     sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
+        // } else {
+        //     switch (qm_button->state) {
+        //         case BTNSTATE_DISCONNECTED:
+        //             sceClibSnprintf(label, sizeof(label), "Connect %s", qm_button->device_name);
+        //             break;
+        //         case BTNSTATE_DISCONNECTING:
+        //             sceClibSnprintf(label, sizeof(label), "Disconnecting %s", qm_button->device_name);
+        //             break;
+        //         case BTNSTATE_CONNECTED:
+        //             sceClibSnprintf(label, sizeof(label), "Disconnect %s", qm_button->device_name);
+        //             break;
+        //         case BTNSTATE_CONNECTING:
+        //             sceClibSnprintf(label, sizeof(label), "Connecting %s", qm_button->device_name);
+        //             break;
+        //     }
+        // }
+        // QuickMenuRebornSetWidgetLabel(qm_button->qm_widget_id, label);
     }
 }
 
@@ -118,12 +118,27 @@ static void reset(void) {
     }
 
     // Detect changes.
-    // TODO if no change return.
+    bool changed = false;
+    if (count == qm_buttons_count) {
+        for (int idx = 0; idx < count; idx++) {
+            VqmbtDeviceInfo* device = &devices[idx];
+            QmButton* qm_button = &qm_buttons[idx];
+            if (sceClibMemcmp(&qm_button->device, device, sizeof(*device)) != 0) {
+                changed = true;
+                break;
+            }
+        }
+        if (!changed) {
+            LOG_DEBUG(0, "Nothing changed");
+            return;
+        }
+    }
 
     // TODO mutex lock
 
     // Update qm_buttons.
     // TODO
+    // qm_buttons_count = count;
 
     // Update UI.
     refresh_buttons();

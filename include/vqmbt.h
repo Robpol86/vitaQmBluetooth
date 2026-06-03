@@ -35,12 +35,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define VQMBT_ERROR_CB_OVERFLOW ((int)0x80690003)
 #define VQMBT_ERROR_NOT_READY ((int)0x80690004)
 
-// Device info (TODO REMOVE).
+// Device info.
 typedef struct VqmbtDeviceInfo {
     char name[VQMBT_DEVICE_NAME_MAX];
     unsigned int mac0;
     unsigned int mac1;
-    int state;
+    int state;  // TODO switch to enum
 } VqmbtDeviceInfo;
 VITASDK_BUILD_ASSERT_EQ(0x8C, VqmbtDeviceInfo);
 
