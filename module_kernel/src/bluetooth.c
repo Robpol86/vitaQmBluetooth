@@ -34,23 +34,20 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];  // TODO locking/semaphore?
 
 /**
- * Check if the device is currently connected.
- *
- * TODO:
- * - Change from bool to int, just reutrn the state. Rename function.
+ * Return the connection state of the device.
  *
  * @param mac0 First four bytes of the bluetooth device's MAC address.
  * @param mac1 Last two bytes of the bluetooth device's MAC address.
- * @return true if the device is connected.
+ * @return state ID.
  */
-bool kvqmbt_is_connected(unsigned int mac0, unsigned int mac1) {
+VqmbtInferredBtState kvqmbt_device_state(unsigned int mac0, unsigned int mac1) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
     ENTER_SYSCALL(syscall_state_);
 
-    int state = ksceBtGetConnectingInfo(mac0, mac1);  // 1 == unknown/disconnected; 5/6 == connected
+    VqmbtInferredBtState state = ksceBtGetConnectingInfo(mac0, mac1);
     LOG_DEBUG(0, "ksceBtGetConnectingInfo(mac0=%08X, mac1=%08X) returned state=%d", mac0, mac1, state);
 
-    return (bool)(state == 5 || state == 6);
+    return state;  // TODO keep int, was: (bool)(state == 5 || state == 6);
 }
 
 /**
@@ -122,7 +119,7 @@ int kvqmbt_get_paired_devices(VqmbtDeviceInfo* info, int info_size) {
     LOG_DEBUG(0, "ksceBtGetRegisteredInfo returned count=%d info_size=%d max=%d", count, info_size, VQMBT_MAX_DEVICES);
 
     // Copy each record across the kernel/user boundary.
-    int state = 0;
+    VqmbtInferredBtState state = 0;
     for (int idx = 0; idx < count; idx++) {
         // Initialize user side.
         VqmbtDeviceInfo dev = {0};
@@ -152,7 +149,7 @@ int kvqmbt_get_paired_devices(VqmbtDeviceInfo* info, int info_size) {
         dev.mac1 = ((unsigned int)mac[5] << 8) | mac[4];
 
         // Get/set state.
-        state = ksceBtGetConnectingInfo(dev.mac0, dev.mac1);  // 1 == unknown/disconnected; 5/6 == connected
+        state = ksceBtGetConnectingInfo(dev.mac0, dev.mac1);
         LOG_DEBUG(0, "ksceBtGetConnectingInfo(mac0=%08X, mac1=%08X) returned state=%d", dev.mac0, dev.mac1, state);
         dev.state = state;
 

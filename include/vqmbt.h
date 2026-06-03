@@ -23,7 +23,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define VQMBT_H
 
 #include <psp2common/types.h>
-#include <stdbool.h>
 #include <vitasdk/build_utils.h>
 
 #define VQMBT_MAX_DEVICES 8        // Maximum number of bluetooth devices the PS Vita can be paired with.
@@ -35,12 +34,23 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define VQMBT_ERROR_CB_OVERFLOW ((int)0x80690003)
 #define VQMBT_ERROR_NOT_READY ((int)0x80690004)
 
+// Device states.
+typedef enum VqmbtInferredBtState : int {
+    VQMBT_BT_STATE_UNKNOWN0 = 0,
+    VQMBT_BT_STATE_DISCONNECTED,
+    VQMBT_BT_STATE_CONNECTING,
+    VQMBT_BT_STATE_UNKNOWN3,
+    VQMBT_BT_STATE_UNKNOWN4,
+    VQMBT_BT_STATE_CONNECTED,
+    VQMBT_BT_STATE_REGISTERING,
+} VqmbtInferredBtState;
+
 // Device info.
 typedef struct VqmbtDeviceInfo {
     char name[VQMBT_DEVICE_NAME_MAX];
     unsigned int mac0;
     unsigned int mac1;
-    int state;  // TODO switch to enum
+    VqmbtInferredBtState state;
 } VqmbtDeviceInfo;
 VITASDK_BUILD_ASSERT_EQ(0x8C, VqmbtDeviceInfo);
 
@@ -66,7 +76,7 @@ typedef struct VqmbtEvent {
 VITASDK_BUILD_ASSERT_EQ(0x0C, VqmbtEvent);
 
 // bluetooth.c syscalls.
-bool kvqmbt_is_connected(unsigned int mac0, unsigned int mac1);
+VqmbtInferredBtState kvqmbt_device_state(unsigned int mac0, unsigned int mac1);
 void kvqmbt_connect_device(unsigned int mac0, unsigned int mac1);
 void kvqmbt_disconnect_device(unsigned int mac0, unsigned int mac1);
 int kvqmbt_get_paired_devices(VqmbtDeviceInfo* info, int info_size);

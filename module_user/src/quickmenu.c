@@ -40,6 +40,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2/kernel/threadmgr/thread.h>
 #include <quickmenureborn/c_types.h>
 #include <quickmenureborn/qm_reborn.h>
+#include <stdbool.h>
 
 #include "kmod_event.h"
 #include "log.h"
