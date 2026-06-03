@@ -155,7 +155,7 @@ static ONLOAD_HANDLER(quickmenu_on_load) {
     LOG_DEBUG(0, "Quick menu opened.");
 
     // Reset button states and fetch initial data.
-    reset();  // TODO do this from a thread to not block quickmenu?
+    reset();  // TODO do this from a thread to not block quickmenu? Maybe use SceKernelLwMutexWork?
 
     // Start event thread for subsequent changes.
     kmod_event_start();
