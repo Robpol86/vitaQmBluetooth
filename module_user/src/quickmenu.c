@@ -158,7 +158,7 @@ static ONLOAD_HANDLER(quickmenu_on_load) {
     reset();  // TODO do this from a thread to not block quickmenu? Maybe use SceKernelLwMutexWork?
 
     // Start event thread for subsequent changes.
-    kmod_event_start();
+    kmod_event_start();  // TODO pass run-once function that runs reset() in the thread.
 }
 
 /**
@@ -173,7 +173,7 @@ static void quickmenu_on_unload(const char* id) {
     kmod_event_stop();
 
     // Reset struct array.
-    sceClibMemset(qm_buttons, 0, sizeof(qm_buttons));
+    sceClibMemset(qm_buttons, 0, sizeof(qm_buttons));  // TODO move to start run-once.
 }
 
 /**
