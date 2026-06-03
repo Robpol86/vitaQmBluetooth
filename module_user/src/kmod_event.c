@@ -148,6 +148,8 @@ static int event_thread(SceSize args, void* argp) {
     (void)args;
     (void)argp;
 
+    LOG_DEBUG(0, "Thread started");
+
     // Get event flag.
     uid_event_flag = kvqmbt_get_wrapped_event_flag();
     LOG_DEBUG(0, "kvqmbt_get_wrapped_event_flag returned 0x%08X", uid_event_flag);
@@ -174,6 +176,8 @@ static int event_thread(SceSize args, void* argp) {
     // Thread is stopping, clean up.
     kvqmbt_unwrap_event_flag();
     uid_event_flag = -1;
+
+    LOG_DEBUG(0, "Thread exiting");
 
     return 0;
 }
