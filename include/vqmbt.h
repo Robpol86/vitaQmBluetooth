@@ -26,7 +26,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <stdbool.h>
 #include <vitasdk/build_utils.h>
 
-#define VQMBT_MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with.
+#define VQMBT_MAX_DEVICES 8        // Maximum number of bluetooth devices the PS Vita can be paired with.
+#define VQMBT_DEVICE_NAME_MAX 128  // TODO reduce to something realistic + buffer.
 
 // Error codes.
 #define VQMBT_ERROR_INVALID_ARGUMENT ((int)0x80690001)
@@ -34,9 +35,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define VQMBT_ERROR_CB_OVERFLOW ((int)0x80690003)
 #define VQMBT_ERROR_NOT_READY ((int)0x80690004)
 
-// Device info.
+// Device info (TODO REMOVE).
 typedef struct VqmbtDeviceInfo {
-    char name[128];
+    char name[VQMBT_DEVICE_NAME_MAX];
     unsigned int mac0;
     unsigned int mac1;
     int state;

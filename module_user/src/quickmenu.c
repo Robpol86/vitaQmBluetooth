@@ -47,20 +47,27 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #define BUTTON_LABEL_MAX (sizeof(((VqmbtDeviceInfo*)0)->name) + 16)
 
-static VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];  // TODO locking/semaphore?
-
 // Widget IDs (prefixed because they must be unique across all plugins).
 #define ID_SEPARATOR MODULE_NAME "Separator"
 #define ID_SECTION_TITLE MODULE_NAME "SectionTitle"
 #define ID_PLANE_BUTTONS MODULE_NAME "PlaneButtons"
 
-// Button widget IDs.
-static const char* const ID_BUTTONS[VQMBT_MAX_DEVICES] = {
-    MODULE_NAME "Button0", MODULE_NAME "Button1", MODULE_NAME "Button2", MODULE_NAME "Button3",
-    MODULE_NAME "Button4", MODULE_NAME "Button5", MODULE_NAME "Button6", MODULE_NAME "Button7",
-};
-_Static_assert(sizeof(ID_BUTTONS) / sizeof(ID_BUTTONS[0]) == VQMBT_MAX_DEVICES,
-               "ID_BUTTONS size must match VQMBT_MAX_DEVICES");
+// Buttons struct that maintains state of a button.
+typedef enum QmButtonState : unsigned int {
+    BTNSTATE_DISCONNECTED,
+    BTNSTATE_DISCONNECTING,
+    BTNSTATE_CONNECTED,
+    BTNSTATE_CONNECTING,
+} QmButtonState;
+typedef struct QmButton {
+    char device_name[VQMBT_DEVICE_NAME_MAX];
+    unsigned int mac0;
+    unsigned int mac1;
+    QmButtonState state;
+    bool enabled;
+    char qm_widget_id[sizeof(MODULE_NAME "Button00")];
+} QmButton;
+static QmButton qm_buttons[VQMBT_MAX_DEVICES];
 
 /**
  * Connect or disconnect the device associated with the button.
@@ -77,21 +84,7 @@ BUTTON_HANDLER(quickmenu_on_press) {
     (void)eventId;
     int idx = (int)(intptr_t)userDat;
 
-    VqmbtDeviceInfo* dev = &devices[idx];
-
-    // Do nothing if slot is empty.
-    if ((dev->mac0 | dev->mac1) == 0) {  // TODO make more robust, use `static int devices_count`?
-        LOG_DEBUG(0, "button idx=%d is empty: no-op", idx);
-        return;
-    }
-
-    if (dev->state == 5 || dev->state == 6) {
-        LOG_DEBUG(0, "Disconnecting \"%s\"", dev->name);
-        kvqmbt_disconnect_device(dev->mac0, dev->mac1);
-    } else {
-        LOG_DEBUG(0, "Connecting \"%s\"", dev->name);
-        kvqmbt_connect_device(dev->mac0, dev->mac1);
-    }
+    LOG_DEBUG(0, "NOT IMPLEMENTED YET (idx=%d)", idx);
 }
 
 /**
@@ -108,36 +101,6 @@ ONLOAD_HANDLER(quickmenu_on_load) {
 
     // Start event thread.
     kmod_event_start();
-
-    // Zero the struct array to prevent ghost data.
-    sceClibMemset(devices, 0, sizeof(devices));
-
-    // Query kernel.
-    VqmbtDeviceInfo* dev;
-    int count = kvqmbt_get_paired_devices(devices, VQMBT_MAX_DEVICES);
-    if (count < 0) {
-        LOG_ERROR("kvqmbt_get_paired_devices returned error 0x%08X", count);
-        return;
-    }
-    if (count < 1) {
-        LOG_DEBUG(0, "No paired devices.");
-        return;
-    }
-    LOG_DEBUG(0, "count=%d", count);
-
-    // Update button labels.
-    for (int idx = 0; idx < count; idx++) {
-        dev = &devices[idx];
-        LOG_DEBUG(0, "idx=%d name=\"%s\" mac0=0x%08X mac1=0x%08X", idx, dev->name, dev->mac0, dev->mac1);
-        const char* id = ID_BUTTONS[idx];
-        char label[BUTTON_LABEL_MAX];
-        if (dev->state == 5 || dev->state == 6) {  // TODO dedupe magic numbers with enum?
-            sceClibSnprintf(label, sizeof(label), "Disconnect %s", dev->name);
-        } else {
-            sceClibSnprintf(label, sizeof(label), "Connect %s", dev->name);
-        }
-        QuickMenuRebornSetWidgetLabel(id, label);
-    }
 }
 
 /**
@@ -147,14 +110,6 @@ void quickmenu_on_unload(const char* id) {
     (void)id;
 
     LOG_DEBUG(0, "Quick menu closed.");
-
-    // Reset button labels.
-    for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
-        const char* id = ID_BUTTONS[idx];
-        char label[BUTTON_LABEL_MAX];
-        sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
-        QuickMenuRebornSetWidgetLabel(id, label);
-    }
 
     // Stop event thread.
     kmod_event_stop();
@@ -193,21 +148,27 @@ void quickmenu_start(void) {
     QuickMenuRebornSetWidgetSize(ID_PLANE_BUTTONS, SCE_PLANE_WIDTH, 650, 0, 0);
     QuickMenuRebornSetWidgetColor(ID_PLANE_BUTTONS, 1, 1, 1, 0);
 
-    // Add device slot buttons.
+    // Add device buttons.
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
-        const char* id = ID_BUTTONS[idx];
-        QuickMenuRebornRegisterWidget(id, ID_PLANE_BUTTONS, button);
-        QuickMenuRebornSetWidgetSize(id, 600, 75, 0, 0);
-        QuickMenuRebornSetWidgetPosition(id, 20, 280 - (idx * 80), 0, 0);
-        QuickMenuRebornSetWidgetColor(id, 1, 1, 1, 1);
-        char label[BUTTON_LABEL_MAX];
+        QmButton* qm_button = &qm_buttons[idx];
+
+        // Set widget ID.
+        sceClibSnprintf(qm_button->qm_widget_id, sizeof(qm_button->qm_widget_id), MODULE_NAME "Button%d", idx);
+
+        // Create widget.
+        QuickMenuRebornRegisterWidget(qm_button->qm_widget_id, ID_PLANE_BUTTONS, button);
+        QuickMenuRebornSetWidgetSize(qm_button->qm_widget_id, 600, 75, 0, 0);
+        QuickMenuRebornSetWidgetPosition(qm_button->qm_widget_id, 20, 280 - (idx * 80), 0, 0);
+        QuickMenuRebornSetWidgetColor(qm_button->qm_widget_id, 1, 1, 1, 1);
+        char label[BUTTON_LABEL_MAX];  // TODO use struct.
         sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
-        QuickMenuRebornSetWidgetLabel(id, label);
-        QuickMenuRebornRegisterEventHanlder(id, QMR_BUTTON_RELEASE_ID, quickmenu_on_press, (void*)(intptr_t)idx);
+        QuickMenuRebornSetWidgetLabel(qm_button->qm_widget_id, label);
+        QuickMenuRebornRegisterEventHanlder(qm_button->qm_widget_id, QMR_BUTTON_RELEASE_ID, quickmenu_on_press,
+                                            (void*)(intptr_t)idx);
     }
 
     // Register handlers.
-    const char* last_widget = ID_BUTTONS[VQMBT_MAX_DEVICES - 1];
+    const char* last_widget = qm_buttons[VQMBT_MAX_DEVICES - 1].qm_widget_id;
     QuickMenuRebornAssignOnLoadHandler(quickmenu_on_load, last_widget);
     QuickMenuRebornAssignOnDeleteHandler(quickmenu_on_unload, last_widget);
 }
@@ -217,7 +178,7 @@ void quickmenu_start(void) {
  */
 void quickmenu_stop(void) {
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
-        const char* id = ID_BUTTONS[idx];
+        const char* id = qm_buttons[idx].qm_widget_id;
         QuickMenuRebornUnregisterWidget(id);
     }
     QuickMenuRebornUnregisterWidget(ID_PLANE_BUTTONS);
