@@ -114,7 +114,7 @@ static void fetch_events(void) {
         VqmbtEvent event = {0};
 
         // Fetch event data.
-        int ret = kvqmbt_read_event(&event);
+        int ret = kvqmbt_read_event(&event, 1);
 
         // Handle errors.
         if (ret == VQMBT_ERROR_CB_OVERFLOW) {
