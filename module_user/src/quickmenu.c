@@ -98,6 +98,8 @@ ONLOAD_HANDLER(quickmenu_on_load) {
     (void)id;
 
     LOG_DEBUG(0, "Quick menu opened.");
+    
+    // TODO reset (get 0 events then syscall)
 
     // Start event thread.
     kmod_event_start();
