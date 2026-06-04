@@ -80,6 +80,16 @@ typedef struct QmButton {
 static QmButton qm_buttons[VQMBT_MAX_DEVICES];
 static int qm_buttons_count = 0;
 
+// UI request.
+typedef enum QmRequestId : unsigned int {
+    REQUEST_BULK_UPDATE = 0,
+    REQUEST_BLUETOOTH_ON,
+    REQUEST_BLUETOOTH_OFF,
+} QmRequestId;
+typedef struct QmRequest {
+    QmRequestId id;
+} QmRequest;
+
 // Other states.
 static bool bluetooth_on = false;
 
@@ -132,6 +142,53 @@ static void refresh_ui(void) {
 /**
  * TODO
  */
+static void transition_ui(const QmRequest* request, int* idx, unsigned int* mac0, unsigned int* mac1,
+                          const VqmbtDeviceInfo* bulk_update) {
+    bool changed = false;
+
+    // Lock mutex.
+    sceKernelLockLwMutex(&mutex, 1, NULL);
+    LOG_DEBUG(0, "Obtained mutex lock");
+
+    switch (request->id) {
+        case REQUEST_BULK_UPDATE:
+            // TODO
+            break;
+
+        case REQUEST_BLUETOOTH_ON:
+            if (bluetooth_on) {
+                LOG_DEBUG(0, "Bluetooth already displaying on");
+            } else {
+                LOG_DEBUG(0, "Displaying bluetooth as on");
+                bluetooth_on = true;
+                changed = true;
+            }
+            break;
+
+        case REQUEST_BLUETOOTH_OFF:
+            if (!bluetooth_on) {
+                LOG_DEBUG(0, "Bluetooth already displaying off");
+            } else {
+                LOG_DEBUG(0, "Displaying bluetooth as off");
+                bluetooth_on = false;
+                changed = true;
+            }
+            break;
+    }
+
+    // Refresh UI.
+    if (changed) {
+        refresh_ui();
+    }
+
+    // Release mutex.
+    sceKernelUnlockLwMutex(&mutex, 1);
+    LOG_DEBUG(0, "Released mutex lock");
+}
+
+/**
+ * TODO
+ */
 static void reset(void) {
     // Flush kernel buffer.
     int ret = kvqmbt_read_event(NULL, 0);
@@ -147,6 +204,8 @@ static void reset(void) {
         LOG_ERROR("kvqmbt_get_paired_devices returned error 0x%08X", count);
         return;
     }
+
+    // TODO transition_ui(&(QmRequest){.id = BULK_UPDATE}, NULL, NULL, NULL, *devices)
 
     // Lock mutex.
     sceKernelLockLwMutex(&mutex, 1, NULL);
@@ -213,12 +272,12 @@ static void handle_event(const VqmbtEvent* event) {
 
         case VQMBT_EVENT_BLUETOOTH_ENABLED:
             LOG_DEBUG(0, INDENT "Bluetooth turned on");
-            // TODO transition_ui(bluetooth_on=True)
+            transition_ui(&(QmRequest){.id = REQUEST_BLUETOOTH_ON}, NULL, NULL, NULL, NULL);
             break;
 
         case VQMBT_EVENT_BLUETOOTH_DISABLED:
             LOG_DEBUG(0, INDENT "Bluetooth turned off");
-            // TODO transition_ui(bluetooth_on=False)
+            transition_ui(&(QmRequest){.id = REQUEST_BLUETOOTH_OFF}, NULL, NULL, NULL, NULL);
             break;
 
         case VQMBT_EVENT_DEVICE_ADDED_REMOVED_CONNECTING:
@@ -277,8 +336,9 @@ static BUTTON_HANDLER(quickmenu_on_press) {
     (void)eventId;
     int idx = (int)(intptr_t)userDat;
 
-    LOG_DEBUG(0, "NOT IMPLEMENTED YET (idx=%d)", idx);
-    // TODO transition_ui(new_state=VQMBT_BT_STATE_CONNECTING/DISCONNECTING, mac0, mac1)
+    LOG_DEBUG(0, "Button idx=%d pressed", idx);
+
+    // TODO transition_ui(action=idx)
 }
 
 /**
