@@ -119,10 +119,12 @@ static void refresh_ui(void) {
         // Enable/disable button.
         if (bluetooth_on && button_enabled) {
             // Enable button.
-            QuickMenuRebornStopBusyIndicator(id);
+            QuickMenuRebornSetWidgetColor(id, 1.0F, 1.0F, 1.0F, 1.0F);
+            // TODO noop callback
         } else {
             // Disable button.
-            QuickMenuRebornStartBusyIndicator(id);
+            QuickMenuRebornSetWidgetColor(id, 0.5F, 0.5F, 0.5F, 1.0F);
+            // TODO noop callback
         }
     }
 }
@@ -211,34 +213,44 @@ static void handle_event(const VqmbtEvent* event) {
 
         case VQMBT_EVENT_BLUETOOTH_ENABLED:
             LOG_DEBUG(0, INDENT "Bluetooth turned on");
+            // TODO transition_ui(bluetooth_on=True)
             break;
 
         case VQMBT_EVENT_BLUETOOTH_DISABLED:
             LOG_DEBUG(0, INDENT "Bluetooth turned off");
+            // TODO transition_ui(bluetooth_on=False)
             break;
 
         case VQMBT_EVENT_DEVICE_ADDED_REMOVED_CONNECTING:
             LOG_DEBUG(0, INDENT "Device added/removed/connecting");
+            // TODO reset()
             break;
 
         case VQMBT_EVENT_DEVICE_DISCONNECTED:
             LOG_DEBUG(0, INDENT "Device disconnected");
+            // TODO transition_ui(new_state=VQMBT_BT_STATE_DISCONNECTED, mac0, mac1)
             break;
 
         case VQMBT_EVENT_DEVICE_CONNECT_SUCCESS:
             LOG_DEBUG(0, INDENT "Device connected");
+            // TODO transition_ui(new_state=VQMBT_BT_STATE_CONNECTED, mac0, mac1)
             break;
 
         case VQMBT_EVENT_DEVICE_CONNECT_FAILED:
             LOG_DEBUG(0, INDENT "Device connect failed");
+            // TODO tell user it failed
+            // TODO transition_ui(new_state=VQMBT_BT_STATE_DISCONNECTED, mac0, mac1)
             break;
 
         case VQMBT_EVENT_DEVICE_CONNECT_ABORTED:
             LOG_DEBUG(0, INDENT "Device connect aborted");
+            // TODO tell user?
+            // TODO transition_ui(new_state=VQMBT_BT_STATE_DISCONNECTED, mac0, mac1)
             break;
 
         case VQMBT_EVENT_DEVICE_CONNECT_CANCELLED:
             LOG_DEBUG(0, INDENT "Device connect cancelled");
+            // TODO transition_ui(new_state=VQMBT_BT_STATE_DISCONNECTED, mac0, mac1)
             break;
 
         default:
@@ -266,6 +278,7 @@ static BUTTON_HANDLER(quickmenu_on_press) {
     int idx = (int)(intptr_t)userDat;
 
     LOG_DEBUG(0, "NOT IMPLEMENTED YET (idx=%d)", idx);
+    // TODO transition_ui(new_state=VQMBT_BT_STATE_CONNECTING/DISCONNECTING, mac0, mac1)
 }
 
 /**
