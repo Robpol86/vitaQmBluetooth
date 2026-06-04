@@ -204,6 +204,8 @@ static void reset(void) {
         LOG_ERROR("kvqmbt_get_paired_devices returned error 0x%08X", count);
         return;
     }
+    
+    // todo get bt on or off state
 
     // TODO transition_ui(&(QmRequest){.id = BULK_UPDATE}, NULL, NULL, NULL, *devices)
 
