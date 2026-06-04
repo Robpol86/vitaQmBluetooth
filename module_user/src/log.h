@@ -32,13 +32,14 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * Main macro that handles getting the current time, logging to stdout, logging
  * to log file via LOG_MESSAGE_TO_FILE macro, then optionally sleeping the thread.
  */
-#define LOG_MESSAGE_(delay, fmt, msg, ...)                                                                       \
-    do {                                                                                                         \
-        SceDateTime dt_;                                                                                         \
-        sceRtcGetCurrentClockLocalTime(&dt_);                                                                    \
-        sceClibPrintf(fmt msg "\n", LOG_FORMAT_VALUES_(dt_), ##__VA_ARGS__);                                     \
-        LOG_MESSAGE_TO_FILE(dt_.year, dt_.month, dt_.day, fmt msg "\n", LOG_FORMAT_VALUES_(dt_), ##__VA_ARGS__); \
-        if (!__builtin_constant_p(delay) || (delay) > 0) sceKernelDelayThread((delay));                          \
+#define LOG_MESSAGE_(delay, fmt, msg, ...)                                                                             \
+    do {                                                                                                               \
+        SceDateTime dt_;                                                                                               \
+        sceRtcGetCurrentClockLocalTime(&dt_);                                                                          \
+        int tid_ = sceKernelGetThreadId();                                                                             \
+        sceClibPrintf(fmt msg "\n", LOG_FORMAT_VALUES_(dt_, tid_), ##__VA_ARGS__);                                     \
+        LOG_MESSAGE_TO_FILE(dt_.year, dt_.month, dt_.day, fmt msg "\n", LOG_FORMAT_VALUES_(dt_, tid_), ##__VA_ARGS__); \
+        if (!__builtin_constant_p(delay) || (delay) > 0) sceKernelDelayThread((delay));                                \
     } while (0)
 
 /**

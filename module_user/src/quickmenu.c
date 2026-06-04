@@ -305,7 +305,6 @@ int quickmenu_start(void) {
         LOG_ERROR("sceKernelCreateLwMutex returned error 0x%08X", ret);
         return VQMBT_ERROR_GENERAL_FAILURE;
     }
-    LOG_DEBUG(0, "sceKernelCreateLwMutex returned %d", ret);
 
     // Add horizontal line separator.
     QuickMenuRebornSeparator(ID_SEPARATOR, SCE_SEPARATOR_HEIGHT);
