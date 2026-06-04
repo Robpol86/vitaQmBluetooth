@@ -83,7 +83,7 @@ static int qm_buttons_count = 0;
 /**
  * TODO
  */
-static void refresh_buttons(void) {
+static void refresh_ui(void) {
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
         QmButton* qm_button = &qm_buttons[idx];
 
@@ -166,7 +166,7 @@ static void reset(void) {
     qm_buttons_count = count;
 
     // Update UI.
-    refresh_buttons();
+    refresh_ui();
 
     // Release mutex.
     sceKernelUnlockLwMutex(&mutex, 1);
@@ -177,8 +177,8 @@ static void reset(void) {
  * Handle scenario where one or more events went missing.
  */
 static void handle_event_dropped(void) {
-    // TODO
-    LOG_DEBUG(0, "TODO run reset()");
+    LOG_DEBUG(0, "Running reset()");
+    reset();  // TODO test
 }
 
 /**
