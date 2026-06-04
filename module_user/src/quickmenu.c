@@ -113,11 +113,64 @@ static void refresh_buttons(void) {
 }
 
 /**
+ * TODO
+ */
+static void reset(void) {
+    // Flush kernel buffer.
+    int ret = kvqmbt_read_event(NULL, 0);
+    if (ret < 0) {
+        LOG_ERROR("kvqmbt_read_event returned error 0x%08X", ret);
+    }
+
+    // Get all currently paired/registered bluetooth devices.
+    VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];
+    sceClibMemset(devices, 0, sizeof(devices));
+    int count = kvqmbt_get_paired_devices(devices, VQMBT_MAX_DEVICES);
+    if (count < 0) {
+        LOG_ERROR("kvqmbt_get_paired_devices returned error 0x%08X", count);
+        return;
+    }
+
+    // Detect changes.
+    bool changed = false;
+    if (count == qm_buttons_count) {
+        for (int idx = 0; idx < count; idx++) {
+            VqmbtDeviceInfo* device = &devices[idx];
+            QmButton* qm_button = &qm_buttons[idx];
+            if (sceClibMemcmp(&qm_button->device, device, sizeof(*device)) != 0) {
+                changed = true;
+                break;
+            }
+        }
+        if (!changed) {
+            LOG_DEBUG(0, "Nothing changed");
+            return;
+        }
+        LOG_DEBUG(0, "Change detected in one or more paired devices");
+    } else {
+        LOG_DEBUG(0, "Change detected: device added or removed");
+    }
+
+    // TODO mutex lock
+
+    // Update qm_buttons[]->device.
+    for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
+        sceClibMemcpy(&qm_buttons[idx].device, &devices[idx], sizeof(devices[idx]));
+    }
+    qm_buttons_count = count;
+
+    // Update UI.
+    refresh_buttons();
+
+    // TODO mutex release
+}
+
+/**
  * Handle scenario where one or more events went missing.
  */
 static void handle_event_dropped(void) {
     // TODO
-    LOG_DEBUG(0, "TODO re-run kvqmbt_get_paired_devices()");
+    LOG_DEBUG(0, "TODO run reset()");
 }
 
 /**
@@ -172,59 +225,6 @@ static void handle_event(const VqmbtEvent* event) {
             LOG_DEBUG(0, INDENT "Ignoring id=0x%08X", event->id);
             break;
     }
-}
-
-/**
- * TODO
- */
-static void reset(void) {
-    // Flush kernel buffer.
-    int ret = kvqmbt_read_event(NULL, 0);
-    if (ret < 0) {
-        LOG_ERROR("kvqmbt_read_event returned error 0x%08X", ret);
-    }
-
-    // Get all currently paired/registered bluetooth devices.
-    VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];
-    sceClibMemset(devices, 0, sizeof(devices));
-    int count = kvqmbt_get_paired_devices(devices, VQMBT_MAX_DEVICES);
-    if (count < 0) {
-        LOG_ERROR("kvqmbt_get_paired_devices returned error 0x%08X", count);
-        return;
-    }
-
-    // Detect changes.
-    bool changed = false;
-    if (count == qm_buttons_count) {
-        for (int idx = 0; idx < count; idx++) {
-            VqmbtDeviceInfo* device = &devices[idx];
-            QmButton* qm_button = &qm_buttons[idx];
-            if (sceClibMemcmp(&qm_button->device, device, sizeof(*device)) != 0) {
-                changed = true;
-                break;
-            }
-        }
-        if (!changed) {
-            LOG_DEBUG(0, "Nothing changed");
-            return;
-        }
-        LOG_DEBUG(0, "Change detected in one or more paired devices");
-    } else {
-        LOG_DEBUG(0, "Change detected: device added or removed");
-    }
-
-    // TODO mutex lock
-
-    // Update qm_buttons[]->device.
-    for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
-        sceClibMemcpy(&qm_buttons[idx].device, &devices[idx], sizeof(devices[idx]));
-    }
-    qm_buttons_count = count;
-
-    // Update UI.
-    refresh_buttons();
-
-    // TODO mutex release
 }
 
 /**
