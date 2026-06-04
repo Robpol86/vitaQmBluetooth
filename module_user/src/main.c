@@ -20,6 +20,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  ******************************************************************************/
 
 #include <psp2/kernel/modulemgr.h>
+#include <stdbool.h>
 
 #include "log.h"
 #include "logfile.h"
@@ -30,7 +31,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  *
  * @param args The size of the arguments passed to the module.
  * @param argp A pointer to the arguments passed to the module.
- * @return SCE_KERNEL_START_SUCCESS on success, or an error code on failure.
+ * @return SCE_KERNEL_START_SUCCESS on success, or an error code on failure. TODO.
  */
 int module_start(SceSize args, const void* argp) {
     (void)args;
@@ -38,7 +39,14 @@ int module_start(SceSize args, const void* argp) {
 
     logfile_init();
     LOG_INFO("Starting");
-    quickmenu_start();
+
+    // Start quickmenu routines.
+    int ret = quickmenu_start();
+    if (ret < 0) {
+        LOG_ERROR("Failed");
+        return SCE_KERNEL_START_FAILED;
+    }
+
     LOG_INFO("Started");
 
     return SCE_KERNEL_START_SUCCESS;
@@ -49,15 +57,21 @@ int module_start(SceSize args, const void* argp) {
  *
  * @param args The size of the arguments passed to the module.
  * @param argp A pointer to the arguments passed to the module.
- * @return SCE_KERNEL_STOP_SUCCESS on success, or an error code on failure.
+ * @return SCE_KERNEL_STOP_SUCCESS on success, or an error code on failure. TODO.
  */
 int module_stop(SceSize args, const void* argp) {
     (void)args;
     (void)argp;
 
+    bool failed = false;
+
     LOG_INFO("Stopping");
-    quickmenu_stop();
+    int ret = quickmenu_stop();
+    if (ret < 0) failed = true;
     LOG_INFO("Stopped");
 
+    if (failed) {
+        return SCE_KERNEL_STOP_FAIL;
+    }
     return SCE_KERNEL_STOP_SUCCESS;
 }

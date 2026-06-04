@@ -52,6 +52,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define INDENT "            "
 _Static_assert(sizeof(PREFIX) == sizeof(INDENT), "INDENT width must match PREFIX");
 
+static SceKernelLwMutexWork mutex;
+
 // Widget IDs (prefixed because they must be unique across all plugins).
 #define ID_SEPARATOR MODULE_NAME "Separator"
 #define ID_SECTION_TITLE MODULE_NAME "SectionTitle"
@@ -131,6 +133,10 @@ static void reset(void) {
         return;
     }
 
+    // Lock mutex.
+    sceKernelLockLwMutex(&mutex, 1, NULL);
+    LOG_DEBUG(0, "Obtained mutex lock");
+
     // Detect changes.
     bool changed = false;
     if (count == qm_buttons_count) {
@@ -144,14 +150,14 @@ static void reset(void) {
         }
         if (!changed) {
             LOG_DEBUG(0, "Nothing changed");
+            sceKernelUnlockLwMutex(&mutex, 1);
+            LOG_DEBUG(0, "Released mutex lock");
             return;
         }
         LOG_DEBUG(0, "Change detected in one or more paired devices");
     } else {
         LOG_DEBUG(0, "Change detected: device added or removed");
     }
-
-    // TODO mutex lock
 
     // Update qm_buttons[]->device.
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
@@ -162,7 +168,9 @@ static void reset(void) {
     // Update UI.
     refresh_buttons();
 
-    // TODO mutex release
+    // Release mutex.
+    sceKernelUnlockLwMutex(&mutex, 1);
+    LOG_DEBUG(0, "Released mutex lock");
 }
 
 /**
@@ -290,7 +298,15 @@ static void quickmenu_on_unload(const char* id) {
  * - button_reset() button_disable() button_enable() functions
  * - long bt names ellipses
  */
-void quickmenu_start(void) {
+int quickmenu_start(void) {
+    // Initialize mutex.
+    int ret = sceKernelCreateLwMutex(&mutex, "vqmbt-quickmenu-mutex", 0, 0, NULL);
+    if (ret < 0) {
+        LOG_ERROR("sceKernelCreateLwMutex returned error 0x%08X", ret);
+        return VQMBT_ERROR_GENERAL_FAILURE;
+    }
+    LOG_DEBUG(0, "sceKernelCreateLwMutex returned %d", ret);
+
     // Add horizontal line separator.
     QuickMenuRebornSeparator(ID_SEPARATOR, SCE_SEPARATOR_HEIGHT);
 
@@ -320,12 +336,14 @@ void quickmenu_start(void) {
     const char* last_widget = ID_BUTTONS[VQMBT_MAX_DEVICES - 1];
     QuickMenuRebornAssignOnLoadHandler(quickmenu_on_load, last_widget);
     QuickMenuRebornAssignOnDeleteHandler(quickmenu_on_unload, last_widget);
+
+    return 0;
 }
 
 /**
  * Unloads the plugin's quick menu items.
  */
-void quickmenu_stop(void) {
+int quickmenu_stop(void) {
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
         const char* id = ID_BUTTONS[idx];
         QuickMenuRebornUnregisterWidget(id);
@@ -333,4 +351,9 @@ void quickmenu_stop(void) {
     QuickMenuRebornUnregisterWidget(ID_PLANE_BUTTONS);
     QuickMenuRebornUnregisterWidget(ID_SECTION_TITLE);
     QuickMenuRebornRemoveSeparator(ID_SEPARATOR);
+
+    int ret = sceKernelDeleteLwMutex(&mutex);
+    LOG_DEBUG(0, "sceKernelDeleteLwMutex returned 0x%08X", ret);
+
+    return 0;
 }
