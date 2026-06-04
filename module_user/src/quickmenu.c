@@ -205,7 +205,7 @@ static void reset(void) {
         return;
     }
     
-    // todo get bt on or off state
+    // todo get bt on or off state. make new state struct
 
     // TODO transition_ui(&(QmRequest){.id = BULK_UPDATE}, NULL, NULL, NULL, *devices)
 
