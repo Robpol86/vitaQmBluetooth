@@ -66,7 +66,7 @@ static const char* const ID_BUTTONS[VQMBT_MAX_DEVICES] = {
 };
 _Static_assert(sizeof(ID_BUTTONS) / sizeof(ID_BUTTONS[0]) == VQMBT_MAX_DEVICES, "ID_BUTTONS size != VQMBT_MAX_DEVICES");
 
-// Button states.
+// Button states (TODO move into nested struct, overall QM state, button states subset).
 typedef enum QmButtonState : unsigned int {
     BTNSTATE_DISCONNECTED = 0,
     BTNSTATE_DISCONNECTING,
@@ -101,10 +101,12 @@ typedef struct QmRequest {
 } QmRequest;
 
 // Other states.
-static bool bluetooth_on = false;
+static bool bluetooth_on = false;  // TODO TODO TODO move into overall QM state
 
 /**
  * TODO
+ *
+ * Called from _ thread TODO.
  */
 static void refresh_ui(void) {
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
@@ -151,6 +153,8 @@ static void refresh_ui(void) {
 
 /**
  * TODO
+ *
+ * Called from _ thread TODO.
  */
 static void transition_ui(const QmRequest* request) {
     bool changed = false;
@@ -197,6 +201,8 @@ static void transition_ui(const QmRequest* request) {
 
 /**
  * TODO
+ *
+ * Called from _ thread TODO.
  */
 static void reset(void) {
     // Flush kernel buffer.
@@ -260,6 +266,8 @@ static void reset(void) {
 
 /**
  * Handle scenario where one or more events went missing.
+ *
+ * Called from event thread only.
  */
 static void handle_event_dropped(void) {
     LOG_DEBUG(0, "Running reset()");
@@ -268,6 +276,8 @@ static void handle_event_dropped(void) {
 
 /**
  * Handler for one event. Called once per bluetooth event.
+ *
+ * Called from event thread only.
  *
  * @param event Event details.
  */
@@ -334,6 +344,8 @@ static void handle_event(const VqmbtEvent* event) {
  * Connect or disconnect the device associated with the button.
  *
  * Called when the user taps on the button.
+ *
+ * Called from main thread only.
  *
  * TODO:
  * - Relabel button "Connecting <name>...".
