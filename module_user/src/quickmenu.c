@@ -98,8 +98,9 @@ typedef struct QmRequest {
             unsigned int mac0, mac1;
         } mac;
         struct {
+            bool bluetooth_on;
+            int num_devices;
             const VqmbtDeviceInfo* devices;
-            int count;
         } bulk;
     };
 } QmRequest;
@@ -167,6 +168,33 @@ static void update_ui(const QmRequest* request) {
     switch (request->id) {
         case REQUEST_BULK_UPDATE:
             // TODO
+            // // Detect changes.
+            // bool changed = false;
+            // if (count == qm_state.num_buttons_active) {
+            //     for (int idx = 0; idx < count; idx++) {
+            //         VqmbtDeviceInfo* device = &devices[idx];
+            //         QmButton* qm_button = &qm_state.buttons[idx];
+            //         if (sceClibMemcmp(&qm_button->device, device, sizeof(*device)) != 0) {
+            //             changed = true;
+            //             break;
+            //         }
+            //     }
+            //     if (!changed) {
+            //         LOG_DEBUG(0, "Nothing changed");
+            //         sceKernelUnlockLwMutex(&mutex, 1);
+            //         LOG_DEBUG(0, "Released mutex lock");
+            //         return;
+            //     }
+            //     LOG_DEBUG(0, "Change detected in one or more paired devices");
+            // } else {
+            //     LOG_DEBUG(0, "Change detected: device added or removed");
+            // }
+
+            // // Update qm_buttons[]->device.
+            // for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
+            //     sceClibMemcpy(&qm_state.buttons[idx].device, &devices[idx], sizeof(devices[idx]));
+            // }
+            // qm_state.num_buttons_active = count;
             break;
 
         case REQUEST_BLUETOOTH_ON:
@@ -212,8 +240,11 @@ static void reset(void) {
         LOG_ERROR("kvqmbt_read_event returned error 0x%08X", ret);
     }
 
+    // Get bluetooth state.
+    bool bluetooth_on = kvqmbt_bluetooth_state();
+
     // Get all currently paired/registered bluetooth devices.
-    VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];
+    VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];  // TODO curious: when does `devices` free from memory?
     sceClibMemset(devices, 0, sizeof(devices));
     int count = kvqmbt_get_paired_devices(devices, VQMBT_MAX_DEVICES);
     if (count < 0) {
@@ -221,49 +252,13 @@ static void reset(void) {
         return;
     }
 
-    // todo get bt on or off state. make new state struct
-
-    // TODO transition_ui(&(QmRequest){.id = REQUEST_BULK_UPDATE, .bulk.devices = devices, .bulk.count = count});
-    // TODO curious: when does `devices` free from memory?
-
-    // Lock mutex.
-    sceKernelLockLwMutex(&mutex, 1, NULL);
-    LOG_DEBUG(0, "Obtained mutex lock");
-
-    // Detect changes.
-    bool changed = false;
-    if (count == qm_state.num_buttons_active) {
-        for (int idx = 0; idx < count; idx++) {
-            VqmbtDeviceInfo* device = &devices[idx];
-            QmButton* qm_button = &qm_state.buttons[idx];
-            if (sceClibMemcmp(&qm_button->device, device, sizeof(*device)) != 0) {
-                changed = true;
-                break;
-            }
-        }
-        if (!changed) {
-            LOG_DEBUG(0, "Nothing changed");
-            sceKernelUnlockLwMutex(&mutex, 1);
-            LOG_DEBUG(0, "Released mutex lock");
-            return;
-        }
-        LOG_DEBUG(0, "Change detected in one or more paired devices");
-    } else {
-        LOG_DEBUG(0, "Change detected: device added or removed");
-    }
-
-    // Update qm_buttons[]->device.
-    for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
-        sceClibMemcpy(&qm_state.buttons[idx].device, &devices[idx], sizeof(devices[idx]));
-    }
-    qm_state.num_buttons_active = count;
-
-    // Update UI.
-    refresh_ui();
-
-    // Release mutex.
-    sceKernelUnlockLwMutex(&mutex, 1);
-    LOG_DEBUG(0, "Released mutex lock");
+    // Update the UI state and refresh the UI if changes were detected.
+    update_ui(&(QmRequest){
+        .id = REQUEST_BULK_UPDATE,
+        .bulk.bluetooth_on = bluetooth_on,
+        .bulk.num_devices = count,
+        .bulk.devices = devices,
+    });
 }
 
 /**
