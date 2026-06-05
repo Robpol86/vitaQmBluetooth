@@ -159,11 +159,11 @@ static void refresh_ui(void) {
  * Called from _ thread TODO.
  */
 static void update_ui(const QmRequest* request) {
-    bool changed = false;
-
     // Lock mutex.
     sceKernelLockLwMutex(&mutex, 1, NULL);
     LOG_DEBUG(0, "Obtained mutex lock");
+
+    bool changed = false;
 
     switch (request->id) {
         case REQUEST_BULK_UPDATE:
@@ -224,7 +224,7 @@ static void update_ui(const QmRequest* request) {
     }
 
     // Release mutex.
-    sceKernelUnlockLwMutex(&mutex, 1);
+    sceKernelUnlockLwMutex(&mutex, 1);  // TODO move to automatic release a la SYSCALL_EXIT in k/syscall.h.
     LOG_DEBUG(0, "Released mutex lock");
 }
 
