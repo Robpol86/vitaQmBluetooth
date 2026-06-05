@@ -241,7 +241,7 @@ static void reset(void) {
     bool bluetooth_on = kvqmbt_bluetooth_state();
 
     // Get all currently paired/registered bluetooth devices.
-    VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];  // TODO curious: when does `devices` free from memory?
+    VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];
     sceClibMemset(devices, 0, sizeof(devices));
     int count = kvqmbt_get_paired_devices(devices, VQMBT_MAX_DEVICES);
     if (count < 0) {
@@ -302,29 +302,29 @@ static void handle_event(const VqmbtEvent* event) {
 
         case VQMBT_EVENT_DEVICE_DISCONNECTED:
             LOG_DEBUG(0, INDENT "Device disconnected");
-            // TODO transition_ui(new_state=VQMBT_BT_STATE_DISCONNECTED, mac0, mac1)
+            // TODO update_ui(new_state=VQMBT_BT_STATE_DISCONNECTED, mac0, mac1)
             break;
 
         case VQMBT_EVENT_DEVICE_CONNECT_SUCCESS:
             LOG_DEBUG(0, INDENT "Device connected");
-            // TODO transition_ui(new_state=VQMBT_BT_STATE_CONNECTED, mac0, mac1)
+            // TODO update_ui(new_state=VQMBT_BT_STATE_CONNECTED, mac0, mac1)
             break;
 
         case VQMBT_EVENT_DEVICE_CONNECT_FAILED:
             LOG_DEBUG(0, INDENT "Device connect failed");
             // TODO tell user it failed
-            // TODO transition_ui(new_state=VQMBT_BT_STATE_DISCONNECTED, mac0, mac1)
+            // TODO update_ui(new_state=VQMBT_BT_STATE_DISCONNECTED, mac0, mac1)
             break;
 
         case VQMBT_EVENT_DEVICE_CONNECT_ABORTED:
             LOG_DEBUG(0, INDENT "Device connect aborted");
             // TODO tell user?
-            // TODO transition_ui(new_state=VQMBT_BT_STATE_DISCONNECTED, mac0, mac1)
+            // TODO update_ui(new_state=VQMBT_BT_STATE_DISCONNECTED, mac0, mac1)
             break;
 
         case VQMBT_EVENT_DEVICE_CONNECT_CANCELLED:
             LOG_DEBUG(0, INDENT "Device connect cancelled");
-            // TODO transition_ui(new_state=VQMBT_BT_STATE_DISCONNECTED, mac0, mac1)
+            // TODO update_ui(new_state=VQMBT_BT_STATE_DISCONNECTED, mac0, mac1)
             break;
 
         default:
@@ -355,7 +355,7 @@ static BUTTON_HANDLER(quickmenu_on_press) {
 
     LOG_DEBUG(0, "Button idx=%d pressed", idx);
 
-    // TODO transition_ui(action=idx)
+    // TODO update_ui(action=idx)
 }
 
 /**
