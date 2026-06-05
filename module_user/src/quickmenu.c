@@ -44,6 +44,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "kmod_event.h"
 #include "log.h"
+#include "mutex.h"
 #include "vqmbt.h"
 
 #define BUTTON_LABEL_MAX (VQMBT_DEVICE_NAME_MAX + 16)
@@ -159,9 +160,9 @@ static void refresh_ui(void) {
  * Called from _ thread TODO.
  */
 static void update_ui(const QmRequest* request) {
-    // Lock mutex.
-    sceKernelLockLwMutex(&mutex, 1, NULL);
-    LOG_DEBUG(0, "Obtained mutex lock");
+    // Lock mutex and defer unlock to function scope exit.
+    SceKernelLwMutexWork* mutex_ MUTEX_STATE = &mutex;
+    ENTER_MUTEX(mutex);
 
     bool changed = false;
 
@@ -222,10 +223,6 @@ static void update_ui(const QmRequest* request) {
     if (changed) {
         refresh_ui();
     }
-
-    // Release mutex.
-    sceKernelUnlockLwMutex(&mutex, 1);  // TODO move to automatic release a la SYSCALL_EXIT in k/syscall.h.
-    LOG_DEBUG(0, "Released mutex lock");
 }
 
 /**
