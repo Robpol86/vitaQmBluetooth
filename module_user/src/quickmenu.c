@@ -104,9 +104,6 @@ typedef struct QmRequest {
     };
 } QmRequest;
 
-// Other states.
-static bool bluetooth_on = false;  // TODO TODO TODO move into overall QM state
-
 /**
  * TODO
  *
@@ -143,7 +140,7 @@ static void refresh_ui(void) {
         QuickMenuRebornSetWidgetLabel(id, label);
 
         // Enable/disable button.
-        if (bluetooth_on && button_enabled) {
+        if (qm_state.bluetooth_on && button_enabled) {
             // Enable button.
             QuickMenuRebornSetWidgetColor(id, 1.0F, 1.0F, 1.0F, 1.0F);
             // TODO noop callback
@@ -173,21 +170,21 @@ static void transition_ui(const QmRequest* request) {
             break;
 
         case REQUEST_BLUETOOTH_ON:
-            if (bluetooth_on) {
+            if (qm_state.bluetooth_on) {
                 LOG_DEBUG(0, "Bluetooth already displaying on");
             } else {
                 LOG_DEBUG(0, "Displaying bluetooth as on");
-                bluetooth_on = true;
+                qm_state.bluetooth_on = true;
                 changed = true;
             }
             break;
 
         case REQUEST_BLUETOOTH_OFF:
-            if (!bluetooth_on) {
+            if (!qm_state.bluetooth_on) {
                 LOG_DEBUG(0, "Bluetooth already displaying off");
             } else {
                 LOG_DEBUG(0, "Displaying bluetooth as off");
-                bluetooth_on = false;
+                qm_state.bluetooth_on = false;
                 changed = true;
             }
             break;
