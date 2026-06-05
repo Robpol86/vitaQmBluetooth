@@ -157,7 +157,7 @@ static void refresh_ui(void) {
  *
  * Called from _ thread TODO.
  */
-static void transition_ui(const QmRequest* request) {
+static void update_ui(const QmRequest* request) {
     bool changed = false;
 
     // Lock mutex.
@@ -295,12 +295,12 @@ static void handle_event(const VqmbtEvent* event) {
 
         case VQMBT_EVENT_BLUETOOTH_ENABLED:
             LOG_DEBUG(0, INDENT "Bluetooth turned on");
-            transition_ui(&(QmRequest){.id = REQUEST_BLUETOOTH_ON});
+            update_ui(&(QmRequest){.id = REQUEST_BLUETOOTH_ON});
             break;
 
         case VQMBT_EVENT_BLUETOOTH_DISABLED:
             LOG_DEBUG(0, INDENT "Bluetooth turned off");
-            transition_ui(&(QmRequest){.id = REQUEST_BLUETOOTH_OFF});
+            update_ui(&(QmRequest){.id = REQUEST_BLUETOOTH_OFF});
             break;
 
         case VQMBT_EVENT_DEVICE_ADDED_REMOVED_CONNECTING:

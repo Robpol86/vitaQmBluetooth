@@ -47,7 +47,7 @@ VqmbtInferredBtState kvqmbt_device_state(unsigned int mac0, unsigned int mac1) {
     VqmbtInferredBtState state = ksceBtGetConnectingInfo(mac0, mac1);
     LOG_DEBUG(0, "ksceBtGetConnectingInfo(mac0=%08X, mac1=%08X) returned state=%d", mac0, mac1, state);
 
-    return state;  // TODO keep int, was: (bool)(state == 5 || state == 6);
+    return state;
 }
 
 /**
@@ -164,4 +164,17 @@ int kvqmbt_get_paired_devices(VqmbtDeviceInfo* info, int info_size) {
     return count;
 }
 
-// TODO get bt on/off state. ksceBtGetConfiguration
+// /**
+//  * TODO
+//  *
+//  * @return state ID.
+//  */
+// VqmbtInferredBtState kvqmbt_bluetooth_state() {
+//     uint32_t syscall_state_ SYSCALL_STATE = 0;
+//     ENTER_SYSCALL(syscall_state_);
+
+//     VqmbtInferredBtState state = ksceBtGetConfiguration();
+//     LOG_DEBUG(0, "ksceBtGetConnectingInfo(mac0=%08X, mac1=%08X) returned state=%d", mac0, mac1, state);
+
+//     return state;
+// }
