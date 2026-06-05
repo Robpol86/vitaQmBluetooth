@@ -223,6 +223,7 @@ static void reset(void) {
     // todo get bt on or off state. make new state struct
 
     // TODO transition_ui(&(QmRequest){.id = REQUEST_BULK_UPDATE, .bulk.devices = devices, .bulk.count = count});
+    // TODO curious: when does `devices` free from memory?
 
     // Lock mutex.
     sceKernelLockLwMutex(&mutex, 1, NULL);
