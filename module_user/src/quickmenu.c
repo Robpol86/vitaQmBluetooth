@@ -88,6 +88,7 @@ typedef enum QmRequestId : unsigned int {
 } QmRequestId;
 typedef struct QmRequest {
     QmRequestId id;
+    // TODO TODO TODO union
 } QmRequest;
 
 // Other states.
