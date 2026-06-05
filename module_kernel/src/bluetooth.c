@@ -40,11 +40,11 @@ static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];  // TODO locking/s
  * @param mac1 Last two bytes of the bluetooth device's MAC address.
  * @return state ID.
  */
-VqmbtInferredBtState kvqmbt_device_state(unsigned int mac0, unsigned int mac1) {
+VqmbtInferredDevState kvqmbt_device_state(unsigned int mac0, unsigned int mac1) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
     ENTER_SYSCALL(syscall_state_);
 
-    VqmbtInferredBtState state = ksceBtGetConnectingInfo(mac0, mac1);
+    VqmbtInferredDevState state = ksceBtGetConnectingInfo(mac0, mac1);
     LOG_DEBUG(0, "ksceBtGetConnectingInfo(mac0=%08X, mac1=%08X) returned state=%d", mac0, mac1, state);
 
     return state;
@@ -119,7 +119,7 @@ int kvqmbt_get_paired_devices(VqmbtDeviceInfo* info, int info_size) {
     LOG_DEBUG(0, "ksceBtGetRegisteredInfo returned count=%d info_size=%d max=%d", count, info_size, VQMBT_MAX_DEVICES);
 
     // Copy each record across the kernel/user boundary.
-    VqmbtInferredBtState state = 0;
+    VqmbtInferredDevState state = 0;
     for (int idx = 0; idx < count; idx++) {
         // Initialize user side.
         VqmbtDeviceInfo dev = {0};
@@ -169,11 +169,11 @@ int kvqmbt_get_paired_devices(VqmbtDeviceInfo* info, int info_size) {
 //  *
 //  * @return state ID.
 //  */
-// VqmbtInferredBtState kvqmbt_bluetooth_state() {
+// VqmbtInferredDevState kvqmbt_bluetooth_state() {
 //     uint32_t syscall_state_ SYSCALL_STATE = 0;
 //     ENTER_SYSCALL(syscall_state_);
 
-//     VqmbtInferredBtState state = ksceBtGetConfiguration();
+//     VqmbtInferredDevState state = ksceBtGetConfiguration();
 //     LOG_DEBUG(0, "ksceBtGetConnectingInfo(mac0=%08X, mac1=%08X) returned state=%d", mac0, mac1, state);
 
 //     return state;

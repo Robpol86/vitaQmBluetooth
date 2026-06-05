@@ -36,7 +36,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define VQMBT_ERROR_GENERAL_FAILURE ((int)0x80690005)
 
 // Device states.
-typedef enum VqmbtInferredBtState : int {
+typedef enum VqmbtInferredDevState : int {
     VQMBT_BT_STATE_UNKNOWN0 = 0,
     VQMBT_BT_STATE_DISCONNECTED = 1,
     VQMBT_BT_STATE_CONNECTING = 2,
@@ -44,14 +44,14 @@ typedef enum VqmbtInferredBtState : int {
     VQMBT_BT_STATE_DISCONNECTING = 4,
     VQMBT_BT_STATE_CONNECTED = 5,
     VQMBT_BT_STATE_REGISTERING = 6,
-} VqmbtInferredBtState;
+} VqmbtInferredDevState;
 
 // Device info.
 typedef struct VqmbtDeviceInfo {
     char name[VQMBT_DEVICE_NAME_MAX];
     unsigned int mac0;
     unsigned int mac1;
-    VqmbtInferredBtState state;
+    VqmbtInferredDevState state;
 } VqmbtDeviceInfo;
 VITASDK_BUILD_ASSERT_EQ(0x8C, VqmbtDeviceInfo);
 
@@ -77,7 +77,7 @@ typedef struct VqmbtEvent {
 VITASDK_BUILD_ASSERT_EQ(0x0C, VqmbtEvent);
 
 // bluetooth.c syscalls.
-VqmbtInferredBtState kvqmbt_device_state(unsigned int mac0, unsigned int mac1);
+VqmbtInferredDevState kvqmbt_device_state(unsigned int mac0, unsigned int mac1);
 void kvqmbt_connect_device(unsigned int mac0, unsigned int mac1);
 void kvqmbt_disconnect_device(unsigned int mac0, unsigned int mac1);
 int kvqmbt_get_paired_devices(VqmbtDeviceInfo* info, int info_size);
