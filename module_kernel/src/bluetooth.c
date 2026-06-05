@@ -164,17 +164,17 @@ int kvqmbt_get_paired_devices(VqmbtDeviceInfo* info, int info_size) {
     return count;
 }
 
-// /**
-//  * TODO
-//  *
-//  * @return state ID.
-//  */
-// VqmbtInferredDevState kvqmbt_bluetooth_state() {
-//     uint32_t syscall_state_ SYSCALL_STATE = 0;
-//     ENTER_SYSCALL(syscall_state_);
+/**
+ * TODO
+ *
+ * @return If bluetooth is enabled.
+ */
+bool kvqmbt_bluetooth_state(void) {
+    uint32_t syscall_state_ SYSCALL_STATE = 0;
+    ENTER_SYSCALL(syscall_state_);
 
-//     VqmbtInferredDevState state = ksceBtGetConfiguration();
-//     LOG_DEBUG(0, "ksceBtGetConnectingInfo(mac0=%08X, mac1=%08X) returned state=%d", mac0, mac1, state);
+    int state = ksceBtGetConfiguration();
+    LOG_DEBUG(0, "ksceBtGetConfiguration returned state=%d", state);
 
-//     return state;
-// }
+    return state == 0x9;
+}

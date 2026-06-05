@@ -23,6 +23,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define VQMBT_H
 
 #include <psp2common/types.h>
+#include <stdbool.h>
 #include <vitasdk/build_utils.h>
 
 #define VQMBT_MAX_DEVICES 8        // Maximum number of bluetooth devices the PS Vita can be paired with.
@@ -81,6 +82,7 @@ VqmbtInferredDevState kvqmbt_device_state(unsigned int mac0, unsigned int mac1);
 void kvqmbt_connect_device(unsigned int mac0, unsigned int mac1);
 void kvqmbt_disconnect_device(unsigned int mac0, unsigned int mac1);
 int kvqmbt_get_paired_devices(VqmbtDeviceInfo* info, int info_size);
+bool kvqmbt_bluetooth_state(void);
 
 // umod_callback.c syscalls.
 int kvqmbt_read_event(VqmbtEvent* event, int num_events);
