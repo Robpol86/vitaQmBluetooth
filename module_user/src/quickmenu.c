@@ -88,7 +88,16 @@ typedef enum QmRequestId : unsigned int {
 } QmRequestId;
 typedef struct QmRequest {
     QmRequestId id;
-    // TODO TODO TODO union
+    union {
+        int idx;
+        struct {
+            unsigned int mac0, mac1;
+        } mac;
+        struct {
+            const VqmbtDeviceInfo* devices;
+            int count;
+        } bulk;
+    };
 } QmRequest;
 
 // Other states.
@@ -143,8 +152,7 @@ static void refresh_ui(void) {
 /**
  * TODO
  */
-static void transition_ui(const QmRequest* request, int* idx, unsigned int* mac0, unsigned int* mac1,
-                          const VqmbtDeviceInfo* bulk_update) {
+static void transition_ui(const QmRequest* request) {
     bool changed = false;
 
     // Lock mutex.
@@ -205,10 +213,10 @@ static void reset(void) {
         LOG_ERROR("kvqmbt_get_paired_devices returned error 0x%08X", count);
         return;
     }
-    
+
     // todo get bt on or off state. make new state struct
 
-    // TODO transition_ui(&(QmRequest){.id = BULK_UPDATE}, NULL, NULL, NULL, *devices)
+    // TODO transition_ui(&(QmRequest){.id = REQUEST_BULK_UPDATE, .bulk.devices = devices, .bulk.count = count});
 
     // Lock mutex.
     sceKernelLockLwMutex(&mutex, 1, NULL);
@@ -275,12 +283,12 @@ static void handle_event(const VqmbtEvent* event) {
 
         case VQMBT_EVENT_BLUETOOTH_ENABLED:
             LOG_DEBUG(0, INDENT "Bluetooth turned on");
-            transition_ui(&(QmRequest){.id = REQUEST_BLUETOOTH_ON}, NULL, NULL, NULL, NULL);
+            transition_ui(&(QmRequest){.id = REQUEST_BLUETOOTH_ON});
             break;
 
         case VQMBT_EVENT_BLUETOOTH_DISABLED:
             LOG_DEBUG(0, INDENT "Bluetooth turned off");
-            transition_ui(&(QmRequest){.id = REQUEST_BLUETOOTH_OFF}, NULL, NULL, NULL, NULL);
+            transition_ui(&(QmRequest){.id = REQUEST_BLUETOOTH_OFF});
             break;
 
         case VQMBT_EVENT_DEVICE_ADDED_REMOVED_CONNECTING:
