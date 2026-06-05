@@ -163,3 +163,5 @@ int kvqmbt_get_paired_devices(VqmbtDeviceInfo* info, int info_size) {
 
     return count;
 }
+
+// TODO get bt on/off state. ksceBtGetConfiguration

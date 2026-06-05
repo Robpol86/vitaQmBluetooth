@@ -66,7 +66,7 @@ static const char* const ID_BUTTONS[VQMBT_MAX_DEVICES] = {
 };
 _Static_assert(sizeof(ID_BUTTONS) / sizeof(ID_BUTTONS[0]) == VQMBT_MAX_DEVICES, "ID_BUTTONS size != VQMBT_MAX_DEVICES");
 
-// Button states (TODO move into nested struct, overall QM state, button states subset).
+// Quickmenu and button states.
 typedef enum QmButtonState : unsigned int {
     BTNSTATE_DISCONNECTED = 0,
     BTNSTATE_DISCONNECTING,
@@ -77,8 +77,12 @@ typedef struct QmButton {
     VqmbtDeviceInfo device;
     QmButtonState state;  // TODO detect and handle transitions from device.state to .state.
 } QmButton;
-static QmButton qm_buttons[VQMBT_MAX_DEVICES];
-static int qm_buttons_count = 0;
+typedef struct QmState {
+    bool bluetooth_on;
+    int num_buttons_active;
+    QmButton buttons[VQMBT_MAX_DEVICES];
+} QmState;
+static QmState qm_state;
 
 // UI request.
 typedef enum QmRequestId : unsigned int {
@@ -110,7 +114,7 @@ static bool bluetooth_on = false;  // TODO TODO TODO move into overall QM state
  */
 static void refresh_ui(void) {
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
-        QmButton* qm_button = &qm_buttons[idx];
+        QmButton* qm_button = &qm_state.buttons[idx];
         bool button_enabled = false;
 
         // Update label.
@@ -231,10 +235,10 @@ static void reset(void) {
 
     // Detect changes.
     bool changed = false;
-    if (count == qm_buttons_count) {
+    if (count == qm_state.num_buttons_active) {
         for (int idx = 0; idx < count; idx++) {
             VqmbtDeviceInfo* device = &devices[idx];
-            QmButton* qm_button = &qm_buttons[idx];
+            QmButton* qm_button = &qm_state.buttons[idx];
             if (sceClibMemcmp(&qm_button->device, device, sizeof(*device)) != 0) {
                 changed = true;
                 break;
@@ -253,9 +257,9 @@ static void reset(void) {
 
     // Update qm_buttons[]->device.
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
-        sceClibMemcpy(&qm_buttons[idx].device, &devices[idx], sizeof(devices[idx]));
+        sceClibMemcpy(&qm_state.buttons[idx].device, &devices[idx], sizeof(devices[idx]));
     }
-    qm_buttons_count = count;
+    qm_state.num_buttons_active = count;
 
     // Update UI.
     refresh_ui();
