@@ -22,7 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "vqmbt.h"
 
 // Button IDs.
-const char* const ID_BUTTONS[VQMBT_MAX_DEVICES] = {
+static const char* const ID_BUTTONS[VQMBT_MAX_DEVICES] = {
     MODULE_NAME "Button0", MODULE_NAME "Button1", MODULE_NAME "Button2", MODULE_NAME "Button3",
     MODULE_NAME "Button4", MODULE_NAME "Button5", MODULE_NAME "Button6", MODULE_NAME "Button7",
 };
