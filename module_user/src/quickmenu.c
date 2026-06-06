@@ -252,6 +252,13 @@ static void update_ui(const QmRequest* request) {
                 break;
             }
             LOG_DEBUG(0, "Button pressed idx=%d", request->idx);  // TODO
+            // TODO disable all buttons
+            // TODO change label to Connecting
+            // TODO start a new thread to poll kvqmbt_device_state().
+            // TODO     stop this thread when event thread gets Connected
+            // TODO     enable all buttons
+            // TODO stop thread on timeout
+            // TODO show busy symbol or progress bar
             break;
         }
 
