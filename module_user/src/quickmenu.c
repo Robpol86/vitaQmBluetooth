@@ -193,7 +193,7 @@ static void update_ui(const QmRequest* request) {
                 } else {
                     LOG_DEBUG(0, "New device detected in slot %d: \"%s\" (was \"%s\")", idx + 1, new_device->name,
                               button->device.name);
-                    sceClibMemcpy(&button->device, new_device, sizeof(&new_device));
+                    sceClibMemcpy(&button->device, new_device, sizeof(*new_device));
                 }
                 changed = true;
                 switch (button->device.state) {
