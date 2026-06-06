@@ -433,13 +433,9 @@ static void quickmenu_on_unload(const char* id) {
  * - Pixel perfect alignment.
  * - If kernel plugin isn't loaded notify user.
  * - If kernel plugin loaded AFTER user plugin what happens? probably fails. Handle this too.
- * TODO:
- * - quickmenu_state struct array
- * - quickmenu_start will start event thread, stop will shut down the thread.
  * - Two body planes: one for the buttons, another with just a text message.
  * TODO:
  * - callback: relabel button with new state. Surface error in button as close/reopen resets labels
- * - button_reset() button_disable() button_enable() functions
  * - long bt names ellipses
  */
 int quickmenu_start(void) {
