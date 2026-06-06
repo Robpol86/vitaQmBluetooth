@@ -186,7 +186,10 @@ static void update_ui(const QmRequest* request) {
                 QmButton* button = &qm_state.buttons[idx];
                 // Detect new device in old slot or new state for existing device.
                 if (new_device->mac0 == button->device.mac0 && new_device->mac1 == button->device.mac1) {
-                    if (new_device->state == button->device.state) continue;  // No change.
+                    if (new_device->state == button->device.state) {
+                        LOG_DEBUG(0, "No changes to \"%s\"", button->device.name);
+                        continue;
+                    }
                     LOG_DEBUG(0, "Device \"%s\" changed state from %d to %d", button->device.name, button->device.state,
                               new_device->state);
                     button->device.state = new_device->state;
