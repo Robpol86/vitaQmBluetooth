@@ -76,7 +76,8 @@ typedef enum QmButtonState : unsigned int {
 } QmButtonState;
 typedef struct QmButton {
     VqmbtDeviceInfo device;
-    QmButtonState state;  // TODO detect and handle transitions from device.state to .state.
+    QmButtonState state;
+    bool enabled;
 } QmButton;
 typedef struct QmState {
     bool bluetooth_on;
@@ -146,10 +147,12 @@ static void refresh_ui(void) {
         // Enable/disable button.
         if (qm_state.bluetooth_on && button_enabled) {
             // Enable button.
+            qm_button->enabled = true;
             QuickMenuRebornSetWidgetColor(id, 1.0F, 1.0F, 1.0F, 1.0F);
             // TODO noop callback
         } else {
             // Disable button.
+            qm_button->enabled = false;
             QuickMenuRebornSetWidgetColor(id, 0.5F, 0.5F, 0.5F, 1.0F);
             // TODO noop callback
         }
@@ -183,41 +186,41 @@ static void update_ui(const QmRequest* request) {
             }
             for (int idx = 0; idx < request->bulk.num_devices; idx++) {
                 const VqmbtDeviceInfo* new_device = &request->bulk.devices[idx];
-                QmButton* button = &qm_state.buttons[idx];
+                QmButton* qm_button = &qm_state.buttons[idx];
                 // Detect new device in old slot or new state for existing device.
-                if (new_device->mac0 == button->device.mac0 && new_device->mac1 == button->device.mac1) {
-                    if (new_device->state == button->device.state) {
-                        LOG_DEBUG(0, "No changes to \"%s\"", button->device.name);
+                if (new_device->mac0 == qm_button->device.mac0 && new_device->mac1 == qm_button->device.mac1) {
+                    if (new_device->state == qm_button->device.state) {
+                        LOG_DEBUG(0, "No changes to \"%s\"", qm_button->device.name);
                         continue;
                     }
-                    LOG_DEBUG(0, "Device \"%s\" changed state from %d to %d", button->device.name, button->device.state,
-                              new_device->state);
-                    button->device.state = new_device->state;
+                    LOG_DEBUG(0, "Device \"%s\" changed state from %d to %d", qm_button->device.name,
+                              qm_button->device.state, new_device->state);
+                    qm_button->device.state = new_device->state;
                 } else {
                     LOG_DEBUG(0, "New device detected in slot %d: \"%s\" (was \"%s\")", idx + 1, new_device->name,
-                              button->device.name);
-                    sceClibMemcpy(&button->device, new_device, sizeof(*new_device));
+                              qm_button->device.name);
+                    sceClibMemcpy(&qm_button->device, new_device, sizeof(*new_device));
                 }
                 changed = true;
-                switch (button->device.state) {
+                switch (qm_button->device.state) {
                     case VQMBT_BT_STATE_DISCONNECTED:
-                        button->state = BTNSTATE_DISCONNECTED;
+                        qm_button->state = BTNSTATE_DISCONNECTED;
                         break;
                     case VQMBT_BT_STATE_CONNECTING:
-                        button->state = BTNSTATE_CONNECTING;
+                        qm_button->state = BTNSTATE_CONNECTING;
                         break;
                     case VQMBT_BT_STATE_DISCONNECTING:
-                        button->state = BTNSTATE_DISCONNECTING;
+                        qm_button->state = BTNSTATE_DISCONNECTING;
                         break;
                     case VQMBT_BT_STATE_CONNECTED:
-                        button->state = BTNSTATE_CONNECTED;
+                        qm_button->state = BTNSTATE_CONNECTED;
                         break;
                     case VQMBT_BT_STATE_REGISTERING:
-                        button->state = BTNSTATE_CONNECTING;
+                        qm_button->state = BTNSTATE_CONNECTING;
                         break;
                     default:
-                        LOG_WARN("Unhandled state=%d for device \"%s\"", button->device.state, button->device.name);
-                        button->state = BTNSTATE_DISCONNECTED;
+                        LOG_WARN("Unhandled state=%d for device \"%s\"", qm_button->device.state, qm_button->device.name);
+                        qm_button->state = BTNSTATE_DISCONNECTED;
                         break;
                 }
             }
