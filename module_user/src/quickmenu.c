@@ -332,6 +332,7 @@ static void update_ui(const QmRequest* request) {
 
     // Refresh UI.
     if (changed) {
+        LOG_DEBUG(0, "Refreshing UI to show changes");
         refresh_ui();
     }
 }
