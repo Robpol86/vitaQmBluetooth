@@ -504,6 +504,10 @@ int quickmenu_start(void) {
  * Unloads the plugin's quick menu items.
  */
 int quickmenu_stop(void) {
+    // Stop event thread.
+    kmod_event_stop();
+
+    // Unregister widgets.
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
         const char* id = ID_BUTTONS[idx];
         QuickMenuRebornUnregisterWidget(id);
@@ -512,6 +516,7 @@ int quickmenu_stop(void) {
     QuickMenuRebornUnregisterWidget(ID_SECTION_TITLE);
     QuickMenuRebornRemoveSeparator(ID_SEPARATOR);
 
+    // Delete mutex.
     int ret = sceKernelDeleteLwMutex(&mutex);
     LOG_DEBUG(0, "sceKernelDeleteLwMutex returned 0x%08X", ret);
 
