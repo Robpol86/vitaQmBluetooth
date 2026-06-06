@@ -255,11 +255,13 @@ static void update_ui(const QmRequest* request) {
             VqmbtDeviceInfo* device = &qm_button->device;
             switch (qm_button->state) {
                 case BTNSTATE_DISCONNECTED:
+                    LOG_DEBUG(0, "Connecting device \"%s\"", device->name);
                     kvqmbt_connect_device(device->mac0, device->mac1);  // TODO return errors.
                     qm_button->state = BTNSTATE_CONNECTING;
                     changed = true;
                     break;
                 case BTNSTATE_CONNECTED:
+                    LOG_DEBUG(0, "Disconnecting device \"%s\"", device->name);
                     kvqmbt_disconnect_device(device->mac0, device->mac1);  // TODO return errors.
                     qm_button->state = BTNSTATE_DISCONNECTING;
                     changed = true;
@@ -268,7 +270,6 @@ static void update_ui(const QmRequest* request) {
                     LOG_DEBUG(0, "Ignoring state=%d for device \"%s\"", qm_button->state, device->name);
                     break;
             }
-            LOG_DEBUG(0, "Button pressed idx=%d", request->idx);
             // TODO disable all buttons
             // TODO start a new thread to poll kvqmbt_device_state().
             // TODO     stop this thread when event thread gets Connected
@@ -305,6 +306,7 @@ static void update_ui(const QmRequest* request) {
                 QmButton* qm_button = &qm_state.buttons[idx];
                 VqmbtDeviceInfo* device = &qm_button->device;
                 if (device->mac0 == request->mac.mac0 && device->mac1 == request->mac.mac1) {
+                    LOG_DEBUG(0, "Device \"%s\" now disconnected", device->name);
                     qm_button->state = BTNSTATE_DISCONNECTED;
                     changed = true;
                     break;
@@ -318,6 +320,7 @@ static void update_ui(const QmRequest* request) {
                 QmButton* qm_button = &qm_state.buttons[idx];
                 VqmbtDeviceInfo* device = &qm_button->device;
                 if (device->mac0 == request->mac.mac0 && device->mac1 == request->mac.mac1) {
+                    LOG_DEBUG(0, "Device \"%s\" now connected", device->name);
                     qm_button->state = BTNSTATE_CONNECTED;
                     changed = true;
                     break;
