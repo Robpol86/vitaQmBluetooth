@@ -164,12 +164,10 @@ static void refresh_ui(void) {
             // Enable button.
             qm_button->enabled = true;
             QuickMenuRebornSetWidgetColor(id, 1.0F, 1.0F, 1.0F, 1.0F);
-            // TODO noop callback
         } else {
             // Disable button.
             qm_button->enabled = false;
             QuickMenuRebornSetWidgetColor(id, 0.5F, 0.5F, 0.5F, 1.0F);
-            // TODO noop callback
         }
     }
 }
