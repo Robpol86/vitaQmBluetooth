@@ -190,7 +190,7 @@ static void update_ui(const QmRequest* request) {
     bool changed = false;
 
     switch (request->id) {
-        case REQUEST_BULK_UPDATE:
+        case REQUEST_BULK_UPDATE: {
             if (request->bulk.bluetooth_on != qm_state.bluetooth_on) {
                 LOG_DEBUG(0, "Bluetooth toggled");
                 qm_state.bluetooth_on = request->bulk.bluetooth_on;
@@ -243,12 +243,19 @@ static void update_ui(const QmRequest* request) {
                 }
             }
             break;
+        }
 
-        case REQUEST_BUTTON_PRESSED:
-            LOG_DEBUG(0, "Button pressed: idx=%d", request->idx);  // TODO
+        case REQUEST_BUTTON_PRESSED: {
+            QmButton* qm_button = &qm_state.buttons[request->idx];
+            if (!qm_button->enabled) {
+                LOG_DEBUG(0, "Button idx=%d pressed but disabled, ignoring", request->idx);
+                break;
+            }
+            LOG_DEBUG(0, "Button pressed idx=%d", request->idx);  // TODO
             break;
+        }
 
-        case REQUEST_BLUETOOTH_ON:
+        case REQUEST_BLUETOOTH_ON: {
             if (qm_state.bluetooth_on) {
                 LOG_DEBUG(0, "Bluetooth already displaying on");
             } else {
@@ -257,8 +264,9 @@ static void update_ui(const QmRequest* request) {
                 changed = true;
             }
             break;
+        }
 
-        case REQUEST_BLUETOOTH_OFF:
+        case REQUEST_BLUETOOTH_OFF: {
             if (!qm_state.bluetooth_on) {
                 LOG_DEBUG(0, "Bluetooth already displaying off");
             } else {
@@ -267,16 +275,19 @@ static void update_ui(const QmRequest* request) {
                 changed = true;
             }
             break;
+        }
 
-        case REQUEST_DEVICE_DISCONNECTED:
+        case REQUEST_DEVICE_DISCONNECTED: {
             LOG_DEBUG(0, "TODO disconnected mac0=0x%08X mac1=0x%08X", request->mac.mac0, request->mac.mac1);
             // TODO
             break;
+        }
 
-        case REQUEST_DEVICE_CONNECTED:
+        case REQUEST_DEVICE_CONNECTED: {
             LOG_DEBUG(0, "TODO connected mac0=0x%08X mac1=0x%08X", request->mac.mac0, request->mac.mac1);
             // TODO
             break;
+        }
     }
 
     // Refresh UI.
@@ -412,13 +423,6 @@ static BUTTON_HANDLER(quickmenu_on_press) {
     (void)hash;
     (void)eventId;
     int idx = (int)(intptr_t)userDat;
-
-    QmButton* qm_button = &qm_state.buttons[idx];
-
-    if (!qm_button->enabled) {
-        LOG_DEBUG(0, "Button idx=%d pressed but disabled, ignoring", idx);
-        return;
-    }
 
     LOG_DEBUG(0, "Button idx=%d pressed", idx);
     update_ui(&(QmRequest){.id = REQUEST_BUTTON_PRESSED, .idx = idx});
