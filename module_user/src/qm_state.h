@@ -49,7 +49,7 @@ typedef struct QmStateRequest {
 } QmStateRequest;
 
 // Exported functions.
-void qm_state_update_ui(const QmStateRequest* request);
+void qm_state_update_ui(const QmStateRequest* request);  // TODO TODO TODO render callback (refresh_ui passed).
 int qm_state_start(void);
 int qm_state_stop(void);
 
