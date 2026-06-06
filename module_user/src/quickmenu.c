@@ -112,6 +112,9 @@ typedef struct QmRequest {
 /**
  * TODO
  *
+ * TODO:
+ * - Move to qm_state.c
+ *
  * Called from _ thread TODO.
  */
 static void refresh_ui(void) {
@@ -162,6 +165,9 @@ static void refresh_ui(void) {
 
 /**
  * TODO
+ *
+ * TODO:
+ * - Move to qm_state.c
  *
  * Called from:
  *  - quickmenu_on_press (main thread)
@@ -361,7 +367,7 @@ static void reset(void) {
  */
 static void handle_event_dropped(void) {
     LOG_DEBUG(0, "Running reset()");
-    reset();  // TODO test
+    reset();
 }
 
 /**
