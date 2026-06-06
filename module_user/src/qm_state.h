@@ -21,12 +21,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "vqmbt.h"
 
-// Button IDs.
-static const char* const ID_BUTTONS[VQMBT_MAX_DEVICES] = {
-    MODULE_NAME "Button0", MODULE_NAME "Button1", MODULE_NAME "Button2", MODULE_NAME "Button3",
-    MODULE_NAME "Button4", MODULE_NAME "Button5", MODULE_NAME "Button6", MODULE_NAME "Button7",
-};
-_Static_assert(sizeof(ID_BUTTONS) / sizeof(ID_BUTTONS[0]) == VQMBT_MAX_DEVICES, "ID_BUTTONS size != VQMBT_MAX_DEVICES");
+// Button IDs (defined in quickmenu.c).
+extern const char* const ID_BUTTONS[VQMBT_MAX_DEVICES];  // TODO remove
 
 // UI request.
 typedef enum QmStateRequestId : unsigned int {

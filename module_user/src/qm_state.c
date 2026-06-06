@@ -57,7 +57,7 @@ static QmState qm_state;
  * TODO
  *
  * TODO:
- * - Move to qm_state.c
+ * - Move back to quickmenu.c
  *
  * Called from _ thread TODO.
  */
