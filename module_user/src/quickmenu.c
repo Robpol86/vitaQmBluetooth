@@ -41,6 +41,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - long bt names ellipses
  * - force close quickmenu. Clean up on recovery?
  * - update screenshot
+ * - RACE BUG: connect via qm, close qm, open qm, bt connects but label still says Connecting
  */
 
 #include "quickmenu.h"
@@ -302,14 +303,28 @@ static void update_ui(const QmRequest* request) {
         }
 
         case REQUEST_DEVICE_DISCONNECTED: {
-            LOG_DEBUG(0, "TODO disconnected mac0=0x%08X mac1=0x%08X", request->mac.mac0, request->mac.mac1);
-            // TODO
+            for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
+                QmButton* qm_button = &qm_state.buttons[idx];
+                VqmbtDeviceInfo* device = &qm_button->device;
+                if (device->mac0 == request->mac.mac0 && device->mac1 == request->mac.mac1) {
+                    qm_button->state = BTNSTATE_DISCONNECTED;
+                    changed = true;
+                    break;
+                }
+            }
             break;
         }
 
         case REQUEST_DEVICE_CONNECTED: {
-            LOG_DEBUG(0, "TODO connected mac0=0x%08X mac1=0x%08X", request->mac.mac0, request->mac.mac1);
-            // TODO
+            for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
+                QmButton* qm_button = &qm_state.buttons[idx];
+                VqmbtDeviceInfo* device = &qm_button->device;
+                if (device->mac0 == request->mac.mac0 && device->mac1 == request->mac.mac1) {
+                    qm_button->state = BTNSTATE_CONNECTED;
+                    changed = true;
+                    break;
+                }
+            }
             break;
         }
     }
