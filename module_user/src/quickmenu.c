@@ -311,6 +311,7 @@ static void update_ui(const QmRequest* request) {
 
         case REQUEST_DEVICE_CONNECTED: {
             for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
+                // TODO try connecting when Settings is opened.
                 QmButton* qm_button = &qm_state.buttons[idx];
                 VqmbtDeviceInfo* device = &qm_button->device;
                 if (device->mac0 == request->mac.mac0 && device->mac1 == request->mac.mac1) {
