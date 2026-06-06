@@ -78,6 +78,7 @@ typedef struct QmButton {
     VqmbtDeviceInfo device;
     QmButtonState state;
     bool enabled;
+    // TODO QmRequestId action_next;
 } QmButton;
 typedef struct QmState {
     bool bluetooth_on;
@@ -92,6 +93,8 @@ typedef enum QmRequestId : unsigned int {
     REQUEST_BUTTON_PRESSED,
     REQUEST_BLUETOOTH_ON,
     REQUEST_BLUETOOTH_OFF,
+    REQUEST_DEVICE_DISCONNECTED,
+    REQUEST_DEVICE_CONNECTED,
 } QmRequestId;
 typedef struct QmRequest {
     QmRequestId id;
@@ -250,6 +253,16 @@ static void update_ui(const QmRequest* request) {
                 changed = true;
             }
             break;
+
+        case REQUEST_DEVICE_DISCONNECTED:
+            LOG_DEBUG(0, "TODO disconnected mac0=0x%08X mac1=0x%08X", request->mac.mac0, request->mac.mac1);
+            // TODO
+            break;
+
+        case REQUEST_DEVICE_CONNECTED:
+            LOG_DEBUG(0, "TODO connected mac0=0x%08X mac1=0x%08X", request->mac.mac0, request->mac.mac1);
+            // TODO
+            break;
     }
 
     // Refresh UI.
@@ -335,29 +348,29 @@ static void handle_event(const VqmbtEvent* event) {
 
         case VQMBT_EVENT_DEVICE_DISCONNECTED:
             LOG_DEBUG(0, INDENT "Device disconnected");
-            // TODO update_ui(new_state=VQMBT_BT_STATE_DISCONNECTED, mac0, mac1);
+            update_ui(&(QmRequest){.id = REQUEST_DEVICE_DISCONNECTED, .mac.mac0 = event->mac0, .mac.mac1 = event->mac1});
             break;
 
         case VQMBT_EVENT_DEVICE_CONNECT_SUCCESS:
             LOG_DEBUG(0, INDENT "Device connected");
-            // TODO update_ui(new_state=VQMBT_BT_STATE_CONNECTED, mac0, mac1);
+            update_ui(&(QmRequest){.id = REQUEST_DEVICE_CONNECTED, .mac.mac0 = event->mac0, .mac.mac1 = event->mac1});
             break;
 
         case VQMBT_EVENT_DEVICE_CONNECT_FAILED:
             LOG_DEBUG(0, INDENT "Device connect failed");
             // TODO tell user it failed
-            // TODO update_ui(new_state=VQMBT_BT_STATE_DISCONNECTED, mac0, mac1);
+            update_ui(&(QmRequest){.id = REQUEST_DEVICE_DISCONNECTED, .mac.mac0 = event->mac0, .mac.mac1 = event->mac1});
             break;
 
         case VQMBT_EVENT_DEVICE_CONNECT_ABORTED:
             LOG_DEBUG(0, INDENT "Device connect aborted");
             // TODO tell user?
-            // TODO update_ui(new_state=VQMBT_BT_STATE_DISCONNECTED, mac0, mac1);
+            update_ui(&(QmRequest){.id = REQUEST_DEVICE_DISCONNECTED, .mac.mac0 = event->mac0, .mac.mac1 = event->mac1});
             break;
 
         case VQMBT_EVENT_DEVICE_CONNECT_CANCELLED:
             LOG_DEBUG(0, INDENT "Device connect cancelled");
-            // TODO update_ui(new_state=VQMBT_BT_STATE_DISCONNECTED, mac0, mac1);
+            update_ui(&(QmRequest){.id = REQUEST_DEVICE_DISCONNECTED, .mac.mac0 = event->mac0, .mac.mac1 = event->mac1});
             break;
 
         default:
