@@ -29,16 +29,16 @@ static const char* const ID_BUTTONS[VQMBT_MAX_DEVICES] = {
 _Static_assert(sizeof(ID_BUTTONS) / sizeof(ID_BUTTONS[0]) == VQMBT_MAX_DEVICES, "ID_BUTTONS size != VQMBT_MAX_DEVICES");
 
 // UI request.
-typedef enum QmRequestId : unsigned int {
+typedef enum QmStateRequestId : unsigned int {
     REQUEST_BULK_UPDATE = 0,
     REQUEST_BUTTON_PRESSED,
     REQUEST_BLUETOOTH_ON,
     REQUEST_BLUETOOTH_OFF,
     REQUEST_DEVICE_DISCONNECTED,
     REQUEST_DEVICE_CONNECTED,
-} QmRequestId;
-typedef struct QmRequest {
-    QmRequestId id;
+} QmStateRequestId;
+typedef struct QmStateRequest {
+    QmStateRequestId id;
     union {
         int idx;
         struct {
@@ -50,9 +50,10 @@ typedef struct QmRequest {
             const VqmbtDeviceInfo* devices;
         } bulk;
     };
-} QmRequest;
+} QmStateRequest;
 
-void update_ui(const QmRequest* request);
+// Exported functions.
+void qm_state_update_ui(const QmStateRequest* request);
 int qm_state_start(void);
 int qm_state_stop(void);
 

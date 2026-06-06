@@ -30,9 +30,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "log.h"
 #include "mutex.h"
 
-static SceKernelLwMutexWork mutex;
-
 #define BUTTON_LABEL_MAX (VQMBT_DEVICE_NAME_MAX + 16)
+
+static SceKernelLwMutexWork mutex;
 
 // Quickmenu and button states.
 typedef enum QmButtonState : unsigned int {
@@ -120,7 +120,7 @@ static void refresh_ui(void) {
  *
  * @param request TODO
  */
-void update_ui(const QmRequest* request) {
+void qm_state_update_ui(const QmStateRequest* request) {
     // Lock mutex and defer unlock to function scope exit.
     SceKernelLwMutexWork* mutex_ MUTEX_STATE = &mutex;  // TODO move into reset() and on_press(). Or maybe not.
     ENTER_MUTEX(mutex);
