@@ -89,6 +89,7 @@ static QmState qm_state;
 // UI request.
 typedef enum QmRequestId : unsigned int {
     REQUEST_BULK_UPDATE = 0,
+    REQUEST_BUTTON_PRESSED,
     REQUEST_BLUETOOTH_ON,
     REQUEST_BLUETOOTH_OFF,
 } QmRequestId;
@@ -224,6 +225,10 @@ static void update_ui(const QmRequest* request) {
                         break;
                 }
             }
+            break;
+
+        case REQUEST_BUTTON_PRESSED:
+            LOG_DEBUG(0, "Button pressed: idx=%d", request->idx);  // TODO
             break;
 
         case REQUEST_BLUETOOTH_ON:
@@ -389,8 +394,7 @@ static BUTTON_HANDLER(quickmenu_on_press) {
     }
 
     LOG_DEBUG(0, "Button idx=%d pressed", idx);
-
-    // TODO update_ui(action=idx)
+    update_ui(&(QmRequest){.id = REQUEST_BUTTON_PRESSED, .idx = idx});
 }
 
 /**
