@@ -445,6 +445,7 @@ static ONLOAD_HANDLER(quickmenu_on_load) {
     LOG_DEBUG(0, "Quick menu opened.");
 
     // Start event thread.
+    // TODO comment out, observe behavior. Does initial state look acceptable to users?
     kmod_event_start(reset, handle_event_dropped, handle_event);
 }
 
