@@ -166,11 +166,16 @@ static void refresh_ui(void) {
 /**
  * TODO
  *
- * Called from _ thread TODO.
+ * Called from:
+ *  - quickmenu_on_press (main thread)
+ *  - handle_event and handle_event_dropped (event thread)
+ *  - reset (event thread)
+ *
+ * @param request TODO
  */
 static void update_ui(const QmRequest* request) {
     // Lock mutex and defer unlock to function scope exit.
-    SceKernelLwMutexWork* mutex_ MUTEX_STATE = &mutex;  // TODO move into reset() and on_press().
+    SceKernelLwMutexWork* mutex_ MUTEX_STATE = &mutex;  // TODO move into reset() and on_press(). Or maybe not.
     ENTER_MUTEX(mutex);
 
     bool changed = false;
