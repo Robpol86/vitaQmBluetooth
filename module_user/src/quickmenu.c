@@ -31,6 +31,15 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  *      - Eventually add new APIs such as Show/Hide and Enable/Disable
  *      - Hide/show the root plane, confirm buttons are unselectable whilst hidden, and no scrollbars
  *      - Enable/disable first button. Should be selectable as-per big BT button at the top, but tap/X/O no-ops
+ * TODO:
+ * - If kernel plugin isn't loaded notify user.
+ * - If kernel plugin loaded AFTER user plugin what happens? probably fails. Handle this too.
+ * - Two body planes: one for the buttons, another with just a text message.
+ * - Hide empty slots and resize plane to eliminate ghost scrolling.
+ * TODO:
+ * - callback: relabel button with new state. Surface error in button as close/reopen resets labels
+ * - long bt names ellipses
+
  */
 
 #include "quickmenu.h"
@@ -417,10 +426,6 @@ static BUTTON_HANDLER(quickmenu_on_press) {
 
 /**
  * Called when the quick menu is opened by the user.
- *
- * TODO:
- * - Performance? delay opening qm? async?
- * - Hide empty slots and resize plane to eliminate ghost scrolling.
  */
 static ONLOAD_HANDLER(quickmenu_on_load) {
     (void)id;
@@ -449,12 +454,6 @@ static void quickmenu_on_unload(const char* id) {
  * TODO:
  * - Add function to calculate position from top left instead of center.
  * - Pixel perfect alignment.
- * - If kernel plugin isn't loaded notify user.
- * - If kernel plugin loaded AFTER user plugin what happens? probably fails. Handle this too.
- * - Two body planes: one for the buttons, another with just a text message.
- * TODO:
- * - callback: relabel button with new state. Surface error in button as close/reopen resets labels
- * - long bt names ellipses
  */
 int quickmenu_start(void) {
     // Initialize mutex.
