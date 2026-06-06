@@ -330,34 +330,34 @@ static void handle_event(const VqmbtEvent* event) {
 
         case VQMBT_EVENT_DEVICE_ADDED_REMOVED_CONNECTING:
             LOG_DEBUG(0, INDENT "Device added/removed/connecting");
-            // TODO reset()
+            reset();
             break;
 
         case VQMBT_EVENT_DEVICE_DISCONNECTED:
             LOG_DEBUG(0, INDENT "Device disconnected");
-            // TODO update_ui(new_state=VQMBT_BT_STATE_DISCONNECTED, mac0, mac1)
+            // TODO update_ui(new_state=VQMBT_BT_STATE_DISCONNECTED, mac0, mac1);
             break;
 
         case VQMBT_EVENT_DEVICE_CONNECT_SUCCESS:
             LOG_DEBUG(0, INDENT "Device connected");
-            // TODO update_ui(new_state=VQMBT_BT_STATE_CONNECTED, mac0, mac1)
+            // TODO update_ui(new_state=VQMBT_BT_STATE_CONNECTED, mac0, mac1);
             break;
 
         case VQMBT_EVENT_DEVICE_CONNECT_FAILED:
             LOG_DEBUG(0, INDENT "Device connect failed");
             // TODO tell user it failed
-            // TODO update_ui(new_state=VQMBT_BT_STATE_DISCONNECTED, mac0, mac1)
+            // TODO update_ui(new_state=VQMBT_BT_STATE_DISCONNECTED, mac0, mac1);
             break;
 
         case VQMBT_EVENT_DEVICE_CONNECT_ABORTED:
             LOG_DEBUG(0, INDENT "Device connect aborted");
             // TODO tell user?
-            // TODO update_ui(new_state=VQMBT_BT_STATE_DISCONNECTED, mac0, mac1)
+            // TODO update_ui(new_state=VQMBT_BT_STATE_DISCONNECTED, mac0, mac1);
             break;
 
         case VQMBT_EVENT_DEVICE_CONNECT_CANCELLED:
             LOG_DEBUG(0, INDENT "Device connect cancelled");
-            // TODO update_ui(new_state=VQMBT_BT_STATE_DISCONNECTED, mac0, mac1)
+            // TODO update_ui(new_state=VQMBT_BT_STATE_DISCONNECTED, mac0, mac1);
             break;
 
         default:
