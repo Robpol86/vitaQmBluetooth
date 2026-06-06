@@ -36,7 +36,7 @@ static KmeCallback cb_on_event_dropped = NULL;
 static KmeHandledCallback cb_on_event = NULL;
 static SceUID uid_event_flag = -1;
 static SceUID uid_thread = -1;
-static bool run_thread = false;
+static _Atomic bool run_thread = false;
 
 /**
  * Retrieve events from the kernel module's ring buffer via syscall and pass them to handle_event().

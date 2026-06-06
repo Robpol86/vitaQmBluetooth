@@ -168,7 +168,7 @@ _Static_assert(sizeof(PREFIX) == sizeof(INDENT), "INDENT width must match PREFIX
 
 static SceUID uid_callback = -1;
 static SceUID uid_thread = -1;
-static bool run_thread = false;
+static _Atomic bool run_thread = false;
 
 typedef enum VqmbtInferredBtEventId {
     VQMBT_BT_EVENT_INQUIRY_RESULT = 0x01,
