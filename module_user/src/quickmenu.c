@@ -21,17 +21,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * TODO:
- * - Stick with QMR.
- *      - Always show 8 buttons
- *      - Write disable_button() enable_button() to grey and no-op callbacks
- *      - When bt is disabled disable all buttons and relabel each with "bt is disabled"
- * - Implement button state struct array
- * - PR merge
- * - Bring in QMR APIs into paf.cpp here (keep project C, paf.cpp will have C++ stubs) one by one
- *      - Eventually add new APIs such as Show/Hide and Enable/Disable
- *      - Hide/show the root plane, confirm buttons are unselectable whilst hidden, and no scrollbars
- *      - Enable/disable first button. Should be selectable as-per big BT button at the top, but tap/X/O no-ops
- * TODO:
  * - If kernel plugin isn't loaded notify user.
  * - If kernel plugin loaded AFTER user plugin what happens? probably fails. Handle this too.
  * - Two body planes: one for the buttons, another with just a text message.
