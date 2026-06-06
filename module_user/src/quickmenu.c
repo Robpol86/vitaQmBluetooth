@@ -208,6 +208,7 @@ static void update_ui(const QmRequest* request) {
                 // Detect new device in old slot or new state for existing device.
                 if (new_device->mac0 == old_device->mac0 && new_device->mac1 == old_device->mac1) {
                     if (new_device->state == old_device->state) {
+                        // TODO BUG stuck in Disconnecting state.
                         LOG_DEBUG(0, "No changes to \"%s\"", old_device->name);
                         continue;
                     }
@@ -254,13 +255,13 @@ static void update_ui(const QmRequest* request) {
             switch (qm_button->state) {
                 case BTNSTATE_DISCONNECTED:
                     LOG_DEBUG(0, "Connecting device \"%s\"", device->name);
-                    kvqmbt_connect_device(device->mac0, device->mac1);  // TODO return errors.
+                    kvqmbt_connect_device(device->mac0, device->mac1);
                     qm_button->state = BTNSTATE_CONNECTING;
                     changed = true;
                     break;
                 case BTNSTATE_CONNECTED:
                     LOG_DEBUG(0, "Disconnecting device \"%s\"", device->name);
-                    kvqmbt_disconnect_device(device->mac0, device->mac1);  // TODO return errors.
+                    kvqmbt_disconnect_device(device->mac0, device->mac1);
                     qm_button->state = BTNSTATE_DISCONNECTING;
                     changed = true;
                     break;
@@ -268,11 +269,6 @@ static void update_ui(const QmRequest* request) {
                     LOG_DEBUG(0, "Ignoring state=%d for device \"%s\"", qm_button->state, device->name);
                     break;
             }
-            // TODO disable all buttons
-            // TODO start a new thread to poll kvqmbt_device_state().
-            // TODO     stop this thread when event thread gets Connected
-            // TODO     enable all buttons
-            // TODO stop thread on timeout
             // TODO show busy symbol or progress bar
             break;
         }

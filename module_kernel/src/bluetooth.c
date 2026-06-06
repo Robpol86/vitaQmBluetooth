@@ -174,7 +174,7 @@ bool kvqmbt_bluetooth_state(void) {
     ENTER_SYSCALL(syscall_state_);
 
     int state = ksceBtGetConfiguration();
-    LOG_DEBUG(0, "ksceBtGetConfiguration returned state=%d", state);
+    LOG_DEBUG(0, "ksceBtGetConfiguration returned state=0x%08X", state);
 
     return state == 0x9;
 }
