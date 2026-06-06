@@ -39,7 +39,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * TODO:
  * - callback: relabel button with new state. Surface error in button as close/reopen resets labels
  * - long bt names ellipses
-
+ * - force close quickmenu. Clean up on recovery?
  */
 
 #include "quickmenu.h"
