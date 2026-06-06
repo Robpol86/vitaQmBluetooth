@@ -88,7 +88,6 @@ typedef struct QmButton {
     VqmbtDeviceInfo device;
     QmButtonState state;
     bool enabled;
-    // TODO QmRequestId action_next;
 } QmButton;
 typedef struct QmState {
     bool bluetooth_on;
@@ -129,29 +128,30 @@ typedef struct QmRequest {
 static void refresh_ui(void) {
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
         QmButton* qm_button = &qm_state.buttons[idx];
+        VqmbtDeviceInfo* device = &qm_button->device;
         bool button_enabled = false;
 
         // Update label.
         char label[BUTTON_LABEL_MAX];
-        if (qm_button->device.mac0 == 0 && qm_button->device.mac1 == 0) {
+        if (device->mac0 == 0 && device->mac1 == 0) {
             sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
         } else if (!qm_state.bluetooth_on) {
             sceClibSnprintf(label, sizeof(label), "Bluetooth is disabled");
         } else {
             switch (qm_button->state) {
                 case BTNSTATE_DISCONNECTED:
-                    sceClibSnprintf(label, sizeof(label), "Connect %s", qm_button->device.name);
+                    sceClibSnprintf(label, sizeof(label), "Connect %s", device->name);
                     button_enabled = true;
                     break;
                 case BTNSTATE_DISCONNECTING:
-                    sceClibSnprintf(label, sizeof(label), "Disconnecting %s", qm_button->device.name);
+                    sceClibSnprintf(label, sizeof(label), "Disconnecting %s", device->name);
                     break;
                 case BTNSTATE_CONNECTED:
-                    sceClibSnprintf(label, sizeof(label), "Disconnect %s", qm_button->device.name);
+                    sceClibSnprintf(label, sizeof(label), "Disconnect %s", device->name);
                     button_enabled = true;
                     break;
                 case BTNSTATE_CONNECTING:
-                    sceClibSnprintf(label, sizeof(label), "Connecting %s", qm_button->device.name);
+                    sceClibSnprintf(label, sizeof(label), "Connecting %s", device->name);
                     break;
             }
         }
@@ -206,22 +206,23 @@ static void update_ui(const QmRequest* request) {
             for (int idx = 0; idx < request->bulk.num_devices; idx++) {
                 const VqmbtDeviceInfo* new_device = &request->bulk.devices[idx];
                 QmButton* qm_button = &qm_state.buttons[idx];
+                VqmbtDeviceInfo* old_device = &qm_button->device;
                 // Detect new device in old slot or new state for existing device.
-                if (new_device->mac0 == qm_button->device.mac0 && new_device->mac1 == qm_button->device.mac1) {
-                    if (new_device->state == qm_button->device.state) {
-                        LOG_DEBUG(0, "No changes to \"%s\"", qm_button->device.name);
+                if (new_device->mac0 == old_device->mac0 && new_device->mac1 == old_device->mac1) {
+                    if (new_device->state == old_device->state) {
+                        LOG_DEBUG(0, "No changes to \"%s\"", old_device->name);
                         continue;
                     }
-                    LOG_DEBUG(0, "Device \"%s\" changed state from %d to %d", qm_button->device.name,
-                              qm_button->device.state, new_device->state);
-                    qm_button->device.state = new_device->state;
+                    LOG_DEBUG(0, "Device \"%s\" changed state from %d to %d", old_device->name, old_device->state,
+                              new_device->state);
+                    old_device->state = new_device->state;
                 } else {
                     LOG_DEBUG(0, "New device detected in slot %d: \"%s\" (was \"%s\")", idx + 1, new_device->name,
-                              qm_button->device.name);
-                    sceClibMemcpy(&qm_button->device, new_device, sizeof(*new_device));
+                              old_device->name);
+                    sceClibMemcpy(old_device, new_device, sizeof(*new_device));
                 }
                 changed = true;
-                switch (qm_button->device.state) {
+                switch (old_device->state) {
                     case VQMBT_BT_STATE_DISCONNECTED:
                         qm_button->state = BTNSTATE_DISCONNECTED;
                         break;
@@ -238,7 +239,7 @@ static void update_ui(const QmRequest* request) {
                         qm_button->state = BTNSTATE_CONNECTING;
                         break;
                     default:
-                        LOG_WARN("Unhandled state=%d for device \"%s\"", qm_button->device.state, qm_button->device.name);
+                        LOG_WARN("Unhandled state=%d for device \"%s\"", old_device->state, old_device->name);
                         qm_button->state = BTNSTATE_DISCONNECTED;
                         break;
                 }
@@ -252,9 +253,24 @@ static void update_ui(const QmRequest* request) {
                 LOG_DEBUG(0, "Button idx=%d pressed but disabled, ignoring", request->idx);
                 break;
             }
-            LOG_DEBUG(0, "Button pressed idx=%d", request->idx);  // TODO
+            VqmbtDeviceInfo* device = &qm_button->device;
+            switch (qm_button->state) {
+                case BTNSTATE_DISCONNECTED:
+                    kvqmbt_connect_device(device->mac0, device->mac1);  // TODO return errors.
+                    qm_button->state = BTNSTATE_CONNECTING;
+                    changed = true;
+                    break;
+                case BTNSTATE_CONNECTED:
+                    kvqmbt_disconnect_device(device->mac0, device->mac1);  // TODO return errors.
+                    qm_button->state = BTNSTATE_DISCONNECTING;
+                    changed = true;
+                    break;
+                default:
+                    LOG_DEBUG(0, "Ignoring state=%d for device \"%s\"", qm_button->state, device->name);
+                    break;
+            }
+            LOG_DEBUG(0, "Button pressed idx=%d", request->idx);
             // TODO disable all buttons
-            // TODO change label to Connecting
             // TODO start a new thread to poll kvqmbt_device_state().
             // TODO     stop this thread when event thread gets Connected
             // TODO     enable all buttons
