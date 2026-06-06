@@ -41,7 +41,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - long bt names ellipses
  * - force close quickmenu. Clean up on recovery?
  * - update screenshot
- * - RACE BUG: connect via qm, close qm, open qm, bt connects but label still says Connecting
  */
 
 #include "quickmenu.h"
@@ -231,11 +230,10 @@ static void update_ui(const QmRequest* request) {
                     case VQMBT_BT_STATE_DISCONNECTING:
                         qm_button->state = BTNSTATE_DISCONNECTING;
                         break;
+                    case VQMBT_BT_STATE_REGISTERING:
+                        LOG_DEBUG(0, "Handling registering state as connected for device \"%s\"", old_device->name);
                     case VQMBT_BT_STATE_CONNECTED:
                         qm_button->state = BTNSTATE_CONNECTED;
-                        break;
-                    case VQMBT_BT_STATE_REGISTERING:
-                        qm_button->state = BTNSTATE_CONNECTING;
                         break;
                     default:
                         LOG_WARN("Unhandled state=%d for device \"%s\"", old_device->state, old_device->name);
