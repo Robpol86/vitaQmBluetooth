@@ -166,7 +166,7 @@ static void refresh_ui(void) {
  */
 static void update_ui(const QmRequest* request) {
     // Lock mutex and defer unlock to function scope exit.
-    SceKernelLwMutexWork* mutex_ MUTEX_STATE = &mutex;
+    SceKernelLwMutexWork* mutex_ MUTEX_STATE = &mutex;  // TODO move into reset() and on_press().
     ENTER_MUTEX(mutex);
 
     bool changed = false;
@@ -380,6 +380,13 @@ static BUTTON_HANDLER(quickmenu_on_press) {
     (void)hash;
     (void)eventId;
     int idx = (int)(intptr_t)userDat;
+
+    QmButton* qm_button = &qm_state.buttons[idx];
+
+    if (!qm_button->enabled) {
+        LOG_DEBUG(0, "Button idx=%d pressed but disabled, ignoring", idx);
+        return;
+    }
 
     LOG_DEBUG(0, "Button idx=%d pressed", idx);
 
