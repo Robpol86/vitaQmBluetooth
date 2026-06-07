@@ -33,26 +33,27 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #define BUTTON_LABEL_MAX (VQMBT_DEVICE_NAME_MAX + 16)
 
-static SceKernelLwMutexWork mutex;
-
-// Quickmenu and button states.
 typedef enum QmButtonState : unsigned int {
     BTNSTATE_DISCONNECTED = 0,
     BTNSTATE_DISCONNECTING,
     BTNSTATE_CONNECTED,
     BTNSTATE_CONNECTING,
 } QmButtonState;
+
 typedef struct QmButton {
     VqmbtDeviceInfo device;
     QmButtonState state;
     bool enabled;
 } QmButton;
+
 typedef struct QmState {
     bool bluetooth_on;
     int num_buttons_active;
     QmButton buttons[VQMBT_MAX_DEVICES];
 } QmState;
+
 static QmState qm_state;
+static SceKernelLwMutexWork mutex;
 
 /**
  * TODO
