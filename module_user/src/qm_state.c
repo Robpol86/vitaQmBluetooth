@@ -34,16 +34,18 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define BUTTON_LABEL_MAX (VQMBT_DEVICE_NAME_MAX + 16)
 
 typedef enum QmButtonState : unsigned int {
-    BTNSTATE_DISCONNECTED = 0,
-    BTNSTATE_DISCONNECTING,
+    BTNSTATE_SLOT_EMPTY_DISABLED,
+    BTNSTATE_BT_OFF_DISABLED,
+    BTNSTATE_DISCONNECTED,
+    BTNSTATE_DISCONNECTING_DISABLED,
     BTNSTATE_CONNECTED,
-    BTNSTATE_CONNECTING,
+    BTNSTATE_CONNECTING_DISABLED,
+    BTNSTATE_ERROR_DISABLED,
 } QmButtonState;
 
 typedef struct QmButton {
     VqmbtDeviceInfo device;
     QmButtonState state;
-    bool enabled;
 } QmButton;
 
 typedef struct QmState {
@@ -62,45 +64,48 @@ static SceKernelLwMutexWork mutex;
  */
 static void refresh_ui(void) {
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
-        QmButton* qm_button = &qm_state.buttons[idx];
-        VqmbtDeviceInfo* device = &qm_button->device;
+        const QmButton* qm_button = &qm_state.buttons[idx];
+        const VqmbtDeviceInfo* device = &qm_button->device;
+        char label[BUTTON_LABEL_MAX];
         bool button_enabled = false;
 
-        // Update label.
-        char label[BUTTON_LABEL_MAX];
-        if (device->mac0 == 0 && device->mac1 == 0) {
-            sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
-        } else if (!qm_state.bluetooth_on) {
-            sceClibSnprintf(label, sizeof(label), "Bluetooth is disabled");
-        } else {
-            switch (qm_button->state) {
-                case BTNSTATE_DISCONNECTED:
-                    sceClibSnprintf(label, sizeof(label), "Connect %s", device->name);
-                    button_enabled = true;
-                    break;
-                case BTNSTATE_DISCONNECTING:
-                    sceClibSnprintf(label, sizeof(label), "Disconnecting %s", device->name);
-                    break;
-                case BTNSTATE_CONNECTED:
-                    sceClibSnprintf(label, sizeof(label), "Disconnect %s", device->name);
-                    button_enabled = true;
-                    break;
-                case BTNSTATE_CONNECTING:
-                    sceClibSnprintf(label, sizeof(label), "Connecting %s", device->name);
-                    break;
-            }
+        // Determine label.
+        switch (qm_button->state) {
+            case BTNSTATE_SLOT_EMPTY_DISABLED:
+                sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
+                break;
+            case BTNSTATE_BT_OFF_DISABLED:
+                sceClibSnprintf(label, sizeof(label), "Bluetooth is disabled");
+                break;
+            case BTNSTATE_DISCONNECTING_DISABLED:
+                sceClibSnprintf(label, sizeof(label), "Disconnecting %s", device->name);
+                break;
+            case BTNSTATE_CONNECTING_DISABLED:
+                sceClibSnprintf(label, sizeof(label), "Connecting %s", device->name);
+                break;
+            case BTNSTATE_ERROR_DISABLED:
+                sceClibSnprintf(label, sizeof(label), "ERROR TODO %s", device->name);  // TODO
+                break;
+            case BTNSTATE_DISCONNECTED:
+                sceClibSnprintf(label, sizeof(label), "Connect %s", device->name);
+                button_enabled = true;
+                break;
+            case BTNSTATE_CONNECTED:
+                sceClibSnprintf(label, sizeof(label), "Disconnect %s", device->name);
+                button_enabled = true;
+                break;
         }
+
+        // Update label.
         const char* id = ID_BUTTONS[idx];
         QuickMenuRebornSetWidgetLabel(id, label);
 
         // Enable/disable button.
-        if (qm_state.bluetooth_on && button_enabled) {
+        if (button_enabled) {
             // Enable button.
-            qm_button->enabled = true;
             QuickMenuRebornSetWidgetColor(id, 1.0F, 1.0F, 1.0F, 1.0F);
         } else {
             // Disable button.
-            qm_button->enabled = false;
             QuickMenuRebornSetWidgetColor(id, 0.5F, 0.5F, 0.5F, 1.0F);
         }
     }
