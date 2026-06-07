@@ -270,26 +270,22 @@ void qm_state_update_ui(const QmStateRequest* request) {
 }
 
 /**
- * TODO
+ * Initialize the mutex. TODO.
  */
-int qm_state_start(void) {
-    // Initialize mutex.
+int qm_state_mutex_start(void) {
     int ret = sceKernelCreateLwMutex(&mutex, "vqmbt-qm_state-mutex", 0, 0, NULL);
     if (ret < 0) {
         LOG_ERROR("sceKernelCreateLwMutex returned error 0x%08X", ret);
         return VQMBT_ERROR_GENERAL_FAILURE;
     }
-
     return 0;
 }
 
 /**
- * Unloads the plugin's quick menu items.
+ * Delete the mutex. TODO.
  */
-int qm_state_stop(void) {
+void qm_state_mutex_stop(void) {
     // Delete mutex.
     int ret = sceKernelDeleteLwMutex(&mutex);
     LOG_DEBUG(0, "sceKernelDeleteLwMutex returned 0x%08X", ret);
-
-    return 0;
 }

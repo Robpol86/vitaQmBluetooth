@@ -222,7 +222,8 @@ static void quickmenu_on_unload(const char* id) {
  * - Pixel perfect alignment.
  */
 int quickmenu_start(void) {
-    qm_state_start();
+    // Initialize mutex and state.
+    qm_state_mutex_start();
 
     // Add horizontal line separator.
     QuickMenuRebornSeparator(ID_SEPARATOR, SCE_SEPARATOR_HEIGHT);
@@ -273,7 +274,8 @@ int quickmenu_stop(void) {
     QuickMenuRebornUnregisterWidget(ID_SECTION_TITLE);
     QuickMenuRebornRemoveSeparator(ID_SEPARATOR);
 
-    qm_state_stop();
+    // Remove mutex.
+    qm_state_mutex_stop();
 
     return 0;
 }
