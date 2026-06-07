@@ -19,7 +19,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "vqmbt.h"
 
-// Widget IDs (prefixed because they must be unique across all plugins).
+// Widget IDs (prefixed because they must be unique across all plugins).  // TODO QM_ID_ prefix.
 #define ID_SEPARATOR MODULE_NAME "Separator"
 #define ID_SECTION_TITLE MODULE_NAME "SectionTitle"
 #define ID_PLANE_BUTTONS MODULE_NAME "PlaneButtons"

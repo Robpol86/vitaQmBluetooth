@@ -23,7 +23,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 // UI request.
 typedef enum QmStateRequestId : unsigned int {
-    REQUEST_BULK_UPDATE = 0,
+    REQUEST_BULK_UPDATE = 0,  // TODO prefix
     REQUEST_BUTTON_PRESSED,
     REQUEST_BLUETOOTH_ON,
     REQUEST_BLUETOOTH_OFF,
