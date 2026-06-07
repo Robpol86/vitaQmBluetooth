@@ -21,9 +21,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "vqmbt.h"
 
-// Button IDs (defined in quickmenu.c).
-extern const char* const ID_BUTTONS[VQMBT_MAX_DEVICES];  // TODO remove
-
 // UI request.
 typedef enum QmStateRequestId : unsigned int {
     REQUEST_BULK_UPDATE = 0,

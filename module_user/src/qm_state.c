@@ -29,6 +29,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "log.h"
 #include "mutex.h"
+#include "qm_ids.h"
 
 #define BUTTON_LABEL_MAX (VQMBT_DEVICE_NAME_MAX + 16)
 
@@ -55,9 +56,6 @@ static QmState qm_state;
 
 /**
  * TODO
- *
- * TODO:
- * - Move back to quickmenu.c
  *
  * Called from _ thread TODO.
  */
