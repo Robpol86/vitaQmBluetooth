@@ -109,7 +109,7 @@ static void refresh_ui(void) {
  * TODO
  *
  * TODO:
- * - Move to qm_state.c
+ * - Refactor into state machine manager.
  *
  * Called from:
  *  - quickmenu_on_press (main thread)
