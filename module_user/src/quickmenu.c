@@ -77,8 +77,8 @@ static void reset(void) {
     }
 
     // Update the UI state and refresh the UI if changes were detected.
-    qm_state_update_ui(&(QmStateRequest){
-        .id = REQUEST_BULK_UPDATE,
+    qm_state_update_ui(&(QmsRequest){
+        .id = QMS_REQUEST_BULK_UPDATE,
         .bulk.bluetooth_on = bluetooth_on,
         .bulk.num_devices = count,
         .bulk.devices = devices,
@@ -114,12 +114,12 @@ static void handle_event(const VqmbtEvent* event) {
 
         case VQMBT_EVENT_BLUETOOTH_ENABLED:
             LOG_DEBUG(0, INDENT "Bluetooth turned on");
-            qm_state_update_ui(&(QmStateRequest){.id = REQUEST_BLUETOOTH_ON});
+            qm_state_update_ui(&(QmsRequest){.id = QMS_REQUEST_BLUETOOTH_ON});
             break;
 
         case VQMBT_EVENT_BLUETOOTH_DISABLED:
             LOG_DEBUG(0, INDENT "Bluetooth turned off");
-            qm_state_update_ui(&(QmStateRequest){.id = REQUEST_BLUETOOTH_OFF});
+            qm_state_update_ui(&(QmsRequest){.id = QMS_REQUEST_BLUETOOTH_OFF});
             break;
 
         case VQMBT_EVENT_DEVICE_ADDED_REMOVED_CONNECTING:
@@ -130,33 +130,33 @@ static void handle_event(const VqmbtEvent* event) {
         case VQMBT_EVENT_DEVICE_DISCONNECTED:
             LOG_DEBUG(0, INDENT "Device disconnected");
             qm_state_update_ui(
-                &(QmStateRequest){.id = REQUEST_DEVICE_DISCONNECTED, .mac.mac0 = event->mac0, .mac.mac1 = event->mac1});
+                &(QmsRequest){.id = QMS_REQUEST_DEVICE_DISCONNECTED, .mac.mac0 = event->mac0, .mac.mac1 = event->mac1});
             break;
 
         case VQMBT_EVENT_DEVICE_CONNECT_SUCCESS:
             LOG_DEBUG(0, INDENT "Device connected");
             qm_state_update_ui(
-                &(QmStateRequest){.id = REQUEST_DEVICE_CONNECTED, .mac.mac0 = event->mac0, .mac.mac1 = event->mac1});
+                &(QmsRequest){.id = QMS_REQUEST_DEVICE_CONNECTED, .mac.mac0 = event->mac0, .mac.mac1 = event->mac1});
             break;
 
         case VQMBT_EVENT_DEVICE_CONNECT_FAILED:
             LOG_DEBUG(0, INDENT "Device connect failed");
             // TODO tell user it failed
             qm_state_update_ui(
-                &(QmStateRequest){.id = REQUEST_DEVICE_DISCONNECTED, .mac.mac0 = event->mac0, .mac.mac1 = event->mac1});
+                &(QmsRequest){.id = QMS_REQUEST_DEVICE_DISCONNECTED, .mac.mac0 = event->mac0, .mac.mac1 = event->mac1});
             break;
 
         case VQMBT_EVENT_DEVICE_CONNECT_ABORTED:
             LOG_DEBUG(0, INDENT "Device connect aborted");
             // TODO tell user?
             qm_state_update_ui(
-                &(QmStateRequest){.id = REQUEST_DEVICE_DISCONNECTED, .mac.mac0 = event->mac0, .mac.mac1 = event->mac1});
+                &(QmsRequest){.id = QMS_REQUEST_DEVICE_DISCONNECTED, .mac.mac0 = event->mac0, .mac.mac1 = event->mac1});
             break;
 
         case VQMBT_EVENT_DEVICE_CONNECT_CANCELLED:
             LOG_DEBUG(0, INDENT "Device connect cancelled");
             qm_state_update_ui(
-                &(QmStateRequest){.id = REQUEST_DEVICE_DISCONNECTED, .mac.mac0 = event->mac0, .mac.mac1 = event->mac1});
+                &(QmsRequest){.id = QMS_REQUEST_DEVICE_DISCONNECTED, .mac.mac0 = event->mac0, .mac.mac1 = event->mac1});
             break;
 
         default:
@@ -186,7 +186,7 @@ static BUTTON_HANDLER(quickmenu_on_press) {
     int idx = (int)(intptr_t)userDat;
 
     LOG_DEBUG(0, "Button idx=%d pressed", idx);
-    qm_state_update_ui(&(QmStateRequest){.id = REQUEST_BUTTON_PRESSED, .idx = idx});
+    qm_state_update_ui(&(QmsRequest){.id = QMS_REQUEST_BUTTON_PRESSED, .idx = idx});
 }
 
 /**

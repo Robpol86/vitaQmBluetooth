@@ -118,7 +118,7 @@ static void refresh_ui(void) {
  *
  * @param request TODO
  */
-void qm_state_update_ui(const QmStateRequest* request) {
+void qm_state_update_ui(const QmsRequest* request) {
     // Lock mutex and defer unlock to function scope exit.
     SceKernelLwMutexWork* mutex_ MUTEX_STATE = &mutex;  // TODO move into reset() and on_press(). Or maybe not.
     ENTER_MUTEX(mutex);
@@ -126,7 +126,7 @@ void qm_state_update_ui(const QmStateRequest* request) {
     bool changed = false;
 
     switch (request->id) {
-        case REQUEST_BULK_UPDATE: {
+        case QMS_REQUEST_BULK_UPDATE: {
             if (request->bulk.bluetooth_on != qm_state.bluetooth_on) {
                 LOG_DEBUG(0, "Bluetooth toggled");
                 qm_state.bluetooth_on = request->bulk.bluetooth_on;
@@ -182,7 +182,7 @@ void qm_state_update_ui(const QmStateRequest* request) {
             break;
         }
 
-        case REQUEST_BUTTON_PRESSED: {
+        case QMS_REQUEST_BUTTON_PRESSED: {
             QmButton* qm_button = &qm_state.buttons[request->idx];
             if (!qm_button->enabled) {
                 LOG_DEBUG(0, "Button idx=%d pressed but disabled, ignoring", request->idx);
@@ -210,7 +210,7 @@ void qm_state_update_ui(const QmStateRequest* request) {
             break;
         }
 
-        case REQUEST_BLUETOOTH_ON: {
+        case QMS_REQUEST_BLUETOOTH_ON: {
             if (qm_state.bluetooth_on) {
                 LOG_DEBUG(0, "Bluetooth already displaying on");
             } else {
@@ -221,7 +221,7 @@ void qm_state_update_ui(const QmStateRequest* request) {
             break;
         }
 
-        case REQUEST_BLUETOOTH_OFF: {
+        case QMS_REQUEST_BLUETOOTH_OFF: {
             if (!qm_state.bluetooth_on) {
                 LOG_DEBUG(0, "Bluetooth already displaying off");
             } else {
@@ -232,7 +232,7 @@ void qm_state_update_ui(const QmStateRequest* request) {
             break;
         }
 
-        case REQUEST_DEVICE_DISCONNECTED: {
+        case QMS_REQUEST_DEVICE_DISCONNECTED: {
             for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
                 QmButton* qm_button = &qm_state.buttons[idx];
                 VqmbtDeviceInfo* device = &qm_button->device;
@@ -246,7 +246,7 @@ void qm_state_update_ui(const QmStateRequest* request) {
             break;
         }
 
-        case REQUEST_DEVICE_CONNECTED: {
+        case QMS_REQUEST_DEVICE_CONNECTED: {
             for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
                 // TODO try connecting when Settings is opened.
                 QmButton* qm_button = &qm_state.buttons[idx];

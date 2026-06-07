@@ -22,16 +22,16 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "vqmbt.h"
 
 // UI request.
-typedef enum QmStateRequestId : unsigned int {
-    REQUEST_BULK_UPDATE = 0,  // TODO prefix
-    REQUEST_BUTTON_PRESSED,
-    REQUEST_BLUETOOTH_ON,
-    REQUEST_BLUETOOTH_OFF,
-    REQUEST_DEVICE_DISCONNECTED,
-    REQUEST_DEVICE_CONNECTED,
-} QmStateRequestId;
-typedef struct QmStateRequest {
-    QmStateRequestId id;
+typedef enum QmsRequestId : unsigned int {
+    QMS_REQUEST_BULK_UPDATE = 0,
+    QMS_REQUEST_BUTTON_PRESSED,
+    QMS_REQUEST_BLUETOOTH_ON,
+    QMS_REQUEST_BLUETOOTH_OFF,
+    QMS_REQUEST_DEVICE_DISCONNECTED,
+    QMS_REQUEST_DEVICE_CONNECTED,
+} QmsRequestId;
+typedef struct QmsRequest {
+    QmsRequestId id;
     union {
         int idx;
         struct {
@@ -43,10 +43,10 @@ typedef struct QmStateRequest {
             const VqmbtDeviceInfo* devices;
         } bulk;
     };
-} QmStateRequest;
+} QmsRequest;
 
 // Exported functions.
-void qm_state_update_ui(const QmStateRequest* request);
+void qm_state_update_ui(const QmsRequest* request);
 int qm_state_mutex_start(void);
 void qm_state_mutex_stop(void);
 
