@@ -251,7 +251,7 @@ static void transition_state_connected(bool* changed, const int* idx, const unsi
         return;
     }
     QmButton* qm_button = &qm_state.buttons[*idx];
-    if (qm_button->state != BTNSTATE_CONNECTED) {
+    if (qm_button->state != BTNSTATE_CONNECTED && qm_button->state != BTNSTATE_BT_OFF_DISABLED) {
         LOG_DEBUG(0, "Setting slot %d as connected", *idx + 1);
         qm_button->state = BTNSTATE_CONNECTED;
         *changed = true;
