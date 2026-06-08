@@ -339,13 +339,13 @@ void qm_state_update_ui(const QmsRequest* request) {
             //         LOG_DEBUG(0, "Ignoring state=%d for device \"%s\"", qm_button->state, device->name);
             //         break;
             // }
-            LOG_DEBUG(0, "TODO 1");  // TODO
+            LOG_DEBUG(0, "TODO idx=%d", request->idx);  // TODO
             // TODO show busy symbol or progress bar
             break;
         }
 
         case QMS_REQUEST_BLUETOOTH_ON: {
-            LOG_DEBUG(0, "TODO 2");  // TODO reset()?
+            LOG_DEBUG(0, "TODO NOTHING");  // TODO reset()?
             // if (qm_state.bluetooth_on) {
             //     LOG_DEBUG(0, "Bluetooth already displaying on");
             // } else {
@@ -372,7 +372,7 @@ void qm_state_update_ui(const QmsRequest* request) {
             //         break;
             //     }
             // }
-            LOG_DEBUG(0, "TODO 3");  // TODO
+            LOG_DEBUG(0, "TODO 3 mac0=0x%08X mac1=0x%08X", request->mac.mac0, request->mac.mac1);  // TODO
             break;
         }
 
@@ -388,7 +388,7 @@ void qm_state_update_ui(const QmsRequest* request) {
             //         break;
             //     }
             // }
-            LOG_DEBUG(0, "TODO 4");  // TODO
+            LOG_DEBUG(0, "TODO 4 mac0=0x%08X mac1=0x%08X", request->mac.mac0, request->mac.mac1);  // TODO
             break;
         }
     }
