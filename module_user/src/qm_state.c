@@ -116,7 +116,7 @@ static void refresh_ui(void) {
 static void transition_state_unoccupied(bool* changed, const int idx) {
     QmButton* qm_button = &qm_state.buttons[idx];
     if (qm_button->state != BTNSTATE_SLOT_EMPTY_DISABLED) {
-        LOG_DEBUG(0, "Setting slot %d as empty", idx);
+        LOG_DEBUG(0, "Setting slot %d as empty", idx + 1);
         qm_button->state = BTNSTATE_SLOT_EMPTY_DISABLED;
         *changed = true;
     }
@@ -128,7 +128,7 @@ static void transition_state_unoccupied(bool* changed, const int idx) {
 static void transition_state_bt_off(bool* changed, const int idx) {
     QmButton* qm_button = &qm_state.buttons[idx];
     if (qm_button->state != BTNSTATE_BT_OFF_DISABLED) {
-        LOG_DEBUG(0, "Setting slot %d as bluetooth off", idx);
+        LOG_DEBUG(0, "Setting slot %d as bluetooth off", idx + 1);
         qm_button->state = BTNSTATE_BT_OFF_DISABLED;
         *changed = true;
     }
@@ -138,7 +138,14 @@ static void transition_state_bt_off(bool* changed, const int idx) {
  * TODO.
  */
 static void transition_state_new_device(bool* changed, const int idx, const VqmbtDeviceInfo* new_device) {
-    // TODO handle new state in new_device.
+    QmButton* qm_button = &qm_state.buttons[idx];
+    VqmbtDeviceInfo* old_device = &qm_button->device;
+    if (new_device->mac0 != old_device->mac0 || new_device->mac1 != old_device->mac1) {
+        LOG_DEBUG(0, "New device in slot %d: \"%s\" (was \"%s\")", idx + 1, new_device->name, old_device->name);
+        sceClibMemcpy(old_device, new_device, sizeof(*new_device));
+        // TODO handle new state.
+        *changed = true;
+    }
 }
 
 /**
@@ -218,9 +225,7 @@ void bulk_update(bool* changed, const QmsRequest* request) {
                       new_device->state);
             old_device->state = new_device->state;
         } else {
-            LOG_DEBUG(0, "New device detected in slot %d: \"%s\" (was \"%s\")", idx + 1, new_device->name,
-                      old_device->name);
-            sceClibMemcpy(old_device, new_device, sizeof(*new_device));
+            // DONE
         }
         *changed = true;
         switch (old_device->state) {
