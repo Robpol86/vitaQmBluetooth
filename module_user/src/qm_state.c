@@ -23,6 +23,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * TODO:
  * - Have event thread constantly get states for all or select devices whilst QM is open?
  * - Test QM updating when Settings app connects/disconnects/enables/disables/add/remove
+ * - BUG: Connect device, then turn off BT. Abort event is emitted and button is relabled to Connect.
  */
 
 #include "qm_state.h"
@@ -338,11 +339,11 @@ static void bulk_update(bool* changed, const QmsRequest* request) {
             continue;
         }
 
-        // Do nothing if state is the same.
-        if (new_device->state == old_device->state) {
-            LOG_DEBUG(0, "No changes to \"%s\"", old_device->name);  // TODO consistent logging
-            continue;
-        }
+        // Do nothing if state is the same.  // TODO remove?
+        // if (new_device->state == old_device->state) {
+        //     LOG_DEBUG(0, "No changes to \"%s\"", old_device->name);  // TODO consistent logging
+        //     continue;
+        // }
 
         // New state.
         switch (new_device->state) {
