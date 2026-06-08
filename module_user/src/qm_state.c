@@ -46,14 +46,11 @@ typedef enum QmButtonState : unsigned int {
 typedef struct QmButton {
     VqmbtDeviceInfo device;
     QmButtonState state;
-    bool occupied;
-    bool enabled;
 } QmButton;
 
 typedef struct QmState {
     int num_buttons_active;
     QmButton buttons[VQMBT_MAX_DEVICES];
-    bool bluetooth_on;
 } QmState;
 
 static QmState qm_state;
@@ -114,16 +111,16 @@ static void refresh_ui(void) {
 }
 
 /**
- * TODO
+ * Transtion to BTNSTATE_SLOT_EMPTY_DISABLED.
  */
-void transition_state_unoccupied(bool* changed) {
+static void transition_state_unoccupied(bool* changed) {
     // TODO
 }
 
 /**
- * TODO
+ * Transition to BTNSTATE_BT_OFF_DISABLED.
  */
-void transition_state_bt_off(bool* changed) {
+static void transition_state_bt_off(bool* changed) {
     if (!qm_state.bluetooth_on) {
         LOG_DEBUG(0, "Bluetooth already displaying off");
         return;
@@ -139,14 +136,44 @@ void transition_state_bt_off(bool* changed) {
 }
 
 /**
+ * Transition to BTNSTATE_DISCONNECTED.
+ */
+static void transition_state_disconnected(bool* changed) {
+    // TODO
+}
+
+/**
+ * Transition to BTNSTATE_DISCONNECTING_DISABLED.
+ */
+static void transition_state_busy_disconnecting(bool* changed) {
+    // TODO
+}
+
+/**
+ * Transition to BTNSTATE_CONNECTED.
+ */
+static void transition_state_connected(bool* changed) {
+    // TODO
+}
+
+/**
+ * Transition to BTNSTATE_CONNECTING_DISABLED.
+ */
+static void transition_state_busy_connecting(bool* changed) {
+    // TODO
+}
+
+/**
+ * Transition to BTNSTATE_ERROR_DISABLED.
+ */
+static void transition_state_error(bool* changed) {
+    // TODO
+}
+
+/**
  * TODO
  */
 void bulk_update(bool* changed, const QmsRequest* request) {
-    if (request->bulk.bluetooth_on != qm_state.bluetooth_on) {
-        LOG_DEBUG(0, "Bluetooth toggled");
-        qm_state.bluetooth_on = request->bulk.bluetooth_on;
-        *changed = true;
-    }
     if (request->bulk.num_devices != qm_state.num_buttons_active) {
         LOG_DEBUG(0, "Number of active buttons went from %d to %d", qm_state.num_buttons_active,
                   request->bulk.num_devices);
@@ -193,6 +220,11 @@ void bulk_update(bool* changed, const QmsRequest* request) {
                 qm_button->state = BTNSTATE_DISCONNECTED;
                 break;
         }
+    }
+    if (request->bulk.bluetooth_on != qm_state.bluetooth_on) {
+        LOG_DEBUG(0, "Bluetooth toggled");
+        qm_state.bluetooth_on = request->bulk.bluetooth_on;
+        *changed = true;
     }
 }
 
