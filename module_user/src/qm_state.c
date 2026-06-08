@@ -126,7 +126,9 @@ static void transition_state_unoccupied(bool* changed, const int idx) {
         sceClibMemset(&qm_button->device, 0, sizeof(qm_button->device));
         qm_button->state = BTNSTATE_SLOT_EMPTY_DISABLED;
         *changed = true;
+        return;
     }
+    LOG_DEBUG(0, "No-op");
 }
 
 /**
@@ -145,7 +147,9 @@ static void transition_state_bt_off(bool* changed, const int* idx) {
         LOG_DEBUG(0, "Setting slot %d as bluetooth off", *idx + 1);
         qm_button->state = BTNSTATE_BT_OFF_DISABLED;
         *changed = true;
+        return;
     }
+    LOG_DEBUG(0, "No-op");
 }
 
 /**
@@ -205,7 +209,9 @@ static void transition_state_disconnected(bool* changed, const int* idx, const u
         LOG_DEBUG(0, "Setting slot %d as disconnected", *idx + 1);
         qm_button->state = BTNSTATE_DISCONNECTED;
         *changed = true;
+        return;
     }
+    LOG_DEBUG(0, "No-op");
 }
 
 /**
@@ -217,7 +223,9 @@ static void transition_state_busy_disconnecting(bool* changed, const int idx) {
         LOG_DEBUG(0, "Setting slot %d as disconnecting", idx + 1);
         qm_button->state = BTNSTATE_DISCONNECTING_DISABLED;
         *changed = true;
+        return;
     }
+    LOG_DEBUG(0, "No-op");
 }
 
 /**
@@ -242,7 +250,9 @@ static void transition_state_connected(bool* changed, const int* idx, const unsi
         LOG_DEBUG(0, "Setting slot %d as connected", *idx + 1);
         qm_button->state = BTNSTATE_CONNECTED;
         *changed = true;
+        return;
     }
+    LOG_DEBUG(0, "No-op");
 }
 
 /**
@@ -254,7 +264,9 @@ static void transition_state_busy_connecting(bool* changed, const int idx) {
         LOG_DEBUG(0, "Setting slot %d as connecting", idx + 1);
         qm_button->state = BTNSTATE_CONNECTING_DISABLED;
         *changed = true;
+        return;
     }
+    LOG_DEBUG(0, "No-op");
 }
 
 /**
