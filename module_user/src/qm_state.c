@@ -66,7 +66,7 @@ static SceKernelLwMutexWork mutex;
  */
 static void refresh_ui(void) {
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
-        QmButton* qm_button = &qm_state.buttons[idx];
+        const QmButton* qm_button = &qm_state.buttons[idx];
         const VqmbtDeviceInfo* device = &qm_button->device;
         char label[BUTTON_LABEL_MAX];
         bool button_enabled = false;
@@ -105,11 +105,9 @@ static void refresh_ui(void) {
         // Enable/disable button.
         if (button_enabled) {
             // Enable button.
-            qm_button->enabled = true;
             QuickMenuRebornSetWidgetColor(id, 1.0F, 1.0F, 1.0F, 1.0F);
         } else {
             // Disable button.
-            qm_button->enabled = false;
             QuickMenuRebornSetWidgetColor(id, 0.5F, 0.5F, 0.5F, 1.0F);
         }
     }
