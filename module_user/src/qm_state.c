@@ -59,6 +59,7 @@ typedef struct QmButton {
 
 typedef struct QmState {
     QmButton buttons[VQMBT_MAX_DEVICES];
+    bool bluetooth_off;
 } QmState;
 
 static QmState qm_state;
@@ -140,6 +141,7 @@ static void transition_state_unoccupied(bool* changed, const int idx) {
  * Transition to BTNSTATE_BT_OFF_DISABLED.
  */
 static void transition_state_bt_off(bool* changed, const int* idx) {
+    // TODO remove idx and toggle qm_state.bluetooth_off
     if (idx == NULL) {
         LOG_DEBUG(0, "Setting all occupied slots as bluetooth off");
         for (int i = 0; i < VQMBT_MAX_DEVICES; i++) {
@@ -161,7 +163,7 @@ static void transition_state_bt_off(bool* changed, const int* idx) {
  * TODO
  */
 static void transition_state_bt_on(bool* changed) {
-    // TODO
+    // TODO toggle qm_state.bluetooth_off
     // if (qm_state.bluetooth_on) {
     //     LOG_DEBUG(0, "Bluetooth already displaying on");
     // } else {
