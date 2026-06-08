@@ -260,6 +260,39 @@ static void transition_state_busy_connecting(bool* changed, const int idx) {
  */
 void transition_state_error(bool* changed, const int idx) {
     // TODO make static
+    LOG_DEBUG(0, "TODO");
+}
+
+/**
+ * TODO
+ */
+static void button_pressed(bool* changed, const int idx) {
+    LOG_DEBUG(0, "TODO");
+    // TODO
+    // QmButton* qm_button = &qm_state.buttons[request->idx];
+    // if (!qm_button->enabled) {
+    //     LOG_DEBUG(0, "Button idx=%d pressed but disabled, ignoring", request->idx);
+    //     break;
+    // }
+    // VqmbtDeviceInfo* device = &qm_button->device;
+    // switch (qm_button->state) {
+    //     case BTNSTATE_DISCONNECTED:
+    //         LOG_DEBUG(0, "Connecting device \"%s\"", device->name);
+    //         int ret = kvqmbt_connect_device(device->mac0, device->mac1);
+    //         qm_button->state = BTNSTATE_CONNECTING_DISABLED;
+    //         changed = true;
+    //         break;
+    //     case BTNSTATE_CONNECTED:
+    //         LOG_DEBUG(0, "Disconnecting device \"%s\"", device->name);
+    //         int ret = kvqmbt_disconnect_device(device->mac0, device->mac1);
+    //         qm_button->state = BTNSTATE_DISCONNECTING_DISABLED;
+    //         changed = true;
+    //         break;
+    //     default:
+    //         LOG_DEBUG(0, "Ignoring state=%d for device \"%s\"", qm_button->state, device->name);
+    //         break;
+    // }
+    // TODO show busy symbol or progress bar
 }
 
 /**
@@ -342,31 +375,7 @@ void qm_state_update_ui(const QmsRequest* request) {
         }
 
         case QMS_REQUEST_BUTTON_PRESSED: {
-            // QmButton* qm_button = &qm_state.buttons[request->idx];
-            // if (!qm_button->enabled) {
-            //     LOG_DEBUG(0, "Button idx=%d pressed but disabled, ignoring", request->idx);
-            //     break;
-            // }
-            // VqmbtDeviceInfo* device = &qm_button->device;
-            // switch (qm_button->state) {
-            //     case BTNSTATE_DISCONNECTED:
-            //         LOG_DEBUG(0, "Connecting device \"%s\"", device->name);
-            //         kvqmbt_connect_device(device->mac0, device->mac1);
-            //         qm_button->state = BTNSTATE_CONNECTING_DISABLED;
-            //         changed = true;
-            //         break;
-            //     case BTNSTATE_CONNECTED:
-            //         LOG_DEBUG(0, "Disconnecting device \"%s\"", device->name);
-            //         kvqmbt_disconnect_device(device->mac0, device->mac1);
-            //         qm_button->state = BTNSTATE_DISCONNECTING_DISABLED;
-            //         changed = true;
-            //         break;
-            //     default:
-            //         LOG_DEBUG(0, "Ignoring state=%d for device \"%s\"", qm_button->state, device->name);
-            //         break;
-            // }
-            LOG_DEBUG(0, "TODO idx=%d", request->idx);  // TODO
-            // TODO show busy symbol or progress bar
+            button_pressed(&changed, request->idx);
             break;
         }
 
