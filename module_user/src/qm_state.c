@@ -41,6 +41,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define BUTTON_LABEL_MAX (VQMBT_DEVICE_NAME_MAX + 16)
 
 typedef enum QmButtonState : unsigned int {
+    BTNSTATE_UNINITIALIZED_DISABLED,
     BTNSTATE_SLOT_EMPTY_DISABLED,
     BTNSTATE_BT_OFF_DISABLED,
     BTNSTATE_DISCONNECTED,
@@ -76,6 +77,9 @@ static void refresh_ui(void) {
 
         // Determine label.
         switch (qm_button->state) {
+            case BTNSTATE_UNINITIALIZED_DISABLED:
+                sceClibSnprintf(label, sizeof(label), "Slot %d: BUG", idx + 1);  // Should not happen.
+                break;
             case BTNSTATE_SLOT_EMPTY_DISABLED:
                 sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
                 break;
@@ -285,6 +289,7 @@ static void button_pressed(bool* changed, const int idx) {
     const VqmbtDeviceInfo* device = &qm_button->device;
 
     switch (qm_button->state) {
+        case BTNSTATE_UNINITIALIZED_DISABLED:
         case BTNSTATE_SLOT_EMPTY_DISABLED:
         case BTNSTATE_BT_OFF_DISABLED:
         case BTNSTATE_DISCONNECTING_DISABLED:
