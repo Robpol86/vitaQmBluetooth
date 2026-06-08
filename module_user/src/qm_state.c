@@ -130,10 +130,17 @@ static void transition_state_unoccupied(bool* changed, const int idx) {
 /**
  * Transition to BTNSTATE_BT_OFF_DISABLED.
  */
-static void transition_state_bt_off(bool* changed, const int idx) {
-    QmButton* qm_button = &qm_state.buttons[idx];
+static void transition_state_bt_off(bool* changed, const int* idx) {
+    if (idx == NULL) {
+        LOG_DEBUG(0, "Setting all slots as bluetooth off");
+        for (int i = 0; i < VQMBT_MAX_DEVICES; i++) {
+            transition_state_bt_off(changed, &i);
+        }
+        return;
+    }
+    QmButton* qm_button = &qm_state.buttons[*idx];
     if (qm_button->state != BTNSTATE_BT_OFF_DISABLED) {
-        LOG_DEBUG(0, "Setting slot %d as bluetooth off", idx + 1);
+        LOG_DEBUG(0, "Setting slot %d as bluetooth off", *idx + 1);
         qm_button->state = BTNSTATE_BT_OFF_DISABLED;
         *changed = true;
     }
@@ -241,7 +248,7 @@ static void bulk_update(bool* changed, const QmsRequest* request) {
         }
         // Check if bluetooth is off.
         if (!request->bulk.bluetooth_on) {
-            transition_state_bt_off(changed, idx);
+            transition_state_bt_off(changed, &idx);
             continue;
         }
 
@@ -348,7 +355,7 @@ void qm_state_update_ui(const QmsRequest* request) {
         }
 
         case QMS_REQUEST_BLUETOOTH_OFF: {
-            transition_state_bt_off(&changed);
+            transition_state_bt_off(&changed, NULL);
             break;
         }
 
