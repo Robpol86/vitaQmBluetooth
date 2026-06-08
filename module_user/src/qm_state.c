@@ -316,41 +316,43 @@ void qm_state_update_ui(const QmsRequest* request) {
         }
 
         case QMS_REQUEST_BUTTON_PRESSED: {
-            QmButton* qm_button = &qm_state.buttons[request->idx];
-            if (!qm_button->enabled) {
-                LOG_DEBUG(0, "Button idx=%d pressed but disabled, ignoring", request->idx);
-                break;
-            }
-            VqmbtDeviceInfo* device = &qm_button->device;
-            switch (qm_button->state) {
-                case BTNSTATE_DISCONNECTED:
-                    LOG_DEBUG(0, "Connecting device \"%s\"", device->name);
-                    kvqmbt_connect_device(device->mac0, device->mac1);
-                    qm_button->state = BTNSTATE_CONNECTING_DISABLED;
-                    changed = true;
-                    break;
-                case BTNSTATE_CONNECTED:
-                    LOG_DEBUG(0, "Disconnecting device \"%s\"", device->name);
-                    kvqmbt_disconnect_device(device->mac0, device->mac1);
-                    qm_button->state = BTNSTATE_DISCONNECTING_DISABLED;
-                    changed = true;
-                    break;
-                default:
-                    LOG_DEBUG(0, "Ignoring state=%d for device \"%s\"", qm_button->state, device->name);
-                    break;
-            }
+            // QmButton* qm_button = &qm_state.buttons[request->idx];
+            // if (!qm_button->enabled) {
+            //     LOG_DEBUG(0, "Button idx=%d pressed but disabled, ignoring", request->idx);
+            //     break;
+            // }
+            // VqmbtDeviceInfo* device = &qm_button->device;
+            // switch (qm_button->state) {
+            //     case BTNSTATE_DISCONNECTED:
+            //         LOG_DEBUG(0, "Connecting device \"%s\"", device->name);
+            //         kvqmbt_connect_device(device->mac0, device->mac1);
+            //         qm_button->state = BTNSTATE_CONNECTING_DISABLED;
+            //         changed = true;
+            //         break;
+            //     case BTNSTATE_CONNECTED:
+            //         LOG_DEBUG(0, "Disconnecting device \"%s\"", device->name);
+            //         kvqmbt_disconnect_device(device->mac0, device->mac1);
+            //         qm_button->state = BTNSTATE_DISCONNECTING_DISABLED;
+            //         changed = true;
+            //         break;
+            //     default:
+            //         LOG_DEBUG(0, "Ignoring state=%d for device \"%s\"", qm_button->state, device->name);
+            //         break;
+            // }
+            LOG_DEBUG(0, "TODO 1");  // TODO
             // TODO show busy symbol or progress bar
             break;
         }
 
         case QMS_REQUEST_BLUETOOTH_ON: {
-            if (qm_state.bluetooth_on) {
-                LOG_DEBUG(0, "Bluetooth already displaying on");
-            } else {
-                LOG_DEBUG(0, "Displaying bluetooth as on");
-                qm_state.bluetooth_on = true;
-                changed = true;
-            }
+            LOG_DEBUG(0, "TODO 2");  // TODO reset()?
+            // if (qm_state.bluetooth_on) {
+            //     LOG_DEBUG(0, "Bluetooth already displaying on");
+            // } else {
+            //     LOG_DEBUG(0, "Displaying bluetooth as on");
+            //     qm_state.bluetooth_on = true;
+            //     changed = true;
+            // }
             break;
         }
 
@@ -360,31 +362,33 @@ void qm_state_update_ui(const QmsRequest* request) {
         }
 
         case QMS_REQUEST_DEVICE_DISCONNECTED: {
-            for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
-                QmButton* qm_button = &qm_state.buttons[idx];
-                VqmbtDeviceInfo* device = &qm_button->device;
-                if (device->mac0 == request->mac.mac0 && device->mac1 == request->mac.mac1) {
-                    LOG_DEBUG(0, "Device \"%s\" now disconnected", device->name);
-                    qm_button->state = BTNSTATE_DISCONNECTED;
-                    changed = true;
-                    break;
-                }
-            }
+            // for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
+            //     QmButton* qm_button = &qm_state.buttons[idx];
+            //     VqmbtDeviceInfo* device = &qm_button->device;
+            //     if (device->mac0 == request->mac.mac0 && device->mac1 == request->mac.mac1) {
+            //         LOG_DEBUG(0, "Device \"%s\" now disconnected", device->name);
+            //         qm_button->state = BTNSTATE_DISCONNECTED;
+            //         changed = true;
+            //         break;
+            //     }
+            // }
+            LOG_DEBUG(0, "TODO 3");  // TODO
             break;
         }
 
         case QMS_REQUEST_DEVICE_CONNECTED: {
-            for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
-                // TODO try connecting when Settings is opened.
-                QmButton* qm_button = &qm_state.buttons[idx];
-                VqmbtDeviceInfo* device = &qm_button->device;
-                if (device->mac0 == request->mac.mac0 && device->mac1 == request->mac.mac1) {
-                    LOG_DEBUG(0, "Device \"%s\" now connected", device->name);
-                    qm_button->state = BTNSTATE_CONNECTED;
-                    changed = true;
-                    break;
-                }
-            }
+            // for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
+            //     // TODO try connecting when Settings is opened.
+            //     QmButton* qm_button = &qm_state.buttons[idx];
+            //     VqmbtDeviceInfo* device = &qm_button->device;
+            //     if (device->mac0 == request->mac.mac0 && device->mac1 == request->mac.mac1) {
+            //         LOG_DEBUG(0, "Device \"%s\" now connected", device->name);
+            //         qm_button->state = BTNSTATE_CONNECTED;
+            //         changed = true;
+            //         break;
+            //     }
+            // }
+            LOG_DEBUG(0, "TODO 4");  // TODO
             break;
         }
     }
