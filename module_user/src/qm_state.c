@@ -30,6 +30,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "log.h"
 #include "mutex.h"
 #include "qm_ids.h"
+#include "vqmbt.h"
 
 #define BUTTON_LABEL_MAX (VQMBT_DEVICE_NAME_MAX + 16)
 
@@ -49,7 +50,6 @@ typedef struct QmButton {
 } QmButton;
 
 typedef struct QmState {
-    int num_buttons_active;
     QmButton buttons[VQMBT_MAX_DEVICES];
 } QmState;
 
@@ -113,25 +113,24 @@ static void refresh_ui(void) {
 /**
  * Transtion to BTNSTATE_SLOT_EMPTY_DISABLED.
  */
-static void transition_state_unoccupied(bool* changed) {
-    // TODO
+static void transition_state_unoccupied(bool* changed, int idx) {
+    QmButton* qm_button = &qm_state.buttons[idx];
+    if (qm_button->state != BTNSTATE_SLOT_EMPTY_DISABLED) {
+        LOG_DEBUG(0, "Setting slot %d as empty", idx);
+        qm_button->state = BTNSTATE_SLOT_EMPTY_DISABLED;
+        *changed = true;
+    }
 }
 
 /**
  * Transition to BTNSTATE_BT_OFF_DISABLED.
  */
-static void transition_state_bt_off(bool* changed) {
-    if (!qm_state.bluetooth_on) {
-        LOG_DEBUG(0, "Bluetooth already displaying off");
-        return;
-    }
-    LOG_DEBUG(0, "Displaying bluetooth as off");
-    qm_state.bluetooth_on = false;
-    *changed = true;
-    for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
-        QmButton* qm_button = &qm_state.buttons[idx];
+static void transition_state_bt_off(bool* changed, int idx) {
+    QmButton* qm_button = &qm_state.buttons[idx];
+    if (qm_button->state != BTNSTATE_BT_OFF_DISABLED) {
+        LOG_DEBUG(0, "Setting slot %d as bluetooth off", idx);
         qm_button->state = BTNSTATE_BT_OFF_DISABLED;
-        qm_button->enabled = false;
+        *changed = true;
     }
 }
 
@@ -174,12 +173,24 @@ static void transition_state_error(bool* changed) {
  * TODO
  */
 void bulk_update(bool* changed, const QmsRequest* request) {
-    if (request->bulk.num_devices != qm_state.num_buttons_active) {
-        LOG_DEBUG(0, "Number of active buttons went from %d to %d", qm_state.num_buttons_active,
-                  request->bulk.num_devices);
-        qm_state.num_buttons_active = request->bulk.num_devices;
-        *changed = true;
+    const bool bluetooth_on = request->bulk.bluetooth_on;
+    const int num_devices = request->bulk.num_devices;
+    // const VqmbtDeviceInfo* devices = request->bulk.devices;
+
+    for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
+        // Check if device was removed.
+        if (idx >= num_devices) {
+            transition_state_unoccupied(changed, idx);
+            continue;
+        }
+        // Check if bluetooth is off.
+        if (!bluetooth_on) {
+            transition_state_bt_off(changed, idx);
+            continue;
+        }
     }
+
+    // TODO refactor below into above.
     for (int idx = 0; idx < request->bulk.num_devices; idx++) {
         const VqmbtDeviceInfo* new_device = &request->bulk.devices[idx];
         QmButton* qm_button = &qm_state.buttons[idx];
@@ -220,11 +231,6 @@ void bulk_update(bool* changed, const QmsRequest* request) {
                 qm_button->state = BTNSTATE_DISCONNECTED;
                 break;
         }
-    }
-    if (request->bulk.bluetooth_on != qm_state.bluetooth_on) {
-        LOG_DEBUG(0, "Bluetooth toggled");
-        qm_state.bluetooth_on = request->bulk.bluetooth_on;
-        *changed = true;
     }
 }
 
