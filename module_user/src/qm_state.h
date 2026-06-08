@@ -25,7 +25,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 typedef enum QmsRequestId : unsigned int {
     QMS_REQUEST_BULK_UPDATE = 0,
     QMS_REQUEST_BUTTON_PRESSED,
-    QMS_REQUEST_BLUETOOTH_ON,
+    QMS_REQUEST_BLUETOOTH_ON,  // TODO remove?
     QMS_REQUEST_BLUETOOTH_OFF,
     QMS_REQUEST_DEVICE_DISCONNECTED,
     QMS_REQUEST_DEVICE_CONNECTED,

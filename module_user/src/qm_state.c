@@ -370,8 +370,8 @@ void qm_state_update_ui(const QmsRequest* request) {
             break;
         }
 
-        case QMS_REQUEST_BLUETOOTH_ON: {
-            LOG_DEBUG(0, "TODO NOTHING");  // TODO reset()?
+        case QMS_REQUEST_BLUETOOTH_ON: {  // TODO remove?
+            LOG_DEBUG(0, "TODO REMOVE");
             // if (qm_state.bluetooth_on) {
             //     LOG_DEBUG(0, "Bluetooth already displaying on");
             // } else {
