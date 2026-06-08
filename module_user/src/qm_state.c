@@ -140,7 +140,7 @@ static void transition_state_bt_off(bool* changed, const int* idx) {
         return;
     }
     QmButton* qm_button = &qm_state.buttons[*idx];
-    if (qm_button->state != BTNSTATE_BT_OFF_DISABLED) {
+    if (qm_button->state != BTNSTATE_BT_OFF_DISABLED && qm_button->state != BTNSTATE_SLOT_EMPTY_DISABLED) {
         LOG_DEBUG(0, "Setting slot %d as bluetooth off", *idx + 1);
         qm_button->state = BTNSTATE_BT_OFF_DISABLED;
         *changed = true;
