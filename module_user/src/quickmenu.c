@@ -174,7 +174,6 @@ static void handle_event(const VqmbtEvent* event) {
  * Called from main thread only.
  *
  * TODO:
- * - Relabel button "Connecting <name>...".
  * - when user taps a button disable all buttons and wait for callback.
  * TODO:
  * - If this button has been relabeled 500ms ago noop the tap event (ignore taps on other buttons)
