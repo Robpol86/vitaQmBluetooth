@@ -210,7 +210,7 @@ static void transition_state_disconnected(bool* changed, const int* idx, const u
         return;
     }
     QmButton* qm_button = &qm_state.buttons[*idx];
-    if (qm_button->state != BTNSTATE_DISCONNECTED) {
+    if (qm_button->state != BTNSTATE_DISCONNECTED && qm_button->state != BTNSTATE_BT_OFF_DISABLED) {
         LOG_DEBUG(0, "Setting slot %d as disconnected", *idx + 1);
         qm_button->state = BTNSTATE_DISCONNECTED;
         *changed = true;
