@@ -243,7 +243,7 @@ void bulk_update(bool* changed, const QmsRequest* request) {
  */
 void qm_state_update_ui(const QmsRequest* request) {
     // Lock mutex and defer unlock to function scope exit.
-    SceKernelLwMutexWork* mutex_ MUTEX_STATE = &mutex;  // TODO move into reset() and on_press(). Or maybe not.
+    SceKernelLwMutexWork* mutex_ MUTEX_STATE = &mutex;  // TODO move back here and eliminate mutex.h.
     ENTER_MUTEX(mutex);
 
     bool changed = false;
