@@ -123,6 +123,7 @@ static void transition_state_unoccupied(bool* changed, const int idx) {
     QmButton* qm_button = &qm_state.buttons[idx];
     if (qm_button->state != BTNSTATE_SLOT_EMPTY_DISABLED) {
         LOG_DEBUG(0, "Setting slot %d as empty", idx + 1);
+        sceClibMemset(&qm_button->device, 0, sizeof(qm_button->device));
         qm_button->state = BTNSTATE_SLOT_EMPTY_DISABLED;
         *changed = true;
     }
