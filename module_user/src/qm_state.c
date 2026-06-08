@@ -140,12 +140,33 @@ static void transition_state_bt_off(bool* changed, const int idx) {
 static void transition_state_new_device(bool* changed, const int idx, const VqmbtDeviceInfo* new_device) {
     QmButton* qm_button = &qm_state.buttons[idx];
     VqmbtDeviceInfo* old_device = &qm_button->device;
-    if (new_device->mac0 != old_device->mac0 || new_device->mac1 != old_device->mac1) {
-        LOG_DEBUG(0, "New device in slot %d: \"%s\" (was \"%s\")", idx + 1, new_device->name, old_device->name);
-        sceClibMemcpy(old_device, new_device, sizeof(*new_device));
-        // TODO handle new state.
-        *changed = true;
+    if (new_device->mac0 == old_device->mac0 && new_device->mac1 == old_device->mac1) return;
+
+    LOG_DEBUG(0, "New device in slot %d: \"%s\" (was \"%s\")", idx + 1, new_device->name, old_device->name);
+    sceClibMemcpy(old_device, new_device, sizeof(*new_device));
+
+    switch (old_device->state) {
+        case VQMBT_BT_STATE_DISCONNECTED:
+            qm_button->state = BTNSTATE_DISCONNECTED;
+            break;
+        case VQMBT_BT_STATE_CONNECTING:
+            qm_button->state = BTNSTATE_CONNECTING_DISABLED;
+            break;
+        case VQMBT_BT_STATE_DISCONNECTING:
+            qm_button->state = BTNSTATE_DISCONNECTING_DISABLED;
+            break;
+        case VQMBT_BT_STATE_REGISTERING:
+            LOG_DEBUG(0, "Handling registering state as connected for device \"%s\"", old_device->name);
+        case VQMBT_BT_STATE_CONNECTED:
+            qm_button->state = BTNSTATE_CONNECTED;
+            break;
+        default:
+            LOG_WARN("Unhandled state=%d for device \"%s\"", old_device->state, old_device->name);
+            qm_button->state = BTNSTATE_DISCONNECTED;
+            break;
     }
+
+    *changed = true;
 }
 
 /**
@@ -207,6 +228,14 @@ void bulk_update(bool* changed, const QmsRequest* request) {
             transition_state_new_device(changed, idx, new_device);
             continue;
         }
+
+        // Do nothing if state is the same.
+        if (new_device->state == old_device->state) {
+            LOG_DEBUG(0, "No changes to \"%s\"", old_device->name);  // TODO consistent logging
+            continue;
+        }
+
+        // TODO new state.
     }
 
     // TODO refactor below into above.
