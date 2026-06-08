@@ -134,7 +134,7 @@ static void transition_state_unoccupied(bool* changed, const int idx) {
  */
 static void transition_state_bt_off(bool* changed, const int* idx) {
     if (idx == NULL) {
-        LOG_DEBUG(0, "Setting all slots as bluetooth off");
+        LOG_DEBUG(0, "Setting all occupied slots as bluetooth off");
         for (int i = 0; i < VQMBT_MAX_DEVICES; i++) {
             transition_state_bt_off(changed, &i);
         }
@@ -368,11 +368,13 @@ void qm_state_update_ui(const QmsRequest* request) {
 
     switch (request->id) {
         case QMS_REQUEST_BULK_UPDATE: {
+            LOG_DEBUG(0, "Request bulk update %d devices", request->bulk.num_devices);
             bulk_update(&changed, request);
             break;
         }
 
         case QMS_REQUEST_BUTTON_PRESSED: {
+            LOG_DEBUG(0, "Request button idx=%d pressed", request->idx);
             button_pressed(&changed, request->idx);
             break;
         }
@@ -390,16 +392,19 @@ void qm_state_update_ui(const QmsRequest* request) {
         }
 
         case QMS_REQUEST_BLUETOOTH_OFF: {
+            LOG_DEBUG(0, "Request bluetooth off");
             transition_state_bt_off(&changed, NULL);
             break;
         }
 
         case QMS_REQUEST_DEVICE_DISCONNECTED: {
+            LOG_DEBUG(0, "Request device mac0=0x%08X mac1=0x%08X disconnected", request->mac.mac0, request->mac.mac1);
             transition_state_disconnected(&changed, NULL, &request->mac.mac0, &request->mac.mac1);
             break;
         }
 
         case QMS_REQUEST_DEVICE_CONNECTED: {
+            LOG_DEBUG(0, "Request device mac0=0x%08X mac1=0x%08X connected", request->mac.mac0, request->mac.mac1);
             transition_state_connected(&changed, NULL, &request->mac.mac0, &request->mac.mac1);
             break;
         }
