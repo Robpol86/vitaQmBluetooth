@@ -114,8 +114,7 @@ static void handle_event(const VqmbtEvent* event) {
 
         case VQMBT_EVENT_BLUETOOTH_ENABLED:
             LOG_DEBUG(0, INDENT "Bluetooth turned on");
-            reset();
-            // qm_state_update_ui(&(QmsRequest){.id = QMS_REQUEST_BLUETOOTH_ON});  // TODO remove after deciding.
+            qm_state_update_ui(&(QmsRequest){.id = QMS_REQUEST_BLUETOOTH_ON});
             break;
 
         case VQMBT_EVENT_BLUETOOTH_DISABLED:

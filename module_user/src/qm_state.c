@@ -158,6 +158,20 @@ static void transition_state_bt_off(bool* changed, const int* idx) {
 }
 
 /**
+ * TODO
+ */
+static void transition_state_bt_on(bool* changed) {
+    // TODO
+    // if (qm_state.bluetooth_on) {
+    //     LOG_DEBUG(0, "Bluetooth already displaying on");
+    // } else {
+    //     LOG_DEBUG(0, "Displaying bluetooth as on");
+    //     qm_state.bluetooth_on = true;
+    //     changed = true;
+    // }
+}
+
+/**
  * TODO.
  */
 static void transition_state_new_device(bool* changed, const int idx, const VqmbtDeviceInfo* new_device) {
@@ -397,15 +411,9 @@ void qm_state_update_ui(const QmsRequest* request) {
             break;
         }
 
-        case QMS_REQUEST_BLUETOOTH_ON: {  // TODO remove?
-            LOG_DEBUG(0, "TODO REMOVE");
-            // if (qm_state.bluetooth_on) {
-            //     LOG_DEBUG(0, "Bluetooth already displaying on");
-            // } else {
-            //     LOG_DEBUG(0, "Displaying bluetooth as on");
-            //     qm_state.bluetooth_on = true;
-            //     changed = true;
-            // }
+        case QMS_REQUEST_BLUETOOTH_ON: {
+            LOG_DEBUG(0, "Request bluetooth on");
+            transition_state_bt_on(&changed);
             break;
         }
 
