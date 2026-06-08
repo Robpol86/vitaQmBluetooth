@@ -20,7 +20,7 @@ Checks: >
   -readability-use-concise-preprocessor-directives,
 CheckOptions:
   readability-function-cognitive-complexity.IgnoreMacros: true
-  readability-function-cognitive-complexity.Threshold: 42
+  readability-function-cognitive-complexity.Threshold: 25
   readability-identifier-naming.EnumCase: CamelCase
   readability-identifier-naming.EnumConstantCase: UPPER_CASE
   readability-identifier-naming.FunctionCase: lower_case

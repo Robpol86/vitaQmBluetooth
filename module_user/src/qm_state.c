@@ -46,13 +46,14 @@ typedef enum QmButtonState : unsigned int {
 typedef struct QmButton {
     VqmbtDeviceInfo device;
     QmButtonState state;
+    bool occupied;
     bool enabled;
 } QmButton;
 
 typedef struct QmState {
-    bool bluetooth_on;
     int num_buttons_active;
     QmButton buttons[VQMBT_MAX_DEVICES];
+    bool bluetooth_on;
 } QmState;
 
 static QmState qm_state;
@@ -116,6 +117,89 @@ static void refresh_ui(void) {
 
 /**
  * TODO
+ */
+void transition_state_unoccupied(bool* changed) {
+    // TODO
+}
+
+/**
+ * TODO
+ */
+void transition_state_bt_off(bool* changed) {
+    if (!qm_state.bluetooth_on) {
+        LOG_DEBUG(0, "Bluetooth already displaying off");
+        return;
+    }
+    LOG_DEBUG(0, "Displaying bluetooth as off");
+    qm_state.bluetooth_on = false;
+    *changed = true;
+    for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
+        QmButton* qm_button = &qm_state.buttons[idx];
+        qm_button->state = BTNSTATE_BT_OFF_DISABLED;
+        qm_button->enabled = false;
+    }
+}
+
+/**
+ * TODO
+ */
+void bulk_update(bool* changed, const QmsRequest* request) {
+    if (request->bulk.bluetooth_on != qm_state.bluetooth_on) {
+        LOG_DEBUG(0, "Bluetooth toggled");
+        qm_state.bluetooth_on = request->bulk.bluetooth_on;
+        *changed = true;
+    }
+    if (request->bulk.num_devices != qm_state.num_buttons_active) {
+        LOG_DEBUG(0, "Number of active buttons went from %d to %d", qm_state.num_buttons_active,
+                  request->bulk.num_devices);
+        qm_state.num_buttons_active = request->bulk.num_devices;
+        *changed = true;
+    }
+    for (int idx = 0; idx < request->bulk.num_devices; idx++) {
+        const VqmbtDeviceInfo* new_device = &request->bulk.devices[idx];
+        QmButton* qm_button = &qm_state.buttons[idx];
+        VqmbtDeviceInfo* old_device = &qm_button->device;
+        // Detect new device in old slot or new state for existing device.
+        if (new_device->mac0 == old_device->mac0 && new_device->mac1 == old_device->mac1) {
+            if (new_device->state == old_device->state) {
+                // TODO BUG stuck in Disconnecting state.
+                LOG_DEBUG(0, "No changes to \"%s\"", old_device->name);
+                continue;
+            }
+            LOG_DEBUG(0, "Device \"%s\" changed state from %d to %d", old_device->name, old_device->state,
+                      new_device->state);
+            old_device->state = new_device->state;
+        } else {
+            LOG_DEBUG(0, "New device detected in slot %d: \"%s\" (was \"%s\")", idx + 1, new_device->name,
+                      old_device->name);
+            sceClibMemcpy(old_device, new_device, sizeof(*new_device));
+        }
+        *changed = true;
+        switch (old_device->state) {
+            case VQMBT_BT_STATE_DISCONNECTED:
+                qm_button->state = BTNSTATE_DISCONNECTED;
+                break;
+            case VQMBT_BT_STATE_CONNECTING:
+                qm_button->state = BTNSTATE_CONNECTING_DISABLED;
+                break;
+            case VQMBT_BT_STATE_DISCONNECTING:
+                qm_button->state = BTNSTATE_DISCONNECTING_DISABLED;
+                break;
+            case VQMBT_BT_STATE_REGISTERING:
+                LOG_DEBUG(0, "Handling registering state as connected for device \"%s\"", old_device->name);
+            case VQMBT_BT_STATE_CONNECTED:
+                qm_button->state = BTNSTATE_CONNECTED;
+                break;
+            default:
+                LOG_WARN("Unhandled state=%d for device \"%s\"", old_device->state, old_device->name);
+                qm_button->state = BTNSTATE_DISCONNECTED;
+                break;
+        }
+    }
+}
+
+/**
+ * TODO
  *
  * TODO:
  * - Refactor into state machine manager.
@@ -136,58 +220,7 @@ void qm_state_update_ui(const QmsRequest* request) {
 
     switch (request->id) {
         case QMS_REQUEST_BULK_UPDATE: {
-            if (request->bulk.bluetooth_on != qm_state.bluetooth_on) {
-                LOG_DEBUG(0, "Bluetooth toggled");
-                qm_state.bluetooth_on = request->bulk.bluetooth_on;
-                changed = true;
-            }
-            if (request->bulk.num_devices != qm_state.num_buttons_active) {
-                LOG_DEBUG(0, "Number of active buttons went from %d to %d", qm_state.num_buttons_active,
-                          request->bulk.num_devices);
-                qm_state.num_buttons_active = request->bulk.num_devices;
-                changed = true;
-            }
-            for (int idx = 0; idx < request->bulk.num_devices; idx++) {
-                const VqmbtDeviceInfo* new_device = &request->bulk.devices[idx];
-                QmButton* qm_button = &qm_state.buttons[idx];
-                VqmbtDeviceInfo* old_device = &qm_button->device;
-                // Detect new device in old slot or new state for existing device.
-                if (new_device->mac0 == old_device->mac0 && new_device->mac1 == old_device->mac1) {
-                    if (new_device->state == old_device->state) {
-                        // TODO BUG stuck in Disconnecting state.
-                        LOG_DEBUG(0, "No changes to \"%s\"", old_device->name);
-                        continue;
-                    }
-                    LOG_DEBUG(0, "Device \"%s\" changed state from %d to %d", old_device->name, old_device->state,
-                              new_device->state);
-                    old_device->state = new_device->state;
-                } else {
-                    LOG_DEBUG(0, "New device detected in slot %d: \"%s\" (was \"%s\")", idx + 1, new_device->name,
-                              old_device->name);
-                    sceClibMemcpy(old_device, new_device, sizeof(*new_device));
-                }
-                changed = true;
-                switch (old_device->state) {
-                    case VQMBT_BT_STATE_DISCONNECTED:
-                        qm_button->state = BTNSTATE_DISCONNECTED;
-                        break;
-                    case VQMBT_BT_STATE_CONNECTING:
-                        qm_button->state = BTNSTATE_CONNECTING;
-                        break;
-                    case VQMBT_BT_STATE_DISCONNECTING:
-                        qm_button->state = BTNSTATE_DISCONNECTING;
-                        break;
-                    case VQMBT_BT_STATE_REGISTERING:
-                        LOG_DEBUG(0, "Handling registering state as connected for device \"%s\"", old_device->name);
-                    case VQMBT_BT_STATE_CONNECTED:
-                        qm_button->state = BTNSTATE_CONNECTED;
-                        break;
-                    default:
-                        LOG_WARN("Unhandled state=%d for device \"%s\"", old_device->state, old_device->name);
-                        qm_button->state = BTNSTATE_DISCONNECTED;
-                        break;
-                }
-            }
+            bulk_update(&changed, request);
             break;
         }
 
@@ -202,13 +235,13 @@ void qm_state_update_ui(const QmsRequest* request) {
                 case BTNSTATE_DISCONNECTED:
                     LOG_DEBUG(0, "Connecting device \"%s\"", device->name);
                     kvqmbt_connect_device(device->mac0, device->mac1);
-                    qm_button->state = BTNSTATE_CONNECTING;
+                    qm_button->state = BTNSTATE_CONNECTING_DISABLED;
                     changed = true;
                     break;
                 case BTNSTATE_CONNECTED:
                     LOG_DEBUG(0, "Disconnecting device \"%s\"", device->name);
                     kvqmbt_disconnect_device(device->mac0, device->mac1);
-                    qm_button->state = BTNSTATE_DISCONNECTING;
+                    qm_button->state = BTNSTATE_DISCONNECTING_DISABLED;
                     changed = true;
                     break;
                 default:
@@ -231,13 +264,7 @@ void qm_state_update_ui(const QmsRequest* request) {
         }
 
         case QMS_REQUEST_BLUETOOTH_OFF: {
-            if (!qm_state.bluetooth_on) {
-                LOG_DEBUG(0, "Bluetooth already displaying off");
-            } else {
-                LOG_DEBUG(0, "Displaying bluetooth as off");
-                qm_state.bluetooth_on = false;
-                changed = true;
-            }
+            transition_state_bt_off(&changed);
             break;
         }
 
