@@ -268,31 +268,30 @@ void transition_state_error(bool* changed, const int idx) {
  * TODO
  */
 static void button_pressed(bool* changed, const int idx) {
-    LOG_DEBUG(0, "TODO");
-    // TODO
-    // QmButton* qm_button = &qm_state.buttons[request->idx];
-    // if (!qm_button->enabled) {
-    //     LOG_DEBUG(0, "Button idx=%d pressed but disabled, ignoring", request->idx);
-    //     break;
-    // }
-    // VqmbtDeviceInfo* device = &qm_button->device;
-    // switch (qm_button->state) {
-    //     case BTNSTATE_DISCONNECTED:
-    //         LOG_DEBUG(0, "Connecting device \"%s\"", device->name);
-    //         int ret = kvqmbt_connect_device(device->mac0, device->mac1);
-    //         qm_button->state = BTNSTATE_CONNECTING_DISABLED;
-    //         changed = true;
-    //         break;
-    //     case BTNSTATE_CONNECTED:
-    //         LOG_DEBUG(0, "Disconnecting device \"%s\"", device->name);
-    //         int ret = kvqmbt_disconnect_device(device->mac0, device->mac1);
-    //         qm_button->state = BTNSTATE_DISCONNECTING_DISABLED;
-    //         changed = true;
-    //         break;
-    //     default:
-    //         LOG_DEBUG(0, "Ignoring state=%d for device \"%s\"", qm_button->state, device->name);
-    //         break;
-    // }
+    QmButton* qm_button = &qm_state.buttons[idx];
+    const VqmbtDeviceInfo* device = &qm_button->device;
+
+    switch (qm_button->state) {
+        case BTNSTATE_SLOT_EMPTY_DISABLED:
+        case BTNSTATE_BT_OFF_DISABLED:
+        case BTNSTATE_DISCONNECTING_DISABLED:
+        case BTNSTATE_CONNECTING_DISABLED:
+        case BTNSTATE_ERROR_DISABLED:
+            LOG_DEBUG(0, "Button idx=%d pressed but disabled, ignoring", idx);
+            return;
+        case BTNSTATE_DISCONNECTED:
+            LOG_DEBUG(0, "Connecting device \"%s\"", device->name);
+            kvqmbt_connect_device(device->mac0, device->mac1);  // TODO ret error
+            qm_button->state = BTNSTATE_CONNECTING_DISABLED;
+            *changed = true;
+            break;
+        case BTNSTATE_CONNECTED:
+            LOG_DEBUG(0, "Disconnecting device \"%s\"", device->name);
+            kvqmbt_disconnect_device(device->mac0, device->mac1);  // TODO ret error
+            qm_button->state = BTNSTATE_DISCONNECTING_DISABLED;
+            *changed = true;
+            break;
+    }
     // TODO show busy symbol or progress bar
 }
 
