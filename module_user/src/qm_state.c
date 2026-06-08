@@ -22,6 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 /**
  * TODO:
  * - Have event thread constantly get states for all or select devices whilst QM is open?
+ * - Test QM updating when Settings app connects/disconnects/enables/disables/add/remove
  */
 
 #include "qm_state.h"
@@ -350,9 +351,6 @@ static void bulk_update(bool* changed, const QmsRequest* request) {
 
 /**
  * TODO
- *
- * TODO:
- * - Refactor into state machine manager.
  *
  * Called from:
  *  - quickmenu_on_press (main thread)
