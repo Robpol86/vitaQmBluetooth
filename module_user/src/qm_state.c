@@ -221,10 +221,23 @@ static void transition_state_busy_disconnecting(bool* changed, const int idx) {
 /**
  * Transition to BTNSTATE_CONNECTED.
  */
-static void transition_state_connected(bool* changed, const int idx) {
-    QmButton* qm_button = &qm_state.buttons[idx];
+static void transition_state_connected(bool* changed, const int* idx, const unsigned int* mac0,
+                                       const unsigned int* mac1) {
+    if (idx == NULL) {
+        LOG_DEBUG(0, "Getting idx for mac0=0x%08X mac1=0x%08X", *mac0, *mac1);
+        for (int i = 0; i < VQMBT_MAX_DEVICES; i++) {
+            const VqmbtDeviceInfo* device = &qm_state.buttons[i].device;
+            if (device->mac0 == *mac0 && device->mac1 == *mac1) {
+                transition_state_connected(changed, &i, NULL, NULL);
+                return;
+            }
+        }
+        LOG_ERROR("mac0=0x%08X mac1=0x%08X not found", *mac0, *mac1);
+        return;
+    }
+    QmButton* qm_button = &qm_state.buttons[*idx];
     if (qm_button->state != BTNSTATE_CONNECTED) {
-        LOG_DEBUG(0, "Setting slot %d as connected", idx + 1);
+        LOG_DEBUG(0, "Setting slot %d as connected", *idx + 1);
         qm_button->state = BTNSTATE_CONNECTED;
         *changed = true;
     }
@@ -293,7 +306,7 @@ static void bulk_update(bool* changed, const QmsRequest* request) {
                 break;
             case VQMBT_BT_STATE_CONNECTED:
             case VQMBT_BT_STATE_REGISTERING:
-                transition_state_connected(changed, idx);
+                transition_state_connected(changed, &idx, NULL, NULL);
                 break;
             default:
                 transition_state_disconnected(changed, &idx, NULL, NULL);
@@ -380,18 +393,7 @@ void qm_state_update_ui(const QmsRequest* request) {
         }
 
         case QMS_REQUEST_DEVICE_CONNECTED: {
-            // for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
-            //     // TODO try connecting when Settings is opened.
-            //     QmButton* qm_button = &qm_state.buttons[idx];
-            //     VqmbtDeviceInfo* device = &qm_button->device;
-            //     if (device->mac0 == request->mac.mac0 && device->mac1 == request->mac.mac1) {
-            //         LOG_DEBUG(0, "Device \"%s\" now connected", device->name);
-            //         qm_button->state = BTNSTATE_CONNECTED;
-            //         changed = true;
-            //         break;
-            //     }
-            // }
-            LOG_DEBUG(0, "TODO 4 mac0=0x%08X mac1=0x%08X", request->mac.mac0, request->mac.mac1);  // TODO
+            transition_state_connected(&changed, NULL, &request->mac.mac0, &request->mac.mac1);
             break;
         }
     }
