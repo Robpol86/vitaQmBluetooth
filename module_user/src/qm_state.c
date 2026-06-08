@@ -19,6 +19,11 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief TODO.
  ******************************************************************************/
 
+/**
+ * TODO:
+ * - Have event thread constantly get states for all or select devices whilst QM is open?
+ */
+
 #include "qm_state.h"
 
 #include <psp2/kernel/clib.h>
