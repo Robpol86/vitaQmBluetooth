@@ -22,31 +22,31 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <assert.h>
 
 static void test_bulk_from_clean_no_devices(void) {
-    assert(1 == 1);  // TODO
+    static_assert(1 == 1, "TODO");  // TODO
 }
 
 static void test_bulk_from_clean_one_device(void) {
-    assert(1 == 1);  // TODO
+    static_assert(1 == 1, "TODO");  // TODO
 }
 
 static void test_bulk_from_clean_max_devices(void) {
-    assert(1 == 1);  // TODO
+    static_assert(1 == 1, "TODO");  // TODO
 }
 
 static void test_bulk_from_clean_one_device_bt_off(void) {
-    assert(1 == 1);  // TODO
+    static_assert(1 == 1, "TODO");  // TODO
 }
 
 static void test_bulk_from_clean_one_device_already_connected(void) {
-    assert(1 == 1);  // TODO
+    static_assert(1 == 1, "TODO");  // TODO
 }
 
 static void test_bulk_add_remove_only_device(void) {
-    assert(1 == 1);  // TODO
+    static_assert(1 == 1, "TODO");  // TODO
 }
 
 static void test_bulk_add_remove_second_device(void) {
-    assert(1 == 1);  // TODO
+    static_assert(1 == 1, "TODO");  // TODO
 }
 
 int main(void) {
