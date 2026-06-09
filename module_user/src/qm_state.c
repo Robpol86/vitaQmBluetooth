@@ -31,14 +31,17 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 Transition rules:
 
-+-----------+--------+--------+
-| Condition | Source | Target |
-+-----------+--------+--------+
-| Bulk      | Source | Target |
-| Add       | Source | Target |
-| Event     | Source | Target |
-| Button    | Source | Target |
-+-----------+--------+--------+
++--------------+-----------------------+---------------------------------+--------+
+| Condition    | Source State          | Target State                    | Result |
++--------------+-----------------------+---------------------------------+--------+
+| Bulk Update  | *                     | *                               | accept |
+| Add Device   | Source                | Target                          |        |
+| Event Thread |                       |                                 |        |
+| Button Press | BTNSTATE_DISCONNECTED | BTNSTATE_CONNECTING_DISABLED    | accept |
+| Button Press | BTNSTATE_CONNECTED    | BTNSTATE_DISCONNECTING_DISABLED | accept |
+| *            | *                     | *                               | no-op  |
++--------------+-----------------------+---------------------------------+--------+
+
 - any -> BTNSTATE_SLOT_EMPTY_DISABLED
 - !BTNSTATE_SLOT_EMPTY_DISABLED -> BTNSTATE_BT_OFF_DISABLED
 - !BTNSTATE_BT_OFF_DISABLED -> BTNSTATE_DISCONNECTED
@@ -392,15 +395,24 @@ static void bulk_update(bool* changed, const QmsRequest* request) {
 }
 
 /**
- * TODO
+ * Look up the index of the button with the given MAC address. Returns -1 if not found or invalid MAC. TODO.
+ *
+ * @param mac0 TODO
+ * @param mac1 TODO
+ * @return TODO
  */
 static int mac_to_idx(const unsigned int mac0, const unsigned int mac1) {
+    if (mac0 < 1 || mac1 < 1) {
+        LOG_ERROR("Invalid MAC address: mac0=0x%08X mac1=0x%08X", mac0, mac1);
+        return VQMBT_ERROR_INVALID_ARGUMENT;
+    }
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
         const VqmbtDeviceInfo* device = &qm_state.buttons[idx].device;
         if (device->mac0 == mac0 && device->mac1 == mac1) {
             return idx;
         }
     }
+    LOG_ERROR("MAC address not found: mac0=0x%08X mac1=0x%08X", mac0, mac1);
     return VQMBT_ERROR_INVALID_ARGUMENT;
 }
 
