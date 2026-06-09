@@ -19,5 +19,5 @@ foreach(src ${TEST_SRCS})
   string(REGEX REPLACE "\\.c$" "" name "${rel}")
   string(REGEX REPLACE "/" "_" name "${name}")
   add_executable("${name}" "${src}")
-  add_test(NAME "${name}" COMMAND "${name}")
+  add_test(NAME "${name}" COMMAND "${name}")  # TODO show N>1 tests per file.
 endforeach()
