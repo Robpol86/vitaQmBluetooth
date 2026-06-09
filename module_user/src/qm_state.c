@@ -306,41 +306,6 @@ static void bulk_updated_remove_device(bool* changed, const int idx) {
 }
 
 /**
- * TODO.
- */
-static void bulk_updated_add_device(bool* changed, const int idx, const VqmbtDeviceInfo* new_device) {
-    QmButton* qm_button = &qm_state.buttons[idx];
-    VqmbtDeviceInfo* old_device = &qm_button->device;
-    if (new_device->mac0 == old_device->mac0 && new_device->mac1 == old_device->mac1) return;
-
-    LOG_DEBUG(0, "New device in idx=%d: \"%s\" (was \"%s\")", idx, new_device->name, old_device->name);
-    sceClibMemcpy(old_device, new_device, sizeof(*new_device));
-
-    switch (old_device->state) {
-        case VQMBT_BT_STATE_DISCONNECTED:
-            qm_button->btn_state = BTNSTATE_DISCONNECTED;
-            break;
-        case VQMBT_BT_STATE_CONNECTING:
-            qm_button->btn_state = BTNSTATE_CONNECTING_DISABLED;
-            break;
-        case VQMBT_BT_STATE_DISCONNECTING:
-            qm_button->btn_state = BTNSTATE_DISCONNECTING_DISABLED;
-            break;
-        case VQMBT_BT_STATE_REGISTERING:
-            LOG_DEBUG(0, "Handling registering state as connected for device \"%s\"", old_device->name);
-        case VQMBT_BT_STATE_CONNECTED:
-            qm_button->btn_state = BTNSTATE_CONNECTED;
-            break;
-        default:
-            LOG_WARN("Unhandled state=%d for device \"%s\"", old_device->state, old_device->name);
-            qm_button->btn_state = BTNSTATE_DISCONNECTED;
-            break;
-    }
-
-    *changed = true;
-}
-
-/**
  * TODO
  */
 static void bulk_update(bool* changed, const QmsRequest* request) {
@@ -355,17 +320,14 @@ static void bulk_update(bool* changed, const QmsRequest* request) {
         }
 
         const VqmbtDeviceInfo* new_device = &request->bulk.devices[idx];
-        const VqmbtDeviceInfo* old_device = &qm_state.buttons[idx].device;
+        VqmbtDeviceInfo* old_device = &qm_state.buttons[idx].device;
 
-        // Check if slot has a new device.
+        // Update button device data if it has a new device.
         if (new_device->mac0 != old_device->mac0 || new_device->mac1 != old_device->mac1) {
             LOG_DEBUG(0, "New device");
-            bulk_updated_add_device(changed, idx, new_device);
-            if (!request->bulk.bluetooth_on) {
-                LOG_DEBUG(0, "New device but bluetooth is off");
-                transition_state_bt_off(changed, &idx);
-            }
-            continue;
+            sceClibMemcpy(old_device, new_device, sizeof(*new_device));
+        } else {
+            LOG_DEBUG(0, "Old device");
         }
 
         // Check if bluetooth is off.
@@ -375,8 +337,7 @@ static void bulk_update(bool* changed, const QmsRequest* request) {
             continue;
         }
 
-        // New state.
-        LOG_DEBUG(0, "Old device updating state");
+        // Set state.
         switch (new_device->state) {
             case VQMBT_BT_STATE_CONNECTING:
                 LOG_DEBUG(0, "Setting state to connecting if not set");
