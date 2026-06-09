@@ -71,18 +71,20 @@ recv-logs:
 .PHONY: lint
 lint: _HELP = Run linters
 lint: $(DEBUG_TARGETS)
-	find include module_*/src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in' \) -exec clang-tidy -p build-debug {} +
-	find include module_*/src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in' \) -exec clang-format --dry-run --Werror {} +
+	find include module_*/src tests \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in' \) -exec clang-tidy -p build-debug {} +
+	find include module_*/src tests \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in' \) -exec clang-format --dry-run --Werror {} +
 
 .PHONY: format
 format: _HELP = Apply format/lint fixes
 format:
-	find include module_*/src \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in' \) -exec clang-format -i {} +
+	find include module_*/src tests \( -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in' \) -exec clang-format -i {} +
 
 .PHONY: test
 test: _HELP = Run unit tests
 test:
-	echo TODO
+	cmake -B build-test tests
+	cmake --build build-test
+	ctest --test-dir build-test --output-on-failure --no-tests=error
 
 ## Misc
 
