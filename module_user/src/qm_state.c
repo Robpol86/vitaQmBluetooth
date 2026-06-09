@@ -80,7 +80,7 @@ typedef enum QmButtonState : unsigned int {
 // Button descriptor.
 typedef struct QmButton {
     VqmbtDeviceInfo device;
-    QmButtonState state;
+    QmButtonState btn_state;
 } QmButton;
 
 // Quickmenu descriptor.
@@ -104,7 +104,7 @@ static void refresh_ui(void) {
         bool button_enabled = false;
 
         // Determine label.
-        switch (qm_button->state) {
+        switch (qm_button->btn_state) {
             case BTNSTATE_SLOT_EMPTY_DISABLED:
                 sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
                 break;
@@ -145,12 +145,12 @@ static void refresh_ui(void) {
 /**
  * Transtion to BTNSTATE_SLOT_EMPTY_DISABLED.
  */
-static void transition_state_unoccupied(bool* changed, const int idx) {
+static void bulk_updated_remove_device(bool* changed, const int idx) {
     QmButton* qm_button = &qm_state.buttons[idx];
-    if (qm_button->state != BTNSTATE_SLOT_EMPTY_DISABLED) {
+    if (qm_button->btn_state != BTNSTATE_SLOT_EMPTY_DISABLED) {
         LOG_DEBUG(0, "Setting slot %d as empty", idx + 1);
         sceClibMemset(&qm_button->device, 0, sizeof(qm_button->device));
-        qm_button->state = BTNSTATE_SLOT_EMPTY_DISABLED;
+        qm_button->btn_state = BTNSTATE_SLOT_EMPTY_DISABLED;
         *changed = true;
         return;
     }
@@ -170,9 +170,9 @@ static void transition_state_bt_off(bool* changed, const int* idx) {
         return;
     }
     QmButton* qm_button = &qm_state.buttons[*idx];
-    if (qm_button->state != BTNSTATE_BT_OFF_DISABLED && qm_button->state != BTNSTATE_SLOT_EMPTY_DISABLED) {
+    if (qm_button->btn_state != BTNSTATE_BT_OFF_DISABLED && qm_button->btn_state != BTNSTATE_SLOT_EMPTY_DISABLED) {
         LOG_DEBUG(0, "Setting slot %d as bluetooth off", *idx + 1);
-        qm_button->state = BTNSTATE_BT_OFF_DISABLED;
+        qm_button->btn_state = BTNSTATE_BT_OFF_DISABLED;
         *changed = true;
         return;
     }
@@ -182,7 +182,7 @@ static void transition_state_bt_off(bool* changed, const int* idx) {
 /**
  * TODO.
  */
-static void transition_state_new_device(bool* changed, const int idx, const VqmbtDeviceInfo* new_device) {
+static void bulk_updated_add_device(bool* changed, const int idx, const VqmbtDeviceInfo* new_device) {
     QmButton* qm_button = &qm_state.buttons[idx];
     VqmbtDeviceInfo* old_device = &qm_button->device;
     if (new_device->mac0 == old_device->mac0 && new_device->mac1 == old_device->mac1) return;
@@ -192,22 +192,22 @@ static void transition_state_new_device(bool* changed, const int idx, const Vqmb
 
     switch (old_device->state) {
         case VQMBT_BT_STATE_DISCONNECTED:
-            qm_button->state = BTNSTATE_DISCONNECTED;
+            qm_button->btn_state = BTNSTATE_DISCONNECTED;
             break;
         case VQMBT_BT_STATE_CONNECTING:
-            qm_button->state = BTNSTATE_CONNECTING_DISABLED;
+            qm_button->btn_state = BTNSTATE_CONNECTING_DISABLED;
             break;
         case VQMBT_BT_STATE_DISCONNECTING:
-            qm_button->state = BTNSTATE_DISCONNECTING_DISABLED;
+            qm_button->btn_state = BTNSTATE_DISCONNECTING_DISABLED;
             break;
         case VQMBT_BT_STATE_REGISTERING:
             LOG_DEBUG(0, "Handling registering state as connected for device \"%s\"", old_device->name);
         case VQMBT_BT_STATE_CONNECTED:
-            qm_button->state = BTNSTATE_CONNECTED;
+            qm_button->btn_state = BTNSTATE_CONNECTED;
             break;
         default:
             LOG_WARN("Unhandled state=%d for device \"%s\"", old_device->state, old_device->name);
-            qm_button->state = BTNSTATE_DISCONNECTED;
+            qm_button->btn_state = BTNSTATE_DISCONNECTED;
             break;
     }
 
@@ -219,13 +219,13 @@ static void transition_state_new_device(bool* changed, const int idx, const Vqmb
  */
 static void transition_state_disconnected(bool* changed, const int idx, bool force) {
     QmButton* qm_button = &qm_state.buttons[idx];
-    if (qm_button->state == BTNSTATE_BT_OFF_DISABLED && !force) {
+    if (qm_button->btn_state == BTNSTATE_BT_OFF_DISABLED && !force) {
         LOG_DEBUG(0, "No-op");
         return;
     }
-    if (qm_button->state != BTNSTATE_DISCONNECTED) {
+    if (qm_button->btn_state != BTNSTATE_DISCONNECTED) {
         LOG_DEBUG(0, "Setting slot %d as disconnected", idx + 1);
-        qm_button->state = BTNSTATE_DISCONNECTED;
+        qm_button->btn_state = BTNSTATE_DISCONNECTED;
         *changed = true;
         return;
     }
@@ -237,9 +237,9 @@ static void transition_state_disconnected(bool* changed, const int idx, bool for
  */
 static void transition_state_busy_disconnecting(bool* changed, const int idx) {
     QmButton* qm_button = &qm_state.buttons[idx];
-    if (qm_button->state != BTNSTATE_DISCONNECTING_DISABLED) {
+    if (qm_button->btn_state != BTNSTATE_DISCONNECTING_DISABLED) {
         LOG_DEBUG(0, "Setting slot %d as disconnecting", idx + 1);
-        qm_button->state = BTNSTATE_DISCONNECTING_DISABLED;
+        qm_button->btn_state = BTNSTATE_DISCONNECTING_DISABLED;
         *changed = true;
         return;
     }
@@ -251,9 +251,9 @@ static void transition_state_busy_disconnecting(bool* changed, const int idx) {
  */
 static void transition_state_connected(bool* changed, const int idx) {
     QmButton* qm_button = &qm_state.buttons[idx];
-    if (qm_button->state != BTNSTATE_CONNECTED && qm_button->state != BTNSTATE_BT_OFF_DISABLED) {
+    if (qm_button->btn_state != BTNSTATE_CONNECTED && qm_button->btn_state != BTNSTATE_BT_OFF_DISABLED) {
         LOG_DEBUG(0, "Setting slot %d as connected", idx + 1);
-        qm_button->state = BTNSTATE_CONNECTED;
+        qm_button->btn_state = BTNSTATE_CONNECTED;
         *changed = true;
         return;
     }
@@ -265,9 +265,9 @@ static void transition_state_connected(bool* changed, const int idx) {
  */
 static void transition_state_busy_connecting(bool* changed, const int idx) {
     QmButton* qm_button = &qm_state.buttons[idx];
-    if (qm_button->state != BTNSTATE_CONNECTING_DISABLED) {
+    if (qm_button->btn_state != BTNSTATE_CONNECTING_DISABLED) {
         LOG_DEBUG(0, "Setting slot %d as connecting", idx + 1);
-        qm_button->state = BTNSTATE_CONNECTING_DISABLED;
+        qm_button->btn_state = BTNSTATE_CONNECTING_DISABLED;
         *changed = true;
         return;
     }
@@ -281,7 +281,7 @@ static void button_pressed(bool* changed, const int idx) {
     QmButton* qm_button = &qm_state.buttons[idx];
     const VqmbtDeviceInfo* device = &qm_button->device;
 
-    switch (qm_button->state) {
+    switch (qm_button->btn_state) {
         case BTNSTATE_SLOT_EMPTY_DISABLED:
         case BTNSTATE_BT_OFF_DISABLED:
         case BTNSTATE_DISCONNECTING_DISABLED:
@@ -311,7 +311,7 @@ static void transition_state_bt_on(bool* changed) {
         const VqmbtDeviceInfo* device = &qm_button->device;
 
         // Skip if empty.
-        if (qm_button->state == BTNSTATE_SLOT_EMPTY_DISABLED) {
+        if (qm_button->btn_state == BTNSTATE_SLOT_EMPTY_DISABLED) {
             LOG_DEBUG(0, "Skipping empty slot idx=%d", idx);
             continue;
         }
@@ -346,10 +346,11 @@ static void transition_state_bt_on(bool* changed) {
 static void bulk_update(bool* changed, const QmsRequest* request) {
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
         LOG_DEBUG(0, "Bulk updating idx=%d", idx);
+
         // Check if device was removed.
         if (idx >= request->bulk.num_devices) {
             LOG_DEBUG(0, "No device");
-            transition_state_unoccupied(changed, idx);
+            bulk_updated_remove_device(changed, idx);
             continue;
         }
 
@@ -359,7 +360,7 @@ static void bulk_update(bool* changed, const QmsRequest* request) {
         // Check if slot has a new device.
         if (new_device->mac0 != old_device->mac0 || new_device->mac1 != old_device->mac1) {
             LOG_DEBUG(0, "New device");
-            transition_state_new_device(changed, idx, new_device);
+            bulk_updated_add_device(changed, idx, new_device);
             if (!request->bulk.bluetooth_on) {
                 LOG_DEBUG(0, "New device but bluetooth is off");
                 transition_state_bt_off(changed, &idx);
@@ -378,16 +379,20 @@ static void bulk_update(bool* changed, const QmsRequest* request) {
         LOG_DEBUG(0, "Old device updating state");
         switch (new_device->state) {
             case VQMBT_BT_STATE_CONNECTING:
+                LOG_DEBUG(0, "Setting state to connecting if not set");
                 transition_state_busy_connecting(changed, idx);
                 break;
             case VQMBT_BT_STATE_DISCONNECTING:
+                LOG_DEBUG(0, "Setting state to disconnecting if not set");
                 transition_state_busy_disconnecting(changed, idx);
                 break;
             case VQMBT_BT_STATE_CONNECTED:
             case VQMBT_BT_STATE_REGISTERING:
+                LOG_DEBUG(0, "Setting state to connected if not set");
                 transition_state_connected(changed, idx);
                 break;
             default:
+                LOG_DEBUG(0, "Setting state to disconnected if not set");
                 transition_state_disconnected(changed, idx, true);
                 break;
         }
