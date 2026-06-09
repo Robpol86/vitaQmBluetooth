@@ -81,7 +81,7 @@ static void refresh_ui(void) {
         // Determine label.
         switch (qm_button->state) {
             case BTNSTATE_UNINITIALIZED_DISABLED:
-                sceClibSnprintf(label, sizeof(label), "Slot %d: BUG", idx + 1);  // Should not happen.
+                sceClibSnprintf(label, sizeof(label), "Slot %d: BUG", idx + 1);  // TODO remove
                 break;
             case BTNSTATE_SLOT_EMPTY_DISABLED:
                 sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
