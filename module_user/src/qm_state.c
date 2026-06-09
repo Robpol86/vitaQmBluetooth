@@ -27,6 +27,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - Keep flat, no btoff var. bt on state guarded. only bulk/bt_off can unset it. only bulk/bt_on can set.
  * - TODO: transition table?
  * - Show error message in button, e.g. when bt syscall is busy
+ * - Make bulk_update resilient.
 
 Transition rules:
 - any -> BTNSTATE_SLOT_EMPTY_DISABLED
@@ -204,23 +205,10 @@ static void transition_state_new_device(bool* changed, const int idx, const Vqmb
 /**
  * Transition to BTNSTATE_DISCONNECTED.
  */
-static void transition_state_disconnected(bool* changed, const int* idx, const unsigned int* mac0,
-                                          const unsigned int* mac1) {
-    if (idx == NULL) {
-        LOG_DEBUG(0, "Getting idx for mac0=0x%08X mac1=0x%08X", *mac0, *mac1);
-        for (int i = 0; i < VQMBT_MAX_DEVICES; i++) {
-            const VqmbtDeviceInfo* device = &qm_state.buttons[i].device;
-            if (device->mac0 == *mac0 && device->mac1 == *mac1) {
-                transition_state_disconnected(changed, &i, NULL, NULL);
-                return;
-            }
-        }
-        LOG_ERROR("mac0=0x%08X mac1=0x%08X not found", *mac0, *mac1);
-        return;
-    }
-    QmButton* qm_button = &qm_state.buttons[*idx];
+static void transition_state_disconnected(bool* changed, const int idx) {
+    QmButton* qm_button = &qm_state.buttons[idx];
     if (qm_button->state != BTNSTATE_DISCONNECTED && qm_button->state != BTNSTATE_BT_OFF_DISABLED) {
-        LOG_DEBUG(0, "Setting slot %d as disconnected", *idx + 1);
+        LOG_DEBUG(0, "Setting slot %d as disconnected", idx + 1);
         qm_button->state = BTNSTATE_DISCONNECTED;
         *changed = true;
         return;
@@ -245,23 +233,10 @@ static void transition_state_busy_disconnecting(bool* changed, const int idx) {
 /**
  * Transition to BTNSTATE_CONNECTED.
  */
-static void transition_state_connected(bool* changed, const int* idx, const unsigned int* mac0,
-                                       const unsigned int* mac1) {
-    if (idx == NULL) {
-        LOG_DEBUG(0, "Getting idx for mac0=0x%08X mac1=0x%08X", *mac0, *mac1);
-        for (int i = 0; i < VQMBT_MAX_DEVICES; i++) {
-            const VqmbtDeviceInfo* device = &qm_state.buttons[i].device;
-            if (device->mac0 == *mac0 && device->mac1 == *mac1) {
-                transition_state_connected(changed, &i, NULL, NULL);
-                return;
-            }
-        }
-        LOG_ERROR("mac0=0x%08X mac1=0x%08X not found", *mac0, *mac1);
-        return;
-    }
-    QmButton* qm_button = &qm_state.buttons[*idx];
+static void transition_state_connected(bool* changed, const int idx) {
+    QmButton* qm_button = &qm_state.buttons[idx];
     if (qm_button->state != BTNSTATE_CONNECTED && qm_button->state != BTNSTATE_BT_OFF_DISABLED) {
-        LOG_DEBUG(0, "Setting slot %d as connected", *idx + 1);
+        LOG_DEBUG(0, "Setting slot %d as connected", idx + 1);
         qm_button->state = BTNSTATE_CONNECTED;
         *changed = true;
         return;
@@ -330,7 +305,7 @@ static void transition_state_bt_on(bool* changed) {
         // Restore state.  // TODO DRY.
         switch (device->state) {
             case VQMBT_BT_STATE_DISCONNECTED:
-                transition_state_disconnected(changed, &idx, NULL, NULL);
+                transition_state_disconnected(changed, idx);
                 break;
             case VQMBT_BT_STATE_CONNECTING:
                 transition_state_busy_connecting(changed, idx);
@@ -340,10 +315,10 @@ static void transition_state_bt_on(bool* changed) {
                 break;
             case VQMBT_BT_STATE_CONNECTED:
             case VQMBT_BT_STATE_REGISTERING:
-                transition_state_connected(changed, &idx, NULL, NULL);
+                transition_state_connected(changed, idx);
                 break;
             default:
-                transition_state_disconnected(changed, &idx, NULL, NULL);
+                transition_state_disconnected(changed, idx);
                 break;
         }
     }
@@ -354,8 +329,10 @@ static void transition_state_bt_on(bool* changed) {
  */
 static void bulk_update(bool* changed, const QmsRequest* request) {
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
+        LOG_DEBUG(0, "Bulk updating idx=%d", idx);
         // Check if device was removed.
         if (idx >= request->bulk.num_devices) {
+            LOG_DEBUG(0, "No device");
             transition_state_unoccupied(changed, idx);
             continue;
         }
@@ -365,21 +342,27 @@ static void bulk_update(bool* changed, const QmsRequest* request) {
 
         // Check if slot has a new device.
         if (new_device->mac0 != old_device->mac0 || new_device->mac1 != old_device->mac1) {
+            LOG_DEBUG(0, "New device");
             transition_state_new_device(changed, idx, new_device);
-            if (!request->bulk.bluetooth_on) transition_state_bt_off(changed, &idx);
+            if (!request->bulk.bluetooth_on) {
+                LOG_DEBUG(0, "New device but bluetooth is off");
+                transition_state_bt_off(changed, &idx);
+            }
             continue;
         }
 
         // Check if bluetooth is off.
         if (!request->bulk.bluetooth_on) {
+            LOG_DEBUG(0, "Old device and bluetooth is off");
             transition_state_bt_off(changed, &idx);
             continue;
         }
 
         // New state.
+        LOG_DEBUG(0, "Old device updating state");
         switch (new_device->state) {
             case VQMBT_BT_STATE_DISCONNECTED:
-                transition_state_disconnected(changed, &idx, NULL, NULL);
+                transition_state_disconnected(changed, idx);  // BUG this isn't unsetting bt_off
                 break;
             case VQMBT_BT_STATE_CONNECTING:
                 transition_state_busy_connecting(changed, idx);
@@ -389,13 +372,26 @@ static void bulk_update(bool* changed, const QmsRequest* request) {
                 break;
             case VQMBT_BT_STATE_CONNECTED:
             case VQMBT_BT_STATE_REGISTERING:
-                transition_state_connected(changed, &idx, NULL, NULL);
+                transition_state_connected(changed, idx);
                 break;
             default:
-                transition_state_disconnected(changed, &idx, NULL, NULL);
+                transition_state_disconnected(changed, idx);
                 break;
         }
     }
+}
+
+/**
+ * TODO
+ */
+static int mac_to_idx(const unsigned int mac0, const unsigned int mac1) {
+    for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
+        const VqmbtDeviceInfo* device = &qm_state.buttons[idx].device;
+        if (device->mac0 == mac0 && device->mac1 == mac1) {
+            return idx;
+        }
+    }
+    return VQMBT_ERROR_INVALID_ARGUMENT;
 }
 
 /**
@@ -442,13 +438,23 @@ void qm_state_update_ui(const QmsRequest* request) {
 
         case QMS_REQUEST_DEVICE_DISCONNECTED: {
             LOG_DEBUG(0, "Request device mac0=0x%08X mac1=0x%08X disconnected", request->mac.mac0, request->mac.mac1);
-            transition_state_disconnected(&changed, NULL, &request->mac.mac0, &request->mac.mac1);
+            int idx = mac_to_idx(request->mac.mac0, request->mac.mac1);
+            if (idx < 0) {
+                LOG_ERROR("mac0=0x%08X mac1=0x%08X not found", request->mac.mac0, request->mac.mac1);
+            } else {
+                transition_state_disconnected(&changed, idx);
+            }
             break;
         }
 
         case QMS_REQUEST_DEVICE_CONNECTED: {
             LOG_DEBUG(0, "Request device mac0=0x%08X mac1=0x%08X connected", request->mac.mac0, request->mac.mac1);
-            transition_state_connected(&changed, NULL, &request->mac.mac0, &request->mac.mac1);
+            int idx = mac_to_idx(request->mac.mac0, request->mac.mac1);
+            if (idx < 0) {
+                LOG_ERROR("mac0=0x%08X mac1=0x%08X not found", request->mac.mac0, request->mac.mac1);
+            } else {
+                transition_state_connected(&changed, idx);
+            }
             break;
         }
     }
