@@ -25,6 +25,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - Test QM updating when Settings app connects/disconnects/enables/disables/add/remove
  * - BUG: Connect device, then turn off BT. Abort event is emitted and button is relabled to Connect.
  * - Keep flat, no btoff var. bt on state guarded. only bulk/bt_off can unset it. only bull/bt_on can set.
+ * - TODO NEW IDEA: transition table.
  */
 
 #include "qm_state.h"
