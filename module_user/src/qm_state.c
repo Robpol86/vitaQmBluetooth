@@ -52,6 +52,9 @@ Transition rules:
 
 #define BUTTON_LABEL_MAX (VQMBT_DEVICE_NAME_MAX + 16)
 
+static SceKernelLwMutexWork mutex;
+
+// Button finite states.
 typedef enum QmButtonState : unsigned int {
     BTNSTATE_SLOT_EMPTY_DISABLED,
     BTNSTATE_BT_OFF_DISABLED,
@@ -61,17 +64,19 @@ typedef enum QmButtonState : unsigned int {
     BTNSTATE_CONNECTING_DISABLED,
 } QmButtonState;
 
+// Button descriptor.
 typedef struct QmButton {
     VqmbtDeviceInfo device;
     QmButtonState state;
 } QmButton;
 
+// Quickmenu descriptor.
 typedef struct QmState {
     QmButton buttons[VQMBT_MAX_DEVICES];
 } QmState;
 
+// Quickmenu state.
 static QmState qm_state;
-static SceKernelLwMutexWork mutex;
 
 /**
  * TODO
