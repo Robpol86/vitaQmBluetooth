@@ -60,7 +60,6 @@ typedef struct QmButton {
 
 typedef struct QmState {
     QmButton buttons[VQMBT_MAX_DEVICES];
-    bool bluetooth_off;
 } QmState;
 
 static QmState qm_state;
@@ -341,6 +340,9 @@ static void bulk_update(bool* changed, const QmsRequest* request) {
             transition_state_unoccupied(changed, idx);
             continue;
         }
+
+        // TODO need to refactor and move bt-off check lower.
+
         // Check if bluetooth is off.
         if (!request->bulk.bluetooth_on) {
             transition_state_bt_off(changed, &idx);
