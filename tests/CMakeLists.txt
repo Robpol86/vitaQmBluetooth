@@ -11,6 +11,7 @@ endif()
 
 # Download cmocka.
 include(FetchContent)
+set(FETCHCONTENT_QUIET OFF)
 FetchContent_Declare(cmocka
   URL                         https://cmocka.org/files/2.0/cmocka-2.0.2.tar.xz  # TODO cache in GHA
   URL_HASH                    SHA256=39f92f366bdf3f1a02af4da75b4a5c52df6c9f7e736c7d65de13283f9f0ef416
