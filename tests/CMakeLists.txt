@@ -9,6 +9,21 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug)
 endif()
 
+# TODO
+if(APPLE)
+  execute_process(
+    COMMAND xcrun --show-sdk-path
+    OUTPUT_VARIABLE MACOS_SDK_PATH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    RESULT_VARIABLE XCRUN_STATUS
+  )
+  if(XCRUN_STATUS EQUAL 0 AND IS_DIRECTORY "${MACOS_SDK_PATH}")
+    add_compile_options(-isysroot "${MACOS_SDK_PATH}")
+  else()
+    message(WARNING "xcrun --show-sdk-path failed; clang-tidy may not find system headers")
+  endif()
+endif()
+
 # Download cmocka.
 include(FetchContent)
 set(FETCHCONTENT_QUIET OFF)
