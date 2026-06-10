@@ -19,64 +19,52 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief TODO.
  ******************************************************************************/
 
-#include <assert.h>  // TODO remove
 #include <cmocka.h>
 
 // #include "delme.c"
 
-static void test_mac_to_idx(void) {
-    static_assert(1 == 1, "TODO");  // TODO
+static void test_mac_to_idx(void** state) {
+    (void)state;
+    assert_int_equal(1, 1);
 }
 
-static void test_bulk_from_clean_no_devices(void) {
-    static_assert(1 == 1, "TODO");  // TODO
-}
+// static void test_bulk_from_clean_no_devices(void) {
+//     static_assert(1 == 1, "TODO");  // TODO
+// }
 
-static void test_bulk_from_clean_one_device(void) {
-    static_assert(1 == 1, "TODO");  // TODO
-}
+// static void test_bulk_from_clean_one_device(void) {
+//     static_assert(1 == 1, "TODO");  // TODO
+// }
 
-static void test_bulk_from_clean_max_devices(void) {
-    static_assert(1 == 1, "TODO");  // TODO
-}
+// static void test_bulk_from_clean_max_devices(void) {
+//     static_assert(1 == 1, "TODO");  // TODO
+// }
 
-static void test_bulk_from_clean_one_device_bt_off(void) {
-    static_assert(1 == 1, "TODO");  // TODO
-}
+// static void test_bulk_from_clean_one_device_bt_off(void) {
+//     static_assert(1 == 1, "TODO");  // TODO
+// }
 
-static void test_bulk_from_clean_one_device_already_connected(void) {
-    static_assert(1 == 1, "TODO");  // TODO
-}
+// static void test_bulk_from_clean_one_device_already_connected(void) {
+//     static_assert(1 == 1, "TODO");  // TODO
+// }
 
-static void test_bulk_add_remove_only_device(void) {
-    static_assert(1 == 1, "TODO");  // TODO
-}
+// static void test_bulk_add_remove_only_device(void) {
+//     static_assert(1 == 1, "TODO");  // TODO
+// }
 
-static void test_bulk_add_remove_second_device(void) {
-    static_assert(1 == 1, "TODO");  // TODO
-}
+// static void test_bulk_add_remove_second_device(void) {
+//     static_assert(1 == 1, "TODO");  // TODO
+// }
 
-static void test_bt_on_off_on_off(void) {
-    // TODO 0, 1, 2, max devices.
-    static_assert(1 == 1, "TODO");  // TODO
-}
+// static void test_bt_on_off_on_off(void) {
+//     // TODO 0, 1, 2, max devices.
+//     static_assert(1 == 1, "TODO");  // TODO
+// }
 
 int main(void) {
-    // TODO eliminate main() in tests and generate it in CMakeLists.txt?
+    const struct CMUnitTest tests[] = {
+        cmocka_unit_test(test_mac_to_idx),
+    };
 
-    test_mac_to_idx();
-
-    test_bulk_from_clean_no_devices();
-    test_bulk_from_clean_one_device();
-    test_bulk_from_clean_max_devices();
-
-    test_bulk_from_clean_one_device_bt_off();
-    test_bulk_from_clean_one_device_already_connected();
-
-    test_bulk_add_remove_only_device();
-    test_bulk_add_remove_second_device();
-
-    test_bt_on_off_on_off();
-
-    return 0;
+    return cmocka_run_group_tests(tests, NULL, NULL);
 }

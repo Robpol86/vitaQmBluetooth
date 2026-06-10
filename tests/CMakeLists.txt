@@ -34,6 +34,6 @@ foreach(src ${TEST_SRCS})
   string(REGEX REPLACE "\\.c$" "" name "${rel}")
   string(REGEX REPLACE "/" "_" name "${name}")
   add_executable("${name}" "${src}")
-  target_link_libraries("${name}" cmocka::cmocka)
+  target_link_libraries("${name}" PRIVATE cmocka::cmocka)
   add_test(NAME "${name}" COMMAND "${name}")  # TODO show N>1 tests per file.
 endforeach()
