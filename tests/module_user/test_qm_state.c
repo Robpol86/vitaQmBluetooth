@@ -49,6 +49,11 @@ static void test_bulk_add_remove_second_device(void) {
     static_assert(1 == 1, "TODO");  // TODO
 }
 
+static void test_bt_on_off_on_off(void) {
+    // TODO 0, 1, 2, max devices.
+    static_assert(1 == 1, "TODO");  // TODO
+}
+
 int main(void) {
     test_bulk_from_clean_no_devices();
     test_bulk_from_clean_one_device();
@@ -59,6 +64,8 @@ int main(void) {
 
     test_bulk_add_remove_only_device();
     test_bulk_add_remove_second_device();
+
+    test_bt_on_off_on_off();
 
     return 0;
 }
