@@ -21,6 +21,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <assert.h>
 
+static void test_mac_to_idx(void) {
+    static_assert(1 == 1, "TODO");  // TODO
+}
+
 static void test_bulk_from_clean_no_devices(void) {
     static_assert(1 == 1, "TODO");  // TODO
 }
@@ -55,6 +59,10 @@ static void test_bt_on_off_on_off(void) {
 }
 
 int main(void) {
+    // TODO eliminate main() in tests and generate it in CMakeLists.txt?
+
+    test_mac_to_idx();
+
     test_bulk_from_clean_no_devices();
     test_bulk_from_clean_one_device();
     test_bulk_from_clean_max_devices();

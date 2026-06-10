@@ -1,13 +1,12 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.20)  # TODO dedupe with top file?
 
 project(vitaQmBluetoothTests LANGUAGES C)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-# TODO keep below?
+# TODO keep this conditional?
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug)
 endif()
-#TODO above
 
 enable_testing()
 
