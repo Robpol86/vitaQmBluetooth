@@ -25,6 +25,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 static void test_mac_to_idx(void** state) {
     (void)state;
+
     assert_int_equal(1, 1);
 }
 

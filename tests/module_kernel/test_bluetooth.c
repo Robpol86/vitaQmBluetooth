@@ -19,14 +19,18 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief TODO.
  ******************************************************************************/
 
-#include <assert.h>
+#include <cmocka.h>
 
-static void test_kvqmbt_get_paired_devices(void) {
-    static_assert(1 == 1, "TODO");  // TODO
+static void test_kvqmbt_get_paired_devices(void** state) {
+    (void)state;
+
+    assert_int_equal(1, 1);
 }
 
 int main(void) {
-    test_kvqmbt_get_paired_devices();
+    const struct CMUnitTest tests[] = {
+        cmocka_unit_test(test_kvqmbt_get_paired_devices),
+    };
 
-    return 0;
+    return cmocka_run_group_tests(tests, NULL, NULL);
 }
