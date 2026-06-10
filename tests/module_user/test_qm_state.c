@@ -21,6 +21,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <assert.h>
 
+// #include "delme.c"
+
 static void test_mac_to_idx(void) {
     static_assert(1 == 1, "TODO");  // TODO
 }
