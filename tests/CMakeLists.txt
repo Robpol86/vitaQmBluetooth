@@ -46,9 +46,14 @@ enable_testing()
 file(GLOB_RECURSE TEST_SRCS CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.c")
 foreach(src ${TEST_SRCS})
   file(RELATIVE_PATH rel "${CMAKE_CURRENT_SOURCE_DIR}" "${src}")
+  get_filename_component(reldir "${rel}" DIRECTORY)   # -> "module_user" or "module_kernel"
   string(REGEX REPLACE "\\.c$" "" name "${rel}")
   string(REGEX REPLACE "/" "_" name "${name}")
+
   add_executable("${name}" "${src}")
   target_link_libraries("${name}" PRIVATE cmocka::cmocka)
+  target_include_directories("${name}" PRIVATE
+    "${CMAKE_SOURCE_DIR}/../${reldir}/src"
+    "${CMAKE_SOURCE_DIR}/../include")
   add_test(NAME "${name}" COMMAND "${name}")  # TODO show N>1 tests per file.
 endforeach()

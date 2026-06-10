@@ -21,12 +21,13 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <cmocka.h>
 
-// #include "delme.c"
+// NOLINTNEXTLINE(bugprone-suspicious-include)
+#include "delme.c"
 
 static void test_mac_to_idx(void** state) {
     (void)state;
 
-    assert_int_equal(1, 1);
+    assert_int_equal(mac_to_idx(1, 1), 2);
 }
 
 // static void test_bulk_from_clean_no_devices(void) {
