@@ -17,7 +17,7 @@ FetchContent_Declare(cmocka
   URL_HASH                    SHA256=39f92f366bdf3f1a02af4da75b4a5c52df6c9f7e736c7d65de13283f9f0ef416
   DOWNLOAD_EXTRACT_TIMESTAMP  TRUE
 )
-# set(WITH_STATIC_LIB ON CACHE BOOL "CMocka: Build with a static library" FORCE)
+# set(WITH_STATIC_LIB ON CACHE BOOL "CMocka: Build with a static library" FORCE)  # TODO needed?
 # set(WITH_CMOCKERY_SUPPORT OFF CACHE BOOL "CMocka: Install a cmockery header" FORCE)
 # set(WITH_EXAMPLES OFF CACHE BOOL "CMocka: Build examples" FORCE)
 # set(UNIT_TESTING OFF CACHE BOOL "CMocka: Build with unit testing" FORCE)
@@ -34,6 +34,6 @@ foreach(src ${TEST_SRCS})
   string(REGEX REPLACE "\\.c$" "" name "${rel}")
   string(REGEX REPLACE "/" "_" name "${name}")
   add_executable("${name}" "${src}")
-  # target_link_libraries("${name}" cmocka::cmocka)
+  target_link_libraries("${name}" cmocka::cmocka)
   add_test(NAME "${name}" COMMAND "${name}")  # TODO show N>1 tests per file.
 endforeach()

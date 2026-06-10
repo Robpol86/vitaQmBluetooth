@@ -19,7 +19,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief TODO.
  ******************************************************************************/
 
-#include <assert.h>
+#include <assert.h>  // TODO remove
+#include <cmocka.h>
 
 // #include "delme.c"
 
