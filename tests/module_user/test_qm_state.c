@@ -21,13 +21,13 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <cmocka.h>
 
-// NOLINTNEXTLINE(bugprone-suspicious-include)
-#include "delme.c"
+#include "qm_state.h"
+#include "vqmbt.h"
 
 static void test_mac_to_idx(void** state) {
     (void)state;
 
-    assert_int_equal(mac_to_idx(1, 1), 2);
+    assert_int_equal(mac_to_idx(1, 1), VQMBT_ERROR_INVALID_ARGUMENT);
 }
 
 // static void test_bulk_from_clean_no_devices(void) {

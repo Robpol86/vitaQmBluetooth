@@ -53,6 +53,7 @@ foreach(src ${TEST_SRCS})
   add_executable("${name}" "${src}")
   target_link_libraries("${name}" PRIVATE cmocka::cmocka)
   target_include_directories("${name}" PRIVATE
+    "${CMAKE_SOURCE_DIR}/shims"
     "${CMAKE_SOURCE_DIR}/../${reldir}/src"
     "${CMAKE_SOURCE_DIR}/../include")
   add_test(NAME "${name}" COMMAND "${name}")  # TODO show N>1 tests per file.
