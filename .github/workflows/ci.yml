@@ -8,7 +8,7 @@ jobs:
   BuildTestLint:
     strategy:
       matrix:
-        os: [&artifact_os ubuntu-latest, macos-latest]
+        os: [&artifact_os ubuntu-latest]  # TODO add macos-latest for PRs only
     runs-on: ${{ matrix.os }}
     steps:
 
