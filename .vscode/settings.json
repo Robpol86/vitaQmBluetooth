@@ -1,6 +1,5 @@
 {
   "clangd.arguments": [
-    "--query-driver=${env:VITASDK}/bin/arm-vita-eabi-*",
-    "--compile-commands-dir=${workspaceFolder}/build-debug"
+    "--query-driver=${env:VITASDK}/bin/arm-vita-eabi-*"
   ]
 }
