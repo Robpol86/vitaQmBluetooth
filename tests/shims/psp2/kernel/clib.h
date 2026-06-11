@@ -1,3 +1,4 @@
+// NOLINTBEGIN(readability-identifier-naming)
 #ifndef SHIM_PSP2_CLIB_H
 #define SHIM_PSP2_CLIB_H
 #include <stdarg.h>
@@ -18,3 +19,4 @@ static inline int sceClibPrintf(const char* f, ...) {
     return 0;
 }
 #endif
+// NOLINTEND(readability-identifier-naming)

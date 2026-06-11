@@ -1,3 +1,4 @@
+// NOLINTBEGIN(readability-identifier-naming)
 #ifndef SHIM_PSP2COMMON_TYPES_H
 #define SHIM_PSP2COMMON_TYPES_H
 #include <stddef.h>
@@ -8,3 +9,4 @@ typedef int32_t SceUID;
 typedef uint32_t SceSize;
 typedef int SceBool;
 #endif
+// NOLINTEND(readability-identifier-naming)

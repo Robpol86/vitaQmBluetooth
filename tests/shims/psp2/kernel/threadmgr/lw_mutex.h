@@ -1,3 +1,4 @@
+// NOLINTBEGIN(readability-identifier-naming)
 #ifndef SHIM_LW_MUTEX_H
 #define SHIM_LW_MUTEX_H
 typedef struct SceKernelLwMutexWork {
@@ -29,3 +30,4 @@ static inline int sceKernelUnlockLwMutex(SceKernelLwMutexWork* m, int n) {
     return 0;
 }
 #endif
+// NOLINTEND(readability-identifier-naming)

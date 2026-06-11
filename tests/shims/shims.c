@@ -1,3 +1,4 @@
+// NOLINTBEGIN(readability-identifier-naming)
 // No-op definitions for on-device symbols qm_state.c references but which have
 // no effect on the pure state logic under test. Replace with recording stubs
 // if you want to assert behavioral expectations later.
@@ -30,13 +31,13 @@ int sceKernelDeleteLwMutex(void* work) {
     return 0;
 }
 
-void kvqmbt_connect_device(unsigned int a, unsigned int b) {
-    (void)a;
-    (void)b;
+void kvqmbt_connect_device(unsigned int mac0, unsigned int mac1) {
+    (void)mac0;
+    (void)mac1;
 }
-void kvqmbt_disconnect_device(unsigned int a, unsigned int b) {
-    (void)a;
-    (void)b;
+void kvqmbt_disconnect_device(unsigned int mac0, unsigned int mac1) {
+    (void)mac0;
+    (void)mac1;
 }
 
 // logfile_write_line — declared in include/logfile.h, called by LOG_MESSAGE_TO_FILE.
@@ -47,3 +48,4 @@ void logfile_write_line(int y, int m, int d, const char* line, ...) {
     (void)line;
 }
 void logfile_init(void) {}
+// NOLINTEND(readability-identifier-naming)
