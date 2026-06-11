@@ -46,7 +46,7 @@ typedef struct QmsRequest {
 } QmsRequest;
 
 // Exported functions.
-int mac_to_idx(unsigned int mac0, unsigned int mac1);  // TODO remove
+int mac_to_idx(unsigned int mac0, unsigned int mac1);  // TODO remove and make static again
 void qm_state_update_ui(const QmsRequest* request);
 int qm_state_mutex_start(void);
 void qm_state_mutex_stop(void);

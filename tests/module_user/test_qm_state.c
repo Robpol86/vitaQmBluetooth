@@ -24,15 +24,37 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "qm_state.h"
 #include "vqmbt.h"
 
+/**
+ * TODO remove this test.
+ */
 static void test_mac_to_idx(void** state) {
     (void)state;
 
     assert_int_equal(mac_to_idx(1, 1), VQMBT_ERROR_INVALID_ARGUMENT);
 }
 
-// static void test_bulk_from_clean_no_devices(void) {
-//     static_assert(1 == 1, "TODO");  // TODO
-// }
+/**
+ * Test bulk update from no devices to no devices.
+ */
+static void test_bulk_from_clean_no_devices(void** state) {
+    (void)state;
+
+    // Setup.
+    // TODO zero out state
+    // TODO mock refresh_ui() and assert it does not run.
+
+    // Run.
+    const VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES] = {0};
+    qm_state_update_ui(&(QmsRequest){
+        .id = QMS_REQUEST_BULK_UPDATE,
+        .bulk.bluetooth_on = true,
+        .bulk.num_devices = 0,
+        .bulk.devices = devices,
+    });
+
+    // Verify.
+    // TODO
+}
 
 // static void test_bulk_from_clean_one_device(void) {
 //     static_assert(1 == 1, "TODO");  // TODO
@@ -66,6 +88,7 @@ static void test_mac_to_idx(void** state) {
 int main(void) {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(test_mac_to_idx),
+        cmocka_unit_test(test_bulk_from_clean_no_devices),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);
