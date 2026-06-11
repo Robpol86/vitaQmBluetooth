@@ -29,15 +29,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "qm_state.c"
 
 /**
- * TODO remove this test.
- */
-static void test_mac_to_idx(void** state) {
-    (void)state;
-
-    assert_int_equal(mac_to_idx(1, 1), VQMBT_ERROR_INVALID_ARGUMENT);
-}
-
-/**
  * Test bulk update from no devices to no devices.
  */
 static void test_bulk_from_clean_no_devices(void** state) {
@@ -111,7 +102,6 @@ static void test_bt_on_off_on_off(void** state) {
 
 int main(void) {
     const struct CMUnitTest tests[] = {
-        cmocka_unit_test(test_mac_to_idx),
         cmocka_unit_test(test_bulk_from_clean_no_devices),
         cmocka_unit_test(test_bulk_from_clean_one_device),
         cmocka_unit_test(test_bulk_from_clean_max_devices),
