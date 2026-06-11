@@ -27,7 +27,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <cmocka.h>
 
 #include "qm_state.c"
-#include "vqmbt.h"
 
 /**
  * TODO remove this test.
@@ -45,7 +44,7 @@ static void test_bulk_from_clean_no_devices(void** state) {
     (void)state;
 
     // Setup.
-    // TODO zero out state
+    qm_state = (QmState){0};
     // TODO mock refresh_ui() and assert it does not run.
 
     // Run.
@@ -58,7 +57,13 @@ static void test_bulk_from_clean_no_devices(void** state) {
     });
 
     // Verify.
-    // TODO
+    for (int i = 0; i < VQMBT_MAX_DEVICES; i++) {
+        assert_string_equal(qm_state.buttons[i].device.name, "");
+        assert_int_equal(qm_state.buttons[i].device.mac0, 0);
+        assert_int_equal(qm_state.buttons[i].device.mac1, 0);
+        assert_int_equal(qm_state.buttons[i].device.state, VQMBT_BT_STATE_UNKNOWN0);
+        assert_int_equal(qm_state.buttons[i].btn_state, BTNSTATE_SLOT_EMPTY_DISABLED);
+    }
 }
 
 static void test_bulk_from_clean_one_device(void** state) {
