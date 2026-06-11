@@ -85,7 +85,7 @@ test: _HELP = Run unit tests
 test:
 	cmake -B build-test tests
 	cmake --build build-test
-	ctest --test-dir build-test --output-on-failure --no-tests=error
+	ctest --test-dir build-test --output-on-failure --no-tests=error -V
 
 ## Misc
 

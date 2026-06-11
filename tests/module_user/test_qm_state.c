@@ -58,39 +58,60 @@ static void test_bulk_from_clean_no_devices(void** state) {
     // TODO
 }
 
-// static void test_bulk_from_clean_one_device(void) {
-//     static_assert(1 == 1, "TODO");  // TODO
-// }
+static void test_bulk_from_clean_one_device(void** state) {
+    (void)state;
 
-// static void test_bulk_from_clean_max_devices(void) {
-//     static_assert(1 == 1, "TODO");  // TODO
-// }
+    skip();  // static_assert(1 == 1, "TODO");  // TODO
+}
 
-// static void test_bulk_from_clean_one_device_bt_off(void) {
-//     static_assert(1 == 1, "TODO");  // TODO
-// }
+static void test_bulk_from_clean_max_devices(void** state) {
+    (void)state;
 
-// static void test_bulk_from_clean_one_device_already_connected(void) {
-//     static_assert(1 == 1, "TODO");  // TODO
-// }
+    skip();  // static_assert(1 == 1, "TODO");  // TODO
+}
 
-// static void test_bulk_add_remove_only_device(void) {
-//     static_assert(1 == 1, "TODO");  // TODO
-// }
+static void test_bulk_from_clean_one_device_bt_off(void** state) {
+    (void)state;
 
-// static void test_bulk_add_remove_second_device(void) {
-//     static_assert(1 == 1, "TODO");  // TODO
-// }
+    skip();  // static_assert(1 == 1, "TODO");  // TODO
+}
 
-// static void test_bt_on_off_on_off(void) {
-//     // TODO 0, 1, 2, max devices.
-//     static_assert(1 == 1, "TODO");  // TODO
-// }
+static void test_bulk_from_clean_one_device_already_connected(void** state) {
+    (void)state;
+
+    skip();  // static_assert(1 == 1, "TODO");  // TODO
+}
+
+static void test_bulk_add_remove_only_device(void** state) {
+    (void)state;
+
+    skip();  // static_assert(1 == 1, "TODO");  // TODO
+}
+
+static void test_bulk_add_remove_second_device(void** state) {
+    (void)state;
+
+    skip();  // static_assert(1 == 1, "TODO");  // TODO
+}
+
+static void test_bt_on_off_on_off(void** state) {
+    (void)state;
+
+    // TODO 0, 1, 2, max devices.
+    skip();  // static_assert(1 == 1, "TODO");  // TODO
+}
 
 int main(void) {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(test_mac_to_idx),
         cmocka_unit_test(test_bulk_from_clean_no_devices),
+        cmocka_unit_test(test_bulk_from_clean_one_device),
+        cmocka_unit_test(test_bulk_from_clean_max_devices),
+        cmocka_unit_test(test_bulk_from_clean_one_device_bt_off),
+        cmocka_unit_test(test_bulk_from_clean_one_device_already_connected),
+        cmocka_unit_test(test_bulk_add_remove_only_device),
+        cmocka_unit_test(test_bulk_add_remove_second_device),
+        cmocka_unit_test(test_bt_on_off_on_off),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);
