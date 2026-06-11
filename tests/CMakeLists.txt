@@ -83,5 +83,5 @@ foreach(src ${TEST_SRCS})
     "${CMAKE_CURRENT_SOURCE_DIR}/shims"
     "${CMAKE_CURRENT_SOURCE_DIR}/../include"
     "${CMAKE_CURRENT_SOURCE_DIR}/../${reldir}/src")
-  add_test(NAME "${name}" COMMAND "${name}")  # TODO show N>1 tests per file.
+  add_test(NAME "${name}" COMMAND "${name}")  # TODO add_cmocka_test https://git.cryptomilk.org/projects/cmocka.git/tree/example/mock/uptime/CMakeLists.txt
 endforeach()
