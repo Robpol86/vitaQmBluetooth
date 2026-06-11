@@ -9,9 +9,9 @@ static inline void* sceClibMemcpy(void* d, const void* s, size_t n) { return mem
 static inline void* sceClibMemset(void* d, int c, size_t n) { return memset(d, c, n); }
 static inline int sceClibSnprintf(char* b, size_t n, const char* f, ...) {
     va_list a;
-    va_start(a, f);
+    __builtin_va_start(a, f);
     int r = vsnprintf(b, n, f, a);
-    va_end(a);
+    __builtin_va_end(a);
     return r;
 }
 static inline int sceClibPrintf(const char* f, ...) {
