@@ -100,6 +100,7 @@ static void test_bulk_from_clean_max_devices(void** state) {
     (void)state;
 
     skip();  // static_assert(1 == 1, "TODO");  // TODO
+    // TODO assert ==8 so this fails when/if I increase MAX devices
 }
 
 static void test_bulk_from_clean_one_device_bt_off(void** state) {
