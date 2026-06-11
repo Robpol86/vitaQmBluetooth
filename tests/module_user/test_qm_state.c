@@ -23,7 +23,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <cmocka.h>
 
-#include "qm_state.h"
+#include "qm_state.c"
 #include "vqmbt.h"
 
 /**

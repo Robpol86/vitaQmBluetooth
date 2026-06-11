@@ -56,19 +56,6 @@ foreach(src ${TEST_SRCS})
   string(REGEX REPLACE "\\.c$" "" name "${rel}")
   string(REGEX REPLACE "/" "_" name "${name}")
 
-  if(reldir STREQUAL "module_user")
-    set(MODULE_SOURCES
-      "${CMAKE_CURRENT_SOURCE_DIR}/../module_user/src/qm_state.c"
-    )
-  # elseif(reldir STREQUAL "module_kernel")
-    # set(MODULE_SOURCES
-    #   "${CMAKE_CURRENT_SOURCE_DIR}/../module_kernel/src/bluetooth.c"
-    # )
-  else()
-    set(MODULE_SOURCES "")
-  endif()
-
-
   add_executable("${name}"
     "${src}"
     ${MODULE_SOURCES}
@@ -83,5 +70,5 @@ foreach(src ${TEST_SRCS})
     "${CMAKE_CURRENT_SOURCE_DIR}/shims"
     "${CMAKE_CURRENT_SOURCE_DIR}/../include"
     "${CMAKE_CURRENT_SOURCE_DIR}/../${reldir}/src")
-  add_test(NAME "${name}" COMMAND "${name}")  # TODO add_cmocka_test https://git.cryptomilk.org/projects/cmocka.git/tree/example/mock/uptime/CMakeLists.txt
+  add_test(NAME "${name}" COMMAND "${name}")
 endforeach()
