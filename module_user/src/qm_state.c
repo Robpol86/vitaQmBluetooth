@@ -367,7 +367,7 @@ static void bulk_update(bool* changed, const QmsRequest* request) {
  * @param mac1 TODO
  * @return TODO
  */
-int mac_to_idx(const unsigned int mac0, const unsigned int mac1) {
+static int mac_to_idx(const unsigned int mac0, const unsigned int mac1) {
     if (mac0 < 1 || mac1 < 1) {
         LOG_ERROR("Invalid MAC address: mac0=0x%08X mac1=0x%08X", mac0, mac1);
         return VQMBT_ERROR_INVALID_ARGUMENT;
