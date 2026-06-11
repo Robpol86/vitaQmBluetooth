@@ -50,11 +50,28 @@ foreach(src ${TEST_SRCS})
   string(REGEX REPLACE "\\.c$" "" name "${rel}")
   string(REGEX REPLACE "/" "_" name "${name}")
 
-  add_executable("${name}" "${src}")
+  if(reldir STREQUAL "module_user")
+    set(MODULE_SOURCES
+      "${CMAKE_CURRENT_SOURCE_DIR}/../module_user/src/qm_state.c"
+    )
+  # elseif(reldir STREQUAL "module_kernel")
+    # set(MODULE_SOURCES
+    #   "${CMAKE_CURRENT_SOURCE_DIR}/../module_kernel/src/bluetooth.c"
+    # )
+  else()
+    set(MODULE_SOURCES "")
+  endif()
+
+
+  add_executable("${name}" "${src}" ${MODULE_SOURCES})
   target_link_libraries("${name}" PRIVATE cmocka::cmocka)
+  target_compile_definitions("${name}" PRIVATE
+    MODULE_NAME="${name}"
+    PROJECT_NAME="${CMAKE_PROJECT_NAME}"
+    ENABLE_VITASDK_BUILD_ASSERT)
   target_include_directories("${name}" PRIVATE
-    "${CMAKE_SOURCE_DIR}/shims"
-    "${CMAKE_SOURCE_DIR}/../${reldir}/src"
-    "${CMAKE_SOURCE_DIR}/../include")
+    "${CMAKE_CURRENT_SOURCE_DIR}/shims"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../${reldir}/src"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../include")
   add_test(NAME "${name}" COMMAND "${name}")  # TODO show N>1 tests per file.
 endforeach()
