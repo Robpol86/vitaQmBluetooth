@@ -46,7 +46,7 @@ typedef struct QmsRequest {
 } QmsRequest;
 
 // Exported functions.
-void qm_state_update_ui(const QmsRequest* request);
+bool qm_state_update_ui(const QmsRequest* request);
 int qm_state_mutex_start(void);
 void qm_state_mutex_stop(void);
 

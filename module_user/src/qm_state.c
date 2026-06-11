@@ -392,7 +392,7 @@ static int mac_to_idx(const unsigned int mac0, const unsigned int mac1) {
  *
  * @param request TODO
  */
-void qm_state_update_ui(const QmsRequest* request) {
+bool qm_state_update_ui(const QmsRequest* request) {
     // Lock mutex and defer unlock to function scope exit.
     SceKernelLwMutexWork* mutex_ MUTEX_STATE = &mutex;  // TODO move back here and eliminate mutex.h.
     ENTER_MUTEX(mutex);
@@ -452,6 +452,8 @@ void qm_state_update_ui(const QmsRequest* request) {
         LOG_DEBUG(0, "Refreshing UI to show changes");
         refresh_ui();
     }
+
+    return changed;
 }
 
 /**

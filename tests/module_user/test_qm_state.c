@@ -36,11 +36,10 @@ static void test_bulk_from_clean_no_devices(void** state) {
 
     // Setup.
     qm_state = (QmState){0};
-    // TODO mock refresh_ui() and assert it does not run.
 
     // Run.
     const VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES] = {0};
-    qm_state_update_ui(&(QmsRequest){
+    const bool changed = qm_state_update_ui(&(QmsRequest){
         .id = QMS_REQUEST_BULK_UPDATE,
         .bulk.bluetooth_on = true,
         .bulk.num_devices = 0,
@@ -48,6 +47,7 @@ static void test_bulk_from_clean_no_devices(void** state) {
     });
 
     // Verify.
+    assert_false(changed);
     for (int i = 0; i < VQMBT_MAX_DEVICES; i++) {
         assert_string_equal(qm_state.buttons[i].device.name, "");
         assert_int_equal(qm_state.buttons[i].device.mac0, 0);
