@@ -29,13 +29,22 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "qm_state.c"
 
 /**
+ * Setup test fixture. Called before each test.
+ */
+static int setup(void** state) {
+    (void)state;
+
+    // Reset state to empty.
+    qm_state = (QmState){0};
+
+    return 0;
+}
+
+/**
  * Test bulk update from no devices to no devices.
  */
 static void test_bulk_from_clean_no_devices(void** state) {
     (void)state;
-
-    // Setup.
-    qm_state = (QmState){0};
 
     // Run.
     const VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES] = {0};
@@ -102,14 +111,14 @@ static void test_bt_on_off_on_off(void** state) {
 
 int main(void) {
     const struct CMUnitTest tests[] = {
-        cmocka_unit_test(test_bulk_from_clean_no_devices),
-        cmocka_unit_test(test_bulk_from_clean_one_device),
-        cmocka_unit_test(test_bulk_from_clean_max_devices),
-        cmocka_unit_test(test_bulk_from_clean_one_device_bt_off),
-        cmocka_unit_test(test_bulk_from_clean_one_device_already_connected),
-        cmocka_unit_test(test_bulk_add_remove_only_device),
-        cmocka_unit_test(test_bulk_add_remove_second_device),
-        cmocka_unit_test(test_bt_on_off_on_off),
+        cmocka_unit_test_setup(test_bulk_from_clean_no_devices, setup),
+        cmocka_unit_test_setup(test_bulk_from_clean_one_device, setup),
+        cmocka_unit_test_setup(test_bulk_from_clean_max_devices, setup),
+        cmocka_unit_test_setup(test_bulk_from_clean_one_device_bt_off, setup),
+        cmocka_unit_test_setup(test_bulk_from_clean_one_device_already_connected, setup),
+        cmocka_unit_test_setup(test_bulk_add_remove_only_device, setup),
+        cmocka_unit_test_setup(test_bulk_add_remove_second_device, setup),
+        cmocka_unit_test_setup(test_bt_on_off_on_off, setup),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);
