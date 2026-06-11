@@ -71,7 +71,7 @@ foreach(src ${TEST_SRCS})
     ENABLE_VITASDK_BUILD_ASSERT)
   target_include_directories("${name}" PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/shims"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../${reldir}/src"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+    "${CMAKE_CURRENT_SOURCE_DIR}/../include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../${reldir}/src")
   add_test(NAME "${name}" COMMAND "${name}")  # TODO show N>1 tests per file.
 endforeach()
