@@ -43,7 +43,13 @@ FetchContent_MakeAvailable(cmocka)
 
 enable_testing()
 
-file(GLOB_RECURSE TEST_SRCS CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.c")
+file(GLOB_RECURSE TEST_SRCS CONFIGURE_DEPENDS
+  "${CMAKE_CURRENT_SOURCE_DIR}/module_*/*.c"
+)
+
+set(TEST_SHIMS
+  "${CMAKE_CURRENT_SOURCE_DIR}/shims/shims.c"
+)
 foreach(src ${TEST_SRCS})
   file(RELATIVE_PATH rel "${CMAKE_CURRENT_SOURCE_DIR}" "${src}")
   get_filename_component(reldir "${rel}" DIRECTORY)   # -> "module_user" or "module_kernel"
@@ -63,7 +69,11 @@ foreach(src ${TEST_SRCS})
   endif()
 
 
-  add_executable("${name}" "${src}" ${MODULE_SOURCES})
+  add_executable("${name}"
+    "${src}"
+    ${MODULE_SOURCES}
+    ${TEST_SHIMS}
+  )
   target_link_libraries("${name}" PRIVATE cmocka::cmocka)
   target_compile_definitions("${name}" PRIVATE
     MODULE_NAME="${name}"
