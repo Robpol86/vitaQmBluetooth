@@ -19,7 +19,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief TODO.
  ******************************************************************************/
 
-// todo https://www.samlewis.me/2016/09/embedded-unit-testing-with-cmocka/
+/**
+ * TODO:
+ * - https://www.samlewis.me/2016/09/embedded-unit-testing-with-cmocka/
+ */
 
 #include <cmocka.h>
 
