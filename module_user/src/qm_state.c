@@ -21,33 +21,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /**
  * TODO:
- * - Have event thread constantly get states for all or select devices whilst QM is open?
  * - Test QM updating when Settings app connects/disconnects/enables/disables/add/remove
- * - BUG: Connect device, then turn off BT. Abort event is emitted and button is relabled to Connect.
- * - Keep flat, no btoff var. bt on state guarded. only bulk/bt_off can unset it. only bulk/bt_on can set.
- * - TODO: transition table?
- * - Show error message in button, e.g. when bt syscall is busy
- * - Make bulk_update resilient.
-
-Transition rules:
-
-+--------------+-----------------------+---------------------------------+--------+
-| Condition    | Source State          | Target State                    | Result |
-+--------------+-----------------------+---------------------------------+--------+
-| Bulk Update  | *                     | *                               | accept |
-| Add Device   | Source                | Target                          |        |
-| Event Thread |                       |                                 |        |
-| Button Press | BTNSTATE_DISCONNECTED | BTNSTATE_CONNECTING_DISABLED    | accept |
-| Button Press | BTNSTATE_CONNECTED    | BTNSTATE_DISCONNECTING_DISABLED | accept |
-| *            | *                     | *                               | no-op  |
-+--------------+-----------------------+---------------------------------+--------+
-
-- any -> BTNSTATE_SLOT_EMPTY_DISABLED
-- !BTNSTATE_SLOT_EMPTY_DISABLED -> BTNSTATE_BT_OFF_DISABLED
-- !BTNSTATE_BT_OFF_DISABLED -> BTNSTATE_DISCONNECTED
-- !BTNSTATE_BT_OFF_DISABLED -> BTNSTATE_DISCONNECTING_DISABLED
-- !BTNSTATE_BT_OFF_DISABLED -> BTNSTATE_CONNECTED
-- !BTNSTATE_BT_OFF_DISABLED -> BTNSTATE_CONNECTING_DISABLED
  */
 
 #include "qm_state.h"
