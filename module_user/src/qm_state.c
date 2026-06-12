@@ -235,7 +235,7 @@ static void transition_state_busy_connecting(bool* changed, const int idx) {
  * TODO:
  * - Persist error message.
  */
-static void transition_state_error(bool* changed, const int idx, const int error) {
+static void transition_state_error(bool* changed, const int idx, const VqmbtError error) {
     QmButton* qm_button = &qm_state.buttons[idx];
 
     if (qm_button->btn_state == BTNSTATE_ERROR_DISABLED) {
@@ -243,15 +243,17 @@ static void transition_state_error(bool* changed, const int idx, const int error
         return;
     }
 
-    LOG_DEBUG(0, "Setting idx=%d as error", idx);
+    LOG_DEBUG(0, "Setting idx=%d as error=0x%08X", idx, error);
     qm_button->btn_state = BTNSTATE_ERROR_DISABLED;
     const char* message;
 
     switch (error) {
         case VQMBT_ERROR_KERNEL_SIDE_BUSY:
             message = "Busy (Settings opened?)";
+            break;
         default:
             message = "Failed";
+            break;
     }
     sceClibSnprintf(qm_button->error_message, sizeof(qm_button->error_message), "%s", message);
 
