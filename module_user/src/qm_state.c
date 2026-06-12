@@ -29,12 +29,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <psp2/kernel/clib.h>
 #include <psp2/kernel/modulemgr.h>
+#include <psp2/kernel/threadmgr/lw_mutex.h>
 #include <psp2/kernel/threadmgr/thread.h>
 #include <quickmenureborn/c_types.h>
 #include <quickmenureborn/qm_reborn.h>
 
 #include "log.h"
-#include "mutex.h"
 #include "qm_ids.h"
 #include "vqmbt.h"
 
@@ -416,9 +416,9 @@ static int mac_to_idx(const unsigned int mac0, const unsigned int mac1) {
  * @param request TODO
  */
 bool qm_state_update_ui(const QmsRequest* request) {
-    // Lock mutex and defer unlock to function scope exit.
-    SceKernelLwMutexWork* mutex_ MUTEX_STATE = &mutex;  // TODO move back here and eliminate mutex.h.
-    ENTER_MUTEX(mutex);
+    // Lock mutex.
+    sceKernelLockLwMutex(&mutex, 1, NULL);
+    LOG_DEBUG(0, "Obtained mutex lock");
 
     bool changed = false;
 
@@ -475,6 +475,10 @@ bool qm_state_update_ui(const QmsRequest* request) {
         LOG_DEBUG(0, "Refreshing UI to show changes");
         refresh_ui();
     }
+
+    // Release mutex.
+    sceKernelUnlockLwMutex(&mutex, 1);
+    LOG_DEBUG(0, "Released mutex lock");
 
     return changed;
 }
