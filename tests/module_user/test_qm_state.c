@@ -40,32 +40,6 @@ static int setup(void** state) {
     return 0;
 }
 
-/**
- * Test bulk update from no devices to no devices.
- */
-static void test_bulk_from_clean_no_devices(void** state) {
-    (void)state;
-
-    // Run.
-    const VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES] = {0};
-    const bool changed = qm_state_update_ui(&(QmsRequest){
-        .id = QMS_REQUEST_BULK_UPDATE,
-        .bulk.bluetooth_on = true,
-        .bulk.num_devices = 0,
-        .bulk.devices = devices,
-    });
-
-    // Verify.
-    assert_false(changed);
-    for (int i = 0; i < VQMBT_MAX_DEVICES; i++) {
-        assert_string_equal(qm_state.buttons[i].device.name, "");
-        assert_int_equal(qm_state.buttons[i].device.mac0, 0);
-        assert_int_equal(qm_state.buttons[i].device.mac1, 0);
-        assert_int_equal(qm_state.buttons[i].device.state, VQMBT_BT_STATE_UNKNOWN0);
-        assert_int_equal(qm_state.buttons[i].btn_state, BTNSTATE_SLOT_EMPTY_DISABLED);
-    }
-}
-
 static void test_bulk_from_clean_one_device(void** state) {
     (void)state;
 
@@ -158,6 +132,51 @@ static void test_bulk_from_clean_one_device_already_connected(void** state) {
     }
 }
 
+static void test_bulk_add_remove_only_device(void** state) {
+    (void)state;
+
+    skip();  // static_assert(1 == 1, "TODO");  // TODO
+}
+
+static void test_bulk_add_remove_second_device(void** state) {
+    (void)state;
+
+    skip();  // static_assert(1 == 1, "TODO");  // TODO
+}
+
+static void test_bt_on_off_on_off(void** state) {
+    (void)state;
+
+    // TODO 0, 1, 2, max devices.
+    skip();  // static_assert(1 == 1, "TODO");  // TODO
+}
+
+/**
+ * Test bulk update from no devices to no devices.
+ */
+static void test_bulk_from_clean_no_devices(void** state) {
+    (void)state;
+
+    // Run.
+    const VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES] = {0};
+    const bool changed = qm_state_update_ui(&(QmsRequest){
+        .id = QMS_REQUEST_BULK_UPDATE,
+        .bulk.bluetooth_on = true,
+        .bulk.num_devices = 0,
+        .bulk.devices = devices,
+    });
+
+    // Verify.
+    assert_false(changed);
+    for (int i = 0; i < VQMBT_MAX_DEVICES; i++) {
+        assert_string_equal(qm_state.buttons[i].device.name, "");
+        assert_int_equal(qm_state.buttons[i].device.mac0, 0);
+        assert_int_equal(qm_state.buttons[i].device.mac1, 0);
+        assert_int_equal(qm_state.buttons[i].device.state, VQMBT_BT_STATE_UNKNOWN0);
+        assert_int_equal(qm_state.buttons[i].btn_state, BTNSTATE_SLOT_EMPTY_DISABLED);
+    }
+}
+
 static void test_bulk_from_clean_max_devices(void** state) {
     (void)state;
 
@@ -212,35 +231,16 @@ static void test_bulk_from_clean_max_devices(void** state) {
     static_assert(sizeof(devices) / sizeof(devices[0]) == VQMBT_MAX_DEVICES, "VQMBT_MAX_DEVICES changed, test outdated");
 }
 
-static void test_bulk_add_remove_only_device(void** state) {
-    (void)state;
-
-    skip();  // static_assert(1 == 1, "TODO");  // TODO
-}
-
-static void test_bulk_add_remove_second_device(void** state) {
-    (void)state;
-
-    skip();  // static_assert(1 == 1, "TODO");  // TODO
-}
-
-static void test_bt_on_off_on_off(void** state) {
-    (void)state;
-
-    // TODO 0, 1, 2, max devices.
-    skip();  // static_assert(1 == 1, "TODO");  // TODO
-}
-
 int main(void) {
     const struct CMUnitTest tests[] = {
-        cmocka_unit_test_setup(test_bulk_from_clean_no_devices, setup),
         cmocka_unit_test_setup(test_bulk_from_clean_one_device, setup),
         cmocka_unit_test_setup(test_bulk_from_clean_one_device_bt_off, setup),
-        cmocka_unit_test_setup(test_bulk_from_clean_max_devices, setup),
         cmocka_unit_test_setup(test_bulk_from_clean_one_device_already_connected, setup),
         cmocka_unit_test_setup(test_bulk_add_remove_only_device, setup),
         cmocka_unit_test_setup(test_bulk_add_remove_second_device, setup),
         cmocka_unit_test_setup(test_bt_on_off_on_off, setup),
+        cmocka_unit_test_setup(test_bulk_from_clean_no_devices, setup),
+        cmocka_unit_test_setup(test_bulk_from_clean_max_devices, setup),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);
