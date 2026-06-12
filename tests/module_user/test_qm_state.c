@@ -312,13 +312,6 @@ static void test_bulk_add_remove_second_device(void** state) {
     assert_int_equal(qm_state.buttons[2].btn_state, BTNSTATE_SLOT_EMPTY_DISABLED);
 }
 
-static void test_bt_on_off_on_off(void** state) {
-    (void)state;
-
-    // TODO 0, 1, 2, max devices.
-    skip();  // static_assert(1 == 1, "TODO");  // TODO
-}
-
 /**
  * Test bulk update from no devices to no devices.
  */
@@ -399,6 +392,13 @@ static void test_bulk_from_clean_max_devices(void** state) {
     static_assert(sizeof(devices) / sizeof(devices[0]) == VQMBT_MAX_DEVICES, "VQMBT_MAX_DEVICES changed, test outdated");
 }
 
+static void test_bt_on_off_on_off(void** state) {
+    (void)state;
+
+    // TODO 0, 1, 2, max devices.
+    skip();  // static_assert(1 == 1, "TODO");  // TODO
+}
+
 int main(void) {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test_setup(test_bulk_from_clean_one_device, setup),
@@ -407,9 +407,9 @@ int main(void) {
         cmocka_unit_test_setup(test_bulk_add_then_readd, setup),
         cmocka_unit_test_setup(test_bulk_add_remove_only_device, setup),
         cmocka_unit_test_setup(test_bulk_add_remove_second_device, setup),
-        cmocka_unit_test_setup(test_bt_on_off_on_off, setup),
         cmocka_unit_test_setup(test_bulk_from_clean_no_devices, setup),
         cmocka_unit_test_setup(test_bulk_from_clean_max_devices, setup),
+        cmocka_unit_test_setup(test_bt_on_off_on_off, setup),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);
