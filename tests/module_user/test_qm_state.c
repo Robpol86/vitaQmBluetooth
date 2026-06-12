@@ -100,7 +100,7 @@ static void test_bulk_from_clean_max_devices(void** state) {
     (void)state;
 
     // Run.
-    const VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES] = {
+    const VqmbtDeviceInfo devices[] = {
         [0] = {.name = "Test Device 0", .mac0 = 0x00000000, .mac1 = 0x9ABCDEF0, .state = VQMBT_BT_STATE_DISCONNECTED},
         [1] = {.name = "Test Device 1", .mac0 = 0x00000001, .mac1 = 0x9ABCDEF1, .state = VQMBT_BT_STATE_DISCONNECTED},
         [2] = {.name = "Test Device 2", .mac0 = 0x00000002, .mac1 = 0x9ABCDEF2, .state = VQMBT_BT_STATE_DISCONNECTED},
@@ -147,7 +147,7 @@ static void test_bulk_from_clean_max_devices(void** state) {
         assert_int_equal(qm_state.buttons[0].device.state, VQMBT_BT_STATE_DISCONNECTED);
         assert_int_equal(qm_state.buttons[0].btn_state, BTNSTATE_DISCONNECTED);
     }
-    // TODO assert sizeof(devices) == VQMBT_MAX_DEVICES
+    static_assert(sizeof(devices) / sizeof(devices[0]) == VQMBT_MAX_DEVICES, "VQMBT_MAX_DEVICES changed, test outdated");
 }
 
 static void test_bulk_from_clean_one_device_bt_off(void** state) {
