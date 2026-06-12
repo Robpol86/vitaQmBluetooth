@@ -99,8 +99,55 @@ static void test_bulk_from_clean_one_device(void** state) {
 static void test_bulk_from_clean_max_devices(void** state) {
     (void)state;
 
-    skip();  // static_assert(1 == 1, "TODO");  // TODO
-    // TODO assert ==8 so this fails when/if I increase MAX devices
+    // Run.
+    const VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES] = {
+        [0] = {.name = "Test Device 0", .mac0 = 0x00000000, .mac1 = 0x9ABCDEF0, .state = VQMBT_BT_STATE_DISCONNECTED},
+        [1] = {.name = "Test Device 1", .mac0 = 0x00000001, .mac1 = 0x9ABCDEF1, .state = VQMBT_BT_STATE_DISCONNECTED},
+        [2] = {.name = "Test Device 2", .mac0 = 0x00000002, .mac1 = 0x9ABCDEF2, .state = VQMBT_BT_STATE_DISCONNECTED},
+        [3] = {.name = "Test Device 3", .mac0 = 0x00000003, .mac1 = 0x9ABCDEF3, .state = VQMBT_BT_STATE_DISCONNECTED},
+        [4] = {.name = "Test Device 4", .mac0 = 0x00000004, .mac1 = 0x9ABCDEF4, .state = VQMBT_BT_STATE_DISCONNECTED},
+        [5] = {.name = "Test Device 5", .mac0 = 0x00000005, .mac1 = 0x9ABCDEF5, .state = VQMBT_BT_STATE_DISCONNECTED},
+        [6] = {.name = "Test Device 6", .mac0 = 0x00000006, .mac1 = 0x9ABCDEF6, .state = VQMBT_BT_STATE_DISCONNECTED},
+        [7] = {.name = "Test Device 7", .mac0 = 0x00000007, .mac1 = 0x9ABCDEF7, .state = VQMBT_BT_STATE_DISCONNECTED},
+    };
+    const bool changed = qm_state_update_ui(&(QmsRequest){
+        .id = QMS_REQUEST_BULK_UPDATE,
+        .bulk.bluetooth_on = true,
+        .bulk.num_devices = VQMBT_MAX_DEVICES,
+        .bulk.devices = devices,
+    });
+
+    // Verify.
+    assert_true(changed);
+    assert_string_equal(qm_state.buttons[0].device.name, "Test Device 0");
+    assert_string_equal(qm_state.buttons[1].device.name, "Test Device 1");
+    assert_string_equal(qm_state.buttons[2].device.name, "Test Device 2");
+    assert_string_equal(qm_state.buttons[3].device.name, "Test Device 3");
+    assert_string_equal(qm_state.buttons[4].device.name, "Test Device 4");
+    assert_string_equal(qm_state.buttons[5].device.name, "Test Device 5");
+    assert_string_equal(qm_state.buttons[6].device.name, "Test Device 6");
+    assert_string_equal(qm_state.buttons[7].device.name, "Test Device 7");
+    assert_int_equal(qm_state.buttons[0].device.mac0, 0x00000000);
+    assert_int_equal(qm_state.buttons[1].device.mac0, 0x00000001);
+    assert_int_equal(qm_state.buttons[2].device.mac0, 0x00000002);
+    assert_int_equal(qm_state.buttons[3].device.mac0, 0x00000003);
+    assert_int_equal(qm_state.buttons[4].device.mac0, 0x00000004);
+    assert_int_equal(qm_state.buttons[5].device.mac0, 0x00000005);
+    assert_int_equal(qm_state.buttons[6].device.mac0, 0x00000006);
+    assert_int_equal(qm_state.buttons[7].device.mac0, 0x00000007);
+    assert_int_equal(qm_state.buttons[0].device.mac1, 0x9ABCDEF0);
+    assert_int_equal(qm_state.buttons[1].device.mac1, 0x9ABCDEF1);
+    assert_int_equal(qm_state.buttons[2].device.mac1, 0x9ABCDEF2);
+    assert_int_equal(qm_state.buttons[3].device.mac1, 0x9ABCDEF3);
+    assert_int_equal(qm_state.buttons[4].device.mac1, 0x9ABCDEF4);
+    assert_int_equal(qm_state.buttons[5].device.mac1, 0x9ABCDEF5);
+    assert_int_equal(qm_state.buttons[6].device.mac1, 0x9ABCDEF6);
+    assert_int_equal(qm_state.buttons[7].device.mac1, 0x9ABCDEF7);
+    for (int i = 0; i < VQMBT_MAX_DEVICES; i++) {
+        assert_int_equal(qm_state.buttons[0].device.state, VQMBT_BT_STATE_DISCONNECTED);
+        assert_int_equal(qm_state.buttons[0].btn_state, BTNSTATE_DISCONNECTED);
+    }
+    // TODO assert sizeof(devices) == VQMBT_MAX_DEVICES
 }
 
 static void test_bulk_from_clean_one_device_bt_off(void** state) {
