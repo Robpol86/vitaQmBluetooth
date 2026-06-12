@@ -132,6 +132,44 @@ static void test_bulk_from_clean_one_device_already_connected(void** state) {
     }
 }
 
+static void test_bulk_add_then_readd(void** state) {
+    (void)state;
+
+    // Add device.
+    const VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES] = {
+        [0] = {.name = "Test Device", .mac0 = 0x12345678, .mac1 = 0x9ABCDEF0, .state = VQMBT_BT_STATE_DISCONNECTED},
+    };
+    bool changed = qm_state_update_ui(&(QmsRequest){
+        .id = QMS_REQUEST_BULK_UPDATE,
+        .bulk.bluetooth_on = true,
+        .bulk.num_devices = 1,
+        .bulk.devices = devices,
+    });
+
+    // Verify device added.
+    assert_true(changed);
+    assert_string_equal(qm_state.buttons[0].device.name, "Test Device");
+    assert_int_equal(qm_state.buttons[0].device.mac0, 0x12345678);
+    assert_int_equal(qm_state.buttons[0].device.mac1, 0x9ABCDEF0);
+    assert_int_equal(qm_state.buttons[0].device.state, VQMBT_BT_STATE_DISCONNECTED);
+    assert_int_equal(qm_state.buttons[0].btn_state, BTNSTATE_DISCONNECTED);
+
+    // Re-add same device.
+    changed = qm_state_update_ui(&(QmsRequest){
+        .id = QMS_REQUEST_BULK_UPDATE,
+        .bulk.bluetooth_on = true,
+        .bulk.num_devices = 1,
+        .bulk.devices = devices,
+    });
+
+    // Verify device added.
+    assert_false(changed);
+    assert_string_equal(qm_state.buttons[0].device.name, "Test Device");
+    assert_int_equal(qm_state.buttons[0].device.mac0, 0x12345678);
+    assert_int_equal(qm_state.buttons[0].device.mac1, 0x9ABCDEF0);
+    assert_int_equal(qm_state.buttons[0].device.state, VQMBT_BT_STATE_DISCONNECTED);
+    assert_int_equal(qm_state.buttons[0].btn_state, BTNSTATE_DISCONNECTED);
+}
 static void test_bulk_add_remove_only_device(void** state) {
     (void)state;
 
@@ -236,6 +274,7 @@ int main(void) {
         cmocka_unit_test_setup(test_bulk_from_clean_one_device, setup),
         cmocka_unit_test_setup(test_bulk_from_clean_one_device_bt_off, setup),
         cmocka_unit_test_setup(test_bulk_from_clean_one_device_already_connected, setup),
+        cmocka_unit_test_setup(test_bulk_add_then_readd, setup),
         cmocka_unit_test_setup(test_bulk_add_remove_only_device, setup),
         cmocka_unit_test_setup(test_bulk_add_remove_second_device, setup),
         cmocka_unit_test_setup(test_bt_on_off_on_off, setup),
