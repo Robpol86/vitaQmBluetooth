@@ -438,7 +438,6 @@ static void test_bt_on_off_on_one_device(void** state) {
     changed = qm_state_update_ui(&(QmsRequest){.id = QMS_REQUEST_BLUETOOTH_ON});
 
     // Verify bluetooth on.
-    skip();  // TODO
     assert_true(changed);
     assert_string_equal(qm_state.buttons[0].device.name, "Test Device");
     assert_int_equal(qm_state.buttons[0].device.mac0, 0x12345678);

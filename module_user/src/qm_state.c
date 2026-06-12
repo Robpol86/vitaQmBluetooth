@@ -271,7 +271,7 @@ static void transition_state_bt_on(bool* changed) {
         // Restore state.  // TODO DRY.
         switch (device->state) {
             case VQMBT_BT_STATE_DISCONNECTED:
-                transition_state_disconnected(changed, idx, false);
+                transition_state_disconnected(changed, idx, true);
                 break;
             case VQMBT_BT_STATE_CONNECTING:
                 transition_state_busy_connecting(changed, idx);
