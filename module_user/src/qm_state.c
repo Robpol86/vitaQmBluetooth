@@ -22,6 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 /**
  * TODO:
  * - Test QM updating when Settings app connects/disconnects/enables/disables/add/remove
+ * - Fix logging performance
  */
 
 #include "qm_state.h"
