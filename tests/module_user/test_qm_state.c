@@ -453,6 +453,9 @@ static void test_bt_on_off_on_one_device(void** state) {
     assert_int_equal(qm_state.buttons[1].btn_state, BTNSTATE_SLOT_EMPTY_DISABLED);
 }
 
+/**
+ * Tests entrypoint.
+ */
 int main(void) {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test_setup(test_bulk_from_clean_one_device, setup),
