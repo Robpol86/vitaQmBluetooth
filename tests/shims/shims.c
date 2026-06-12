@@ -31,13 +31,15 @@ int sceKernelDeleteLwMutex(void* work) {
     return 0;
 }
 
-void kvqmbt_connect_device(unsigned int mac0, unsigned int mac1) {
+int kvqmbt_connect_device(unsigned int mac0, unsigned int mac1) {
     (void)mac0;
     (void)mac1;
+    return 0;
 }
-void kvqmbt_disconnect_device(unsigned int mac0, unsigned int mac1) {
+int kvqmbt_disconnect_device(unsigned int mac0, unsigned int mac1) {
     (void)mac0;
     (void)mac1;
+    return 0;
 }
 
 // logfile_write_line — declared in include/logfile.h, called by LOG_MESSAGE_TO_FILE.

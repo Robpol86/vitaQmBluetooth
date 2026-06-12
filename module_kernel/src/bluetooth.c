@@ -55,16 +55,25 @@ VqmbtInferredDevState kvqmbt_device_state(unsigned int mac0, unsigned int mac1) 
  *
  * @param mac0 First four bytes of the bluetooth device's MAC address.
  * @param mac1 Last two bytes of the bluetooth device's MAC address.
+ * @return TODO
  */
-void kvqmbt_connect_device(unsigned int mac0, unsigned int mac1) {
+int kvqmbt_connect_device(unsigned int mac0, unsigned int mac1) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
     ENTER_SYSCALL(syscall_state_);
 
     int ret = ksceBtStartConnect(mac0, mac1);
-    if (ret < 0) {
-        LOG_ERROR("ksceBtStartConnect(mac0=%08X, mac1=%08X) returned error 0x%08X", mac0, mac1, ret);
-    } else {
+    if (ret >= 0) {
         LOG_DEBUG(0, "ksceBtStartConnect(mac0=%08X, mac1=%08X) returned %d", mac0, mac1, ret);
+        return 0;
+    }
+
+    switch (ret) {
+        case SCE_BT_ERROR_CONNECT_START_BUSY:
+            LOG_DEBUG(0, "ksceBtStartConnect(mac0=%08X, mac1=%08X) returned SCE_BT_ERROR_CONNECT_START_BUSY", mac0, mac1);
+            return VQMBT_ERROR_KERNEL_SIDE_BUSY;
+        default:
+            LOG_ERROR("ksceBtStartConnect(mac0=%08X, mac1=%08X) returned error 0x%08X", mac0, mac1, ret);
+            return VQMBT_ERROR_GENERAL_FAILURE;
     }
 }
 
@@ -74,15 +83,20 @@ void kvqmbt_connect_device(unsigned int mac0, unsigned int mac1) {
  * @param mac0 First four bytes of the bluetooth device's MAC address.
  * @param mac1 Last two bytes of the bluetooth device's MAC address.
  */
-void kvqmbt_disconnect_device(unsigned int mac0, unsigned int mac1) {
+int kvqmbt_disconnect_device(unsigned int mac0, unsigned int mac1) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
     ENTER_SYSCALL(syscall_state_);
 
     int ret = ksceBtStartDisconnect(mac0, mac1);
-    if (ret < 0) {
-        LOG_ERROR("ksceBtStartDisconnect(mac0=%08X, mac1=%08X) returned error 0x%08X", mac0, mac1, ret);
-    } else {
+    if (ret >= 0) {
         LOG_DEBUG(0, "ksceBtStartDisconnect(mac0=%08X, mac1=%08X) returned %d", mac0, mac1, ret);
+        return 0;
+    }
+
+    switch (ret) {
+        default:
+            LOG_ERROR("ksceBtStartDisconnect(mac0=%08X, mac1=%08X) returned error 0x%08X", mac0, mac1, ret);
+            return VQMBT_ERROR_GENERAL_FAILURE;
     }
 }
 

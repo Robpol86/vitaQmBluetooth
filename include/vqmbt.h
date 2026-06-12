@@ -33,6 +33,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 typedef enum VqmbtError : int {
     VQMBT_ERROR_INVALID_ARGUMENT = (int)0x80690001,
     VQMBT_ERROR_KERNEL_SIDE,
+    VQMBT_ERROR_KERNEL_SIDE_BUSY,
     VQMBT_ERROR_CB_OVERFLOW,
     VQMBT_ERROR_NOT_READY,
     VQMBT_ERROR_GENERAL_FAILURE,
@@ -81,8 +82,8 @@ VITASDK_BUILD_ASSERT_EQ(0x0C, VqmbtEvent);
 
 // bluetooth.c syscalls.
 VqmbtInferredDevState kvqmbt_device_state(unsigned int mac0, unsigned int mac1);
-void kvqmbt_connect_device(unsigned int mac0, unsigned int mac1);
-void kvqmbt_disconnect_device(unsigned int mac0, unsigned int mac1);
+int kvqmbt_connect_device(unsigned int mac0, unsigned int mac1);
+int kvqmbt_disconnect_device(unsigned int mac0, unsigned int mac1);
 int kvqmbt_get_paired_devices(VqmbtDeviceInfo* info, int info_size);
 bool kvqmbt_bluetooth_state(void);
 
