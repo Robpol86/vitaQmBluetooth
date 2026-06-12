@@ -22,6 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 /**
  * TODO:
  * - https://www.samlewis.me/2016/09/embedded-unit-testing-with-cmocka/
+ * - cmd+click QMR/vitasdk API opens shims instead of vendored headers, even in prod code
  */
 
 #include <cmocka.h>
@@ -86,7 +87,6 @@ static void test_bulk_from_clean_one_device_bt_off(void** state) {
     });
 
     // Verify.
-    skip();  // TODO remove
     assert_true(changed);
     assert_string_equal(qm_state.buttons[0].device.name, "Test Device");
     assert_int_equal(qm_state.buttons[0].device.mac0, 0x12345678);

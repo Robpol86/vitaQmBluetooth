@@ -320,12 +320,15 @@ static void bulk_update(bool* changed, const QmsRequest* request) {
         }
 
         const VqmbtDeviceInfo* new_device = &request->bulk.devices[idx];
-        VqmbtDeviceInfo* old_device = &qm_state.buttons[idx].device;
+        QmButton* qm_button = &qm_state.buttons[idx];
+        VqmbtDeviceInfo* old_device = &qm_button->device;
 
         // Update button device data if it has a new device.
         if (new_device->mac0 != old_device->mac0 || new_device->mac1 != old_device->mac1) {
             LOG_DEBUG(0, "New device");
             sceClibMemcpy(old_device, new_device, sizeof(*new_device));
+            qm_button->btn_state = BTNSTATE_DISCONNECTED;
+            *changed = true;
         } else {
             LOG_DEBUG(0, "Old device");
         }
