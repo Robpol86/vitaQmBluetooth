@@ -75,12 +75,14 @@ typedef enum QmButtonState : unsigned int {
     BTNSTATE_DISCONNECTING_DISABLED,
     BTNSTATE_CONNECTED,
     BTNSTATE_CONNECTING_DISABLED,
+    BTNSTATE_ERROR_DISABLED,
 } QmButtonState;
 
 // Button descriptor.
 typedef struct QmButton {
     VqmbtDeviceInfo device;
     QmButtonState btn_state;
+    char error_message[BUTTON_LABEL_MAX];
 } QmButton;
 
 // Quickmenu descriptor.
@@ -116,6 +118,9 @@ static void refresh_ui(void) {
                 break;
             case BTNSTATE_CONNECTING_DISABLED:
                 sceClibSnprintf(label, sizeof(label), "Connecting %s", device->name);
+                break;
+            case BTNSTATE_ERROR_DISABLED:
+                sceClibSnprintf(label, sizeof(label), "Error: %s", qm_button->error_message);
                 break;
             case BTNSTATE_DISCONNECTED:
                 sceClibSnprintf(label, sizeof(label), "Connect %s", device->name);
@@ -226,6 +231,35 @@ static void transition_state_busy_connecting(bool* changed, const int idx) {
 
 /**
  * TODO
+ *
+ * TODO:
+ * - Persist error message.
+ */
+static void transition_state_error(bool* changed, const int idx, const int error) {
+    QmButton* qm_button = &qm_state.buttons[idx];
+
+    if (qm_button->btn_state == BTNSTATE_ERROR_DISABLED) {
+        LOG_DEBUG(0, "No-op");
+        return;
+    }
+
+    LOG_DEBUG(0, "Setting idx=%d as error", idx);
+    qm_button->btn_state = BTNSTATE_ERROR_DISABLED;
+    const char* message;
+
+    switch (error) {
+        case VQMBT_ERROR_KERNEL_SIDE_BUSY:
+            message = "Busy (Settings opened?)";
+        default:
+            message = "Failed";
+    }
+    sceClibSnprintf(qm_button->error_message, sizeof(qm_button->error_message), "%s", message);
+
+    *changed = true;
+}
+
+/**
+ * TODO
  */
 static void button_pressed(bool* changed, const int idx) {
     QmButton* qm_button = &qm_state.buttons[idx];
@@ -236,17 +270,26 @@ static void button_pressed(bool* changed, const int idx) {
         case BTNSTATE_BT_OFF_DISABLED:
         case BTNSTATE_DISCONNECTING_DISABLED:
         case BTNSTATE_CONNECTING_DISABLED:
+        case BTNSTATE_ERROR_DISABLED:
             LOG_DEBUG(0, "Button idx=%d pressed but disabled, ignoring", idx);
             return;
         case BTNSTATE_DISCONNECTED:
             LOG_DEBUG(0, "Connecting device \"%s\"", device->name);
-            kvqmbt_connect_device(device->mac0, device->mac1);  // TODO ret error
-            transition_state_busy_connecting(changed, idx);
+            int ret = kvqmbt_connect_device(device->mac0, device->mac1);
+            if (ret < 0) {
+                transition_state_error(changed, idx, ret);
+            } else {
+                transition_state_busy_connecting(changed, idx);
+            }
             break;
         case BTNSTATE_CONNECTED:
             LOG_DEBUG(0, "Disconnecting device \"%s\"", device->name);
-            kvqmbt_disconnect_device(device->mac0, device->mac1);  // TODO ret error
-            transition_state_busy_disconnecting(changed, idx);
+            ret = kvqmbt_disconnect_device(device->mac0, device->mac1);
+            if (ret < 0) {
+                transition_state_error(changed, idx, ret);
+            } else {
+                transition_state_busy_disconnecting(changed, idx);
+            }
             break;
     }
     // TODO show busy symbol or progress bar
