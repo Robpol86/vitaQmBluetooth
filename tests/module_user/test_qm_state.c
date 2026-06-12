@@ -392,11 +392,65 @@ static void test_bulk_from_clean_max_devices(void** state) {
     static_assert(sizeof(devices) / sizeof(devices[0]) == VQMBT_MAX_DEVICES, "VQMBT_MAX_DEVICES changed, test outdated");
 }
 
-static void test_bt_on_off_on_off(void** state) {
+static void test_bt_on_off_on_one_device(void** state) {
     (void)state;
 
-    // TODO 0, 1, 2, max devices.
-    skip();  // static_assert(1 == 1, "TODO");  // TODO
+    // Add device.
+    VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES] = {
+        [0] = {.name = "Test Device", .mac0 = 0x12345678, .mac1 = 0x9ABCDEF0, .state = VQMBT_BT_STATE_DISCONNECTED},
+    };
+    bool changed = qm_state_update_ui(&(QmsRequest){
+        .id = QMS_REQUEST_BULK_UPDATE,
+        .bulk.bluetooth_on = true,
+        .bulk.num_devices = 1,
+        .bulk.devices = devices,
+    });
+
+    // Verify device added.
+    assert_true(changed);
+    assert_string_equal(qm_state.buttons[0].device.name, "Test Device");
+    assert_int_equal(qm_state.buttons[0].device.mac0, 0x12345678);
+    assert_int_equal(qm_state.buttons[0].device.mac1, 0x9ABCDEF0);
+    assert_int_equal(qm_state.buttons[0].device.state, VQMBT_BT_STATE_DISCONNECTED);
+    assert_int_equal(qm_state.buttons[0].btn_state, BTNSTATE_DISCONNECTED);
+    assert_string_equal(qm_state.buttons[1].device.name, "");
+    assert_int_equal(qm_state.buttons[1].device.mac0, 0);
+    assert_int_equal(qm_state.buttons[1].device.mac1, 0);
+    assert_int_equal(qm_state.buttons[1].device.state, VQMBT_BT_STATE_UNKNOWN0);
+    assert_int_equal(qm_state.buttons[1].btn_state, BTNSTATE_SLOT_EMPTY_DISABLED);
+
+    // Turn off bluetooth.
+    changed = qm_state_update_ui(&(QmsRequest){.id = QMS_REQUEST_BLUETOOTH_OFF});
+
+    // Verify bluetooth off.
+    assert_true(changed);
+    assert_string_equal(qm_state.buttons[0].device.name, "Test Device");
+    assert_int_equal(qm_state.buttons[0].device.mac0, 0x12345678);
+    assert_int_equal(qm_state.buttons[0].device.mac1, 0x9ABCDEF0);
+    assert_int_equal(qm_state.buttons[0].device.state, VQMBT_BT_STATE_DISCONNECTED);
+    assert_int_equal(qm_state.buttons[0].btn_state, BTNSTATE_BT_OFF_DISABLED);
+    assert_string_equal(qm_state.buttons[1].device.name, "");
+    assert_int_equal(qm_state.buttons[1].device.mac0, 0);
+    assert_int_equal(qm_state.buttons[1].device.mac1, 0);
+    assert_int_equal(qm_state.buttons[1].device.state, VQMBT_BT_STATE_UNKNOWN0);
+    assert_int_equal(qm_state.buttons[1].btn_state, BTNSTATE_SLOT_EMPTY_DISABLED);
+
+    // Turn on bluetooth.
+    changed = qm_state_update_ui(&(QmsRequest){.id = QMS_REQUEST_BLUETOOTH_ON});
+
+    // Verify bluetooth on.
+    skip();  // TODO
+    assert_true(changed);
+    assert_string_equal(qm_state.buttons[0].device.name, "Test Device");
+    assert_int_equal(qm_state.buttons[0].device.mac0, 0x12345678);
+    assert_int_equal(qm_state.buttons[0].device.mac1, 0x9ABCDEF0);
+    assert_int_equal(qm_state.buttons[0].device.state, VQMBT_BT_STATE_DISCONNECTED);
+    assert_int_equal(qm_state.buttons[0].btn_state, BTNSTATE_DISCONNECTED);
+    assert_string_equal(qm_state.buttons[1].device.name, "");
+    assert_int_equal(qm_state.buttons[1].device.mac0, 0);
+    assert_int_equal(qm_state.buttons[1].device.mac1, 0);
+    assert_int_equal(qm_state.buttons[1].device.state, VQMBT_BT_STATE_UNKNOWN0);
+    assert_int_equal(qm_state.buttons[1].btn_state, BTNSTATE_SLOT_EMPTY_DISABLED);
 }
 
 int main(void) {
@@ -409,7 +463,7 @@ int main(void) {
         cmocka_unit_test_setup(test_bulk_add_remove_second_device, setup),
         cmocka_unit_test_setup(test_bulk_from_clean_no_devices, setup),
         cmocka_unit_test_setup(test_bulk_from_clean_max_devices, setup),
-        cmocka_unit_test_setup(test_bt_on_off_on_off, setup),
+        cmocka_unit_test_setup(test_bt_on_off_on_one_device, setup),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);
