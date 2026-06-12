@@ -210,8 +210,8 @@ int main(void) {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test_setup(test_bulk_from_clean_no_devices, setup),
         cmocka_unit_test_setup(test_bulk_from_clean_one_device, setup),
-        cmocka_unit_test_setup(test_bulk_from_clean_max_devices, setup),
         cmocka_unit_test_setup(test_bulk_from_clean_one_device_bt_off, setup),
+        cmocka_unit_test_setup(test_bulk_from_clean_max_devices, setup),
         cmocka_unit_test_setup(test_bulk_from_clean_one_device_already_connected, setup),
         cmocka_unit_test_setup(test_bulk_add_remove_only_device, setup),
         cmocka_unit_test_setup(test_bulk_add_remove_second_device, setup),
