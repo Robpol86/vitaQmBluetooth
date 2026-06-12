@@ -107,7 +107,7 @@ static void test_bulk_from_clean_one_device_already_connected(void** state) {
 
     // Run.
     const VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES] = {
-        [0] = {.name = "Test Device", .mac0 = 0x12345678, .mac1 = 0x9ABCDEF0, .state = VQMBT_BT_STATE_DISCONNECTED},
+        [0] = {.name = "Test Device", .mac0 = 0x12345678, .mac1 = 0x9ABCDEF0, .state = VQMBT_BT_STATE_CONNECTED},
     };
     const bool changed = qm_state_update_ui(&(QmsRequest){
         .id = QMS_REQUEST_BULK_UPDATE,
@@ -118,7 +118,6 @@ static void test_bulk_from_clean_one_device_already_connected(void** state) {
 
     // Verify.
     assert_true(changed);
-    skip();  // TODO remove
     assert_string_equal(qm_state.buttons[0].device.name, "Test Device");
     assert_int_equal(qm_state.buttons[0].device.mac0, 0x12345678);
     assert_int_equal(qm_state.buttons[0].device.mac1, 0x9ABCDEF0);
