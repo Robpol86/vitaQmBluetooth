@@ -354,10 +354,10 @@ static void bulk_updated_remove_device(bool* changed, const int idx) {
 }
 
 /**
- * TODO
+ * Bulk update all buttons regardless of prior states.
  *
  * @param changed Set to true if the state was changed.
- * @param request TODO.
+ * @param request State change request payload.
  */
 static void bulk_update(bool* changed, const QmsRequest* request) {
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
