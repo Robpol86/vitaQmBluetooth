@@ -118,7 +118,7 @@ static void refresh_ui(void) {
  * Transition one or all buttons to BTNSTATE_BT_OFF_DISABLED.
  *
  * @param changed Set to true if one or more states were changed.
- * @param idx Read/change state for qm_state.buttons[idx] or iterate all buttons if NULL.
+ * @param idx Read/change state for qm_state.buttons[idx] or all buttons if NULL.
  */
 static void transition_state_bt_off(bool* changed, const int* idx) {
     // TODO remove idx and toggle qm_state.bluetooth_off
@@ -140,7 +140,15 @@ static void transition_state_bt_off(bool* changed, const int* idx) {
 }
 
 /**
- * Transition to BTNSTATE_DISCONNECTED.
+ * Transition one button to BTNSTATE_DISCONNECTED.
+ *
+ * Does not move the button off the BTNSTATE_BT_OFF_DISABLED state if `force` is false. The reason for this guard is because
+ * if a bluetooth device is connected and the user turns off the bluetooth feature, the bluetooth-off event is emitted before
+ * the device-disconnect event.
+ *
+ * @param changed Set to true if the state was changed.
+ * @param idx Read/change state for qm_state.buttons[idx].
+ * @param force If false no-op if button is in the BTNSTATE_BT_OFF_DISABLED state.
  */
 static void transition_state_disconnected(bool* changed, const int idx, bool force) {
     QmButton* qm_button = &qm_state.buttons[idx];
@@ -158,7 +166,10 @@ static void transition_state_disconnected(bool* changed, const int idx, bool for
 }
 
 /**
- * Transition to BTNSTATE_DISCONNECTING_DISABLED.
+ * Transition one button to BTNSTATE_DISCONNECTING_DISABLED.
+ *
+ * @param changed Set to true if the state was changed.
+ * @param idx Read/change state for qm_state.buttons[idx].
  */
 static void transition_state_busy_disconnecting(bool* changed, const int idx) {
     QmButton* qm_button = &qm_state.buttons[idx];
@@ -172,7 +183,12 @@ static void transition_state_busy_disconnecting(bool* changed, const int idx) {
 }
 
 /**
- * Transition to BTNSTATE_CONNECTED.
+ * Transition one button to BTNSTATE_CONNECTED.
+ *
+ * Does not move the button off the BTNSTATE_BT_OFF_DISABLED state. TODO NEED FORCE.
+ *
+ * @param changed Set to true if the state was changed.
+ * @param idx Read/change state for qm_state.buttons[idx].
  */
 static void transition_state_connected(bool* changed, const int idx) {
     QmButton* qm_button = &qm_state.buttons[idx];
