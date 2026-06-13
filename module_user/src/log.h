@@ -35,7 +35,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define LOG_MESSAGE_(delay, fmt, msg, ...)                                                                             \
     do {                                                                                                               \
         SceDateTime dt_;                                                                                               \
-        sceRtcGetCurrentClockLocalTime(&dt_);                                                                          \
+        sceRtcGetCurrentClockUtc(&dt_);                                                                                \
         int tid_ = sceKernelGetThreadId();                                                                             \
         sceClibPrintf(fmt msg "\n", LOG_FORMAT_VALUES_(dt_, tid_), ##__VA_ARGS__);                                     \
         LOG_MESSAGE_TO_FILE(dt_.year, dt_.month, dt_.day, fmt msg "\n", LOG_FORMAT_VALUES_(dt_, tid_), ##__VA_ARGS__); \
