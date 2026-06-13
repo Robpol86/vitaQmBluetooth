@@ -19,12 +19,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief Module-agnostic macros for log files.
  ******************************************************************************/
 
-/**
- * TODO:
- * - Sidestep tz problem by using UTC everywhere. Log timezone on load?
- * - Don't implement the "wait for tz" else kernel modules will block until tz is set and that might be a deadlock.
- */
-
 #ifndef LOGFILE_H
 #define LOGFILE_H
 
