@@ -132,10 +132,12 @@ static int event_thread(SceSize args, void* argp) {
 /**
  * Create a thread to handle events from the kernel module and start it.
  *
- * @param on_start TODO
- *
  * TODO:
  * - Return errors so caller can return non-success.
+ *
+ * @param on_start Call this function from the thread when it starts.
+ * @param on_event_dropped Call this function from the thread when dropped/missed kernel events are detected.
+ * @param on_event Call this function from the thread when an event is detected.
  */
 void kmod_event_start(KmeCallback on_start, KmeCallback on_event_dropped, KmeHandledCallback on_event) {
     if (uid_thread >= 0) {
