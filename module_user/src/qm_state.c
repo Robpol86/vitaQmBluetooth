@@ -16,14 +16,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /******************************************************************************
  * @file
- * @brief TODO.
+ * @brief Manage the state of buttons in the Quick Menu.
  ******************************************************************************/
-
-/**
- * TODO:
- * - Test QM updating when Settings app connects/disconnects/enables/disables/add/remove
- * - Fix logging performance
- */
 
 #include "qm_state.h"
 
@@ -69,9 +63,7 @@ typedef struct QmState {
 static QmState qm_state;
 
 /**
- * TODO
- *
- * Called from _ thread TODO.
+ * Read the current state and update the UI to make it match.
  */
 static void refresh_ui(void) {
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
@@ -123,7 +115,10 @@ static void refresh_ui(void) {
 }
 
 /**
- * Transition to BTNSTATE_BT_OFF_DISABLED.
+ * Transition one or all buttons to BTNSTATE_BT_OFF_DISABLED.
+ *
+ * @param changed Set to true if one or more states were changed.
+ * @param idx Read/change state for qm_state.buttons[idx] or iterate all buttons if NULL.
  */
 static void transition_state_bt_off(bool* changed, const int* idx) {
     // TODO remove idx and toggle qm_state.bluetooth_off
@@ -206,9 +201,6 @@ static void transition_state_busy_connecting(bool* changed, const int idx) {
 
 /**
  * TODO
- *
- * TODO:
- * - Persist error message.
  */
 static void transition_state_error(bool* changed, const int idx, const VqmbtError error) {
     QmButton* qm_button = &qm_state.buttons[idx];
@@ -407,11 +399,6 @@ static int mac_to_idx(const unsigned int mac0, const unsigned int mac1) {
 
 /**
  * TODO
- *
- * Called from:
- *  - quickmenu_on_press (main thread)
- *  - handle_event and handle_event_dropped (event thread)
- *  - reset (event thread)
  *
  * @param request TODO
  */
