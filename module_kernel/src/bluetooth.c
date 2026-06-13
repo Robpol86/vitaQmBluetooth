@@ -179,9 +179,9 @@ int kvqmbt_get_paired_devices(VqmbtDeviceInfo* info, int info_size) {
 }
 
 /**
- * TODO
+ * Get the bluetooth subsystem state.
  *
- * @return If bluetooth is enabled.
+ * @return True if bluetooth is enabled.
  */
 bool kvqmbt_bluetooth_state(void) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
