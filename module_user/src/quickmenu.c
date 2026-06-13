@@ -204,24 +204,24 @@ int quickmenu_start(void) {
     qm_state_mutex_start();
 
     // Add horizontal line separator.
-    QuickMenuRebornSeparator(ID_SEPARATOR, SCE_SEPARATOR_HEIGHT);
+    QuickMenuRebornSeparator(QM_ID_SEPARATOR, SCE_SEPARATOR_HEIGHT);
 
     // Add section heading text.
-    QuickMenuRebornRegisterWidget(ID_SECTION_TITLE, NULL, text);
-    QuickMenuRebornSetWidgetSize(ID_SECTION_TITLE, 300, 50, 0, 0);
-    QuickMenuRebornSetWidgetPosition(ID_SECTION_TITLE, -206, 0, 0, 0);
-    QuickMenuRebornSetWidgetColor(ID_SECTION_TITLE, 1, 1, 1, 1);
-    QuickMenuRebornSetWidgetLabel(ID_SECTION_TITLE, "Bluetooth Devices");
+    QuickMenuRebornRegisterWidget(QM_ID_SECTION_TITLE, NULL, text);
+    QuickMenuRebornSetWidgetSize(QM_ID_SECTION_TITLE, 300, 50, 0, 0);
+    QuickMenuRebornSetWidgetPosition(QM_ID_SECTION_TITLE, -206, 0, 0, 0);
+    QuickMenuRebornSetWidgetColor(QM_ID_SECTION_TITLE, 1, 1, 1, 1);
+    QuickMenuRebornSetWidgetLabel(QM_ID_SECTION_TITLE, "Bluetooth Devices");
 
     // Add the button plane that holds all the buttons.
-    QuickMenuRebornRegisterWidget(ID_PLANE_BUTTONS, NULL, plane);
-    QuickMenuRebornSetWidgetSize(ID_PLANE_BUTTONS, SCE_PLANE_WIDTH, 650, 0, 0);
-    QuickMenuRebornSetWidgetColor(ID_PLANE_BUTTONS, 1, 1, 1, 0);
+    QuickMenuRebornRegisterWidget(QM_ID_PLANE_BUTTONS, NULL, plane);
+    QuickMenuRebornSetWidgetSize(QM_ID_PLANE_BUTTONS, SCE_PLANE_WIDTH, 650, 0, 0);
+    QuickMenuRebornSetWidgetColor(QM_ID_PLANE_BUTTONS, 1, 1, 1, 0);
 
     // Add device buttons.
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
-        const char* id = ID_BUTTONS[idx];
-        QuickMenuRebornRegisterWidget(id, ID_PLANE_BUTTONS, button);
+        const char* id = QM_ID_BUTTONS[idx];
+        QuickMenuRebornRegisterWidget(id, QM_ID_PLANE_BUTTONS, button);
         QuickMenuRebornSetWidgetSize(id, 600, 75, 0, 0);
         QuickMenuRebornSetWidgetPosition(id, 20, 280 - (idx * 80), 0, 0);
         QuickMenuRebornSetWidgetColor(id, 1, 1, 1, 1);
@@ -229,7 +229,7 @@ int quickmenu_start(void) {
     }
 
     // Register handlers.
-    const char* last_widget = ID_BUTTONS[VQMBT_MAX_DEVICES - 1];
+    const char* last_widget = QM_ID_BUTTONS[VQMBT_MAX_DEVICES - 1];
     QuickMenuRebornAssignOnLoadHandler(quickmenu_on_load, last_widget);
     QuickMenuRebornAssignOnDeleteHandler(quickmenu_on_unload, last_widget);
 
@@ -245,12 +245,12 @@ int quickmenu_stop(void) {
 
     // Unregister widgets.
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
-        const char* id = ID_BUTTONS[idx];
+        const char* id = QM_ID_BUTTONS[idx];
         QuickMenuRebornUnregisterWidget(id);
     }
-    QuickMenuRebornUnregisterWidget(ID_PLANE_BUTTONS);
-    QuickMenuRebornUnregisterWidget(ID_SECTION_TITLE);
-    QuickMenuRebornRemoveSeparator(ID_SEPARATOR);
+    QuickMenuRebornUnregisterWidget(QM_ID_PLANE_BUTTONS);
+    QuickMenuRebornUnregisterWidget(QM_ID_SECTION_TITLE);
+    QuickMenuRebornRemoveSeparator(QM_ID_SEPARATOR);
 
     // Remove mutex.
     qm_state_mutex_stop();

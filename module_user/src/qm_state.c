@@ -100,7 +100,7 @@ static void refresh_ui(void) {
         }
 
         // Update label.
-        const char* id = ID_BUTTONS[idx];
+        const char* id = QM_ID_BUTTONS[idx];
         QuickMenuRebornSetWidgetLabel(id, label);
 
         // Enable/disable button.
