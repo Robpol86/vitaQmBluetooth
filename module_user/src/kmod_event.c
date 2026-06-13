@@ -28,8 +28,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "log.h"
 #include "vqmbt.h"
 
-#define THREAD_PRIORITY 0x96      /* Higher value = lower priority. */
-#define THREAD_STACK_SIZE 0x1000  // TODO tune?
+#define THREAD_PRIORITY 0x96     /* Higher value = lower priority. */
+#define THREAD_STACK_SIZE 0x4000 /* TODO optimize. */
 
 static KmeCallback cb_on_start = NULL;
 static KmeCallback cb_on_event_dropped = NULL;

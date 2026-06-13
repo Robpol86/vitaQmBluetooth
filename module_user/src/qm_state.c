@@ -23,7 +23,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * TODO:
  * - Test QM updating when Settings app connects/disconnects/enables/disables/add/remove
  * - Fix logging performance
- * - FIX CRASH BUG: TWS reconnect via qm
  */
 
 #include "qm_state.h"
@@ -330,9 +329,8 @@ static void bulk_updated_remove_device(bool* changed, const int idx) {
  * TODO
  */
 static void bulk_update(bool* changed, const QmsRequest* request) {
-    LOG_DEBUG(10000, "B");  // TODO remove
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
-        LOG_DEBUG(10000, "Bulk updating idx=%d", idx);  // TODO back to 0
+        LOG_DEBUG(0, "Bulk updating idx=%d", idx);
 
         // Check if device was removed.
         if (idx >= request->bulk.num_devices) {
@@ -426,8 +424,7 @@ bool qm_state_update_ui(const QmsRequest* request) {
 
     switch (request->id) {
         case QMS_REQUEST_BULK_UPDATE: {
-            LOG_DEBUG(10000, "Request bulk update %d devices", request->bulk.num_devices);  // TODO back to 0
-            LOG_DEBUG(10000, "A");                                                          // TODO remove
+            LOG_DEBUG(0, "Request bulk update %d devices", request->bulk.num_devices);
             bulk_update(&changed, request);
             break;
         }
