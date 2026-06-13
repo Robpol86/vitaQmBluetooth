@@ -437,14 +437,17 @@ static int mac_to_idx(const unsigned int mac0, const unsigned int mac1) {
 }
 
 /**
- * TODO
+ * Main entrypoint for all events. Callers call this requesting state changes or actions.
  *
- * @param request TODO
+ * Forces serialization of threaded events using a mutex.
+ *
+ * @param request State change request payload.
+ * @return True if anything was changed.
  */
 bool qm_state_update_ui(const QmsRequest* request) {
     // Lock mutex.
     LOG_DEBUG(0, "Asking for mutex lock");
-    sceKernelLockLwMutex(&mutex, 1, NULL);
+    sceKernelLockLwMutex(&mutex, 1, NULL);  // Blocks until any existing ongoing request finishes.
     LOG_DEBUG(0, "Obtained mutex lock");
 
     bool changed = false;
@@ -511,7 +514,9 @@ bool qm_state_update_ui(const QmsRequest* request) {
 }
 
 /**
- * Initialize the mutex. TODO.
+ * Initialize the mutex to serialize multi-threaded event handling.
+ *
+ * @return 0 on success, negative on error.
  */
 int qm_state_mutex_start(void) {
     int ret = sceKernelCreateLwMutex(&mutex, "vqmbt-qm_state-mutex", 0, 0, NULL);
@@ -525,7 +530,9 @@ int qm_state_mutex_start(void) {
 }
 
 /**
- * Delete the mutex. TODO.
+ * Delete the mutex.
+ *
+ * @return 0 on success, negative on error.
  */
 int qm_state_mutex_stop(void) {
     int ret = sceKernelDeleteLwMutex(&mutex);
