@@ -492,14 +492,21 @@ int qm_state_mutex_start(void) {
         LOG_ERROR("sceKernelCreateLwMutex returned error 0x%08X", ret);
         return VQMBT_ERROR_GENERAL_FAILURE;
     }
+    LOG_DEBUG(0, "sceKernelCreateLwMutex returned 0x%08X", ret);
+
     return 0;
 }
 
 /**
  * Delete the mutex. TODO.
  */
-void qm_state_mutex_stop(void) {
-    // Delete mutex.
+int qm_state_mutex_stop(void) {
     int ret = sceKernelDeleteLwMutex(&mutex);
+    if (ret < 0) {
+        LOG_ERROR("sceKernelDeleteLwMutex returned error 0x%08X", ret);
+        return VQMBT_ERROR_GENERAL_FAILURE;
+    }
     LOG_DEBUG(0, "sceKernelDeleteLwMutex returned 0x%08X", ret);
+
+    return 0;
 }

@@ -48,6 +48,6 @@ typedef struct QmsRequest {
 // Exported functions.
 bool qm_state_update_ui(const QmsRequest* request);
 int qm_state_mutex_start(void);
-void qm_state_mutex_stop(void);
+int qm_state_mutex_stop(void);
 
 #endif  // QM_STATE_H
