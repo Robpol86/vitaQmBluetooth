@@ -121,7 +121,6 @@ static void refresh_ui(void) {
  * @param idx Read/change state for qm_state.buttons[idx] or all buttons if NULL.
  */
 static void transition_state_bt_off(bool* changed, const int* idx) {
-    // TODO remove idx and toggle qm_state.bluetooth_off
     if (idx == NULL) {
         LOG_DEBUG(0, "Setting all occupied slots as bluetooth off");
         for (int i = 0; i < VQMBT_MAX_DEVICES; i++) {
@@ -258,10 +257,10 @@ static void transition_state_error(bool* changed, const int idx, const VqmbtErro
 }
 
 /**
- * TODO
+ * Connect or disconnect a bluetooth device. Called when user presses on one of the buttons.
  *
  * @param changed Set to true if the state was changed.
- * @param idx TODO.
+ * @param idx Which button was pressed.
  */
 static void button_pressed(bool* changed, const int idx) {
     QmButton* qm_button = &qm_state.buttons[idx];
@@ -294,11 +293,10 @@ static void button_pressed(bool* changed, const int idx) {
             }
             break;
     }
-    // TODO show busy symbol or progress bar
 }
 
 /**
- * TODO
+ * Transition all non-empty buttons out of BTNSTATE_BT_OFF_DISABLED.
  *
  * @param changed Set to true if the state was changed.
  */
@@ -417,11 +415,11 @@ static void bulk_update(bool* changed, const QmsRequest* request) {
 }
 
 /**
- * Look up the index of the button with the given MAC address. Returns -1 if not found or invalid MAC. TODO.
+ * Get the index of the button for the device with the given MAC address.
  *
- * @param mac0 TODO
- * @param mac1 TODO
- * @return TODO
+ * @param mac0 First four bytes of the bluetooth device's MAC address.
+ * @param mac1 Last two bytes of the bluetooth device's MAC address.
+ * @return idx of the matching button, negative on error.
  */
 static int mac_to_idx(const unsigned int mac0, const unsigned int mac1) {
     if (mac0 < 1 || mac1 < 1) {
