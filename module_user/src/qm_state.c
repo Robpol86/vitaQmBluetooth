@@ -142,9 +142,9 @@ static void transition_state_bt_off(bool* changed, const int* idx) {
 /**
  * Transition one button to BTNSTATE_DISCONNECTED.
  *
- * Does not move the button off the BTNSTATE_BT_OFF_DISABLED state if `force` is false. The reason for this guard is because
- * if a bluetooth device is connected and the user turns off the bluetooth feature, the bluetooth-off event is emitted before
- * the device-disconnect event.
+ * Does not move the button off the BTNSTATE_BT_OFF_DISABLED state if `force` is false. The reason for this guard is
+ * because if a bluetooth device is connected and the user turns off the bluetooth feature, the bluetooth-off event is
+ * emitted before the device-disconnect event.
  *
  * @param changed Set to true if the state was changed.
  * @param idx Read/change state for qm_state.buttons[idx].
@@ -185,14 +185,21 @@ static void transition_state_busy_disconnecting(bool* changed, const int idx) {
 /**
  * Transition one button to BTNSTATE_CONNECTED.
  *
- * Does not move the button off the BTNSTATE_BT_OFF_DISABLED state. TODO NEED FORCE.
+ * Does not move the button off the BTNSTATE_BT_OFF_DISABLED state if `force` is false. The reason for this guard is
+ * because if the user turns off bluetooth via the Quick Menu, then goes into settings and turns it back on and connects a
+ * device, then opens the Quick Menu again, we want the bulk update to show the true state of the device.
  *
  * @param changed Set to true if the state was changed.
  * @param idx Read/change state for qm_state.buttons[idx].
+ * @param force If false no-op if button is in the BTNSTATE_BT_OFF_DISABLED state.
  */
-static void transition_state_connected(bool* changed, const int idx) {
+static void transition_state_connected(bool* changed, const int idx, bool force) {
     QmButton* qm_button = &qm_state.buttons[idx];
-    if (qm_button->btn_state != BTNSTATE_CONNECTED && qm_button->btn_state != BTNSTATE_BT_OFF_DISABLED) {
+    if (qm_button->btn_state == BTNSTATE_BT_OFF_DISABLED && !force) {
+        LOG_DEBUG(0, "No-op");
+        return;
+    }
+    if (qm_button->btn_state != BTNSTATE_CONNECTED) {
         LOG_DEBUG(0, "Setting idx=%d as connected", idx);
         qm_button->btn_state = BTNSTATE_CONNECTED;
         *changed = true;
@@ -309,7 +316,7 @@ static void transition_state_bt_on(bool* changed) {
                 break;
             case VQMBT_BT_STATE_CONNECTED:
             case VQMBT_BT_STATE_REGISTERING:
-                transition_state_connected(changed, idx);
+                transition_state_connected(changed, idx, false);
                 break;
             default:
                 transition_state_disconnected(changed, idx, false);
@@ -381,7 +388,7 @@ static void bulk_update(bool* changed, const QmsRequest* request) {
             case VQMBT_BT_STATE_CONNECTED:
             case VQMBT_BT_STATE_REGISTERING:
                 LOG_DEBUG(0, "Setting state to connected if not set");
-                transition_state_connected(changed, idx);
+                transition_state_connected(changed, idx, true);
                 break;
             default:
                 LOG_DEBUG(0, "Setting state to disconnected if not set");
@@ -467,7 +474,7 @@ bool qm_state_update_ui(const QmsRequest* request) {
             if (idx < 0) {
                 LOG_ERROR("mac0=0x%08X mac1=0x%08X not found", request->mac.mac0, request->mac.mac1);
             } else {
-                transition_state_connected(&changed, idx);
+                transition_state_connected(&changed, idx, false);
             }
             break;
         }
