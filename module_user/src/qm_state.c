@@ -445,6 +445,7 @@ static int mac_to_idx(const unsigned int mac0, const unsigned int mac1) {
  */
 bool qm_state_update_ui(const QmsRequest* request) {
     // Lock mutex.
+    LOG_DEBUG(0, "Asking for mutex lock");
     sceKernelLockLwMutex(&mutex, 1, NULL);
     LOG_DEBUG(0, "Obtained mutex lock");
 
