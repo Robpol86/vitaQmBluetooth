@@ -39,7 +39,7 @@ typedef enum VqmbtError : int {
     VQMBT_ERROR_GENERAL_FAILURE,
 } VqmbtError;
 
-// Device states.
+// Device states.  // TODO move to own h file.
 typedef enum VqmbtInferredDevState : int {
     VQMBT_BT_STATE_UNKNOWN0 = 0,
     VQMBT_BT_STATE_DISCONNECTED = 1,

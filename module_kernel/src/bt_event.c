@@ -170,7 +170,7 @@ static SceUID uid_callback = -1;
 static SceUID uid_thread = -1;
 static _Atomic bool run_thread = false;
 
-typedef enum VqmbtInferredBtEventId {
+typedef enum VqmbtInferredBtEventId {  // TODO move into own h file.
     VQMBT_BT_EVENT_INQUIRY_RESULT = 0x01,
     VQMBT_BT_EVENT_INQUIRY_STOP = 0x02,
     VQMBT_BT_EVENT_PAIRING_REQUEST = 0x04,
