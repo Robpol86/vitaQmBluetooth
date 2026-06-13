@@ -55,7 +55,7 @@ VqmbtInferredDevState kvqmbt_device_state(unsigned int mac0, unsigned int mac1) 
  *
  * @param mac0 First four bytes of the bluetooth device's MAC address.
  * @param mac1 Last two bytes of the bluetooth device's MAC address.
- * @return TODO
+ * @return 0 on success, negative on failure.
  */
 int kvqmbt_connect_device(unsigned int mac0, unsigned int mac1) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
@@ -82,6 +82,7 @@ int kvqmbt_connect_device(unsigned int mac0, unsigned int mac1) {
  *
  * @param mac0 First four bytes of the bluetooth device's MAC address.
  * @param mac1 Last two bytes of the bluetooth device's MAC address.
+ * @return 0 on success, negative on failure.
  */
 int kvqmbt_disconnect_device(unsigned int mac0, unsigned int mac1) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
@@ -105,7 +106,6 @@ int kvqmbt_disconnect_device(unsigned int mac0, unsigned int mac1) {
  *
  * TODO:
  * - Is 8 actually the max number of devices?
- * - Refactor?
  *
  * @param info User-space pointer to an array of VqmbtDeviceInfo records.
  * @param info_size Capacity of the user array, in records.
