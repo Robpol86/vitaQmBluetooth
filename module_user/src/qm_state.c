@@ -209,7 +209,10 @@ static void transition_state_connected(bool* changed, const int idx, bool force)
 }
 
 /**
- * Transition to BTNSTATE_CONNECTING_DISABLED.
+ * Transition one button to BTNSTATE_CONNECTING_DISABLED.
+ *
+ * @param changed Set to true if the state was changed.
+ * @param idx Read/change state for qm_state.buttons[idx].
  */
 static void transition_state_busy_connecting(bool* changed, const int idx) {
     QmButton* qm_button = &qm_state.buttons[idx];
@@ -223,7 +226,11 @@ static void transition_state_busy_connecting(bool* changed, const int idx) {
 }
 
 /**
- * TODO
+ * Transition one button to BTNSTATE_ERROR_DISABLED and set an error message.
+ *
+ * @param changed Set to true if the state was changed.
+ * @param idx Read/change state for qm_state.buttons[idx].
+ * @param error The error message to display as the button's label.
  */
 static void transition_state_error(bool* changed, const int idx, const VqmbtError error) {
     QmButton* qm_button = &qm_state.buttons[idx];
@@ -252,6 +259,9 @@ static void transition_state_error(bool* changed, const int idx, const VqmbtErro
 
 /**
  * TODO
+ *
+ * @param changed Set to true if the state was changed.
+ * @param idx TODO.
  */
 static void button_pressed(bool* changed, const int idx) {
     QmButton* qm_button = &qm_state.buttons[idx];
@@ -289,6 +299,8 @@ static void button_pressed(bool* changed, const int idx) {
 
 /**
  * TODO
+ *
+ * @param changed Set to true if the state was changed.
  */
 static void transition_state_bt_on(bool* changed) {
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
@@ -326,7 +338,10 @@ static void transition_state_bt_on(bool* changed) {
 }
 
 /**
- * Transtion to BTNSTATE_SLOT_EMPTY_DISABLED.
+ * Transition one button to BTNSTATE_SLOT_EMPTY_DISABLED.
+ *
+ * @param changed Set to true if the state was changed.
+ * @param idx Read/change state for qm_state.buttons[idx].
  */
 static void bulk_updated_remove_device(bool* changed, const int idx) {
     QmButton* qm_button = &qm_state.buttons[idx];
@@ -342,6 +357,9 @@ static void bulk_updated_remove_device(bool* changed, const int idx) {
 
 /**
  * TODO
+ *
+ * @param changed Set to true if the state was changed.
+ * @param request TODO.
  */
 static void bulk_update(bool* changed, const QmsRequest* request) {
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
