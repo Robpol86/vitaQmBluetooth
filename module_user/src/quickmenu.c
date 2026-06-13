@@ -31,6 +31,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - force close quickmenu. Clean up on recovery?
  * - update screenshot
  * - prune includes
+ * - user module check kernel module version and fail if mismatch. Test with different main branch commits.
  */
 
 #include "quickmenu.h"
