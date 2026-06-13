@@ -378,6 +378,8 @@ static int event_thread(SceSize args, void* argp) {
     (void)args;
     (void)argp;
 
+    LOG_DEBUG(0, "Thread started");
+
     // Create callback.
     uid_callback = ksceKernelCreateCallback("kvqmbt-bt_event-event_callback", 0, event_callback, NULL);
     LOG_DEBUG(0, "ksceKernelCreateCallback returned 0x%08X", uid_callback);
@@ -403,6 +405,8 @@ static int event_thread(SceSize args, void* argp) {
     ret = ksceKernelDeleteCallback(uid_callback);
     LOG_DEBUG(0, "ksceKernelDeleteCallback returned 0x%08X", ret);
     uid_callback = -1;
+
+    LOG_DEBUG(0, "Thread exiting");
 
     return 0;
 }
