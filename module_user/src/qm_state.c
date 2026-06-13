@@ -23,6 +23,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * TODO:
  * - Test QM updating when Settings app connects/disconnects/enables/disables/add/remove
  * - Fix logging performance
+ * - FIX CRASH BUG: TWS reconnect via qm
  */
 
 #include "qm_state.h"
