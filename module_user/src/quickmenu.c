@@ -28,7 +28,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * - Hide empty slots and resize plane to eliminate ghost scrolling.
  * - long bt names ellipses
  * - force close quickmenu. Clean up on recovery?
- * - update screenshot
  */
 
 #include "quickmenu.h"
@@ -51,9 +50,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 _Static_assert(sizeof(PREFIX) == sizeof(INDENT), "INDENT width must match PREFIX");
 
 /**
- * TODO
- *
- * Called from _ thread TODO.
+ * Flush old events and get the current state of all bluetooth devices and updates the UI.
  */
 static void reset(void) {
     // Flush kernel buffer.
@@ -85,8 +82,6 @@ static void reset(void) {
 
 /**
  * Handle scenario where one or more events went missing.
- *
- * Called from event thread only.
  */
 static void handle_event_dropped(void) {
     LOG_DEBUG(0, "Running reset()");
@@ -95,8 +90,6 @@ static void handle_event_dropped(void) {
 
 /**
  * Handler for one event. Called once per bluetooth event.
- *
- * Called from event thread only.
  *
  * @param event Event details.
  */
@@ -163,11 +156,7 @@ static void handle_event(const VqmbtEvent* event) {
 }
 
 /**
- * Connect or disconnect the device associated with the button.
- *
- * Called when the user taps on the button.
- *
- * Called from main thread only.
+ * Called when the user taps on one of the buttons.
  */
 static BUTTON_HANDLER(quickmenu_on_press) {
     (void)id;
