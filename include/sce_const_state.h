@@ -16,13 +16,17 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /******************************************************************************
  * @file
- * @brief TODO.
+ * @brief Trial-and-error guessed bluetooth device system states.
  ******************************************************************************/
+
+/**
+ * TODO:
+ * - Move into module_kernel and abstract these for the user module.
+ */
 
 #ifndef SCE_CONST_STATE_H
 #define SCE_CONST_STATE_H
 
-// Device states.
 typedef enum VqmbtInferredDevState : int {
     VQMBT_BT_STATE_UNKNOWN0 = 0,
     VQMBT_BT_STATE_DISCONNECTED = 1,
