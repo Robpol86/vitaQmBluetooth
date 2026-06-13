@@ -31,7 +31,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  *
  * @param args The size of the arguments passed to the module.
  * @param argp A pointer to the arguments passed to the module.
- * @return SCE_KERNEL_START_SUCCESS on success, or an error code on failure. TODO.
+ * @return SCE_KERNEL_START_SUCCESS on success, or an error code on failure.
  */
 int module_start(SceSize args, const void* argp) {
     (void)args;
@@ -57,7 +57,7 @@ int module_start(SceSize args, const void* argp) {
  *
  * @param args The size of the arguments passed to the module.
  * @param argp A pointer to the arguments passed to the module.
- * @return SCE_KERNEL_STOP_SUCCESS on success, or an error code on failure. TODO.
+ * @return SCE_KERNEL_STOP_SUCCESS on success, or an error code on failure.
  */
 int module_stop(SceSize args, const void* argp) {
     (void)args;
