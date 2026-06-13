@@ -156,6 +156,7 @@ SceBtEvent: id=0x05 unk1=0x04 unk3=0x00000000 mac0=0xF26B3406 mac1=0x0000708C un
 #include <stdbool.h>
 
 #include "log.h"
+#include "sce_const_event.h"
 #include "umod_callback.h"
 #include "vqmbt.h"
 
@@ -169,23 +170,6 @@ _Static_assert(sizeof(PREFIX) == sizeof(INDENT), "INDENT width must match PREFIX
 static SceUID uid_callback = -1;
 static SceUID uid_thread = -1;
 static _Atomic bool run_thread = false;
-
-typedef enum VqmbtInferredBtEventId {  // TODO move into own h file.
-    VQMBT_BT_EVENT_INQUIRY_RESULT = 0x01,
-    VQMBT_BT_EVENT_INQUIRY_STOP = 0x02,
-    VQMBT_BT_EVENT_PAIRING_REQUEST = 0x04,
-    VQMBT_BT_EVENT_CONNECT_RESULT = 0x05,
-    VQMBT_BT_EVENT_DISCONNECT = 0x06,
-    VQMBT_BT_EVENT_ADD_REMOVE_CONNECTING_DEVICE = 0x07,
-    VQMBT_BT_EVENT_CONNECT_REQUESTED = 0x08,
-    VQMBT_BT_EVENT_CONNECT_UNPAIRED = 0x09,
-    VQMBT_BT_EVENT_BUTTON_PRESSED = 0x0D,
-    VQMBT_BT_EVENT_UNKNOWN1 = 0x0E,
-    VQMBT_BT_EVENT_UNKNOWN2 = 0x10,
-    VQMBT_BT_EVENT_UNKNOWN3 = 0x11,
-    VQMBT_BT_EVENT_TOGGLE_BLUETOOTH = 0x15,
-    VQMBT_BT_EVENT_UNKNOWN4 = 0x1C,
-} VqmbtInferredBtEventId;
 
 /**
  * Handle scenario where one or more events went missing.
