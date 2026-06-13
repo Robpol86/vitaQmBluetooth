@@ -23,15 +23,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * TODO:
  * - If kernel plugin isn't loaded notify user.
  * - If kernel plugin loaded AFTER user plugin what happens? probably fails. Handle this too.
+ * - If kernel plugin's version does not match user module's fail with error (surfaced in UI or Settings).
  * - Two body planes: one for the buttons, another with just a text message.
  * - Hide empty slots and resize plane to eliminate ghost scrolling.
- * TODO:
- * - callback: relabel button with new state. Surface error in button as close/reopen resets labels
  * - long bt names ellipses
  * - force close quickmenu. Clean up on recovery?
  * - update screenshot
- * - prune includes
- * - user module check kernel module version and fail if mismatch. Test with different main branch commits.
  */
 
 #include "quickmenu.h"
@@ -142,14 +139,12 @@ static void handle_event(const VqmbtEvent* event) {
 
         case VQMBT_EVENT_DEVICE_CONNECT_FAILED:
             LOG_DEBUG(0, INDENT "Device connect failed");
-            // TODO tell user it failed
             qm_state_update_ui(
                 &(QmsRequest){.id = QMS_REQUEST_DEVICE_DISCONNECTED, .mac.mac0 = event->mac0, .mac.mac1 = event->mac1});
             break;
 
         case VQMBT_EVENT_DEVICE_CONNECT_ABORTED:
             LOG_DEBUG(0, INDENT "Device connect aborted");
-            // TODO tell user?
             qm_state_update_ui(
                 &(QmsRequest){.id = QMS_REQUEST_DEVICE_DISCONNECTED, .mac.mac0 = event->mac0, .mac.mac1 = event->mac1});
             break;
@@ -173,11 +168,6 @@ static void handle_event(const VqmbtEvent* event) {
  * Called when the user taps on the button.
  *
  * Called from main thread only.
- *
- * TODO:
- * - when user taps a button disable all buttons and wait for callback.
- * TODO:
- * - If this button has been relabeled 500ms ago noop the tap event (ignore taps on other buttons)
  */
 static BUTTON_HANDLER(quickmenu_on_press) {
     (void)id;
@@ -198,7 +188,6 @@ static ONLOAD_HANDLER(quickmenu_on_load) {
     LOG_DEBUG(0, "Quick menu opened.");
 
     // Start event thread.
-    // TODO comment out, observe behavior. Does initial state look acceptable to users?
     kmod_event_start(reset, handle_event_dropped, handle_event);
 }
 
