@@ -61,7 +61,7 @@ VITASDK_BUILD_ASSERT_EQ(0x8C, VqmbtDeviceInfo);
 
 // Inter-module events.
 typedef enum VqmbtEventId : unsigned int {
-    VQMBT_EVENT_NONE = 0,
+    VQMBT_EVENT_NONE,
     VQMBT_EVENT_DROPPED_EVENTS,
     VQMBT_EVENT_BLUETOOTH_ENABLED,
     VQMBT_EVENT_BLUETOOTH_DISABLED,
