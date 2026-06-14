@@ -39,7 +39,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "log.h"
 #include "vqmbt.h"
 
-#define BUTTON_LABEL_MAX (sizeof(((VqmbtDeviceInfo*)0)->name) + 16)
+#define BUTTON_LABEL_MAX (VQMBT_SCE_DEVICE_NAME_MAX + 16)
 
 static VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];  // TODO locking/semaphore?
 
