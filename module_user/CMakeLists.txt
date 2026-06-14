@@ -47,6 +47,7 @@ target_link_directories("${MODULE_NAME}" PRIVATE
 target_link_libraries("${MODULE_NAME}" PRIVATE
   gcc
 
+  # SceLibc_stub: not available, use sceClibMemset instead of `= {0}`.
   SceIofilemgr_stub
   SceKernelThreadMgr_stub
   SceLibKernel_stub

@@ -52,7 +52,7 @@ _Static_assert(sizeof(ID_BUTTONS) / sizeof(ID_BUTTONS[0]) == VQMBT_MAX_DEVICES,
  * - Relabel button "Connecting <name>...".
  * - when user taps a button disable all buttons and wait for callback.
  */
-BUTTON_HANDLER(quickmenu_on_press) {
+static BUTTON_HANDLER(quickmenu_on_press) {
     (void)id;
     (void)hash;
     (void)eventId;
@@ -82,7 +82,7 @@ BUTTON_HANDLER(quickmenu_on_press) {
  * - Performance? delay opening qm? async?
  * - Hide empty slots and resize plane to eliminate ghost scrolling.
  */
-ONLOAD_HANDLER(quickmenu_on_load) {
+static ONLOAD_HANDLER(quickmenu_on_load) {
     (void)id;
 
     LOG_DEBUG(0, "Quick menu opened.");
@@ -121,7 +121,7 @@ ONLOAD_HANDLER(quickmenu_on_load) {
 /**
  * Called when the quick menu is closed by the user.
  */
-void quickmenu_on_unload(const char* id) {
+static void quickmenu_on_unload(const char* id) {
     (void)id;
 
     LOG_DEBUG(0, "Quick menu closed.");
