@@ -88,7 +88,7 @@ test:
 
 .PHONY: all
 all: _HELP = Run linters and unit tests and then build
-all: test lint $(DEBUG_TARGETS) $(RELEASE_TARGETS)
+all: $(DEBUG_TARGETS) $(RELEASE_TARGETS) test lint
 
 .PHONY: clean
 clean: _HELP = Remove build and temporary files
