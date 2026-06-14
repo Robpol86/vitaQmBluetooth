@@ -19,13 +19,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief Trial-and-error guessed bluetooth device system states.
  ******************************************************************************/
 
-/**
- * TODO:
- * - Move into module_kernel and abstract these for the user module.
- */
-
 #ifndef SCE_CONST_STATE_H
 #define SCE_CONST_STATE_H
+
+#define VQMBT_DEVICE_NAME_MAX 0x79  // From ksceBtGetDeviceName function signature in bt.h.
 
 typedef enum VqmbtInferredDevState : int {
     VQMBT_BT_STATE_UNKNOWN0 = 0,
