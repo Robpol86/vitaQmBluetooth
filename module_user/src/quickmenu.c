@@ -19,6 +19,17 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief Interface for the Quick Menu on the PS Vita.
  ******************************************************************************/
 
+/**
+ * TODO:
+ * - If kernel plugin isn't loaded notify user.
+ * - If kernel plugin loaded AFTER user plugin what happens? probably fails. Handle this too.
+ * - If kernel plugin's version does not match user module's fail with error (surfaced in UI or Settings).
+ * - Two body planes: one for the buttons, another with just a text message.
+ * - Hide empty slots and resize plane to eliminate ghost scrolling.
+ * - long bt names ellipses
+ * - force close quickmenu. Clean up on recovery?
+ */
+
 #include "quickmenu.h"
 
 #include <psp2/kernel/clib.h>
@@ -164,8 +175,6 @@ static void add_buttons(void) {
  * TODO:
  * - Add function to calculate position from top left instead of center.
  * - Pixel perfect alignment.
- * - If kernel plugin isn't loaded notify user.
- * - If kernel plugin loaded AFTER user plugin what happens? probably fails. Handle this too.
  */
 void quickmenu_start(void) {
     // Add horizontal line separator.
