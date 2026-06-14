@@ -14,6 +14,11 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
+/******************************************************************************
+ * @file
+ * @brief Quick Menu state management interface for the rest of the module.
+ ******************************************************************************/
+
 #ifndef QM_STATE_H
 #define QM_STATE_H
 

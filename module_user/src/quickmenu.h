@@ -14,6 +14,11 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
+/******************************************************************************
+ * @file
+ * @brief Load and unload the user module's quick menu items.
+ ******************************************************************************/
+
 #ifndef QUICKMENU_H
 #define QUICKMENU_H
 
