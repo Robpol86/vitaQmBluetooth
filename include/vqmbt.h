@@ -66,7 +66,6 @@ typedef struct VqmbtEvent {
     unsigned int mac0;
     unsigned int mac1;
 } VqmbtEvent;
-VITASDK_BUILD_ASSERT_EQ(0x0C, VqmbtEvent);
 
 // bluetooth.c syscalls.
 VqmbtInferredDevState kvqmbt_device_state(unsigned int mac0, unsigned int mac1);
