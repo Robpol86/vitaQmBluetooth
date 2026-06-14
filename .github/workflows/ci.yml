@@ -8,7 +8,7 @@ jobs:
   BuildTestLint:
     strategy:
       matrix:
-        os: [&artifact_os ubuntu-latest, macos-latest]
+        os: ${{ github.event_name == 'pull_request' && fromJSON('["ubuntu-latest", "macos-latest"]') || fromJSON('["ubuntu-latest"]') }}
     runs-on: ${{ matrix.os }}
     steps:
 
@@ -38,9 +38,7 @@ jobs:
         run: make lint
 
       - name: Upload release artifact
-        env:
-          artifact_os: *artifact_os
-        if: matrix.os == env.artifact_os
+        if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v7
         with:
           name: release
@@ -48,9 +46,7 @@ jobs:
           if-no-files-found: error
 
       - name: Upload debug artifact
-        env:
-          artifact_os: *artifact_os
-        if: matrix.os == env.artifact_os
+        if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v7
         with:
           name: debug
