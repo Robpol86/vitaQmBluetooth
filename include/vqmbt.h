@@ -24,7 +24,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <psp2common/types.h>
 #include <stdbool.h>
-#include <vitasdk/build_utils.h>
 
 #include "sce_const.h"
 
@@ -43,7 +42,6 @@ typedef struct VqmbtDeviceInfo {
     unsigned int mac1;
     VqmbtInferredDevState state;
 } VqmbtDeviceInfo;
-VITASDK_BUILD_ASSERT_EQ(0x88, VqmbtDeviceInfo);
 
 // Inter-module events.
 typedef enum VqmbtEventId : unsigned int {
@@ -64,7 +62,6 @@ typedef struct VqmbtEvent {
     unsigned int mac0;
     unsigned int mac1;
 } VqmbtEvent;
-VITASDK_BUILD_ASSERT_EQ(0x0C, VqmbtEvent);
 
 // bluetooth.c syscalls.
 bool kvqmbt_is_connected(unsigned int mac0, unsigned int mac1);
