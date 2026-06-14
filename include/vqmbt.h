@@ -26,6 +26,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <stdbool.h>
 #include <vitasdk/build_utils.h>
 
+#include "sce_const.h"
+
 #define VQMBT_MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with.
 
 // Error codes.
@@ -36,12 +38,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 // Device info.
 typedef struct VqmbtDeviceInfo {
-    char name[128];
+    char name[VQMBT_SCE_DEVICE_NAME_MAX];
     unsigned int mac0;
     unsigned int mac1;
-    int state;
+    VqmbtInferredDevState state;
 } VqmbtDeviceInfo;
-VITASDK_BUILD_ASSERT_EQ(0x8C, VqmbtDeviceInfo);
+VITASDK_BUILD_ASSERT_EQ(0x88, VqmbtDeviceInfo);
 
 // Inter-module events.
 typedef enum VqmbtEventId : unsigned int {

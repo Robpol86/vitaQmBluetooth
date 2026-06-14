@@ -156,6 +156,7 @@ SceBtEvent: id=0x05 unk1=0x04 unk3=0x00000000 mac0=0xF26B3406 mac1=0x0000708C un
 #include <stdbool.h>
 
 #include "log.h"
+#include "sce_const.h"
 #include "umod_callback.h"
 #include "vqmbt.h"
 
@@ -212,7 +213,7 @@ static void handle_event(const SceBtEvent* event) {
     // Log device name in debug builds.
 #ifndef NDEBUG
     if (event->mac0 > 0 && event->mac1 > 0) {
-        char name[128];
+        char name[VQMBT_SCE_DEVICE_NAME_MAX];
         int ret = ksceBtGetDeviceName(event->mac0, event->mac1, name);
         if (ret == 0) {
             LOG_DEBUG(0, INDENT "Name: \"%s\"", name);
