@@ -16,11 +16,11 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /******************************************************************************
  * @file
- * @brief Trial-and-error guessed bluetooth device system states.
+ * @brief Trial-and-error guessed bluetooth device system states. TODO rewrite.
  ******************************************************************************/
 
-#ifndef SCE_CONST_STATE_H
-#define SCE_CONST_STATE_H
+#ifndef SCE_CONST_H
+#define SCE_CONST_H
 
 #define VQMBT_DEVICE_NAME_MAX 0x79  // From ksceBtGetDeviceName function signature in bt.h.
 
@@ -34,4 +34,4 @@ typedef enum VqmbtInferredDevState : int {
     VQMBT_BT_STATE_REGISTERING = 6,
 } VqmbtInferredDevState;
 
-#endif  // SCE_CONST_STATE_H
+#endif  // SCE_CONST_H

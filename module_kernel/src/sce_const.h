@@ -16,11 +16,13 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /******************************************************************************
  * @file
- * @brief Trial-and-error guessed bluetooth system events.
+ * @brief Trial-and-error guessed bluetooth system events. TODO rewrite.
  ******************************************************************************/
 
-#ifndef SCE_CONST_EVENT_H
-#define SCE_CONST_EVENT_H
+#ifndef SCE_CONST_H_MODULE
+#define SCE_CONST_H_MODULE
+
+#include <sce_const.h>
 
 typedef enum VqmbtInferredBtEventId : unsigned char {
     VQMBT_BT_EVENT_INQUIRY_RESULT = 0x01,
@@ -39,4 +41,4 @@ typedef enum VqmbtInferredBtEventId : unsigned char {
     VQMBT_BT_EVENT_UNKNOWN4 = 0x1C,
 } VqmbtInferredBtEventId;
 
-#endif  // SCE_CONST_EVENT_H
+#endif  // SCE_CONST_H_MODULE

@@ -25,7 +25,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2common/types.h>
 #include <stdbool.h>
 
-#include "sce_const_state.h"
+#include "sce_const.h"
 
 #define VQMBT_MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with.
 
