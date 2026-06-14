@@ -198,7 +198,7 @@ static void handle_event(const SceBtEvent* event) {
     // Log device name in debug builds.
 #ifndef NDEBUG
     if (event->mac0 > 0 && event->mac1 > 0) {
-        char name[VQMBT_DEVICE_NAME_MAX];
+        char name[VQMBT_SCE_DEVICE_NAME_MAX];
         int ret = ksceBtGetDeviceName(event->mac0, event->mac1, name);
         if (ret == 0) {
             LOG_DEBUG(0, INDENT "Name: \"%s\"", name);

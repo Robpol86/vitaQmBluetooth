@@ -25,7 +25,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 /**
  * Bluetooth device name max size. Must match ksceBtGetDeviceName(name) size.
  */
-#define VQMBT_DEVICE_NAME_MAX 0x79
+#define VQMBT_SCE_DEVICE_NAME_MAX 0x79
 
 /**
  * Device state returned by ksceBtGetConnectingInfo().

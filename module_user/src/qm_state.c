@@ -32,7 +32,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "qm_ids.h"
 #include "vqmbt.h"
 
-#define BUTTON_LABEL_MAX (VQMBT_DEVICE_NAME_MAX + 16)
+#define BUTTON_LABEL_MAX (VQMBT_SCE_DEVICE_NAME_MAX + 16)
 
 static SceKernelLwMutexWork mutex;
 

@@ -41,7 +41,7 @@ typedef enum VqmbtError : int {
 
 // Device info.
 typedef struct VqmbtDeviceInfo {
-    char name[VQMBT_DEVICE_NAME_MAX];
+    char name[VQMBT_SCE_DEVICE_NAME_MAX];
     unsigned int mac0;
     unsigned int mac1;
     VqmbtInferredDevState state;
