@@ -17,6 +17,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 /******************************************************************************
  * @file
  * @brief SCE constants inferred/guessed through trial and error.
+ *
+ * These values attempt to match Sony's undocumented interfaces. They must not
+ * change unless the Vita SDK changes them or new reverse engineering efforts
+ * uncover better alignments.
  ******************************************************************************/
 
 #ifndef SCE_CONST_H
