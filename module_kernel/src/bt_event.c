@@ -169,7 +169,7 @@ _Static_assert(sizeof(PREFIX) == sizeof(INDENT), "INDENT width must match PREFIX
 
 static SceUID uid_callback = -1;
 static SceUID uid_thread = -1;
-static bool run_thread = false;
+static _Atomic bool run_thread = false;
 
 /**
  * Handle scenario where one or more events went missing.
@@ -374,8 +374,9 @@ static int event_thread(SceSize args, void* argp) {
         // Ignore irrelevant IDs. Set to 0xFFFFFFFF to receive and log all events.
         (1U << VQMBT_SCE_BT_EVENT_INQUIRY_RESULT) | (1U << VQMBT_SCE_BT_EVENT_INQUIRY_STOP) |
         (1U << VQMBT_SCE_BT_EVENT_PAIRING_REQUEST) | (1U << VQMBT_SCE_BT_EVENT_CONNECT_REQUESTED) |
-        (1U << VQMBT_SCE_BT_EVENT_CONNECT_UNPAIRED) | (1U << VQMBT_SCE_BT_EVENT_UNKNOWN1) |
-        (1U << VQMBT_SCE_BT_EVENT_UNKNOWN2) | (1U << VQMBT_SCE_BT_EVENT_UNKNOWN3) | (1U << VQMBT_SCE_BT_EVENT_UNKNOWN4));
+        (1U << VQMBT_SCE_BT_EVENT_CONNECT_UNPAIRED) | (1U << VQMBT_SCE_BT_EVENT_BUTTON_PRESSED) |
+        (1U << VQMBT_SCE_BT_EVENT_UNKNOWN1) | (1U << VQMBT_SCE_BT_EVENT_UNKNOWN2) | (1U << VQMBT_SCE_BT_EVENT_UNKNOWN3) |
+        (1U << VQMBT_SCE_BT_EVENT_UNKNOWN4));
     int ret = ksceBtRegisterCallback(uid_callback, 0, id_mask, 0);
     LOG_DEBUG(0, "ksceBtRegisterCallback returned 0x%08X", ret);
 
