@@ -16,22 +16,28 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /******************************************************************************
  * @file
- * @brief Trial-and-error guessed bluetooth device system states. TODO rewrite.
+ * @brief SCE constants inferred/guessed through trial and error.
  ******************************************************************************/
 
 #ifndef SCE_CONST_H
 #define SCE_CONST_H
 
-#define VQMBT_DEVICE_NAME_MAX 0x79  // From ksceBtGetDeviceName function signature in bt.h.
+/**
+ * Bluetooth device name max size. Must match ksceBtGetDeviceName(name) size.
+ */
+#define VQMBT_DEVICE_NAME_MAX 0x79
 
+/**
+ * Device state returned by ksceBtGetConnectingInfo().
+ */
 typedef enum VqmbtInferredDevState : int {
-    VQMBT_BT_STATE_UNKNOWN0 = 0,
-    VQMBT_BT_STATE_DISCONNECTED = 1,
-    VQMBT_BT_STATE_CONNECTING = 2,
-    VQMBT_BT_STATE_UNKNOWN3 = 3,
-    VQMBT_BT_STATE_DISCONNECTING = 4,
-    VQMBT_BT_STATE_CONNECTED = 5,
-    VQMBT_BT_STATE_REGISTERING = 6,
+    VQMBT_SCE_BT_STATE_UNKNOWN0 = 0,
+    VQMBT_SCE_BT_STATE_DISCONNECTED = 1,
+    VQMBT_SCE_BT_STATE_CONNECTING = 2,
+    VQMBT_SCE_BT_STATE_UNKNOWN3 = 3,
+    VQMBT_SCE_BT_STATE_DISCONNECTING = 4,
+    VQMBT_SCE_BT_STATE_CONNECTED = 5,
+    VQMBT_SCE_BT_STATE_REGISTERING = 6,
 } VqmbtInferredDevState;
 
 #endif  // SCE_CONST_H

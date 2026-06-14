@@ -315,17 +315,17 @@ static void transition_state_bt_on(bool* changed) {
 
         // Restore state.  // TODO DRY.
         switch (device->state) {
-            case VQMBT_BT_STATE_DISCONNECTED:
+            case VQMBT_SCE_BT_STATE_DISCONNECTED:
                 transition_state_disconnected(changed, idx, true);
                 break;
-            case VQMBT_BT_STATE_CONNECTING:
+            case VQMBT_SCE_BT_STATE_CONNECTING:
                 transition_state_busy_connecting(changed, idx);
                 break;
-            case VQMBT_BT_STATE_DISCONNECTING:
+            case VQMBT_SCE_BT_STATE_DISCONNECTING:
                 transition_state_busy_disconnecting(changed, idx);
                 break;
-            case VQMBT_BT_STATE_CONNECTED:
-            case VQMBT_BT_STATE_REGISTERING:
+            case VQMBT_SCE_BT_STATE_CONNECTED:
+            case VQMBT_SCE_BT_STATE_REGISTERING:
                 transition_state_connected(changed, idx, false);
                 break;
             default:
@@ -393,16 +393,16 @@ static void bulk_update(bool* changed, const QmsRequest* request) {
 
         // Set state.
         switch (new_device->state) {
-            case VQMBT_BT_STATE_CONNECTING:
+            case VQMBT_SCE_BT_STATE_CONNECTING:
                 LOG_DEBUG(0, "Setting state to connecting if not set");
                 transition_state_busy_connecting(changed, idx);
                 break;
-            case VQMBT_BT_STATE_DISCONNECTING:
+            case VQMBT_SCE_BT_STATE_DISCONNECTING:
                 LOG_DEBUG(0, "Setting state to disconnecting if not set");
                 transition_state_busy_disconnecting(changed, idx);
                 break;
-            case VQMBT_BT_STATE_CONNECTED:
-            case VQMBT_BT_STATE_REGISTERING:
+            case VQMBT_SCE_BT_STATE_CONNECTED:
+            case VQMBT_SCE_BT_STATE_REGISTERING:
                 LOG_DEBUG(0, "Setting state to connected if not set");
                 transition_state_connected(changed, idx, true);
                 break;

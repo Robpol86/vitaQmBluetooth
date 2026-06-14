@@ -16,29 +16,33 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /******************************************************************************
  * @file
- * @brief Trial-and-error guessed bluetooth system events. TODO rewrite.
+ * @brief SCE constants inferred/guessed through trial and error.
  ******************************************************************************/
 
 #ifndef SCE_CONST_H_MODULE
 #define SCE_CONST_H_MODULE
 
-#include <sce_const.h>
+#include <psp2kern/bt.h>
 
+/**
+ * SceBtEvent event IDs and their inferred meanings.
+ */
 typedef enum VqmbtInferredBtEventId : unsigned char {
-    VQMBT_BT_EVENT_INQUIRY_RESULT = 0x01,
-    VQMBT_BT_EVENT_INQUIRY_STOP = 0x02,
-    VQMBT_BT_EVENT_PAIRING_REQUEST = 0x04,
-    VQMBT_BT_EVENT_CONNECT_RESULT = 0x05,
-    VQMBT_BT_EVENT_DISCONNECT = 0x06,
-    VQMBT_BT_EVENT_ADD_REMOVE_CONNECTING_DEVICE = 0x07,
-    VQMBT_BT_EVENT_CONNECT_REQUESTED = 0x08,
-    VQMBT_BT_EVENT_CONNECT_UNPAIRED = 0x09,
-    VQMBT_BT_EVENT_BUTTON_PRESSED = 0x0D,
-    VQMBT_BT_EVENT_UNKNOWN1 = 0x0E,
-    VQMBT_BT_EVENT_UNKNOWN2 = 0x10,
-    VQMBT_BT_EVENT_UNKNOWN3 = 0x11,
-    VQMBT_BT_EVENT_TOGGLE_BLUETOOTH = 0x15,
-    VQMBT_BT_EVENT_UNKNOWN4 = 0x1C,
+    VQMBT_SCE_BT_EVENT_INQUIRY_RESULT = 0x01,
+    VQMBT_SCE_BT_EVENT_INQUIRY_STOP = 0x02,
+    VQMBT_SCE_BT_EVENT_PAIRING_REQUEST = 0x04,
+    VQMBT_SCE_BT_EVENT_CONNECT_RESULT = 0x05,
+    VQMBT_SCE_BT_EVENT_DISCONNECT = 0x06,
+    VQMBT_SCE_BT_EVENT_ADD_REMOVE_CONNECTING_DEVICE = 0x07,
+    VQMBT_SCE_BT_EVENT_CONNECT_REQUESTED = 0x08,
+    VQMBT_SCE_BT_EVENT_CONNECT_UNPAIRED = 0x09,
+    VQMBT_SCE_BT_EVENT_BUTTON_PRESSED = 0x0D,
+    VQMBT_SCE_BT_EVENT_UNKNOWN1 = 0x0E,
+    VQMBT_SCE_BT_EVENT_UNKNOWN2 = 0x10,
+    VQMBT_SCE_BT_EVENT_UNKNOWN3 = 0x11,
+    VQMBT_SCE_BT_EVENT_TOGGLE_BLUETOOTH = 0x15,
+    VQMBT_SCE_BT_EVENT_UNKNOWN4 = 0x1C,
 } VqmbtInferredBtEventId;
+_Static_assert(sizeof(VqmbtInferredBtEventId) == sizeof(((SceBtEvent*)0)->id), "SceBtEvent.id changed size?");
 
 #endif  // SCE_CONST_H_MODULE

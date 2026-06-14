@@ -211,7 +211,7 @@ static void handle_event(const SceBtEvent* event) {
 
     // Handle events.
     switch (event->id) {
-        case VQMBT_BT_EVENT_CONNECT_RESULT:
+        case VQMBT_SCE_BT_EVENT_CONNECT_RESULT:
             switch (event->unk1) {
                 case 0x00:
                     LOG_DEBUG(0, INDENT "Device connected");
@@ -265,7 +265,7 @@ static void handle_event(const SceBtEvent* event) {
             }
             break;
 
-        case VQMBT_BT_EVENT_DISCONNECT:
+        case VQMBT_SCE_BT_EVENT_DISCONNECT:
             LOG_DEBUG(0, INDENT "Device disconnected");
             umod_cb_emit_event(&(VqmbtEvent){
                 .id = VQMBT_EVENT_DEVICE_DISCONNECTED,
@@ -274,7 +274,7 @@ static void handle_event(const SceBtEvent* event) {
             });
             break;
 
-        case VQMBT_BT_EVENT_ADD_REMOVE_CONNECTING_DEVICE:
+        case VQMBT_SCE_BT_EVENT_ADD_REMOVE_CONNECTING_DEVICE:
             LOG_DEBUG(0, INDENT "Device added/removed/connecting");  // TODO relabel?
             umod_cb_emit_event(&(VqmbtEvent){
                 .id = VQMBT_EVENT_DEVICE_ADDED_REMOVED_CONNECTING,
@@ -283,7 +283,7 @@ static void handle_event(const SceBtEvent* event) {
             });
             break;
 
-        case VQMBT_BT_EVENT_TOGGLE_BLUETOOTH:
+        case VQMBT_SCE_BT_EVENT_TOGGLE_BLUETOOTH:
             switch (event->unk3) {
                 case 0x00:
                     // Ignore
@@ -373,11 +373,11 @@ static int event_thread(SceSize args, void* argp) {
     // Register callback.
     const unsigned int id_mask = ~(
         // Ignore irrelevant IDs. Set to 0xFFFFFFFF to receive and log all events.
-        (1U << VQMBT_BT_EVENT_INQUIRY_RESULT) | (1U << VQMBT_BT_EVENT_INQUIRY_STOP) |
-        (1U << VQMBT_BT_EVENT_PAIRING_REQUEST) | (1U << VQMBT_BT_EVENT_CONNECT_REQUESTED) |
-        (1U << VQMBT_BT_EVENT_CONNECT_UNPAIRED) | (1U << VQMBT_BT_EVENT_BUTTON_PRESSED) |
-        (1U << VQMBT_BT_EVENT_UNKNOWN1) | (1U << VQMBT_BT_EVENT_UNKNOWN2) | (1U << VQMBT_BT_EVENT_UNKNOWN3) |
-        (1U << VQMBT_BT_EVENT_UNKNOWN4));
+        (1U << VQMBT_SCE_BT_EVENT_INQUIRY_RESULT) | (1U << VQMBT_SCE_BT_EVENT_INQUIRY_STOP) |
+        (1U << VQMBT_SCE_BT_EVENT_PAIRING_REQUEST) | (1U << VQMBT_SCE_BT_EVENT_CONNECT_REQUESTED) |
+        (1U << VQMBT_SCE_BT_EVENT_CONNECT_UNPAIRED) | (1U << VQMBT_SCE_BT_EVENT_BUTTON_PRESSED) |
+        (1U << VQMBT_SCE_BT_EVENT_UNKNOWN1) | (1U << VQMBT_SCE_BT_EVENT_UNKNOWN2) | (1U << VQMBT_SCE_BT_EVENT_UNKNOWN3) |
+        (1U << VQMBT_SCE_BT_EVENT_UNKNOWN4));
     int ret = ksceBtRegisterCallback(uid_callback, 0, id_mask, 0);
     LOG_DEBUG(0, "ksceBtRegisterCallback returned 0x%08X", ret);
 
