@@ -42,7 +42,7 @@ _Static_assert(sizeof(PREFIX) == sizeof(INDENT), "INDENT width must match PREFIX
 
 static SceUID uid_event_flag = -1;
 static SceUID uid_thread = -1;
-static bool run_thread = false;
+static _Atomic bool run_thread = false;
 
 /**
  * Handle scenario where one or more events went missing.
