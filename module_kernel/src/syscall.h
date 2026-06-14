@@ -16,7 +16,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /******************************************************************************
  * @file
- * @brief Miscellaneous macros and functions.
+ * @brief Automatically call EXIT_SYSCALL() when a function using SYSCALL_STATE
+ *        returns.
  ******************************************************************************/
 
 #ifndef SYSCALL_H
