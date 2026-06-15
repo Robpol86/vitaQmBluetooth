@@ -36,75 +36,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define THREAD_PRIORITY 0x96 /* Higher value = lower priority. */
 #define THREAD_STACK_SIZE 0x1000
 
-#define PREFIX "VqmbtEvent: "
-#define INDENT "            "
-_Static_assert(sizeof(PREFIX) == sizeof(INDENT), "INDENT width must match PREFIX");
-
 static SceUID uid_event_flag = -1;
 static SceUID uid_thread = -1;
 static _Atomic bool run_thread = false;
-
-/**
- * Handle scenario where one or more events went missing.
- */
-static void handle_event_dropped(void) {
-    // TODO
-    LOG_DEBUG(0, "TODO re-run kvqmbt_get_paired_devices()");
-}
-
-/**
- * Handler for one event. Called once per bluetooth event.
- *
- * @param event Event details.
- */
-static void handle_event(const VqmbtEvent* event) {
-    LOG_DEBUG(0, PREFIX "id=0x%08X mac0=0x%08X mac1=0x%08X", event->id, event->mac0, event->mac1);
-
-    // Handle events.
-    switch (event->id) {
-        case VQMBT_EVENT_DROPPED_EVENTS:
-            LOG_DEBUG(0, INDENT "Missing bluetooth events detected");
-            handle_event_dropped();
-            break;
-
-        case VQMBT_EVENT_BLUETOOTH_ENABLED:
-            LOG_DEBUG(0, INDENT "Bluetooth turned on");
-            break;
-
-        case VQMBT_EVENT_BLUETOOTH_DISABLED:
-            LOG_DEBUG(0, INDENT "Bluetooth turned off");
-            break;
-
-        case VQMBT_EVENT_DEVICE_ADDED_REMOVED_CONNECTING:
-            LOG_DEBUG(0, INDENT "Device added/removed/connecting");
-            break;
-
-        case VQMBT_EVENT_DEVICE_DISCONNECTED:
-            LOG_DEBUG(0, INDENT "Device disconnected");
-            break;
-
-        case VQMBT_EVENT_DEVICE_CONNECT_SUCCESS:
-            LOG_DEBUG(0, INDENT "Device connected");
-            break;
-
-        case VQMBT_EVENT_DEVICE_CONNECT_FAILED:
-            LOG_DEBUG(0, INDENT "Device connect failed");
-            break;
-
-        case VQMBT_EVENT_DEVICE_CONNECT_ABORTED:
-            LOG_DEBUG(0, INDENT "Device connect aborted");
-            break;
-
-        case VQMBT_EVENT_DEVICE_CONNECT_CANCELLED:
-            LOG_DEBUG(0, INDENT "Device connect cancelled");
-            break;
-
-        default:
-            LOG_WARN(INDENT "Unhandled event id=0x%08X", event->id);
-            LOG_DEBUG(0, INDENT "Ignoring id=0x%08X", event->id);
-            break;
-    }
-}
 
 /**
  * Retrieve events from the kernel module's ring buffer via syscall and pass them to handle_event().
