@@ -148,21 +148,21 @@ void quickmenu_start(void) {
     QuickMenuRebornSeparator(QM_ID_SEPARATOR, SCE_SEPARATOR_HEIGHT);
 
     // Add the root plane that holds all other items.
-    QuickMenuRebornRegisterWidget(QM_ID_PLANE_ROOT, NULL, plane);
-    QuickMenuRebornSetWidgetSize(QM_ID_PLANE_ROOT, SCE_PLANE_WIDTH, 700, 0, 0);
-    QuickMenuRebornSetWidgetColor(QM_ID_PLANE_ROOT, 1, 1, 1, 0);
+    QuickMenuRebornRegisterWidget(QM_ID_PLANE_BUTTONS, NULL, plane);
+    QuickMenuRebornSetWidgetSize(QM_ID_PLANE_BUTTONS, SCE_PLANE_WIDTH, 700, 0, 0);
+    QuickMenuRebornSetWidgetColor(QM_ID_PLANE_BUTTONS, 1, 1, 1, 0);
 
     // Add section heading text.
-    QuickMenuRebornRegisterWidget(QM_ID_SECTION_TEXT, QM_ID_PLANE_ROOT, text);
-    QuickMenuRebornSetWidgetSize(QM_ID_SECTION_TEXT, SCE_PLANE_WIDTH, 50, 0, 0);
-    QuickMenuRebornSetWidgetPosition(QM_ID_SECTION_TEXT, -206, 312, 0, 0);
-    QuickMenuRebornSetWidgetColor(QM_ID_SECTION_TEXT, 1, 1, 1, 1);
-    QuickMenuRebornSetWidgetLabel(QM_ID_SECTION_TEXT, "Bluetooth Devices");
+    QuickMenuRebornRegisterWidget(QM_ID_SECTION_TITLE, QM_ID_PLANE_BUTTONS, text);
+    QuickMenuRebornSetWidgetSize(QM_ID_SECTION_TITLE, SCE_PLANE_WIDTH, 50, 0, 0);
+    QuickMenuRebornSetWidgetPosition(QM_ID_SECTION_TITLE, -206, 312, 0, 0);
+    QuickMenuRebornSetWidgetColor(QM_ID_SECTION_TITLE, 1, 1, 1, 1);
+    QuickMenuRebornSetWidgetLabel(QM_ID_SECTION_TITLE, "Bluetooth Devices");
 
     // Add device buttons.
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
         const char* id = QM_ID_BUTTONS[idx];
-        QuickMenuRebornRegisterWidget(id, QM_ID_PLANE_ROOT, button);
+        QuickMenuRebornRegisterWidget(id, QM_ID_PLANE_BUTTONS, button);
         QuickMenuRebornSetWidgetSize(id, 600, 75, 0, 0);
         QuickMenuRebornSetWidgetPosition(id, 20, 243 - (idx * 80), 0, 0);
         QuickMenuRebornSetWidgetColor(id, 1, 1, 1, 1);
@@ -186,7 +186,7 @@ void quickmenu_stop(void) {
         const char* id = QM_ID_BUTTONS[idx];
         QuickMenuRebornUnregisterWidget(id);
     }
-    QuickMenuRebornUnregisterWidget(QM_ID_SECTION_TEXT);
-    QuickMenuRebornUnregisterWidget(QM_ID_PLANE_ROOT);
+    QuickMenuRebornUnregisterWidget(QM_ID_SECTION_TITLE);
+    QuickMenuRebornUnregisterWidget(QM_ID_PLANE_BUTTONS);
     QuickMenuRebornRemoveSeparator(QM_ID_SEPARATOR);
 }

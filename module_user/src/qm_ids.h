@@ -26,8 +26,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 // Widget IDs (prefixed because they must be unique across all plugins).
 #define QM_ID_SEPARATOR MODULE_NAME "Separator"
-#define QM_ID_SECTION_TEXT MODULE_NAME "SectionText"
-#define QM_ID_PLANE_ROOT MODULE_NAME "PlaneRoot"
+#define QM_ID_SECTION_TITLE MODULE_NAME "SectionTitle"
+#define QM_ID_PLANE_BUTTONS MODULE_NAME "PlaneButtons"
 
 // Button IDs.
 static const char* const QM_ID_BUTTONS[VQMBT_MAX_DEVICES] = {
