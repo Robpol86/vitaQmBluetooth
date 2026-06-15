@@ -137,29 +137,6 @@ static void quickmenu_on_unload(const char* id) {
 }
 
 /**
- * Add connect/disconnect buttons to quick menu. One button per paired device.
- *
- * For now buttons are fixed and so is the plane.
- *
- * TODO:
- * - callback: relabel button with new state. Surface error in button as close/reopen resets labels
- * - button_reset() button_disable() button_enable() functions
- */
-static void add_buttons(void) {
-    for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
-        const char* id = QM_ID_BUTTONS[idx];
-        QuickMenuRebornRegisterWidget(id, QM_ID_PLANE_ROOT, button);
-        QuickMenuRebornSetWidgetSize(id, 600, 75, 0, 0);
-        QuickMenuRebornSetWidgetPosition(id, 20, 243 - (idx * 80), 0, 0);
-        QuickMenuRebornSetWidgetColor(id, 1, 1, 1, 1);
-        char label[BUTTON_LABEL_MAX];
-        sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
-        QuickMenuRebornSetWidgetLabel(id, label);
-        QuickMenuRebornRegisterEventHanlder(id, QMR_BUTTON_RELEASE_ID, quickmenu_on_press, (void*)(intptr_t)idx);
-    }
-}
-
-/**
  * Loads the plugin's quick menu items.
  *
  * TODO:
@@ -182,8 +159,18 @@ void quickmenu_start(void) {
     QuickMenuRebornSetWidgetColor(QM_ID_SECTION_TEXT, 1, 1, 1, 1);
     QuickMenuRebornSetWidgetLabel(QM_ID_SECTION_TEXT, "Bluetooth Devices");
 
-    // Add device slot buttons.
-    add_buttons();
+    // Add device buttons.
+    for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
+        const char* id = QM_ID_BUTTONS[idx];
+        QuickMenuRebornRegisterWidget(id, QM_ID_PLANE_ROOT, button);
+        QuickMenuRebornSetWidgetSize(id, 600, 75, 0, 0);
+        QuickMenuRebornSetWidgetPosition(id, 20, 243 - (idx * 80), 0, 0);
+        QuickMenuRebornSetWidgetColor(id, 1, 1, 1, 1);
+        char label[BUTTON_LABEL_MAX];
+        sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
+        QuickMenuRebornSetWidgetLabel(id, label);
+        QuickMenuRebornRegisterEventHanlder(id, QMR_BUTTON_RELEASE_ID, quickmenu_on_press, (void*)(intptr_t)idx);
+    }
 
     // Register handlers.
     const char* last = QM_ID_BUTTONS[VQMBT_MAX_DEVICES - 1];
