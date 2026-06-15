@@ -156,7 +156,7 @@ static ONLOAD_HANDLER(quickmenu_on_load) {
     LOG_DEBUG(0, "Quick menu opened.");
 
     // Start event thread.
-    kmod_event_start();
+    kmod_event_start(NULL, handle_event_dropped, handle_event);
 
     // Zero the struct array to prevent ghost data.
     sceClibMemset(devices, 0, sizeof(devices));
