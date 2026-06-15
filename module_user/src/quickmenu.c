@@ -37,22 +37,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <quickmenureborn/qm_reborn.h>
 
 #include "log.h"
+#include "qm_ids.h"
 #include "vqmbt.h"
 
 #define BUTTON_LABEL_MAX (VQMBT_SCE_DEVICE_NAME_MAX + 16)
 
 static VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];  // TODO locking/semaphore?
-
-// Widget IDs (prefixed because they must be unique across all plugins).
-#define ID_SEPARATOR MODULE_NAME "Separator"
-#define ID_PLANE_ROOT MODULE_NAME "PlaneRoot"
-#define ID_SECTION_TEXT MODULE_NAME "SectionText"
-static const char* const ID_BUTTONS[VQMBT_MAX_DEVICES] = {
-    MODULE_NAME "Button0", MODULE_NAME "Button1", MODULE_NAME "Button2", MODULE_NAME "Button3",
-    MODULE_NAME "Button4", MODULE_NAME "Button5", MODULE_NAME "Button6", MODULE_NAME "Button7",
-};
-_Static_assert(sizeof(ID_BUTTONS) / sizeof(ID_BUTTONS[0]) == VQMBT_MAX_DEVICES,
-               "ID_BUTTONS size must match VQMBT_MAX_DEVICES");
 
 /**
  * Connect or disconnect the device associated with the button.
@@ -118,7 +108,7 @@ static ONLOAD_HANDLER(quickmenu_on_load) {
     for (int idx = 0; idx < count; idx++) {
         dev = &devices[idx];
         LOG_DEBUG(0, "idx=%d name=\"%s\" mac0=0x%08X mac1=0x%08X", idx, dev->name, dev->mac0, dev->mac1);
-        const char* id = ID_BUTTONS[idx];
+        const char* id = QM_ID_BUTTONS[idx];
         char label[BUTTON_LABEL_MAX];
         if (dev->state == 5 || dev->state == 6) {  // TODO dedupe magic numbers with enum?
             sceClibSnprintf(label, sizeof(label), "Disconnect %s", dev->name);
@@ -139,7 +129,7 @@ static void quickmenu_on_unload(const char* id) {
 
     // Reset button labels.
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
-        const char* id = ID_BUTTONS[idx];
+        const char* id = QM_ID_BUTTONS[idx];
         char label[BUTTON_LABEL_MAX];
         sceClibSnprintf(label, sizeof(label), "Slot %d: no device", idx + 1);
         QuickMenuRebornSetWidgetLabel(id, label);
@@ -157,8 +147,8 @@ static void quickmenu_on_unload(const char* id) {
  */
 static void add_buttons(void) {
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
-        const char* id = ID_BUTTONS[idx];
-        QuickMenuRebornRegisterWidget(id, ID_PLANE_ROOT, button);
+        const char* id = QM_ID_BUTTONS[idx];
+        QuickMenuRebornRegisterWidget(id, QM_ID_PLANE_ROOT, button);
         QuickMenuRebornSetWidgetSize(id, 600, 75, 0, 0);
         QuickMenuRebornSetWidgetPosition(id, 20, 243 - (idx * 80), 0, 0);
         QuickMenuRebornSetWidgetColor(id, 1, 1, 1, 1);
@@ -178,25 +168,25 @@ static void add_buttons(void) {
  */
 void quickmenu_start(void) {
     // Add horizontal line separator.
-    QuickMenuRebornSeparator(ID_SEPARATOR, SCE_SEPARATOR_HEIGHT);
+    QuickMenuRebornSeparator(QM_ID_SEPARATOR, SCE_SEPARATOR_HEIGHT);
 
     // Add the root plane that holds all other items.
-    QuickMenuRebornRegisterWidget(ID_PLANE_ROOT, NULL, plane);
-    QuickMenuRebornSetWidgetSize(ID_PLANE_ROOT, SCE_PLANE_WIDTH, 700, 0, 0);
-    QuickMenuRebornSetWidgetColor(ID_PLANE_ROOT, 1, 1, 1, 0);
+    QuickMenuRebornRegisterWidget(QM_ID_PLANE_ROOT, NULL, plane);
+    QuickMenuRebornSetWidgetSize(QM_ID_PLANE_ROOT, SCE_PLANE_WIDTH, 700, 0, 0);
+    QuickMenuRebornSetWidgetColor(QM_ID_PLANE_ROOT, 1, 1, 1, 0);
 
     // Add section heading text.
-    QuickMenuRebornRegisterWidget(ID_SECTION_TEXT, ID_PLANE_ROOT, text);
-    QuickMenuRebornSetWidgetSize(ID_SECTION_TEXT, SCE_PLANE_WIDTH, 50, 0, 0);
-    QuickMenuRebornSetWidgetPosition(ID_SECTION_TEXT, -206, 312, 0, 0);
-    QuickMenuRebornSetWidgetColor(ID_SECTION_TEXT, 1, 1, 1, 1);
-    QuickMenuRebornSetWidgetLabel(ID_SECTION_TEXT, "Bluetooth Devices");
+    QuickMenuRebornRegisterWidget(QM_ID_SECTION_TEXT, QM_ID_PLANE_ROOT, text);
+    QuickMenuRebornSetWidgetSize(QM_ID_SECTION_TEXT, SCE_PLANE_WIDTH, 50, 0, 0);
+    QuickMenuRebornSetWidgetPosition(QM_ID_SECTION_TEXT, -206, 312, 0, 0);
+    QuickMenuRebornSetWidgetColor(QM_ID_SECTION_TEXT, 1, 1, 1, 1);
+    QuickMenuRebornSetWidgetLabel(QM_ID_SECTION_TEXT, "Bluetooth Devices");
 
     // Add device slot buttons.
     add_buttons();
 
     // Register handlers.
-    const char* last = ID_BUTTONS[VQMBT_MAX_DEVICES - 1];
+    const char* last = QM_ID_BUTTONS[VQMBT_MAX_DEVICES - 1];
     QuickMenuRebornAssignOnLoadHandler(quickmenu_on_load, last);
     QuickMenuRebornAssignOnDeleteHandler(quickmenu_on_unload, last);
 }
@@ -206,10 +196,10 @@ void quickmenu_start(void) {
  */
 void quickmenu_stop(void) {
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
-        const char* id = ID_BUTTONS[idx];
+        const char* id = QM_ID_BUTTONS[idx];
         QuickMenuRebornUnregisterWidget(id);
     }
-    QuickMenuRebornUnregisterWidget(ID_SECTION_TEXT);
-    QuickMenuRebornUnregisterWidget(ID_PLANE_ROOT);
-    QuickMenuRebornRemoveSeparator(ID_SEPARATOR);
+    QuickMenuRebornUnregisterWidget(QM_ID_SECTION_TEXT);
+    QuickMenuRebornUnregisterWidget(QM_ID_PLANE_ROOT);
+    QuickMenuRebornRemoveSeparator(QM_ID_SEPARATOR);
 }
