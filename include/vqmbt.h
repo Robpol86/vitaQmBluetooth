@@ -30,12 +30,14 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define VQMBT_MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with.
 
 // Error codes.
-#define VQMBT_ERROR_INVALID_ARGUMENT ((int)0x80690001)
-#define VQMBT_ERROR_KERNEL_SIDE ((int)0x80690002)
-#define VQMBT_ERROR_KERNEL_SIDE_BUSY ((int)0x80690006)
-#define VQMBT_ERROR_CB_OVERFLOW ((int)0x80690003)
-#define VQMBT_ERROR_NOT_READY ((int)0x80690004)
-#define VQMBT_ERROR_GENERAL_FAILURE ((int)0x80690005)
+typedef enum VqmbtError : int {
+    VQMBT_ERROR_INVALID_ARGUMENT = (int)0x80690001,  // Arbitrary first value.
+    VQMBT_ERROR_KERNEL_SIDE,
+    VQMBT_ERROR_KERNEL_SIDE_BUSY,
+    VQMBT_ERROR_CB_OVERFLOW,
+    VQMBT_ERROR_NOT_READY,
+    VQMBT_ERROR_GENERAL_FAILURE,
+} VqmbtError;
 
 // Device info.
 typedef struct VqmbtDeviceInfo {
