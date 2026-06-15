@@ -401,12 +401,11 @@ static int event_thread(SceSize args, void* argp) {
 /**
  * Create a thread to handle bluetooth events and start it.
  *
- * TODO:
- * - Return errors so caller can return non-success.
+ * @return 0 on success, negative on error.
  */
-void bt_event_start(void) {
+int bt_event_start(void) {
     if (uid_thread >= 0) {
-        return;
+        return 0;
     }
 
     run_thread = true;
@@ -416,24 +415,25 @@ void bt_event_start(void) {
                                         0, SCE_KERNEL_THREAD_CPU_AFFINITY_MASK_DEFAULT, NULL);
     if (uid_thread < 0) {
         LOG_ERROR("ksceKernelCreateThread returned error 0x%08X", uid_thread);
-        return;
+        return VQMBT_ERROR_KERNEL_SIDE;
     }
     LOG_DEBUG(0, "ksceKernelCreateThread returned 0x%08X", uid_thread);
 
     // Start the thread.
     int ret = ksceKernelStartThread(uid_thread, 0, NULL);
     LOG_DEBUG(0, "ksceKernelStartThread returned 0x%08X", ret);
+
+    return 0;
 }
 
 /**
  * Shut down the running event-handling thread.
  *
- * TODO:
- * - Return errors so caller can return non-success.
+ * @return 0 on success, negative on error.
  */
-void bt_event_stop(void) {
+int bt_event_stop(void) {
     if (uid_thread < 0) {
-        return;
+        return 0;
     }
 
     // Tell the thread to stop.
@@ -448,4 +448,6 @@ void bt_event_stop(void) {
     LOG_DEBUG(0, "ksceKernelDeleteThread returned 0x%08X", ret);
 
     uid_thread = -1;
+
+    return 0;
 }

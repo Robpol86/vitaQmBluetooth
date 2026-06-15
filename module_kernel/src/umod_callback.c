@@ -207,7 +207,7 @@ int umod_cb_start(void) {
     event_flag_uid = ksceKernelCreateEventFlag("kvqmbt-umod_callback-event_flag", 0, 0, NULL);
     if (event_flag_uid < 0) {
         LOG_ERROR("ksceKernelCreateEventFlag returned error 0x%08X", event_flag_uid);
-        return event_flag_uid;
+        return VQMBT_ERROR_KERNEL_SIDE;
     }
     LOG_DEBUG(0, "ksceKernelCreateEventFlag returned event_flag_uid=0x%08X", event_flag_uid);
 
@@ -228,7 +228,7 @@ int umod_cb_stop(void) {
         int ret = ksceKernelDeleteEventFlag(event_flag_uid);
         if (ret < 0) {
             LOG_ERROR("ksceKernelDeleteEventFlag returned error 0x%08X", ret);
-            return ret;
+            return VQMBT_ERROR_KERNEL_SIDE;
         }
         LOG_DEBUG(0, "ksceKernelDeleteEventFlag returned 0x%08X", ret);
         event_flag_uid = -1;

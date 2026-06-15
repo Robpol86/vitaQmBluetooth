@@ -22,7 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef QUICKMENU_H
 #define QUICKMENU_H
 
-void quickmenu_start(void);
-void quickmenu_stop(void);
+int quickmenu_start(void);
+int quickmenu_stop(void);
 
 #endif  // QUICKMENU_H

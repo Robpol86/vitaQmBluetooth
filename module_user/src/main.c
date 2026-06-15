@@ -20,6 +20,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  ******************************************************************************/
 
 #include <psp2/kernel/modulemgr.h>
+#include <stdbool.h>
 
 #include "log.h"
 #include "logfile.h"
@@ -36,9 +37,17 @@ int module_start(SceSize args, const void* argp) {
     (void)args;
     (void)argp;
 
+    // Initialize logging.
     logfile_init();
     LOG_INFO("Starting");
-    quickmenu_start();
+
+    // Start quickmenu routines.
+    int ret = quickmenu_start();
+    if (ret < 0) {
+        LOG_ERROR("quickmenu_start returned error 0x%08X", ret);
+        return SCE_KERNEL_START_FAILED;
+    }
+
     LOG_INFO("Started");
 
     return SCE_KERNEL_START_SUCCESS;
@@ -55,9 +64,19 @@ int module_stop(SceSize args, const void* argp) {
     (void)args;
     (void)argp;
 
+    bool failed = false;
+
     LOG_INFO("Stopping");
-    quickmenu_stop();
+
+    // Stop quickmenu routines.
+    int ret = quickmenu_stop();
+    if (ret < 0) {
+        LOG_ERROR("quickmenu_stop returned error 0x%08X", ret);
+        failed = true;
+    }
+
     LOG_INFO("Stopped");
 
-    return SCE_KERNEL_STOP_SUCCESS;
+    // TODO drop (int) cast on new clang-tidy: https://github.com/llvm/llvm-project/issues/195604
+    return (int)failed ? SCE_KERNEL_STOP_FAIL : SCE_KERNEL_STOP_SUCCESS;
 }

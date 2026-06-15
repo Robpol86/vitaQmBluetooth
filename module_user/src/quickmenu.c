@@ -218,8 +218,10 @@ static void quickmenu_on_unload(const char* id) {
  * TODO:
  * - Add function to calculate position from top left instead of center.
  * - Pixel perfect alignment.
+ *
+ * @return 0 on success, negative on error.
  */
-void quickmenu_start(void) {
+int quickmenu_start(void) {
     // Add horizontal line separator.
     QuickMenuRebornSeparator(QM_ID_SEPARATOR, SCE_SEPARATOR_HEIGHT);
 
@@ -252,12 +254,16 @@ void quickmenu_start(void) {
     const char* last_widget = QM_ID_BUTTONS[VQMBT_MAX_DEVICES - 1];
     QuickMenuRebornAssignOnLoadHandler(quickmenu_on_load, last_widget);
     QuickMenuRebornAssignOnDeleteHandler(quickmenu_on_unload, last_widget);
+
+    return 0;
 }
 
 /**
  * Unloads the plugin's quick menu items.
+ *
+ * @return 0 on success, negative on error.
  */
-void quickmenu_stop(void) {
+int quickmenu_stop(void) {
     // Stop event thread.
     kmod_event_stop();
 
@@ -269,4 +275,6 @@ void quickmenu_stop(void) {
     QuickMenuRebornUnregisterWidget(QM_ID_PLANE_BUTTONS);
     QuickMenuRebornUnregisterWidget(QM_ID_SECTION_TITLE);
     QuickMenuRebornRemoveSeparator(QM_ID_SEPARATOR);
+
+    return 0;
 }
