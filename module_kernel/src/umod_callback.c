@@ -74,13 +74,18 @@ int umod_cb_emit_event(const VqmbtEvent* event) {
  * Syscall that the user module uses to read the next event from the ring buffer.
  *
  * @param event Write event details into this pointer.
+ * @param num_events Just reset read_idx if <1, return 1 if 1, error on >1.
  * @return 0 on no new event, 1 on new event, negative on error.
  */
-int kvqmbt_read_event(VqmbtEvent* event) {
+int kvqmbt_read_event(VqmbtEvent* event, int num_events) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
     ENTER_SYSCALL(syscall_state_);
 
-    if (event == NULL) {
+    if (num_events > 1) {
+        LOG_ERROR("num_events must be <=1: %d", num_events);
+        return VQMBT_ERROR_INVALID_ARGUMENT;
+    }
+    if (num_events > 0 && event == NULL) {
         LOG_ERROR("Invalid event pointer: NULL");
         return VQMBT_ERROR_INVALID_ARGUMENT;
     }
@@ -92,9 +97,17 @@ int kvqmbt_read_event(VqmbtEvent* event) {
         // No new data.
         return 0;
     }
-    LOG_DEBUG(0, "write_idx=0x%08X read_idx=0x%08X", write_idx, read_idx);  // Keep below "no new data" (logs a lot).
+    LOG_DEBUG(0, "Fetched write_idx=0x%08X read_idx=0x%08X", write_idx, read_idx);
+
+    // Reset read_idx if requested.
+    if (num_events < 1) {
+        atomic_store_explicit(&ring_buffer_read_idx, write_idx, memory_order_relaxed);
+        LOG_DEBUG(0, "Set ring_buffer_read_idx=0x%08X", write_idx);
+        return 0;
+    }
+
+    // Fault if producer wrote more since the last read than the size of the buffer.
     if (write_idx - read_idx > RING_BUFFER_SIZE) {
-        // Producer wrote more since the last read than the size of the buffer, fault.
         LOG_WARN("Ring buffer overrun: write_idx=%u read_idx=%u (delta=%u)", write_idx, read_idx, write_idx - read_idx);
         atomic_store_explicit(&ring_buffer_read_idx, write_idx, memory_order_relaxed);
         return VQMBT_ERROR_CB_OVERFLOW;

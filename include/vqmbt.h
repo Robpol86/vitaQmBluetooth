@@ -75,7 +75,7 @@ int kvqmbt_get_paired_devices(VqmbtDeviceInfo* info, int info_size);
 bool kvqmbt_bluetooth_state(void);
 
 // umod_callback.c syscalls.
-int kvqmbt_read_event(VqmbtEvent* event);
+int kvqmbt_read_event(VqmbtEvent* event, int num_events);
 SceUID kvqmbt_get_wrapped_event_flag(void);
 void kvqmbt_unwrap_event_flag(void);
 
