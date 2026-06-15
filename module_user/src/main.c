@@ -37,13 +37,14 @@ int module_start(SceSize args, const void* argp) {
     (void)args;
     (void)argp;
 
+    // Initialize logging.
     logfile_init();
     LOG_INFO("Starting");
 
     // Start quickmenu routines.
     int ret = quickmenu_start();
     if (ret < 0) {
-        LOG_ERROR("Failed");
+        LOG_ERROR("quickmenu_start returned error 0x%08X", ret);
         return SCE_KERNEL_START_FAILED;
     }
 
@@ -66,12 +67,16 @@ int module_stop(SceSize args, const void* argp) {
     bool failed = false;
 
     LOG_INFO("Stopping");
+
+    // Stop quickmenu routines.
     int ret = quickmenu_stop();
-    if (ret < 0) failed = true;
+    if (ret < 0) {
+        LOG_ERROR("quickmenu_stop returned error 0x%08X", ret);
+        failed = true;
+    }
+
     LOG_INFO("Stopped");
 
-    if (failed) {
-        return SCE_KERNEL_STOP_FAIL;
-    }
-    return SCE_KERNEL_STOP_SUCCESS;
+    // TODO drop (int) cast on new clang-tidy: https://github.com/llvm/llvm-project/issues/195604
+    return (int)failed ? SCE_KERNEL_STOP_FAIL : SCE_KERNEL_STOP_SUCCESS;
 }

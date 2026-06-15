@@ -29,9 +29,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 /**
  * Main entrypoint. Called when the module is started.
  *
- * TODO:
- * - Return SCE_KERNEL_START_FAILED if any called functions fails.
- *
  * @param args The size of the arguments passed to the module.
  * @param argp A pointer to the arguments passed to the module.
  * @return SCE_KERNEL_START_SUCCESS on success, or an error code on failure.
@@ -40,10 +37,28 @@ int module_start(SceSize args, const void* argp) {
     (void)args;
     (void)argp;
 
+    // Initialize logging.
     logfile_init();
     LOG_INFO("Starting");
-    umod_cb_start();
-    bt_event_start();
+
+    // Start user module callback handling routines.
+    int ret = umod_cb_start();
+    if (ret < 0) {
+        LOG_ERROR("umod_cb_start returned error 0x%08X", ret);
+        return SCE_KERNEL_START_FAILED;
+    }
+
+    // Start system blueooth event listener thread.
+    ret = bt_event_start();
+    if (ret < 0) {
+        LOG_ERROR("bt_event_start returned error 0x%08X", ret);
+        ret = umod_cb_stop();
+        if (ret < 0) {
+            LOG_ERROR("umod_cb_stop returned error 0x%08X", ret);
+        }
+        return SCE_KERNEL_START_FAILED;
+    }
+
     LOG_INFO("Started");
 
     return SCE_KERNEL_START_SUCCESS;
@@ -51,9 +66,6 @@ int module_start(SceSize args, const void* argp) {
 
 /**
  * Unloading entrypoint. Called when the module is stopped.
- *
- * TODO:
- * - Return SCE_KERNEL_STOP_FAILED if any called functions fails.
  *
  * @param args The size of the arguments passed to the module.
  * @param argp A pointer to the arguments passed to the module.
@@ -63,10 +75,26 @@ int module_stop(SceSize args, const void* argp) {
     (void)args;
     (void)argp;
 
+    bool failed = false;
+
     LOG_INFO("Stopping");
-    bt_event_stop();
-    umod_cb_stop();
+
+    // Stop system blueooth event listener thread.
+    int ret = bt_event_stop();
+    if (ret < 0) {
+        LOG_ERROR("bt_event_stop returned error 0x%08X", ret);
+        failed = true;
+    }
+
+    // Stop user module callback handling routines.
+    ret = umod_cb_stop();
+    if (ret < 0) {
+        LOG_ERROR("umod_cb_stop returned error 0x%08X", ret);
+        failed = true;
+    }
+
     LOG_INFO("Stopped");
 
-    return SCE_KERNEL_STOP_SUCCESS;
+    // TODO drop (int) cast on new clang-tidy: https://github.com/llvm/llvm-project/issues/195604
+    return (int)failed ? SCE_KERNEL_STOP_FAIL : SCE_KERNEL_STOP_SUCCESS;
 }
