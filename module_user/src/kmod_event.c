@@ -36,6 +36,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define THREAD_PRIORITY 0x96 /* Higher value = lower priority. */
 #define THREAD_STACK_SIZE 0x1000
 
+static KmeCallback cb_on_start = NULL;
+static KmeCallback cb_on_event_dropped = NULL;
+static KmeCallbackEvent cb_on_event = NULL;
 static SceUID uid_event_flag = -1;
 static SceUID uid_thread = -1;
 static _Atomic bool run_thread = false;
@@ -53,7 +56,11 @@ static void fetch_events(void) {
         // Handle errors.
         if (ret == VQMBT_ERROR_CB_OVERFLOW) {
             LOG_WARN("kvqmbt_read_event reported dropped events");
-            handle_event_dropped();
+            if (cb_on_event_dropped == NULL) {
+                LOG_ERROR("cb_on_event_dropped is null");
+            } else {
+                cb_on_event_dropped();
+            }
             continue;
         }
         if (ret < 0) {
@@ -67,7 +74,11 @@ static void fetch_events(void) {
         }
 
         // Continue in handler.
-        handle_event(&event);
+        if (cb_on_event == NULL) {
+            LOG_ERROR("cb_on_event is null");
+        } else {
+            cb_on_event(&event);
+        }
     }
 }
 
@@ -83,6 +94,13 @@ static int event_thread(SceSize args, void* argp) {
     (void)argp;
 
     LOG_DEBUG(0, "Thread started");
+
+    // Run the on_start function if passed.
+    if (cb_on_start == NULL) {
+        LOG_ERROR("cb_on_start is null");
+    } else {
+        cb_on_start();
+    }
 
     // Get event flag.
     uid_event_flag = kvqmbt_get_wrapped_event_flag();
@@ -121,12 +139,19 @@ static int event_thread(SceSize args, void* argp) {
  *
  * TODO:
  * - Return errors so caller can return non-success.
+ *
+ * @param on_start Call this function from the thread when it starts.
+ * @param on_event_dropped Call this function from the thread when dropped/missed kernel events are detected.
+ * @param on_event Call this function from the thread when an event is detected.
  */
-void kmod_event_start(void) {
+void kmod_event_start(KmeCallback on_start, KmeCallback on_event_dropped, KmeCallbackEvent on_event) {
     if (uid_thread >= 0) {
         return;
     }
 
+    cb_on_start = on_start;
+    cb_on_event_dropped = on_event_dropped;
+    cb_on_event = on_event;
     run_thread = true;
 
     // Create the thread.
