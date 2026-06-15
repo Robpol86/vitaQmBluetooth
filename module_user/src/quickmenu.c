@@ -202,12 +202,9 @@ static void quickmenu_on_unload(const char* id) {
  * @return 0 on success, negative on error.
  */
 int quickmenu_start(void) {
-<<<<<<< HEAD
     // Initialize mutex and state.
     qm_state_mutex_start();
 
-=======
->>>>>>> 135253b (Return error codes from funcs called from main() (#151))
     // Add horizontal line separator.
     QuickMenuRebornSeparator(QM_ID_SEPARATOR, SCE_SEPARATOR_HEIGHT);
 
