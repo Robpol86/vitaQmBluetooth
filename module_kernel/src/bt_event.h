@@ -22,7 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef BT_EVENT_H
 #define BT_EVENT_H
 
-void bt_event_start(void);
-void bt_event_stop(void);
+int bt_event_start(void);
+int bt_event_stop(void);
 
 #endif  // BT_EVENT_H
