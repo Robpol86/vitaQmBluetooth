@@ -140,6 +140,9 @@ static void quickmenu_on_unload(const char* id) {
  * Loads the plugin's quick menu items.
  *
  * TODO:
+ * - callback: relabel button with new state. Surface error in button as close/reopen resets labels
+ * - button_reset() button_disable() button_enable() functions
+ * TODO:
  * - Add function to calculate position from top left instead of center.
  * - Pixel perfect alignment.
  */
