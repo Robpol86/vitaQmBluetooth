@@ -33,7 +33,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 static KmeCallback cb_on_start = NULL;
 static KmeCallback cb_on_event_dropped = NULL;
-static KmeHandledCallback cb_on_event = NULL;
+static KmeCallbackEvent cb_on_event = NULL;
 static SceUID uid_event_flag = -1;
 static SceUID uid_thread = -1;
 static _Atomic bool run_thread = false;
@@ -139,7 +139,7 @@ static int event_thread(SceSize args, void* argp) {
  * @param on_event_dropped Call this function from the thread when dropped/missed kernel events are detected.
  * @param on_event Call this function from the thread when an event is detected.
  */
-void kmod_event_start(KmeCallback on_start, KmeCallback on_event_dropped, KmeHandledCallback on_event) {
+void kmod_event_start(KmeCallback on_start, KmeCallback on_event_dropped, KmeCallbackEvent on_event) {
     if (uid_thread >= 0) {
         return;
     }
