@@ -35,23 +35,20 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];  // TODO locking/semaphore?
 
 /**
- * Check if the device is currently connected.
- *
- * TODO:
- * - Change from bool to int, just reutrn the state. Rename function.
+ * Return the connection state of the device.
  *
  * @param mac0 First four bytes of the bluetooth device's MAC address.
  * @param mac1 Last two bytes of the bluetooth device's MAC address.
- * @return true if the device is connected.
+ * @return state ID.
  */
-bool kvqmbt_is_connected(unsigned int mac0, unsigned int mac1) {
+VqmbtInferredDevState kvqmbt_device_state(unsigned int mac0, unsigned int mac1) {
     uint32_t syscall_state_ SYSCALL_STATE = 0;
     ENTER_SYSCALL(syscall_state_);
 
     VqmbtInferredDevState state = ksceBtGetConnectingInfo(mac0, mac1);
     LOG_DEBUG(0, "ksceBtGetConnectingInfo(mac0=%08X, mac1=%08X) returned state=%d", mac0, mac1, state);
 
-    return (bool)(state == 5 || state == 6);
+    return state;
 }
 
 /**
@@ -180,4 +177,19 @@ int kvqmbt_get_paired_devices(VqmbtDeviceInfo* info, int info_size) {
     }
 
     return count;
+}
+
+/**
+ * Get the bluetooth subsystem state.
+ *
+ * @return True if bluetooth is enabled.
+ */
+bool kvqmbt_bluetooth_state(void) {
+    uint32_t syscall_state_ SYSCALL_STATE = 0;
+    ENTER_SYSCALL(syscall_state_);
+
+    int state = ksceBtGetConfiguration();
+    LOG_DEBUG(0, "ksceBtGetConfiguration returned state=0x%08X", state);
+
+    return state == 0x9;
 }

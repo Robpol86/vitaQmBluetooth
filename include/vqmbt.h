@@ -68,10 +68,11 @@ typedef struct VqmbtEvent {
 } VqmbtEvent;
 
 // bluetooth.c syscalls.
-bool kvqmbt_is_connected(unsigned int mac0, unsigned int mac1);
+VqmbtInferredDevState kvqmbt_device_state(unsigned int mac0, unsigned int mac1);
 int kvqmbt_connect_device(unsigned int mac0, unsigned int mac1);
 int kvqmbt_disconnect_device(unsigned int mac0, unsigned int mac1);
 int kvqmbt_get_paired_devices(VqmbtDeviceInfo* info, int info_size);
+bool kvqmbt_bluetooth_state(void);
 
 // umod_callback.c syscalls.
 int kvqmbt_read_event(VqmbtEvent* event);
