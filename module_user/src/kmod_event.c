@@ -19,11 +19,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief Listen for and handle events emitted by the kernel module.
  ******************************************************************************/
 
-/**
- * TODO:
- * - Optimize, only run the thread when quickmenu is opened.
- */
-
 #include "kmod_event.h"
 
 #include <psp2/kernel/error.h>
