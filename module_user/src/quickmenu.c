@@ -36,6 +36,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2/kernel/modulemgr.h>
 #include <quickmenureborn/qm_reborn.h>
 
+#include "kmod_event.h"
 #include "log.h"
 #include "qm_ids.h"
 #include "vqmbt.h"
@@ -154,6 +155,9 @@ static ONLOAD_HANDLER(quickmenu_on_load) {
 
     LOG_DEBUG(0, "Quick menu opened.");
 
+    // Start event thread.
+    kmod_event_start();
+
     // Zero the struct array to prevent ghost data.
     sceClibMemset(devices, 0, sizeof(devices));
 
@@ -192,6 +196,9 @@ static void quickmenu_on_unload(const char* id) {
     (void)id;
 
     LOG_DEBUG(0, "Quick menu closed.");
+
+    // Stop event thread.
+    kmod_event_stop();
 
     // Reset button labels.
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
@@ -251,6 +258,10 @@ void quickmenu_start(void) {
  * Unloads the plugin's quick menu items.
  */
 void quickmenu_stop(void) {
+    // Stop event thread.
+    kmod_event_stop();
+
+    // Unregister widgets.
     for (int idx = 0; idx < VQMBT_MAX_DEVICES; idx++) {
         const char* id = QM_ID_BUTTONS[idx];
         QuickMenuRebornUnregisterWidget(id);
