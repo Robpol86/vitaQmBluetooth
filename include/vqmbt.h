@@ -31,7 +31,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 // Error codes.
 typedef enum VqmbtError : int {
-    VQMBT_ERROR_INVALID_ARGUMENT = (int)0x80690001,
+    VQMBT_ERROR_INVALID_ARGUMENT = (int)0x80690001,  // Arbitrary first value.
     VQMBT_ERROR_KERNEL_SIDE,
     VQMBT_ERROR_KERNEL_SIDE_BUSY,
     VQMBT_ERROR_CB_OVERFLOW,
