@@ -2,13 +2,3 @@ If:
   PathMatch: vendor/.*
 Diagnostics:
   Suppress: "*"
----
-If:
-  PathMatch: tests/.*
-CompileFlags:
-  CompilationDatabase: build-test
----
-If:
-  PathMatch: (include|module_.*)/.*
-CompileFlags:
-  CompilationDatabase: build-debug
