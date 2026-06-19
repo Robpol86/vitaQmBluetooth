@@ -90,7 +90,7 @@ static void refresh_ui(void) {
                 sceClibSnprintf(label, sizeof(label), "Error: %s", qm_button->error_message);
                 break;
             case BTNSTATE_DISCONNECTED:
-                sceClibSnprintf(label, sizeof(label), "Connect %s", device->name);
+                sceClibSnprintf(label, sizeof(label), "Connect %s", device->name[0] ? device->name : "N/A");
                 button_enabled = true;
                 break;
             case BTNSTATE_CONNECTED:
