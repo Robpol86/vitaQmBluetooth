@@ -244,6 +244,9 @@ static void transition_state_error(bool* changed, const int idx, const VqmbtErro
     const char* message;
 
     switch (error) {
+        case VQMBT_ERROR_KERNEL_SIDE_NOT_CONNECTABLE:
+            message = "Not connectable (try connecting from device)";
+            break;
         case VQMBT_ERROR_KERNEL_SIDE_BUSY:
             message = "Busy (Settings opened?)";
             break;
