@@ -69,6 +69,10 @@ int kvqmbt_connect_device(unsigned int mac0, unsigned int mac1) {
     }
 
     switch (ret) {
+        case SCE_BT_ERROR_CONNECT_START_NOT_CONNECTABLE:
+            LOG_ERROR("ksceBtStartConnect(mac0=%08X, mac1=%08X) returned SCE_BT_ERROR_CONNECT_START_NOT_CONNECTABLE",
+                      mac0, mac1);
+            return VQMBT_ERROR_KERNEL_SIDE_NOT_CONNECTABLE;
         case SCE_BT_ERROR_CONNECT_START_BUSY:
             LOG_ERROR("ksceBtStartConnect(mac0=%08X, mac1=%08X) returned SCE_BT_ERROR_CONNECT_START_BUSY", mac0, mac1);
             return VQMBT_ERROR_KERNEL_SIDE_BUSY;
