@@ -30,6 +30,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "log.h"
 #include "qm_ids.h"
+#include "sce_const.h"
 #include "vqmbt.h"
 
 #define BUTTON_LABEL_MAX (VQMBT_SCE_DEVICE_NAME_MAX + 16)
@@ -327,6 +328,7 @@ static void transition_state_bt_on(bool* changed) {
             case VQMBT_SCE_BT_STATE_DISCONNECTING:
                 transition_state_busy_disconnecting(changed, idx);
                 break;
+            case VQMBT_SCE_BT_STATE_CONNECTED_HID:
             case VQMBT_SCE_BT_STATE_CONNECTED:
             case VQMBT_SCE_BT_STATE_REGISTERING:
                 transition_state_connected(changed, idx, false);
@@ -404,6 +406,7 @@ static void bulk_update(bool* changed, const QmsRequest* request) {
                 LOG_DEBUG(0, "Setting state to disconnecting if not set");
                 transition_state_busy_disconnecting(changed, idx);
                 break;
+            case VQMBT_SCE_BT_STATE_CONNECTED_HID:
             case VQMBT_SCE_BT_STATE_CONNECTED:
             case VQMBT_SCE_BT_STATE_REGISTERING:
                 LOG_DEBUG(0, "Setting state to connected if not set");
