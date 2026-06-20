@@ -27,7 +27,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "sce_const.h"
 
-#define VQMBT_MAX_DEVICES 8  // Maximum number of bluetooth devices the PS Vita can be paired with.
+#define VQMBT_MAX_DEVICES 8  // Maximum number of bluetooth devices supported by the plugin.
 
 // Error codes.
 typedef enum VqmbtError : int {
