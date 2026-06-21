@@ -31,7 +31,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  */
 void debug_banner(void) {
 #ifndef NDEBUG
-    LOG_DEBUG(0, "TODO");
+    LOG_WARN("TODO");
 #endif
 }
 
