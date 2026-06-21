@@ -24,16 +24,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "log.h"
 #include "logfile.h"
+#include "notify.h"
 #include "quickmenu.h"
-
-/**
- * TODO
- */
-void debug_banner(void) {
-#ifndef NDEBUG
-    LOG_WARN("TODO");
-#endif
-}
 
 /**
  * Main entrypoint. Called when the module is started.
@@ -57,8 +49,8 @@ int module_start(SceSize args, const void* argp) {
         return SCE_KERNEL_START_FAILED;
     }
 
-    // TODO
-    debug_banner();
+    // Notify user if they're running a debug build.
+    notify_if_debug();
 
     LOG_INFO("Started");
 

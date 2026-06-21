@@ -10,6 +10,7 @@ add_executable("${MODULE_NAME}"
   src/main.c
   src/kmod_event.c
   src/logfile.c
+  src/notify.c
   src/qm_state.c
   src/quickmenu.c
 )
