@@ -27,6 +27,15 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "quickmenu.h"
 
 /**
+ * TODO
+ */
+void debug_banner(void) {
+#ifndef NDEBUG
+    LOG_DEBUG(0, "TODO");
+#endif
+}
+
+/**
  * Main entrypoint. Called when the module is started.
  *
  * @param args The size of the arguments passed to the module.
@@ -47,6 +56,9 @@ int module_start(SceSize args, const void* argp) {
         LOG_ERROR("quickmenu_start returned error 0x%08X", ret);
         return SCE_KERNEL_START_FAILED;
     }
+
+    // TODO
+    debug_banner();
 
     LOG_INFO("Started");
 
