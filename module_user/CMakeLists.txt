@@ -53,8 +53,8 @@ target_link_libraries("${MODULE_NAME}" PRIVATE
   SceIofilemgr_stub
   SceKernelThreadMgr_stub
   SceLibKernel_stub
-  SceNotificationUtil_stub
   SceRtc_stub
+  SceSysmodule_stub
 
   taihen_stub
 

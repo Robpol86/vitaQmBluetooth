@@ -19,14 +19,31 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief TODO.
  ******************************************************************************/
 
+/**
+ * TODO:
+ * - Tapping on the notification says "Cannot Find Application"
+ * - Move SceNotificationUtil workaround into its own function.
+ */
+
 #include "notify.h"
 
-#include <psp2/notificationutil.h>
+#include <psp2/sysmodule.h>
+#include <psp2/types.h>
+#include <stdint.h>
+#include <taihen.h>
 
 #include "log.h"
 
+// Library not found: [SceNotificationUtil, ver=1]
+
+#define VQMBT_NOTIFICATIONUTIL_LIB_NID 0xE19097C3
+#define VQMBT_NOTIFICATIONUTIL_SEND_NID 0xDE6F33F4
+#define NOTIFY_TEXT_BUFFER_BYTES 0x410
+
+typedef SceInt32 (*VqmbtSendNotificationFn)(const SceWChar16* text);
+
 /**
- * TODO remove.
+ * TODO
  */
 static void utf8_to_utf16(const uint8_t* src, uint16_t* dst) {
     int i;
@@ -53,13 +70,26 @@ void notify_if_debug(void) {
 #ifdef NDEBUG
     return;
 #endif
-    char text_buf[SCE_NOTIFICATIONUTIL_TEXT_MAX * 2];
-    sceClibSnprintf(text_buf, sizeof(text_buf), "Hello World");
+    int ret = sceSysmoduleLoadModule(SCE_SYSMODULE_NOTIFICATION_UTIL);
+    if (ret < 0) {
+        LOG_ERROR("sceSysmoduleLoadModule returned error 0x%08X", ret);
+        return;
+    }
+    LOG_DEBUG(0, "sceSysmoduleLoadModule returned 0x%08X", ret);
 
-    SceNotificationUtilProgressInitParam param;
-    sceClibMemset(&param, 0, sizeof(SceNotificationUtilProgressInitParam));
-    utf8_to_utf16((uint8_t*)text_buf, param.notificationText);
+    uintptr_t send_addr = 0;
+    ret = taiGetModuleExportFunc("SceNotificationUtil", VQMBT_NOTIFICATIONUTIL_LIB_NID, VQMBT_NOTIFICATIONUTIL_SEND_NID,
+                                 &send_addr);
+    if (ret < 0) {
+        LOG_ERROR("taiGetModuleExportFunc returned error 0x%08X", ret);
+        return;
+    }
+    LOG_DEBUG(0, "taiGetModuleExportFunc returned 0x%08X", ret);
 
-    SceInt32 ret = sceNotificationUtilSendNotification(param.notificationText);
-    LOG_DEBUG(0, "sceNotificationUtilSendNotification returned 0x%08X", ret);
+    static SceWChar16 text[NOTIFY_TEXT_BUFFER_BYTES / sizeof(SceWChar16)];
+    sceClibMemset(text, 0, sizeof(text));
+    utf8_to_utf16((const uint8_t*)"Hello World", text);
+
+    ret = ((VqmbtSendNotificationFn)send_addr)(text);
+    LOG_DEBUG(0, "VqmbtSendNotificationFn returned 0x%08X", ret);
 }
