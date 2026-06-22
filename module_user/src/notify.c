@@ -23,6 +23,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * TODO:
  * - Tapping on the notification says "Cannot Find Application"
  * - Move SceNotificationUtil workaround into its own function.
+ * - Decompile release binary and confirm no notify instructions compared to main branch.
  */
 
 #include "notify.h"
