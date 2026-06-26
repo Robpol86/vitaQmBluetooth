@@ -56,13 +56,6 @@ runs:
         echo "VITASDK=${{ inputs.vitasdk-path }}" >> "$GITHUB_ENV"
         echo "${{ inputs.vitasdk-path }}/bin" >> "$GITHUB_PATH"
 
-    - name: Restore vitasdk cache
-      id: cache-vitasdk
-      uses: actions/cache/restore@v5
-      with:
-        path: ${{ inputs.vitasdk-path }}
-        key: ${{ runner.os }}-${{ hashFiles('.github/actions/vitasdk/**') }}-vitasdk
-
     - name: Install the Vita SDK
       if: steps.cache-vitasdk.outputs.cache-hit != 'true'
       shell: bash
@@ -70,13 +63,6 @@ runs:
         set -euxo pipefail
         git -C "$RUNNER_TEMP" clone --depth 1 "https://github.com/vitasdk/vdpm"
         cd "$RUNNER_TEMP/vdpm"
-        until bash -exo pipefail ./bootstrap-vitasdk.sh; do sleep 10; rm -rv "$VITASDK"; done
+        ./bootstrap-vitasdk.sh
         ./install-all.sh
         cd .. && rm -rf vdpm
-
-    - name: Save vitasdk cache
-      if: steps.cache-vitasdk.outputs.cache-hit != 'true'
-      uses: actions/cache/save@v5
-      with:
-        path: ${{ inputs.vitasdk-path }}
-        key: ${{ steps.cache-vitasdk.outputs.cache-primary-key }}
