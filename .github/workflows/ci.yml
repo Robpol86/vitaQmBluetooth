@@ -26,7 +26,7 @@ jobs:
       - name: Install clang tools
         uses: ./.github/actions/clang
         with:
-          version: "22"
+          version: "22.1.8"
 
       - name: Build
         run: make build
