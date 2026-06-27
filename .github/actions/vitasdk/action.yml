@@ -19,7 +19,7 @@ runs:
       uses: actions/cache/restore@v5
       with:
         path: ${{ runner.temp }}/zstd
-        key: ${{ runner.os }}-${{ hashFiles('.github/actions/vitasdk/**') }}-zstd
+        key: ${{ runner.os }}-TODO-REVERT-zstd
 
     - name: Download and build zstd (macOS)
       if: runner.os == 'macOS' && steps.cache-zstd.outputs.cache-hit != 'true'
