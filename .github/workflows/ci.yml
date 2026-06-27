@@ -8,7 +8,7 @@ jobs:
   BuildTestLint:
     strategy:
       matrix:
-        os: ${{ github.event_name == 'pull_request' && fromJSON('["ubuntu-latest", "macos-latest"]') || fromJSON('["ubuntu-latest"]') }}
+        os: ["ubuntu-latest", "macos-latest"]
     runs-on: ${{ matrix.os }}
     steps:
 
@@ -21,7 +21,7 @@ jobs:
 
       - name: Install Vita SDK
         uses: ./.github/actions/vitasdk
-        timeout-minutes: 10
+        timeout-minutes: 2
 
       - name: Install clang tools
         uses: ./.github/actions/clang
