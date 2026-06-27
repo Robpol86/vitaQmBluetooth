@@ -74,7 +74,6 @@ runs:
         cd "$RUNNER_TEMP/vdpm"
         bash -exo pipefail ./bootstrap-vitasdk.sh
         bash -exo pipefail ./install-all.sh
-        "$VITASDK/bin/arm-vita-eabi-gcc" --version
         cd .. && rm -rf vdpm
 
     - name: Save vitasdk cache
@@ -83,3 +82,7 @@ runs:
       with:
         path: ${{ inputs.vitasdk-path }}
         key: ${{ steps.cache-vitasdk.outputs.cache-primary-key }}
+
+    - name: Validate Vita SDK
+      shell: bash -euxo pipefail
+      run: '"$VITASDK/bin/arm-vita-eabi-gcc" --version'
