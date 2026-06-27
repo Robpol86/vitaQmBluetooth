@@ -84,5 +84,5 @@ runs:
         key: ${{ steps.cache-vitasdk.outputs.cache-primary-key }}
 
     - name: Validate Vita SDK
-      shell: bash -euxo pipefail
+      shell: bash
       run: '"$VITASDK/bin/arm-vita-eabi-gcc" --version'
