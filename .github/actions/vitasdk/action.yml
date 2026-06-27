@@ -67,5 +67,5 @@ runs:
         cd "$RUNNER_TEMP/vdpm"
         ./bootstrap-vitasdk.sh
         ./install-all.sh
-        cd .. && rm -rf vdpm
         "$VITASDK/bin/arm-vita-eabi-gcc" --version
+        cd .. && rm -rf vdpm
