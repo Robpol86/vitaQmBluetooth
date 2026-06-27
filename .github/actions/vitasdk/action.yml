@@ -66,9 +66,4 @@ runs:
         ./bootstrap-vitasdk.sh
         ./install-all.sh
         cd .. && rm -rf vdpm
-
-    - name: Validate Vita SDK
-      shell: bash
-      run: |
-        set -euxo pipefail
         "$VITASDK/bin/arm-vita-eabi-gcc" --version
