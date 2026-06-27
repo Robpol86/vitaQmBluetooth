@@ -21,7 +21,7 @@ jobs:
 
       - name: Install Vita SDK
         uses: ./.github/actions/vitasdk
-        timeout-minutes: 2
+        timeout-minutes: 5
 
       - name: Install clang tools
         uses: ./.github/actions/clang
