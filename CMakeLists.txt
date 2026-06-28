@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.20)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-  if(DEFINED ENV{VITASDK})
+  if(DEFINED ENV{VITASDK})  # TODO and not empty
     set(CMAKE_TOOLCHAIN_FILE "$ENV{VITASDK}/share/vita.toolchain.cmake" CACHE PATH "toolchain file")
   else()
     message(FATAL_ERROR "Please define VITASDK to point to your SDK path!")
