@@ -16,7 +16,7 @@ add_executable("${MODULE_NAME}"
   src/umod_callback.c
 )
 
-forward_module_name_project_name("${MODULE_NAME}")
+common_forward_module_name_project_name("${MODULE_NAME}")
 
 target_include_directories("${MODULE_NAME}" PRIVATE
   "${CMAKE_SOURCE_DIR}/include"
