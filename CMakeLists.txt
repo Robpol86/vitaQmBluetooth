@@ -11,9 +11,6 @@ endif()
 project(vitaQmBluetooth VERSION 0.1.0 LANGUAGES C)
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
-# Explicit includes for clang-tidy.
-list(REMOVE_ITEM CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES "$ENV{VITASDK}/arm-vita-eabi/include")
-
 # Export compile commands for clang-tidy.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
