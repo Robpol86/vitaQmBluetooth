@@ -18,28 +18,12 @@ add_executable("${MODULE_NAME}"
 )
 
 common_forward_module_name_project_name("${MODULE_NAME}")
-
 target_include_directories("${MODULE_NAME}" SYSTEM PRIVATE
   "${VENDOR_DIR}/quickmenureborn"
 )
-target_include_directories("${MODULE_NAME}" PRIVATE
-  "${CMAKE_SOURCE_DIR}/include"
-  "${CMAKE_BINARY_DIR}/cmake_gen"
-)
-
-target_compile_options("${MODULE_NAME}" PRIVATE
-  -Wall
-  -Werror=format-security
-  -Werror=strict-prototypes
-  -Wformat=2
-  -ffile-prefix-map=${CMAKE_CURRENT_SOURCE_DIR}/src/=
-)
-
-target_link_options("${MODULE_NAME}" PRIVATE
-  -Wl,-e,module_start
-  -Wl,-q
-  -nostdlib
-)
+common_include_directories("${MODULE_NAME}")
+common_compile_options("${MODULE_NAME}")
+common_link_options("${MODULE_NAME}")
 
 target_link_directories("${MODULE_NAME}" PRIVATE
   "${VENDOR_DIR}/quickmenureborn/vitasdk_stubs"
