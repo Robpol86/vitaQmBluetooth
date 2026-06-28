@@ -1,3 +1,5 @@
+include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
+
 # Set variables.
 set(EXPORTS_YML "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen/exports.yml")
 set(MODULE_NAME "${PROJECT_NAME}Kernel")
@@ -16,7 +18,7 @@ add_executable("${MODULE_NAME}"
 target_compile_definitions("${MODULE_NAME}" PRIVATE ENABLE_VITASDK_BUILD_ASSERT
   MODULE_NAME="${MODULE_NAME}"
   PROJECT_NAME="${PROJECT_NAME}"
-)
+)  # TODO move to /cmake/common.cmake
 
 target_include_directories("${MODULE_NAME}" PRIVATE
   "${CMAKE_SOURCE_DIR}/include"
@@ -29,13 +31,13 @@ target_compile_options("${MODULE_NAME}" PRIVATE
   -Werror=strict-prototypes
   -Wformat=2
   -ffile-prefix-map=${CMAKE_CURRENT_SOURCE_DIR}/src/=
-)
+)  # TODO move to /cmake/common.cmake
 
 target_link_options("${MODULE_NAME}" PRIVATE
   -Wl,-e,module_start
   -Wl,-q
   -nostdlib
-)
+)  # TODO move to /cmake/common.cmake
 
 target_link_libraries("${MODULE_NAME}" PRIVATE
   gcc

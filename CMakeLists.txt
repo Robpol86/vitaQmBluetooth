@@ -9,9 +9,7 @@ if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
 endif()
 
 project(vitaQmBluetooth VERSION 0.1.0 LANGUAGES C)
-include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
-# Export compile commands for clang-tidy.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_subdirectory(module_kernel)

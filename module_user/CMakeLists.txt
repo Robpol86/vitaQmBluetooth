@@ -1,3 +1,5 @@
+include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
+
 # Set variables.
 set(EXPORTS_YML "${CMAKE_CURRENT_BINARY_DIR}/cmake_gen/exports.yml")
 set(MODULE_NAME "${PROJECT_NAME}User")
