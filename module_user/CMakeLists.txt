@@ -17,7 +17,7 @@ add_executable("${MODULE_NAME}"
   src/quickmenu.c
 )
 
-common_forward_module_name_project_name("${MODULE_NAME}")
+common_compile_definitions("${MODULE_NAME}")
 target_include_directories("${MODULE_NAME}" SYSTEM PRIVATE
   "${VENDOR_DIR}/quickmenureborn"
 )

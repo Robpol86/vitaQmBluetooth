@@ -16,7 +16,7 @@ add_executable("${MODULE_NAME}"
   src/umod_callback.c
 )
 
-common_forward_module_name_project_name("${MODULE_NAME}")
+common_compile_definitions("${MODULE_NAME}")
 common_include_directories("${MODULE_NAME}")
 common_compile_options("${MODULE_NAME}")
 common_link_options("${MODULE_NAME}")
