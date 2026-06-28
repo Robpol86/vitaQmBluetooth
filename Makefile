@@ -93,7 +93,7 @@ all: $(DEBUG_TARGETS) $(RELEASE_TARGETS) test lint
 .PHONY: clean
 clean: _HELP = Remove build and temporary files
 clean:
-	rm -rfv build-*/ fetch-*/
+	rm -rfv build-*/ fetch-*/ CMakeCache.txt CMakeFiles/
 
 define MAKEFILE_HELP_AWK
 BEGIN {

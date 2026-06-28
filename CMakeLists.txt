@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.28)
 
 # TODO
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
-  message(FATAL_ERROR "In-source builds are not allowed. Build out-of-source, e.g. `cmake -B build-debug .`")
+  message(FATAL_ERROR "In-source builds are forbidden. Build with e.g. `cmake -B build-debug .`")
 endif()
 
 # TODO
