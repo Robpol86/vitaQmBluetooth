@@ -1,3 +1,4 @@
+include("${CMAKE_SOURCE_DIR}/cmake/common.cmake" REQUIRED)
 include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
 # Set variables.
@@ -15,10 +16,7 @@ add_executable("${MODULE_NAME}"
   src/umod_callback.c
 )
 
-target_compile_definitions("${MODULE_NAME}" PRIVATE ENABLE_VITASDK_BUILD_ASSERT
-  MODULE_NAME="${MODULE_NAME}"
-  PROJECT_NAME="${PROJECT_NAME}"
-)  # TODO move to /cmake/common.cmake
+forward_module_name_project_name("${MODULE_NAME}")
 
 target_include_directories("${MODULE_NAME}" PRIVATE
   "${CMAKE_SOURCE_DIR}/include"
