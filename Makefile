@@ -10,10 +10,9 @@ build-%/compile_commands.json: CMakeLists.txt $(wildcard */CMakeLists.txt cmake/
 
 DEBUG_TARGETS = build-debug/module_user/$(PROJECT_NAME).suprx build-debug/module_kernel/$(PROJECT_NAME).skprx
 RELEASE_TARGETS = build-release/module_user/$(PROJECT_NAME).suprx build-release/module_kernel/$(PROJECT_NAME).skprx
-$(DEBUG_TARGETS): CMAKE_BUILD_TYPE = Debug
-$(RELEASE_TARGETS): CMAKE_BUILD_TYPE = Release
-$(DEBUG_TARGETS) $(RELEASE_TARGETS): CMakeLists.txt $(wildcard include/* module_*/* module_*/*/* module_*/*/*/* module_*/*/*/*/*)
-	cmake -B $(firstword $(subst /, ,$@)) -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE)
+$(DEBUG_TARGETS): build-debug/compile_commands.json
+$(RELEASE_TARGETS): build-release/compile_commands.json
+$(DEBUG_TARGETS) $(RELEASE_TARGETS): $(wildcard include/* module_*/* module_*/*/* module_*/*/*/* module_*/*/*/*/*)
 	cmake --build $(firstword $(subst /, ,$@))
 
 .PHONY: build
