@@ -5,6 +5,7 @@ PROJECT_NAME = vitaQmBluetooth
 
 build-%/compile_commands.json: FIRST_DIR = $(firstword $(subst /, ,$@))
 build-%/compile_commands.json: CMAKE_BUILD_TYPE = $(if $(filter build-release,$(FIRST_DIR)),Release,Debug)
+build-%/compile_commands.json: EXTRA_CMAKE_ARGS ?=
 build-%/compile_commands.json: CMakeLists.txt $(wildcard */CMakeLists.txt cmake/*.cmake)
 	cmake -B $(FIRST_DIR) -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) $(EXTRA_CMAKE_ARGS)
 
