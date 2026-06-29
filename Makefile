@@ -91,7 +91,6 @@ format:
 
 .PHONY: test
 test: _HELP = Run unit tests
-test: export CC = clang
 test:
 	cmake -B build-test -DCMAKE_BUILD_TYPE=Debug -DUNIT_TESTING=ON
 	cmake --build build-test
