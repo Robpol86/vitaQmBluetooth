@@ -87,7 +87,7 @@ void logfile_write_line(int y, int m, int d, const char* line, ...) {
     va_list args;
     va_start(args, line);
     ret = sceClibVsnprintf(buffer, sizeof(buffer), line, args);
-    va_end(args);
+    va_end(args);  // NOLINT(clang-analyzer-security.VAList)
     if (ret < 0) {
         LOG_ERROR("sceClibVsnprintf returned error 0x%08X", ret);
         return;
