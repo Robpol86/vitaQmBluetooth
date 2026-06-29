@@ -91,8 +91,7 @@ format:
 
 .PHONY: test
 test: _HELP = Run unit tests
-test:
-	cmake -B build-test -DCMAKE_BUILD_TYPE=Debug -DUNIT_TESTING=ON
+test: build-test/compile_commands.json
 	cmake --build build-test
 	ctest --test-dir build-test --output-on-failure --no-tests=error -V
 
