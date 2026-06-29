@@ -1,0 +1,55 @@
+# Set variables.
+set(MODULE_NAME "${PROJECT_NAME}Test")
+set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
+
+include(CTest)
+
+# Enable FetchContent feature.
+include(FetchContent)
+set(FETCHCONTENT_QUIET OFF)
+
+# Download cmocka.
+FetchContent_Declare(cmocka
+  URL                         https://cmocka.org/files/2.0/cmocka-2.0.2.tar.xz
+  URL_HASH                    SHA256=39f92f366bdf3f1a02af4da75b4a5c52df6c9f7e736c7d65de13283f9f0ef416
+  DOWNLOAD_EXTRACT_TIMESTAMP  TRUE
+)
+FetchContent_MakeAvailable(cmocka)
+
+# Download fff.
+FetchContent_Declare(fff
+  GIT_REPOSITORY  https://github.com/meekrosoft/fff.git
+  GIT_TAG         5111c61e1ef7848e3afd3550044a8cf4405f4199
+)
+FetchContent_GetProperties(fff)
+if(NOT fff_POPULATED)
+  FetchContent_MakeAvailable(fff)
+endif()
+
+# Iterate unit test (test_*.c) files.
+# TODO NO ITERATE, HARDCODE
+# file(GLOB_RECURSE TEST_SRC_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/module_*/test_*.c")
+# foreach(test_src_file_abs ${TEST_SRC_FILES})
+#   # Get relative path, top directory name, and test name.
+#   file(RELATIVE_PATH test_src_file_rel "${CMAKE_CURRENT_SOURCE_DIR}" "${test_src_file_abs}")  # e.g. module_user/a/test_x.c
+#   string(REGEX REPLACE "/.*" "" src_module_dir_name "${test_src_file_rel}")  # e.g. module_user
+#   string(REGEX REPLACE "[^a-zA-Z0-9]" "_" test_name "${MODULE_NAME}_${test_src_file_rel}")  # e.g. vitaQmBluetoothTest_module_user_a_test_x
+#   # Add test and its dependencies, like the other CMakeLists.txt files.
+#   add_executable("${test_name}" "${test_src_file_rel}")
+#   target_compile_definitions("${test_name}" PRIVATE
+#     MODULE_NAME="${MODULE_NAME}"
+#     PROJECT_NAME="${CMAKE_PROJECT_NAME}"
+#   )
+#   target_include_directories("${test_name}" PRIVATE
+#     "${CMAKE_SOURCE_DIR}/include"
+#     "${CMAKE_BINARY_DIR}/cmake_gen"
+#     "${CMAKE_SOURCE_DIR}/${src_module_dir_name}/src"
+#   )
+#   if(src_module_dir_name STREQUAL "module_user")
+#     target_include_directories("${test_name}" PRIVATE "${VENDOR_DIR}/quickmenureborn")
+#   endif()
+#   target_include_directories("${test_name}" PRIVATE "${fff_SOURCE_DIR}")
+#   target_compile_options("${test_name}" PRIVATE "-idirafter" "$ENV{VITASDK}/arm-vita-eabi/include")
+#   target_link_libraries("${test_name}" PRIVATE cmocka::cmocka)
+#   add_test(NAME "${test_name}" COMMAND "${test_name}")
+# endforeach()

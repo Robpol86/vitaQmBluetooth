@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.28)
 
+option(WITH_TESTS "Build unit tests" OFF)
+message(STATUS "WITH_TESTS:                   ${WITH_TESTS}")
+
 # Block in-source builds.
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
   message(FATAL_ERROR "In-source builds are forbidden. Build with: `make clean build`")
@@ -20,3 +23,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_subdirectory(module_kernel)
 add_subdirectory(module_user)
+if(WITH_TESTS)
+  add_subdirectory(tests)
+endif()

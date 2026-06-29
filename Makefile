@@ -81,8 +81,11 @@ format:
 
 .PHONY: test
 test: _HELP = Run unit tests
+test: export CC = clang
 test:
-	echo TODO
+	cmake -B build-test -DWITH_TESTS=ON
+	cmake --build build-test
+	ctest --test-dir build-test --output-on-failure --no-tests=error -V
 
 ## Misc
 

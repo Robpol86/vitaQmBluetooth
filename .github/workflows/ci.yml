@@ -28,6 +28,12 @@ jobs:
         with:
           version: "22"
 
+      - name: Restore cmake cache
+        uses: actions/cache@v5
+        with:
+          path: build-*/_deps
+          key: cmake-${{ runner.os }}-${{ hashFiles('**/CMakeLists.txt', '**/*.cmake') }}
+
       - name: Build
         run: make build
 
