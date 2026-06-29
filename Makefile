@@ -5,9 +5,8 @@ PROJECT_NAME = vitaQmBluetooth
 
 build-%/compile_commands.json: FIRST_DIR = $(firstword $(subst /, ,$@))
 build-%/compile_commands.json: CMAKE_BUILD_TYPE = $(if $(filter build-release,$(FIRST_DIR)),Release,Debug)
-build-%/compile_commands.json: UNIT_TESTING = $(if $(filter build-test,$(FIRST_DIR)),ON,OFF)
 build-%/compile_commands.json: CMakeLists.txt $(wildcard */CMakeLists.txt cmake/*.cmake)
-	cmake -B $(FIRST_DIR) -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) -DUNIT_TESTING=$(UNIT_TESTING)
+	cmake -B $(FIRST_DIR) -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) $(EXTRA_CMAKE_ARGS)
 
 DEBUG_TARGETS = build-debug/module_user/$(PROJECT_NAME).suprx build-debug/module_kernel/$(PROJECT_NAME).skprx
 RELEASE_TARGETS = build-release/module_user/$(PROJECT_NAME).suprx build-release/module_kernel/$(PROJECT_NAME).skprx
@@ -73,6 +72,8 @@ recv-logs:
 	nc -kl 10224
 
 ## Testing
+
+build-test/compile_commands.json: EXTRA_CMAKE_ARGS = -DUNIT_TESTING=ON
 
 FIND_RELEVANT = -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in'
 
