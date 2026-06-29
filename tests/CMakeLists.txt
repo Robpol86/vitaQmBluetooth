@@ -2,8 +2,6 @@
 set(MODULE_NAME "${PROJECT_NAME}Test")
 set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
 
-include(CTest)
-
 # Enable FetchContent feature.
 include(FetchContent)
 set(FETCHCONTENT_QUIET OFF)

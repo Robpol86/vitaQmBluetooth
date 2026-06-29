@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.28)
 
-option(WITH_TESTS "Build unit tests" OFF)
-message(STATUS "WITH_TESTS:                   ${WITH_TESTS}")
+option(UNIT_TESTING "Build unit tests" OFF)
 message(STATUS "CMAKE_BUILD_TYPE:             ${CMAKE_BUILD_TYPE}")
+message(STATUS "UNIT_TESTING:                 ${UNIT_TESTING}")
 
 # Block in-source builds.
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
@@ -10,14 +10,14 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
 endif()
 
 # Block non-debug test builds.
-if(WITH_TESTS)
+if(UNIT_TESTING)
   if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
-    message(FATAL_ERROR "CMAKE_BUILD_TYPE must be Debug when WITH_TESTS is ON")
+    message(FATAL_ERROR "CMAKE_BUILD_TYPE must be Debug when UNIT_TESTING is ON")
   endif()
 endif()
 
 # Look for VITASDK environment variable.
-if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+if(NOT UNIT_TESTING AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   if(DEFINED ENV{VITASDK} AND NOT "$ENV{VITASDK}" STREQUAL "")
     set(CMAKE_TOOLCHAIN_FILE "$ENV{VITASDK}/share/vita.toolchain.cmake" CACHE PATH "toolchain file")
   else()
@@ -32,8 +32,10 @@ set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_subdirectory(module_kernel)
-add_subdirectory(module_user)
-if(WITH_TESTS)
+if(UNIT_TESTING)
+  enable_testing()
   add_subdirectory(tests)
+else()
+  add_subdirectory(module_kernel)
+  add_subdirectory(module_user)
 endif()
