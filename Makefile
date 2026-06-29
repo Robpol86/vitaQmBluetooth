@@ -83,7 +83,7 @@ format:
 test: _HELP = Run unit tests
 test: export CC = clang
 test:
-	cmake -B build-test -DWITH_TESTS=ON
+	cmake -B build-test -DWITH_TESTS=ON -DCMAKE_BUILD_TYPE=Debug
 	cmake --build build-test
 	ctest --test-dir build-test --output-on-failure --no-tests=error -V
 
