@@ -8,7 +8,7 @@ RELEASE_TARGETS = build-release/module_user/$(PROJECT_NAME).suprx build-release/
 $(DEBUG_TARGETS): CMAKE_BUILD_TYPE = Debug
 $(RELEASE_TARGETS): CMAKE_BUILD_TYPE = Release
 $(DEBUG_TARGETS) $(RELEASE_TARGETS): CMakeLists.txt $(wildcard include/* module_*/* module_*/*/* module_*/*/*/* module_*/*/*/*/*)
-	cmake -B $(firstword $(subst /, ,$@)) -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) .
+	cmake -B $(firstword $(subst /, ,$@)) -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE)
 	cmake --build $(firstword $(subst /, ,$@))
 
 .PHONY: build
@@ -83,7 +83,7 @@ format:
 test: _HELP = Run unit tests
 test: export CC = clang
 test:
-	cmake -B build-test -DUNIT_TESTING=ON -DCMAKE_BUILD_TYPE=Debug
+	cmake -B build-test -DCMAKE_BUILD_TYPE=Debug -DUNIT_TESTING=ON
 	cmake --build build-test
 	ctest --test-dir build-test --output-on-failure --no-tests=error -V
 
