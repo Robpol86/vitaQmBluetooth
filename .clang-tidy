@@ -24,6 +24,6 @@ CheckOptions:
   readability-identifier-naming.EnumCase: CamelCase
   readability-identifier-naming.EnumConstantCase: UPPER_CASE
   readability-identifier-naming.FunctionCase: lower_case
-ExcludeHeaderFilterRegex: '.*/build-[^/]+/.*'
+ExcludeHeaderFilterRegex: '.*/build-[^/]+/.*|.*/vendor/.*'
 HeaderFilterRegex: '.*'
 WarningsAsErrors: '*'
