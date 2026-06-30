@@ -83,8 +83,7 @@ lint: _HELP = Run linters
 lint: build-debug/compile_commands.json build-test/compile_commands.json
 	find include module_*/src \( $(FIND_RELEVANT) \) -exec clang-tidy -p build-debug {} +
 	find tests \( $(FIND_RELEVANT) \) -exec clang-tidy -p build-test {} +
-	find include module_*/src \( $(FIND_RELEVANT) \) -exec clang-format --dry-run --Werror {} +
-	echo TODO find tests \( $(FIND_RELEVANT) \) -exec clang-format --dry-run --Werror {} +
+	find include module_*/src tests \( $(FIND_RELEVANT) \) -exec clang-format --dry-run --Werror {} +
 
 .PHONY: format
 format: _HELP = Apply format/lint fixes
