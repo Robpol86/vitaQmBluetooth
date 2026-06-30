@@ -18,10 +18,10 @@ add_executable("${MODULE_NAME}"
 )
 
 common_compile_definitions("${MODULE_NAME}")
+common_include_directories("${MODULE_NAME}")
 target_include_directories("${MODULE_NAME}" SYSTEM PRIVATE
   "${VENDOR_DIR}/quickmenureborn"
 )
-common_include_directories("${MODULE_NAME}")
 common_compile_options("${MODULE_NAME}")
 common_link_options("${MODULE_NAME}")
 
