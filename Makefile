@@ -88,7 +88,7 @@ lint: build-debug/compile_commands.json build-test/compile_commands.json
 .PHONY: format
 format: _HELP = Apply format/lint fixes
 format:
-	find include module_*/src \( $(FIND_RELEVANT) \) -exec clang-format -i {} +
+	find include module_*/src tests \( $(FIND_RELEVANT) \) -exec clang-format -i {} +
 
 .PHONY: test
 test: _HELP = Run unit tests
