@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.28)
 
+message(STATUS "CMAKE_BUILD_TYPE:             ${CMAKE_BUILD_TYPE}")
+
 # Block in-source builds.
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
   message(FATAL_ERROR "In-source builds are forbidden. Build with: `make clean build`")
