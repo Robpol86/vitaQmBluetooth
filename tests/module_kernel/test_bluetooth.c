@@ -20,9 +20,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  ******************************************************************************/
 
 #include <cmocka.h>
-
+#include <fff.h>
 // TODO #include "bluetooth.c"
-#include "fff.h"
 
 DEFINE_FFF_GLOBALS;
 
