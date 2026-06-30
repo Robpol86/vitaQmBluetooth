@@ -3,12 +3,17 @@ PROJECT_NAME = vitaQmBluetooth
 
 ## Build
 
+build-%/compile_commands.json: FIRST_DIR = $(firstword $(subst /, ,$@))
+build-%/compile_commands.json: CMAKE_BUILD_TYPE = $(if $(filter build-release,$(FIRST_DIR)),Release,Debug)
+build-%/compile_commands.json: CMakeLists.txt $(wildcard */CMakeLists.txt cmake/*.cmake)
+	cmake -B $(FIRST_DIR) -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE)
+
 DEBUG_TARGETS = build-debug/module_user/$(PROJECT_NAME).suprx build-debug/module_kernel/$(PROJECT_NAME).skprx
 RELEASE_TARGETS = build-release/module_user/$(PROJECT_NAME).suprx build-release/module_kernel/$(PROJECT_NAME).skprx
-$(DEBUG_TARGETS): export CMAKE_BUILD_TYPE = Debug
-$(RELEASE_TARGETS): export CMAKE_BUILD_TYPE = Release
-$(DEBUG_TARGETS) $(RELEASE_TARGETS): CMakeLists.txt $(wildcard include/* module_*/* module_*/*/* module_*/*/*/* module_*/*/*/*/*)
-	cmake -B $(firstword $(subst /, ,$@)) .
+
+$(DEBUG_TARGETS): build-debug/compile_commands.json
+$(RELEASE_TARGETS): build-release/compile_commands.json
+$(DEBUG_TARGETS) $(RELEASE_TARGETS): $(wildcard include/* module_*/* module_*/*/* module_*/*/*/* module_*/*/*/*/*)
 	cmake --build $(firstword $(subst /, ,$@))
 
 .PHONY: build
@@ -72,7 +77,7 @@ FIND_RELEVANT = -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in'
 
 .PHONY: lint
 lint: _HELP = Run linters
-lint: $(DEBUG_TARGETS)
+lint: build-debug/compile_commands.json
 	find include module_*/src \( $(FIND_RELEVANT) \) -exec clang-tidy -p build-debug {} +
 	find include module_*/src \( $(FIND_RELEVANT) \) -exec clang-format --dry-run --Werror {} +
 
