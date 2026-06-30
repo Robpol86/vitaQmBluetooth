@@ -2,7 +2,7 @@
 
 # Set common compile definitions.
 function(common_compile_definitions target)
-  target_compile_definitions("${target}" PRIVATE ENABLE_VITASDK_BUILD_ASSERT
+  target_compile_definitions("${target}" PRIVATE
     MODULE_NAME="${MODULE_NAME}"
     PROJECT_NAME="${PROJECT_NAME}"
   )
