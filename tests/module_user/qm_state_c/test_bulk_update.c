@@ -21,8 +21,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <cmocka.h>
 #include <fff.h>
-#include <stdio.h>
-#include <string.h>
 
 #include "qm_state.c"
 
