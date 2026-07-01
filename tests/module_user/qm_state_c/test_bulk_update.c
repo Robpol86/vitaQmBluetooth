@@ -41,17 +41,11 @@ FAKE_VALUE_FUNC(int, kvqmbt_connect_device, unsigned int, unsigned int);
 FAKE_VALUE_FUNC(int, kvqmbt_disconnect_device, unsigned int, unsigned int);
 FAKE_VALUE_FUNC(int, sceKernelGetThreadId);
 FAKE_VALUE_FUNC_VARARG(int, sceClibPrintf, const char*, ...);
+FAKE_VALUE_FUNC_VARARG(int, sceClibSnprintf, char*, SceSize, const char*, ...);
 
 // === Hand-written bridges — need real behavior ===
 void* sceClibMemcpy(void* d, const void* s, SceSize n) { return memcpy(d, s, n); }
 void* sceClibMemset(void* d, int c, SceSize n) { return memset(d, c, n); }
-int sceClibSnprintf(char* buf, SceSize n, const char* fmt, ...) {
-    va_list ap;
-    va_start(ap, fmt);
-    int r = vsnprintf(buf, n, fmt, ap);
-    va_end(ap);
-    return r;
-}
 
 // === Hand-written no-ops — tests don't care about these side effects ===
 int sceKernelLockLwMutex(SceKernelLwMutexWork* m, int n, unsigned int* t) {
