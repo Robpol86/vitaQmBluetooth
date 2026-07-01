@@ -5,8 +5,9 @@ PROJECT_NAME = vitaQmBluetooth
 
 build-%/compile_commands.json: FIRST_DIR = $(firstword $(subst /, ,$@))
 build-%/compile_commands.json: CMAKE_BUILD_TYPE = $(if $(filter build-release,$(FIRST_DIR)),Release,Debug)
+build-%/compile_commands.json: EXTRA_CMAKE_ARGS ?=
 build-%/compile_commands.json: CMakeLists.txt $(wildcard */CMakeLists.txt cmake/*.cmake)
-	cmake -B $(FIRST_DIR) -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE)
+	cmake -B $(FIRST_DIR) -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) $(EXTRA_CMAKE_ARGS)
 
 DEBUG_TARGETS = build-debug/module_user/$(PROJECT_NAME).suprx build-debug/module_kernel/$(PROJECT_NAME).skprx
 RELEASE_TARGETS = build-release/module_user/$(PROJECT_NAME).suprx build-release/module_kernel/$(PROJECT_NAME).skprx
@@ -73,23 +74,27 @@ recv-logs:
 
 ## Testing
 
+build-test/compile_commands.json: EXTRA_CMAKE_ARGS = -DUNIT_TESTING=ON
+
 FIND_RELEVANT = -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in'
 
 .PHONY: lint
 lint: _HELP = Run linters
-lint: build-debug/compile_commands.json
+lint: build-debug/compile_commands.json build-test/compile_commands.json
 	find include module_*/src \( $(FIND_RELEVANT) \) -exec clang-tidy -p build-debug {} +
-	find include module_*/src \( $(FIND_RELEVANT) \) -exec clang-format --dry-run --Werror {} +
+	find tests \( $(FIND_RELEVANT) \) -exec clang-tidy -p build-test {} +
+	find include module_*/src tests \( $(FIND_RELEVANT) \) -exec clang-format --dry-run --Werror {} +
 
 .PHONY: format
 format: _HELP = Apply format/lint fixes
 format:
-	find include module_*/src \( $(FIND_RELEVANT) \) -exec clang-format -i {} +
+	find include module_*/src tests \( $(FIND_RELEVANT) \) -exec clang-format -i {} +
 
 .PHONY: test
 test: _HELP = Run unit tests
-test:
-	echo TODO
+test: build-test/compile_commands.json
+	cmake --build build-test
+	ctest --test-dir build-test --output-on-failure --no-tests=error -V
 
 ## Misc
 

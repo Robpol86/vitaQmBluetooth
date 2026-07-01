@@ -17,6 +17,7 @@ add_executable("${MODULE_NAME}"
   src/quickmenu.c
 )
 
+target_compile_definitions("${MODULE_NAME}" PRIVATE ENABLE_VITASDK_BUILD_ASSERT)
 common_compile_definitions("${MODULE_NAME}")
 common_include_directories("${MODULE_NAME}")
 target_include_directories("${MODULE_NAME}" SYSTEM PRIVATE
