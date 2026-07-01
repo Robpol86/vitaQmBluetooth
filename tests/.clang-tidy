@@ -2,5 +2,6 @@ InheritParentConfig: true
 Checks: >
   -bugprone-suspicious-include,
   -bugprone-multi-level-implicit-pointer-conversion,
+  -clang-analyzer-security.VAList,
   -readability-else-after-return,
   -readability-inconsistent-declaration-parameter-name,
