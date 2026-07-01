@@ -39,8 +39,12 @@ FAKE_VALUE_FUNC(int, QuickMenuRebornSetWidgetColor, const char*, float, float, f
 FAKE_VALUE_FUNC(int, QuickMenuRebornSetWidgetLabel, const char*, const char*);
 FAKE_VALUE_FUNC(int, kvqmbt_connect_device, unsigned int, unsigned int);
 FAKE_VALUE_FUNC(int, kvqmbt_disconnect_device, unsigned int, unsigned int);
+FAKE_VALUE_FUNC(int, sceKernelCreateLwMutex, SceKernelLwMutexWork*, const char*, unsigned int, int,
+                const SceKernelLwMutexOptParam*);
 FAKE_VALUE_FUNC(int, sceKernelDeleteLwMutex, SceKernelLwMutexWork*);
 FAKE_VALUE_FUNC(int, sceKernelGetThreadId);
+FAKE_VALUE_FUNC(int, sceKernelLockLwMutex, SceKernelLwMutexWork*, int, unsigned int*);
+FAKE_VALUE_FUNC(int, sceKernelUnlockLwMutex, SceKernelLwMutexWork*, int);
 FAKE_VALUE_FUNC_VARARG(int, sceClibPrintf, const char*, ...);
 FAKE_VALUE_FUNC_VARARG(int, sceClibSnprintf, char*, SceSize, const char*, ...);
 FAKE_VOID_FUNC_VARARG(logfile_write_line, int, int, int, const char*, ...);
@@ -50,26 +54,6 @@ void* sceClibMemcpy(void* d, const void* s, SceSize n) { return memcpy(d, s, n);
 void* sceClibMemset(void* d, int c, SceSize n) { return memset(d, c, n); }
 
 // === Hand-written no-ops — tests don't care about these side effects ===
-int sceKernelLockLwMutex(SceKernelLwMutexWork* m, int n, unsigned int* t) {
-    (void)m;
-    (void)n;
-    (void)t;
-    return 0;
-}
-int sceKernelUnlockLwMutex(SceKernelLwMutexWork* m, int n) {
-    (void)m;
-    (void)n;
-    return 0;
-}
-int sceKernelCreateLwMutex(SceKernelLwMutexWork* w, const char* name, unsigned int attr, int init,
-                           const SceKernelLwMutexOptParam* opt) {
-    (void)w;
-    (void)name;
-    (void)attr;
-    (void)init;
-    (void)opt;
-    return 0;
-}
 int sceRtcGetCurrentClock(SceDateTime* t, int tz) {
     if (t) memset(t, 0, sizeof(*t));
     (void)tz;
