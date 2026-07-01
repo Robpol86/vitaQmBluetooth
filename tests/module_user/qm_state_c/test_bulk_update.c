@@ -42,6 +42,7 @@ FAKE_VALUE_FUNC(int, kvqmbt_disconnect_device, unsigned int, unsigned int);
 FAKE_VALUE_FUNC(int, sceKernelGetThreadId);
 FAKE_VALUE_FUNC_VARARG(int, sceClibPrintf, const char*, ...);
 FAKE_VALUE_FUNC_VARARG(int, sceClibSnprintf, char*, SceSize, const char*, ...);
+FAKE_VOID_FUNC_VARARG(logfile_write_line, int, int, int, const char*, ...);
 
 // === Hand-written bridges — need real behavior ===
 void* sceClibMemcpy(void* d, const void* s, SceSize n) { return memcpy(d, s, n); }
@@ -77,12 +78,6 @@ int sceRtcGetCurrentClock(SceDateTime* t, int tz) {
     (void)tz;
     return 0;
 }
-void logfile_write_line(int y, int m, int d, const char* line, ...) {
-    (void)y;
-    (void)m;
-    (void)d;
-    (void)line;
-}
 
 /**
  * Setup test fixture. Called before each test.
@@ -93,18 +88,15 @@ static int setup(void** state) {
     // Reset state to empty.
     qm_state = (QmState){0};
 
-    // TODO
-    // RESET_FAKE(QuickMenuRebornSetWidgetLabel);
-    // RESET_FAKE(QuickMenuRebornSetWidgetColor);
-    // RESET_FAKE(kvqmbt_connect_device);
-    // RESET_FAKE(kvqmbt_disconnect_device);
-    // RESET_FAKE(sceKernelGetThreadId);
-    // RESET_FAKE(sceClibPrintf);
+    // Reset fff.
     FFF_RESET_HISTORY();
 
     return 0;
 }
 
+/**
+ * Test bulk update from clean state to single-device state.
+ */
 static void test_bulk_from_clean_one_device(void** state) {
     (void)state;
 
@@ -135,6 +127,9 @@ static void test_bulk_from_clean_one_device(void** state) {
     }
 }
 
+/**
+ * Entrypoint for all tests in this file.
+ */
 int main(void) {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test_setup(test_bulk_from_clean_one_device, setup),
