@@ -16,13 +16,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /******************************************************************************
  * @file
- * @brief TODO.
+ * @brief Unit tests for non-bulk state changes in qm_state.c.
  ******************************************************************************/
-
-/**
- * TODO:
- * - https://www.samlewis.me/2016/09/embedded-unit-testing-with-cmocka/
- */
 
 #include <cmocka.h>
 #include <fff.h>
@@ -30,7 +25,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <string.h>
 
 #include "qm_state.c"
-#include "vqmbt.h"
 
 // Setup mocks.
 DEFINE_FFF_GLOBALS;
