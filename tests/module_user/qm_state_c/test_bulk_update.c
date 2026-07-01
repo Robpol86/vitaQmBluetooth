@@ -35,8 +35,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 DEFINE_FFF_GLOBALS;
 
-FAKE_VALUE_FUNC(int, QuickMenuRebornSetWidgetLabel, const char*, const char*);
 FAKE_VALUE_FUNC(int, QuickMenuRebornSetWidgetColor, const char*, float, float, float, float);
+FAKE_VALUE_FUNC(int, QuickMenuRebornSetWidgetLabel, const char*, const char*);
 FAKE_VALUE_FUNC(int, kvqmbt_connect_device, unsigned int, unsigned int);
 FAKE_VALUE_FUNC(int, kvqmbt_disconnect_device, unsigned int, unsigned int);
 FAKE_VALUE_FUNC(int, sceKernelGetThreadId);
@@ -100,12 +100,12 @@ static int setup(void** state) {
     qm_state = (QmState){0};
 
     // TODO
-    RESET_FAKE(QuickMenuRebornSetWidgetLabel);
-    RESET_FAKE(QuickMenuRebornSetWidgetColor);
-    RESET_FAKE(kvqmbt_connect_device);
-    RESET_FAKE(kvqmbt_disconnect_device);
-    RESET_FAKE(sceKernelGetThreadId);
-    RESET_FAKE(sceClibPrintf);
+    // RESET_FAKE(QuickMenuRebornSetWidgetLabel);
+    // RESET_FAKE(QuickMenuRebornSetWidgetColor);
+    // RESET_FAKE(kvqmbt_connect_device);
+    // RESET_FAKE(kvqmbt_disconnect_device);
+    // RESET_FAKE(sceKernelGetThreadId);
+    // RESET_FAKE(sceClibPrintf);
     FFF_RESET_HISTORY();
 
     return 0;
