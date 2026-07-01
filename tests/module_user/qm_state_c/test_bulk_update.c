@@ -22,7 +22,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 /**
  * TODO:
  * - https://www.samlewis.me/2016/09/embedded-unit-testing-with-cmocka/
- * - Revisit mocks, prune, re-implement, understand.
  */
 
 #include <cmocka.h>
@@ -33,8 +32,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "qm_state.c"
 #include "vqmbt.h"
 
+// Setup mocks.
 DEFINE_FFF_GLOBALS;
-
 FAKE_VALUE_FUNC(int, QuickMenuRebornSetWidgetColor, const char*, float, float, float, float);
 FAKE_VALUE_FUNC(int, QuickMenuRebornSetWidgetLabel, const char*, const char*);
 FAKE_VALUE_FUNC(int, kvqmbt_connect_device, unsigned int, unsigned int);
@@ -49,8 +48,6 @@ FAKE_VALUE_FUNC(int, sceRtcGetCurrentClock, SceDateTime*, int);
 FAKE_VALUE_FUNC_VARARG(int, sceClibPrintf, const char*, ...);
 FAKE_VALUE_FUNC_VARARG(int, sceClibSnprintf, char*, SceSize, const char*, ...);
 FAKE_VOID_FUNC_VARARG(logfile_write_line, int, int, int, const char*, ...);
-
-// === Hand-written bridges — need real behavior ===
 void* sceClibMemcpy(void* d, const void* s, SceSize n) { return memcpy(d, s, n); }
 void* sceClibMemset(void* d, int c, SceSize n) { return memset(d, c, n); }
 
