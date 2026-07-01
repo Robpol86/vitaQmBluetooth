@@ -39,6 +39,7 @@ FAKE_VALUE_FUNC(int, QuickMenuRebornSetWidgetColor, const char*, float, float, f
 FAKE_VALUE_FUNC(int, QuickMenuRebornSetWidgetLabel, const char*, const char*);
 FAKE_VALUE_FUNC(int, kvqmbt_connect_device, unsigned int, unsigned int);
 FAKE_VALUE_FUNC(int, kvqmbt_disconnect_device, unsigned int, unsigned int);
+FAKE_VALUE_FUNC(int, sceKernelDeleteLwMutex, SceKernelLwMutexWork*);
 FAKE_VALUE_FUNC(int, sceKernelGetThreadId);
 FAKE_VALUE_FUNC_VARARG(int, sceClibPrintf, const char*, ...);
 FAKE_VALUE_FUNC_VARARG(int, sceClibSnprintf, char*, SceSize, const char*, ...);
@@ -67,10 +68,6 @@ int sceKernelCreateLwMutex(SceKernelLwMutexWork* w, const char* name, unsigned i
     (void)attr;
     (void)init;
     (void)opt;
-    return 0;
-}
-int sceKernelDeleteLwMutex(SceKernelLwMutexWork* w) {
-    (void)w;
     return 0;
 }
 int sceRtcGetCurrentClock(SceDateTime* t, int tz) {
