@@ -39,6 +39,7 @@ FAKE_VALUE_FUNC(int, QuickMenuRebornSetWidgetLabel, const char*, const char*);
 FAKE_VALUE_FUNC(int, QuickMenuRebornSetWidgetColor, const char*, float, float, float, float);
 FAKE_VALUE_FUNC(int, kvqmbt_connect_device, unsigned int, unsigned int);
 FAKE_VALUE_FUNC(int, kvqmbt_disconnect_device, unsigned int, unsigned int);
+FAKE_VALUE_FUNC(int, sceKernelGetThreadId);
 
 // === Hand-written bridges — need real behavior ===
 void* sceClibMemcpy(void* d, const void* s, SceSize n) { return memcpy(d, s, n); }
@@ -56,7 +57,6 @@ int sceClibPrintf(const char* fmt, ...) {
     (void)fmt;
     return 0;
 }
-int sceKernelGetThreadId(void) { return 0; }
 int sceKernelLockLwMutex(SceKernelLwMutexWork* m, int n, unsigned int* t) {
     (void)m;
     (void)n;
@@ -106,6 +106,7 @@ static int setup(void** state) {
     RESET_FAKE(QuickMenuRebornSetWidgetColor);
     RESET_FAKE(kvqmbt_connect_device);
     RESET_FAKE(kvqmbt_disconnect_device);
+    RESET_FAKE(sceKernelGetThreadId);
     FFF_RESET_HISTORY();
 
     return 0;
