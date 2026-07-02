@@ -19,9 +19,13 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief DELETE ME.
  ******************************************************************************/
 
+#include "syscall.h"
 #include "vqmbt.h"
 
-int delete_me(void) {
+int example_syscall(void) {
+    uint32_t syscall_state_ SYSCALL_STATE = 0;
+    ENTER_SYSCALL(syscall_state_);
+
     VqmbtDeviceInfo dev = {0};
     return sizeof(dev);
 }

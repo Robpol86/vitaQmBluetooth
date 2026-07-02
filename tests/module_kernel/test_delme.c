@@ -19,13 +19,20 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief TODO.
  ******************************************************************************/
 
+#define _PSP2KERN_KERNEL_CPU_H_      // Blocks real cpu.h
+#define _PSP2KERN_KERNEL_SYSCLIB_H_  // Blocks real sysclib.h
+
 #include <cmocka.h>
 #include <fff.h>
 
-#include "delme.c"
-
 // Setup mocks.
 DEFINE_FFF_GLOBALS;
+FAKE_VOID_FUNC(mock_enter_syscall, uint32_t*);
+FAKE_VOID_FUNC(mock_exit_syscall, uint32_t);
+#define ENTER_SYSCALL(state) mock_enter_syscall(&(state))
+#define EXIT_SYSCALL(state) mock_exit_syscall(state)
+
+#include "delme.c"
 
 /**
  * Setup test fixture. Called before each test.
@@ -39,10 +46,10 @@ static int setup(void** state) {
     return 0;
 }
 
-static void test_delet_me(void** state) {
+static void test_example_syscall(void** state) {
     (void)state;
 
-    int ret = delete_me();
+    int ret = example_syscall();
     assert_int_equal(ret, 136);
 }
 
@@ -51,7 +58,7 @@ static void test_delet_me(void** state) {
  */
 int main(void) {
     const struct CMUnitTest tests[] = {
-        cmocka_unit_test_setup(test_delet_me, setup),
+        cmocka_unit_test_setup(test_example_syscall, setup),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);
