@@ -36,8 +36,11 @@ FAKE_VOID_FUNC(mock_exit_syscall, uint32_t);
 
 // Setup post-include mocks.
 FAKE_VALUE_FUNC(int, ksceBtGetConnectingInfo, unsigned int, unsigned int);
+FAKE_VALUE_FUNC(int, ksceBtGetRegisteredInfo, int, int, SceBtRegisteredInfo*, SceSize);
 FAKE_VALUE_FUNC(int, ksceBtStartConnect, unsigned int, unsigned int);
 FAKE_VALUE_FUNC(int, ksceBtStartDisconnect, unsigned int, unsigned int);
+FAKE_VALUE_FUNC(int, ksceKernelCopyToUser, void*, const void*, SceSize);
+FAKE_VALUE_FUNC(int, ksceKernelDelayThread, SceUInt);
 FAKE_VALUE_FUNC(int, ksceKernelGetThreadId);
 FAKE_VALUE_FUNC(int, ksceRtcGetCurrentClock, SceDateTime*, int);
 FAKE_VALUE_FUNC_VARARG(int, ksceKernelPrintf, const char*, ...);
