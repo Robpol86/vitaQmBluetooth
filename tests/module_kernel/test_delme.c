@@ -43,7 +43,7 @@ static void test_delet_me(void** state) {
     (void)state;
 
     int ret = delete_me();
-    assert_int_equal(ret, 123);
+    assert_int_equal(ret, 136);
 }
 
 /**

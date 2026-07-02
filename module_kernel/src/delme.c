@@ -19,4 +19,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief DELETE ME.
  ******************************************************************************/
 
-int delete_me(void) { return 123; }
+#include "vqmbt.h"
+
+int delete_me(void) {
+    VqmbtDeviceInfo dev = {0};
+    return sizeof(dev);
+}
