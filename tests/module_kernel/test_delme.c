@@ -19,9 +19,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief TODO.
  ******************************************************************************/
 
-#define _PSP2KERN_KERNEL_CPU_H_      // Blocks real cpu.h
-#define _PSP2KERN_KERNEL_SYSCLIB_H_  // Blocks real sysclib.h
-
 #include <cmocka.h>
 #include <fff.h>
 
@@ -33,6 +30,8 @@ FAKE_VOID_FUNC(mock_exit_syscall, uint32_t);
 #define EXIT_SYSCALL(state) mock_exit_syscall(state)
 
 // Include source code to test.
+#define _PSP2KERN_KERNEL_CPU_H_      // Blocks vitasdk cpu.h
+#define _PSP2KERN_KERNEL_SYSCLIB_H_  // Blocks vitasdk sysclib.h
 #include "delme.c"
 
 /**
