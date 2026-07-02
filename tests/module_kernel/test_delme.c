@@ -22,7 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <cmocka.h>
 #include <fff.h>
 
-// Setup mocks.
+// Setup pre-include mocks.
 DEFINE_FFF_GLOBALS;
 FAKE_VOID_FUNC(mock_enter_syscall, uint32_t*);
 FAKE_VOID_FUNC(mock_exit_syscall, uint32_t);
@@ -33,6 +33,13 @@ FAKE_VOID_FUNC(mock_exit_syscall, uint32_t);
 #define _PSP2KERN_KERNEL_CPU_H_      // Blocks vitasdk cpu.h
 #define _PSP2KERN_KERNEL_SYSCLIB_H_  // Blocks vitasdk sysclib.h
 #include "delme.c"
+
+// Setup post-include mocks.
+FAKE_VALUE_FUNC(int, ksceBtGetConnectingInfo, unsigned int, unsigned int);
+FAKE_VALUE_FUNC(int, ksceKernelGetThreadId);
+FAKE_VALUE_FUNC(int, ksceRtcGetCurrentClock, SceDateTime*, int);
+FAKE_VALUE_FUNC_VARARG(int, ksceKernelPrintf, const char*, ...);
+FAKE_VOID_FUNC_VARARG(logfile_write_line, int, int, int, const char*, ...);
 
 /**
  * Setup test fixture. Called before each test.

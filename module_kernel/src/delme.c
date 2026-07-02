@@ -19,6 +19,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
  * @brief DELETE ME.
  ******************************************************************************/
 
+#include <psp2kern/bt.h>
+
+#include "log.h"
 #include "syscall.h"
 #include "vqmbt.h"
 
@@ -28,4 +31,14 @@ int example_syscall(void) {
 
     VqmbtDeviceInfo dev = {0};
     return sizeof(dev);
+}
+
+VqmbtInferredDevState example_kvqmbt_device_state(unsigned int mac0, unsigned int mac1) {
+    uint32_t syscall_state_ SYSCALL_STATE = 0;
+    ENTER_SYSCALL(syscall_state_);
+
+    VqmbtInferredDevState state = ksceBtGetConnectingInfo(mac0, mac1);
+    LOG_DEBUG(0, "ksceBtGetConnectingInfo(mac0=%08X, mac1=%08X) returned state=%d", mac0, mac1, state);
+
+    return state;
 }
