@@ -26,6 +26,17 @@ if(NOT fff_POPULATED)
   FetchContent_MakeAvailable(fff)
 endif()
 
+# Download repo containing CodeCoverage.
+FetchContent_Declare(cmake_modules
+  GIT_REPOSITORY  https://github.com/bilke/cmake-modules.git
+  GIT_TAG         5b988b5beb64270cf68b7d6c20298ebc8236b580
+)
+FetchContent_GetProperties(cmake_modules)
+if(NOT cmake_modules_POPULATED)
+  FetchContent_MakeAvailable(cmake_modules)
+endif()
+list(APPEND CMAKE_MODULE_PATH "${cmake_modules_SOURCE_DIR}")
+
 # Iterate unit test (test_*.c) files.
 file(GLOB_RECURSE TEST_SRC_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/module_*/test_*.c")
 foreach(test_src_file_abs ${TEST_SRC_FILES})
