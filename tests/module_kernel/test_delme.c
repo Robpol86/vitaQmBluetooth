@@ -32,6 +32,7 @@ FAKE_VOID_FUNC(mock_exit_syscall, uint32_t);
 #define ENTER_SYSCALL(state) mock_enter_syscall(&(state))
 #define EXIT_SYSCALL(state) mock_exit_syscall(state)
 
+// Include source code to test.
 #include "delme.c"
 
 /**
