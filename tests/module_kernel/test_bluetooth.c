@@ -54,6 +54,7 @@ static int setup(void** state) {
     (void)state;
 
     // Reset fff.
+    RESET_FAKE(ksceBtGetConfiguration);
     FFF_RESET_HISTORY();  // TODO remove setup function?
 
     return 0;
@@ -65,7 +66,15 @@ static int setup(void** state) {
 static void test_kvqmbt_bluetooth_state(void** state) {
     (void)state;
 
-    assert_int_equal(1, 1);  // TODO
+    // Test state == 0x9
+    ksceBtGetConfiguration_fake.return_val = 0x9;
+    bool ret = kvqmbt_bluetooth_state();
+    assert_true(ret);
+
+    // Test state == 0x0
+    ksceBtGetConfiguration_fake.return_val = 0x0;
+    ret = kvqmbt_bluetooth_state();
+    assert_false(ret);
 }
 
 /**
