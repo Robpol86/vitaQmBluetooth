@@ -16,7 +16,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 /******************************************************************************
  * @file
- * @brief TODO.
+ * @brief Unit tests for bluetooth.c.
  ******************************************************************************/
 
 #include <cmocka.h>
@@ -55,7 +55,7 @@ static int setup(void** state) {
 
     // Reset fff.
     RESET_FAKE(ksceBtGetConfiguration);
-    FFF_RESET_HISTORY();  // TODO remove setup function?
+    FFF_RESET_HISTORY();
 
     return 0;
 }
