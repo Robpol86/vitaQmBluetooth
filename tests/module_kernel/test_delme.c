@@ -22,7 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <cmocka.h>
 #include <fff.h>
 
-// TODO #include "bluetooth.c"
+#include "delme.c"
 
 // Setup mocks.
 DEFINE_FFF_GLOBALS;
@@ -39,10 +39,11 @@ static int setup(void** state) {
     return 0;
 }
 
-static void test_kvqmbt_get_paired_devices(void** state) {
+static void test_delet_me(void** state) {
     (void)state;
 
-    assert_int_equal(1, 1);
+    int ret = delete_me();
+    assert_int_equal(ret, 123);
 }
 
 /**
@@ -50,7 +51,7 @@ static void test_kvqmbt_get_paired_devices(void** state) {
  */
 int main(void) {
     const struct CMUnitTest tests[] = {
-        cmocka_unit_test_setup(test_kvqmbt_get_paired_devices, setup),
+        cmocka_unit_test_setup(test_delet_me, setup),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);

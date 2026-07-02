@@ -45,6 +45,12 @@ foreach(test_src_file_abs ${TEST_SRC_FILES})
   if(src_module_dir_name STREQUAL "module_user")
     target_include_directories("${test_name}" PRIVATE "${VENDOR_DIR}/quickmenureborn")
   endif()
+  if(src_module_dir_name STREQUAL "module_kernel")
+    # Shadow headers that neutralize host-incompatible VitaSDK kernel headers
+    # (ARM cp15 asm in cpu.h, libc collisions in sysclib.h). Regular -I dirs
+    # are searched before the -idirafter VitaSDK dir, so these win.
+    target_include_directories("${test_name}" PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/shims")
+  endif()
   target_include_directories("${test_name}" PRIVATE "${fff_SOURCE_DIR}")
   target_compile_options("${test_name}" PRIVATE "-idirafter" "$ENV{VITASDK}/arm-vita-eabi/include")
   target_link_libraries("${test_name}" PRIVATE cmocka::cmocka)
