@@ -59,10 +59,13 @@ static int setup(void** state) {
     return 0;
 }
 
-static void test_example_syscall(void** state) {
+/**
+ * Test.
+ */
+static void test_kvqmbt_bluetooth_state(void** state) {
     (void)state;
 
-    assert_int_equal(1, 1);
+    assert_int_equal(1, 1);  // TODO
 }
 
 /**
@@ -70,7 +73,7 @@ static void test_example_syscall(void** state) {
  */
 int main(void) {
     const struct CMUnitTest tests[] = {
-        cmocka_unit_test_setup(test_example_syscall, setup),
+        cmocka_unit_test_setup(test_kvqmbt_bluetooth_state, setup),
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL);
