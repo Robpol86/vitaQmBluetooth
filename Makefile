@@ -107,6 +107,10 @@ clean: _HELP = Remove build and temporary files
 clean:
 	rm -rfv build-*/ fetch-*/ CMakeCache.txt CMakeFiles/
 
+.PHONY: distclean
+distclean: _HELP = Remove build, temporary, and cached files
+distclean: clean
+
 define MAKEFILE_HELP_AWK
 BEGIN {
 	while (getline < "/dev/stdin") if ($$0 == "# Files") break  # Skip lines until targets start being listed.
