@@ -103,9 +103,10 @@ all: _HELP = Run linters and unit tests and then build
 all: $(DEBUG_TARGETS) $(RELEASE_TARGETS) test lint
 
 .PHONY: clean
-clean: _HELP = Remove build and temporary files
+clean: _HELP = Remove build files
 clean:
 	rm -rfv CMakeCache.txt CMakeFiles/
+	find build-*/ -mindepth 1 -maxdepth 1 ! -iname _deps -exec rm -rfv {} \;
 
 .PHONY: distclean
 distclean: _HELP = Remove build, temporary, and cached files
