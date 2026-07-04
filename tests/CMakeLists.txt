@@ -48,6 +48,7 @@ foreach(test_src_file_abs ${TEST_SRC_FILES})
 
   # Add test and its dependencies, like the other CMakeLists.txt files.
   add_executable("${test_name}" "${test_src_file_rel}")
+  # TODO append_coverage_compiler_flags_to_target("${test_name}")
   common_compile_definitions("${test_name}")
   common_include_directories("${test_name}")
   target_include_directories("${test_name}" PRIVATE
