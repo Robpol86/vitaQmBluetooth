@@ -74,7 +74,7 @@ recv-logs:
 
 ## Testing
 
-build-test/compile_commands.json: EXTRA_CMAKE_ARGS = -DUNIT_TESTING=ON
+build-test/compile_commands.json: EXTRA_CMAKE_ARGS = -DCMAKE_C_COMPILER=clang -DUNIT_TESTING=ON
 
 FIND_RELEVANT = -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in'
 
