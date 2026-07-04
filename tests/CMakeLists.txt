@@ -38,8 +38,7 @@ if(NOT fff_POPULATED)
 endif()
 
 # Iterate unit test (test_*.c) files.
-# TODO REVISIT
-set(ALL_TEST_TARGETS "")
+set(TEST_TARGETS "")
 file(GLOB_RECURSE TEST_SRC_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/module_*/test_*.c")
 foreach(test_src_file_abs ${TEST_SRC_FILES})
 
@@ -62,9 +61,11 @@ foreach(test_src_file_abs ${TEST_SRC_FILES})
   target_compile_options("${test_name}" PRIVATE "-idirafter" "$ENV{VITASDK}/arm-vita-eabi/include")
   target_link_libraries("${test_name}" PRIVATE cmocka::cmocka)
   add_test(NAME "${test_name}" COMMAND "${test_name}")
+
+  # Add test coverage flags/options.
   append_coverage_compiler_flags_to_target("${test_name}")
-  list(APPEND ALL_TEST_TARGETS "${test_name}")
   target_link_options("${test_name}" PRIVATE --coverage)
+  list(APPEND TEST_TARGETS "${test_name}")
 
 endforeach()
 
@@ -75,7 +76,7 @@ endif()
 setup_target_for_coverage_gcovr_xml(
   NAME coverage
   EXECUTABLE ctest --test-dir "${CMAKE_BINARY_DIR}" --output-on-failure --no-tests=error -V
-  DEPENDENCIES ${ALL_TEST_TARGETS}
+  DEPENDENCIES ${TEST_TARGETS}
   EXCLUDE
     "${CMAKE_BINARY_DIR}/_deps/*"
     "${CMAKE_SOURCE_DIR}/tests/*"
