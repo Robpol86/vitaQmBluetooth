@@ -27,7 +27,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <stdatomic.h>
 
 #include "log.h"
-#include "syscall.h"
 #include "vqmbt.h"
 
 #define RING_BUFFER_SIZE 16
@@ -78,9 +77,6 @@ int umod_cb_emit_event(const VqmbtEvent* event) {
  * @return 0 on no new event, 1 on new event, negative on error.
  */
 int kvqmbt_read_event(VqmbtEvent* event, int num_events) {
-    uint32_t syscall_state_ SYSCALL_STATE = 0;
-    ENTER_SYSCALL(syscall_state_);
-
     if (num_events > 1) {
         LOG_ERROR("num_events must be <=1: %d", num_events);
         return VQMBT_ERROR_INVALID_ARGUMENT;
@@ -140,9 +136,6 @@ int kvqmbt_read_event(VqmbtEvent* event, int num_events) {
  * @return The wrapped event flag UID on success, negative on error.
  */
 SceUID kvqmbt_get_wrapped_event_flag(void) {
-    uint32_t syscall_state_ SYSCALL_STATE = 0;
-    ENTER_SYSCALL(syscall_state_);
-
     // Sanity check.
     if (event_flag_uid < 0) {
         LOG_ERROR("event_flag_uid is not initialized: 0x%08X", event_flag_uid);
@@ -177,9 +170,6 @@ SceUID kvqmbt_get_wrapped_event_flag(void) {
  * Delete the wrapped event flag's "wrapping".
  */
 void kvqmbt_unwrap_event_flag(void) {
-    uint32_t syscall_state_ SYSCALL_STATE = 0;
-    ENTER_SYSCALL(syscall_state_);
-
     if (event_flag_puid < 0) {
         return;
     }

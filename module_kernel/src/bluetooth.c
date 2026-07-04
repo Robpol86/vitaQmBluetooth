@@ -29,7 +29,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <stdbool.h>
 
 #include "log.h"
-#include "syscall.h"
 #include "vqmbt.h"
 
 static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];  // TODO locking/semaphore?
@@ -42,9 +41,6 @@ static SceBtRegisteredInfo paired_devices[VQMBT_MAX_DEVICES];  // TODO locking/s
  * @return state ID.
  */
 VqmbtInferredDevState kvqmbt_device_state(unsigned int mac0, unsigned int mac1) {
-    uint32_t syscall_state_ SYSCALL_STATE = 0;
-    ENTER_SYSCALL(syscall_state_);
-
     VqmbtInferredDevState state = ksceBtGetConnectingInfo(mac0, mac1);
     LOG_DEBUG(0, "ksceBtGetConnectingInfo(mac0=%08X, mac1=%08X) returned state=%d", mac0, mac1, state);
 
@@ -59,9 +55,6 @@ VqmbtInferredDevState kvqmbt_device_state(unsigned int mac0, unsigned int mac1) 
  * @return 0 on success, negative on failure.
  */
 int kvqmbt_connect_device(unsigned int mac0, unsigned int mac1) {
-    uint32_t syscall_state_ SYSCALL_STATE = 0;
-    ENTER_SYSCALL(syscall_state_);
-
     int ret = ksceBtStartConnect(mac0, mac1);
     if (ret >= 0) {
         LOG_DEBUG(0, "ksceBtStartConnect(mac0=%08X, mac1=%08X) returned %d", mac0, mac1, ret);
@@ -90,9 +83,6 @@ int kvqmbt_connect_device(unsigned int mac0, unsigned int mac1) {
  * @return 0 on success, negative on failure.
  */
 int kvqmbt_disconnect_device(unsigned int mac0, unsigned int mac1) {
-    uint32_t syscall_state_ SYSCALL_STATE = 0;
-    ENTER_SYSCALL(syscall_state_);
-
     int ret = ksceBtStartDisconnect(mac0, mac1);
     if (ret >= 0) {
         LOG_DEBUG(0, "ksceBtStartDisconnect(mac0=%08X, mac1=%08X) returned %d", mac0, mac1, ret);
@@ -117,9 +107,6 @@ int kvqmbt_disconnect_device(unsigned int mac0, unsigned int mac1) {
  * @return Number of records written on success, or a negative error code on failure.
  */
 int kvqmbt_get_paired_devices(VqmbtDeviceInfo* info, int info_size) {
-    uint32_t syscall_state_ SYSCALL_STATE = 0;
-    ENTER_SYSCALL(syscall_state_);
-
     // Validate.
     if (info == NULL || info_size < 1 || info_size > VQMBT_MAX_DEVICES) {
         LOG_ERROR("Invalid argument: info=%p info_size=%d", info, info_size);
@@ -189,9 +176,6 @@ int kvqmbt_get_paired_devices(VqmbtDeviceInfo* info, int info_size) {
  * @return True if bluetooth is enabled.
  */
 bool kvqmbt_bluetooth_state(void) {
-    uint32_t syscall_state_ SYSCALL_STATE = 0;
-    ENTER_SYSCALL(syscall_state_);
-
     int state = ksceBtGetConfiguration();
     LOG_DEBUG(0, "ksceBtGetConfiguration returned state=0x%08X", state);
 
