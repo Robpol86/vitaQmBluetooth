@@ -24,10 +24,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 // Setup pre-include mocks.
 DEFINE_FFF_GLOBALS;
-FAKE_VOID_FUNC(mock_enter_syscall, uint32_t*);
-FAKE_VOID_FUNC(mock_exit_syscall, uint32_t);
-#define ENTER_SYSCALL(state) mock_enter_syscall(&(state))
-#define EXIT_SYSCALL(state) mock_exit_syscall(state)
 
 // Include source code to test.
 #define _PSP2KERN_KERNEL_CPU_H_      // Blocks vitasdk cpu.h
