@@ -73,7 +73,6 @@ endforeach()
 if(CMAKE_C_COMPILER_ID MATCHES "Clang")
   list(APPEND GCOVR_ADDITIONAL_ARGS --gcov-executable "llvm-cov gcov")
 endif()
-list(APPEND GCOVR_ADDITIONAL_ARGS -f ".*/(module_(user|kernel)/src|include)/.*" -i ".*\\.[ch]$")
 setup_target_for_coverage_gcovr_html(  # TODO back to xml
   NAME coverage
   EXECUTABLE ctest --test-dir "${CMAKE_BINARY_DIR}" --output-on-failure --no-tests=error -V
