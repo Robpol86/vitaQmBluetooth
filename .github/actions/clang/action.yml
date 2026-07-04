@@ -17,8 +17,9 @@ runs:
       run: |
         set -euxo pipefail
         curl -LSSf https://apt.llvm.org/llvm.sh |sudo bash -s -- "${{ inputs.version }}" all
-        sudo update-alternatives --install /usr/bin/clang-format clang-format "/usr/bin/clang-format-${{ inputs.version }}" 999
-        sudo update-alternatives --install /usr/bin/clang-tidy clang-tidy "/usr/bin/clang-tidy-${{ inputs.version }}" 999
+        for name in clang clang++ clang-format clang-tidy llvm-cov; do
+          sudo update-alternatives --install "/usr/bin/$name" "$name" "/usr/bin/$name-${{ inputs.version }}" 999
+        done
 
     - name: Install clang tools (macOS)
       if: runner.os == 'macOS'
