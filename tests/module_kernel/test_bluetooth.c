@@ -22,15 +22,13 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <cmocka.h>
 #include <fff.h>
 
-// Setup pre-include mocks.
-DEFINE_FFF_GLOBALS;
-
 // Include source code to test.
 #define _PSP2KERN_KERNEL_CPU_H_      // Blocks vitasdk cpu.h
 #define _PSP2KERN_KERNEL_SYSCLIB_H_  // Blocks vitasdk sysclib.h
 #include "bluetooth.c"
 
-// Setup post-include mocks.
+// Setup mocks.
+DEFINE_FFF_GLOBALS;
 FAKE_VALUE_FUNC(int, ksceBtGetConfiguration);
 FAKE_VALUE_FUNC(int, ksceBtGetConnectingInfo, unsigned int, unsigned int);
 FAKE_VALUE_FUNC(int, ksceBtGetRegisteredInfo, int, int, SceBtRegisteredInfo*, SceSize);

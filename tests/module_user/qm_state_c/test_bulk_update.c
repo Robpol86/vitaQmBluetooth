@@ -22,6 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <cmocka.h>
 #include <fff.h>
 
+// Include source code to test.
 #include "qm_state.c"
 
 // Setup mocks.
