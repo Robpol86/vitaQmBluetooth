@@ -23,7 +23,7 @@ function(common_compile_options target)
     -Werror=format-security
     -Werror=strict-prototypes
     -Wformat=2
-    -ffile-prefix-map=${CMAKE_SOURCE_DIR}/=${PROJECT_NAME}/
+    -ffile-prefix-map=${CMAKE_CURRENT_SOURCE_DIR}/src/=
   )
 endfunction()
 

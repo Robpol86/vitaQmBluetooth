@@ -60,9 +60,7 @@ static void reset(void) {
     }
 
     // Get bluetooth state.
-    LOG_DEBUG(0, "Getting bluetooth state");
     bool bluetooth_on = kvqmbt_bluetooth_state();
-    LOG_DEBUG(0, "Bluetooth state: %s", bluetooth_on ? "on" : "off");
 
     // Get all currently paired/registered bluetooth devices.
     VqmbtDeviceInfo devices[VQMBT_MAX_DEVICES];
