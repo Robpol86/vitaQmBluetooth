@@ -17,8 +17,7 @@ FetchContent_GetProperties(cmake_modules)
 if(NOT cmake_modules_POPULATED)
   FetchContent_MakeAvailable(cmake_modules)
 endif()
-list(APPEND CMAKE_MODULE_PATH "${cmake_modules_SOURCE_DIR}")
-include(CodeCoverage)
+include("${cmake_modules_SOURCE_DIR}/CodeCoverage.cmake" REQUIRED)
 
 # Download cmocka.
 FetchContent_Declare(cmocka
