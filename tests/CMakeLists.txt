@@ -80,5 +80,4 @@ setup_target_for_coverage_gcovr_xml(
     "${CMAKE_BINARY_DIR}/_deps/*"
     "${CMAKE_SOURCE_DIR}/tests/*"
     "${CMAKE_SOURCE_DIR}/vendor/*"
-  LCOV_ARGS --ignore-errors unused
 )
