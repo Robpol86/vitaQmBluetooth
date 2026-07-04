@@ -48,7 +48,6 @@ foreach(test_src_file_abs ${TEST_SRC_FILES})
 
   # Add test and its dependencies, like the other CMakeLists.txt files.
   add_executable("${test_name}" "${test_src_file_rel}")
-  # TODO append_coverage_compiler_flags_to_target("${test_name}")
   common_compile_definitions("${test_name}")
   common_include_directories("${test_name}")
   target_include_directories("${test_name}" PRIVATE
@@ -61,5 +60,8 @@ foreach(test_src_file_abs ${TEST_SRC_FILES})
   target_compile_options("${test_name}" PRIVATE "-idirafter" "$ENV{VITASDK}/arm-vita-eabi/include")
   target_link_libraries("${test_name}" PRIVATE cmocka::cmocka)
   add_test(NAME "${test_name}" COMMAND "${test_name}")
+  # TODO append_coverage_compiler_flags_to_target("${test_name}")
 
 endforeach()
+
+# TODO setup_target_for_coverage_gcovr_xml()
