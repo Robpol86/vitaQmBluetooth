@@ -73,7 +73,7 @@ if(CMAKE_C_COMPILER_ID MATCHES "Clang")
   list(APPEND GCOVR_ADDITIONAL_ARGS --gcov-executable "llvm-cov gcov")
 endif()
 setup_target_for_coverage_gcovr_xml(
-  NAME test-with-coverage
+  NAME coverage
   EXECUTABLE ctest --test-dir "${CMAKE_BINARY_DIR}" --output-on-failure --no-tests=error -V
   DEPENDENCIES ${ALL_TEST_TARGETS}
   EXCLUDE

@@ -93,7 +93,7 @@ format:
 .PHONY: test
 test: _HELP = Run unit tests
 test: build-test/compile_commands.json
-	cmake --build build-test --target test-with-coverage
+	cmake --build build-test --target coverage
 
 ## Misc
 
