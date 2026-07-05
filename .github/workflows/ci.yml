@@ -8,7 +8,12 @@ jobs:
   BuildTestLint:
     strategy:
       matrix:
-        os: ${{ github.event_name == 'pull_request' && fromJSON('["ubuntu-latest", "macos-latest"]') || fromJSON('["ubuntu-latest"]') }}
+        os: >-
+          ${{
+            (github.event_name == 'pull_request' || github.ref == 'refs/heads/main')
+            && fromJSON('["ubuntu-latest", "macos-latest"]')
+            || fromJSON('["ubuntu-latest"]')
+          }}
     runs-on: ${{ matrix.os }}
     steps:
 
