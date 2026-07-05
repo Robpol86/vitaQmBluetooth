@@ -8,6 +8,17 @@ set(VENDOR_DIR "${CMAKE_SOURCE_DIR}/vendor")
 include(FetchContent)
 set(FETCHCONTENT_QUIET OFF)
 
+# Download CodeCoverage.
+FetchContent_Declare(cmake_modules
+  GIT_REPOSITORY  https://github.com/bilke/cmake-modules.git
+  GIT_TAG         5b988b5beb64270cf68b7d6c20298ebc8236b580
+)
+FetchContent_GetProperties(cmake_modules)
+if(NOT cmake_modules_POPULATED)
+  FetchContent_MakeAvailable(cmake_modules)
+endif()
+include("${cmake_modules_SOURCE_DIR}/CodeCoverage.cmake" REQUIRED)
+
 # Download cmocka.
 FetchContent_Declare(cmocka
   URL                         https://cmocka.org/files/2.0/cmocka-2.0.2.tar.xz
@@ -27,6 +38,7 @@ if(NOT fff_POPULATED)
 endif()
 
 # Iterate unit test (test_*.c) files.
+set(TEST_TARGETS "")
 file(GLOB_RECURSE TEST_SRC_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/module_*/test_*.c")
 foreach(test_src_file_abs ${TEST_SRC_FILES})
 
@@ -50,4 +62,23 @@ foreach(test_src_file_abs ${TEST_SRC_FILES})
   target_link_libraries("${test_name}" PRIVATE cmocka::cmocka)
   add_test(NAME "${test_name}" COMMAND "${test_name}")
 
+  # Add test coverage flags/options.
+  append_coverage_compiler_flags_to_target("${test_name}")
+  target_link_options("${test_name}" PRIVATE --coverage)
+  list(APPEND TEST_TARGETS "${test_name}")
+
 endforeach()
+
+# Produce code coverage.
+if(CMAKE_C_COMPILER_ID MATCHES "Clang")
+  list(APPEND GCOVR_ADDITIONAL_ARGS --gcov-executable "llvm-cov gcov")
+endif()
+setup_target_for_coverage_gcovr_xml(
+  NAME coverage
+  EXECUTABLE ctest --test-dir "${CMAKE_BINARY_DIR}" --output-on-failure --no-tests=error -V
+  DEPENDENCIES ${TEST_TARGETS}
+  EXCLUDE
+    "${CMAKE_BINARY_DIR}/_deps/*"
+    "${CMAKE_SOURCE_DIR}/tests/*"
+    "${CMAKE_SOURCE_DIR}/vendor/*"
+)
