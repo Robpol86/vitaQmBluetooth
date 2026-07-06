@@ -1,6 +1,7 @@
 # Contributing
 
-TODO
+This document will guide you through setting up your local environment to start developing for this project, and also steps
+needed to get a PS Vita ready for development.
 
 ## Bug Reports
 
@@ -10,9 +11,11 @@ TODO
 
 TODO
 
-### Setup Development Environment
+## Setup Local Development Environment
 
 TODO
+
+## Setup Development PS Vita
 
 TODO support vita3k
 
