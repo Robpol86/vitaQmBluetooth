@@ -43,8 +43,8 @@ This project's [Makefile](Makefile) is designed to quickly deploy new developmen
 To install vitacompanion on the PS Vita:
 
 1. Download **vitacompanion.suprx** from: https://github.com/devnoname120/vitacompanion/releases/latest
-1. Upload the file to the PS Vita in the directory: **ur0:tai/**
-1. Add this line to **ur0:tai/config.txt**:
+1. Upload the file to the PS Vita into the directory: **ur0:tai/**
+1. Add this to **ur0:tai/config.txt**:
     ```text
     *main
     ur0:tai/vitacompanion.suprx
@@ -78,17 +78,21 @@ make help
 [Cat-A-Log](https://github.com/isage/catlog) is used to read logs live from the PS Vita in your development machine's
 terminal.
 
-Install Cat-A-Log on a PS Vita:
+To install Cat-A-Log on the PS Vita:
 
-```bash
-# https://github.com/isage/catlog
-#   rm -rf build && cmake -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -B build . && cmake --build build
-#   for f in build/*_module/catlog.s?prx; do curl -T "$f" ftp://192.168.9.109:1337/ur0:/tai/; done
-# Edit ur0:tai/config.txt
-# Add firewall rule to router.
-# Local: nc -kl 10224
-# Reboot vita to get a lot of kernel log statements.
-```
+1. Download **catlog.suprx** and **catlog.skprx** from: https://github.com/isage/catlog/releases/latest
+1. Upload both files to the PS Vita into the directory: **ur0:tai/**
+1. Add this to **ur0:tai/config.txt**:
+    ```text
+    *KERNEL
+    ur0:tai/catlog.skprx
+    *NPXS10015
+    ur0:tai/catlog.suprx
+    ```
+1. Reboot the PS Vita
+1. Get your computer's IP address, then input it in: Settings > Network > Catlog > Log host
+1. In your local terminal run `make recv-logs`, then reboot the PS Vita again
+1. You should see log statements appear in your terminal once the PS Vita reboots
 
 ## Releases
 
