@@ -90,7 +90,7 @@ To install Cat-A-Log on the PS Vita:
     ur0:tai/catlog.suprx
     ```
 1. Reboot the PS Vita
-1. Get your computer's IP address, then input it in: Settings > Network > Catlog > Log host
+1. Get your computer's IP address, then input it in: Settings > Network > Cat Log > Log host
 1. In your local terminal run `make recv-logs`, then reboot the PS Vita again
 1. You should see log statements appear in your terminal once the PS Vita reboots
 
