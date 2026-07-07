@@ -100,6 +100,22 @@ To install Cat-A-Log on the PS Vita:
 > If you still don't see any logs, make sure you've set the right IP address and that you can ping the PS Vita from your
 > computer.
 
+### Deploy
+
+After you've setup **vitacompanion** and **Cat-A-Log** try deploying this project to the PS Vita.
+
+1. Add this to **ur0:tai/config.txt**:
+    ```
+    *KERNEL
+    ur0:tai/vitaQmBluetooth.skprx
+    *main
+    ur0:tai/QuickMenuReborn.suprx
+    ```
+1. Run this command:
+    ```bash
+    make PSVITA_IP=192.168.0.100 deploy-init deploy fetch-logs reboot recv-logs
+    ```
+
 ## Releases
 
 TODO

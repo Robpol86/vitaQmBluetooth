@@ -23,6 +23,16 @@ build: $(DEBUG_TARGETS) $(RELEASE_TARGETS)
 
 ## PS Vita
 
+.PHONY: deploy-init
+deploy-init: _HELP = Deploy the plugin's dependencies to the PS Vita (requires vitacompanion)
+deploy-init:
+ifndef PSVITA_IP
+	$(error PSVITA_IP is not set. Install https://github.com/devnoname120/vitacompanion on the Vita and set PSVITA_IP.")
+endif
+	echo TODO ur0:tai/QuickMenuReborn.suprx
+	echo TODO mkdir ur0:QuickMenuReborn
+	echo TODO ur0:QuickMenuReborn/qmr_plugin.rco
+
 .PHONY: deploy
 deploy: _HELP = Deploy plugin to the PS Vita (requires vitacompanion)
 deploy: $(DEBUG_TARGETS)
