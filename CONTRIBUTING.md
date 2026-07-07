@@ -1,7 +1,7 @@
 # Contributing
 
-This document will guide you through setting up your local environment to start developing for this project, and also steps
-needed to get a PS Vita ready for development.
+This document will guide you through setting up your local environment to start developing for this project. It also covers
+the steps needed to get a [hacked retail PS Vita](https://vita.hacks.guide/) ready for development.
 
 ## Bug Reports
 
