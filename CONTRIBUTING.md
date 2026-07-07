@@ -34,18 +34,43 @@ This project's [Makefile](Makefile) is designed to quickly deploy new developmen
 
 ### vitacompanion
 
-Install vitacompanion on a PS Vita:
+[vitacompanion](https://github.com/devnoname120/vitacompanion) provides an always-on FTP server that this project uses to:
+
+- Upload new builds to the PS Vita
+- Download logs and screenshots from the PS Vita
+- Reboot the PS Vita
+
+To install vitacompanion on the PS Vita:
+
+1. Download **vitacompanion.suprx** from: https://github.com/devnoname120/vitacompanion/releases/latest
+1. Install the suprx by:
+    1. Uploading it to the PS Vita in the directory: **ur0:tai/**
+    1. Add this line to **ur0:tai/config.txt**:
+        ```text
+        *main
+        ur0:tai/vitacompanion.suprx
+        ```
+    1. Reboot the PS Vita
+    1. Get the PS Vita's IP address: Settings > Network > Internet Connection Status
+
+#### Verify
+
+Take a screenshot (PS Button + Start) and then run (replace 192.168.0.100 with your PS Vita's IP address):
 
 ```bash
-# TODO replace with make commands.
-# https://github.com/Robpol86/vitacompanion/tree/sdk-fix
-#   rm -rf build && cmake -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -B build . && cmake --build build
-wget -P build-SCREENSHOT --mirror ftp://192.168.9.109:1337/ux0:/picture/SCREENSHOT/
-curl -T build-debug/vitaQmBluetooth.suprx ftp://192.168.9.109:1337/ur0:/QuickMenuReborn/
-echo reboot |nc -v 192.168.9.109 1338
+make PSVITA_IP=192.168.0.100 fetch-screenshots
+```
+
+For more commands, run:
+
+```bash
+make help
 ```
 
 ### Cat-A-Log
+
+[Cat-A-Log](https://github.com/isage/catlog) is used to read logs live from the PS Vita in your development machine's
+terminal.
 
 Install Cat-A-Log on a PS Vita:
 
@@ -58,10 +83,6 @@ Install Cat-A-Log on a PS Vita:
 # Local: nc -kl 10224
 # Reboot vita to get a lot of kernel log statements.
 ```
-
-### Confirm
-
-TODO use Makefile
 
 ## Releases
 
