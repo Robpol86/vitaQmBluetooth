@@ -15,9 +15,24 @@ TODO
 
 TODO
 
+### macOS
+
+TODO
+
+### Linux
+
+TODO
+
+### Windows
+
+TODO Use WSL
+
 ## Setup Development PS Vita
 
-TODO support vita3k
+This project's [Makefile](Makefile) is designed to quickly deploy new development builds to a hardware PS Vita running
+[vitacompanion](https://github.com/devnoname120/vitacompanion) and [Cat-A-Log](https://github.com/isage/catlog).
+
+### vitacompanion
 
 Install vitacompanion on a PS Vita:
 
@@ -30,6 +45,8 @@ curl -T build-debug/vitaQmBluetooth.suprx ftp://192.168.9.109:1337/ur0:/QuickMen
 echo reboot |nc -v 192.168.9.109 1338
 ```
 
+### Cat-A-Log
+
 Install Cat-A-Log on a PS Vita:
 
 ```bash
@@ -41,6 +58,10 @@ Install Cat-A-Log on a PS Vita:
 # Local: nc -kl 10224
 # Reboot vita to get a lot of kernel log statements.
 ```
+
+### Confirm
+
+TODO use Makefile
 
 ## Releases
 
