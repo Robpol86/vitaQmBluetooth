@@ -93,8 +93,9 @@ To install Cat-A-Log on the PS Vita:
 1. Get your computer's IP address, then input it in: Settings > Network > Cat Log > Log host
     1. Set **Log port** to: 10224
     1. Then return to main Settings menu
-1. In your local terminal run `make recv-logs`, then reboot the PS Vita again
-1. You should see log statements appear in your terminal once the PS Vita reboots
+1. In your local terminal run `make recv-logs`, you should instantly see a lot of logs appear
+    1. If you don't, try rebooting. If you still don't, make sure you've set the right IP address and that you can ping the
+       PS Vita from your computer.
 
 ## Releases
 
