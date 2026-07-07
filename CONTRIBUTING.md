@@ -113,7 +113,7 @@ After you've setup **vitacompanion** and **Cat-A-Log** try deploying this projec
     ```
 1. Run this command:
     ```bash
-    make PSVITA_IP=192.168.0.100 deploy-init deploy fetch-logs reboot recv-logs
+    make PSVITA_IP=192.168.0.100 deploy-init deploy reboot recv-logs
     ```
 
 ## Releases
