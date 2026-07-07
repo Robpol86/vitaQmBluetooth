@@ -54,6 +54,10 @@ To install vitacompanion on the PS Vita:
 
 #### Verify
 
+> [!NOTE]
+> The Makefile will first move all screenshots on the PS Vita out of their random subdirectories into the parent directory,
+> thus flattening the directory structure.
+
 Take a screenshot (PS Button + Start) and then run (replace 192.168.0.100 with your PS Vita's IP address):
 
 ```bash
