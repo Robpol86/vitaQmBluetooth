@@ -36,6 +36,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define BUTTON_LABEL_MAX (VQMBT_SCE_DEVICE_NAME_MAX + 16)
 
 static SceKernelLwMutexWork mutex;
+static bool first_run = true;
 
 // Button finite states.
 typedef enum QmButtonState : unsigned int {
@@ -508,6 +509,10 @@ bool qm_state_update_ui(const QmsRequest* request) {
     if (changed) {
         LOG_DEBUG(0, "Refreshing UI to show changes");
         refresh_ui();
+    } else if (first_run) {
+        LOG_DEBUG(0, "Refreshing UI to show changes for the first run");
+        refresh_ui();
+        first_run = false;
     }
 
     // Release mutex.
