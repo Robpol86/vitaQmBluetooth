@@ -30,7 +30,7 @@ TODO Use WSL
 ## Setup Development PS Vita
 
 This project's [Makefile](Makefile) is designed to quickly deploy new development builds to a hardware PS Vita running
-[vitacompanion](https://github.com/devnoname120/vitacompanion) and [Cat-A-Log](https://github.com/isage/catlog).
+**vitacompanion** and **Cat-A-Log**.
 
 ### vitacompanion
 
@@ -43,15 +43,14 @@ This project's [Makefile](Makefile) is designed to quickly deploy new developmen
 To install vitacompanion on the PS Vita:
 
 1. Download **vitacompanion.suprx** from: https://github.com/devnoname120/vitacompanion/releases/latest
-1. Install the suprx by:
-    1. Uploading it to the PS Vita in the directory: **ur0:tai/**
-    1. Add this line to **ur0:tai/config.txt**:
-        ```text
-        *main
-        ur0:tai/vitacompanion.suprx
-        ```
-    1. Reboot the PS Vita
-    1. Get the PS Vita's IP address: Settings > Network > Internet Connection Status
+1. Upload the file to the PS Vita in the directory: **ur0:tai/**
+1. Add this line to **ur0:tai/config.txt**:
+    ```text
+    *main
+    ur0:tai/vitacompanion.suprx
+    ```
+1. Reboot the PS Vita
+1. Get the PS Vita's IP address: Settings > Network > Internet Connection Status
 
 #### Verify
 
