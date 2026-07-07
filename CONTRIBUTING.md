@@ -59,6 +59,7 @@ Take a screenshot (PS Button + Start) and then run (replace 192.168.0.100 with y
 
 ```bash
 make PSVITA_IP=192.168.0.100 fetch-screenshots
+ls fetch-screenshots
 ```
 
 For more commands, run:
