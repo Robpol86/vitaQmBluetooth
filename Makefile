@@ -29,9 +29,9 @@ deploy-init:
 ifndef PSVITA_IP
 	$(error PSVITA_IP is not set. Install https://github.com/devnoname120/vitacompanion on the Vita and set PSVITA_IP.")
 endif
-	echo TODO ur0:tai/QuickMenuReborn.suprx
-	echo TODO mkdir ur0:QuickMenuReborn
-	echo TODO ur0:QuickMenuReborn/qmr_plugin.rco
+	curl -T redist/quickmenureborn/QuickMenuReborn.suprx "ftp://$(PSVITA_IP):1337/ur0:/tai/"
+	lftp -p 1337 "$(PSVITA_IP)" -e "mkdir -f /ur0:/QuickMenuReborn; bye"
+	curl -T redist/quickmenureborn/qmr_plugin.rco "ftp://$(PSVITA_IP):1337/ur0:/QuickMenuReborn/"
 
 .PHONY: deploy
 deploy: _HELP = Deploy plugin to the PS Vita (requires vitacompanion)
