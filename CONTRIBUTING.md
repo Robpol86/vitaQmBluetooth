@@ -13,7 +13,8 @@ TODO
 
 ## Setup Local Development Environment
 
-TODO
+This project is built using the Vita SDK. You must have it installed before developing for this project. For more information
+about that go here: https://vitasdk.org/
 
 ### macOS
 
