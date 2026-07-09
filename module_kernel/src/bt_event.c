@@ -182,13 +182,6 @@ static void handle_event_dropped(void) {
 /**
  * Handler for one event. Called once per bluetooth event.
  *
- * TODO:
- * - Test with MacBook
- * - Test with iPhone
- * - Test with ds3
- * - Test with ds4
- * - single airpod switching to other one
- *
  * @param event Event details.
  */
 static void handle_event(const SceBtEvent* event) {
