@@ -1,9 +1,16 @@
 # vitaQmBluetooth
 
-Reconnect bluetooth devices from the quick menu without needing to open the Settings app.
+Reconnect bluetooth devices from the [quick menu](https://manuals.playstation.net/document/gb/psvita/basic/menu.html) without
+needing to open the Settings app.
 
-> [!CAUTION]
-> ⚠️ ⚠️ ⚠️ The project is currently under development. ⚠️ ⚠️ ⚠️
+I developed this plugin because I was tired of having to close RetroArch to reconnect my AirPods Pro 1 headphones. This
+plugin got me to finally ditch my wired headphones for my PS Vita when I'm on a flight.
+
+![Screenshot](example.png?raw=true "Screenshot")
+
+> ![TIP]
+> In case you didn't know, you can open the quick menu by holding down the **PS Button** on your PS Vita or PSTV's DS3. With
+> the plugin installed you can scroll to the bottom to see the new "Bluetooth Devices" section.
 
 ## Install
 
@@ -30,9 +37,3 @@ Unmount, then in VitaShell:
         ur0:tai/QuickMenuReborn.suprx
         ```
 1. Reboot
-
-## Usage
-
-Hold down the PS button and scroll to the bottom of the quick menu.
-
-![Screenshot](example.png?raw=true "Screenshot")
