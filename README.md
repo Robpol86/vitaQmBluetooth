@@ -14,6 +14,8 @@ plugin got me to finally ditch my wired headphones for my PS Vita when I'm on a 
 
 ## Install
 
+TODO
+
 Copy from local to dev vita:
 
 ```bash
@@ -37,3 +39,7 @@ Unmount, then in VitaShell:
         ur0:tai/QuickMenuReborn.suprx
         ```
 1. Reboot
+
+## Attributions
+
+This plugin uses Ibrahim778's [QuickMenuReborn](https://github.com/Ibrahim778/QuickMenuReborn).
