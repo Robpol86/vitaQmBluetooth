@@ -8,7 +8,7 @@ plugin got me to finally ditch my wired headphones for my PS Vita when I'm on a 
 
 ![Screenshot](example.png?raw=true "Screenshot")
 
-> ![TIP]
+> [!TIP]
 > In case you didn't know, you can open the quick menu by holding down the **PS Button** on your PS Vita or PSTV's DS3. With
 > the plugin installed you can scroll to the bottom to see the new "Bluetooth Devices" section.
 
