@@ -16,6 +16,8 @@ plugin got me to finally ditch my wired headphones for my PS Vita when I'm on a 
 
 Download the files for the latest version from the releases page: https://github.com/Robpol86/vitaQmBluetooth/releases/latest
 
+<!-- INSTALL-BEGIN -->
+
 Upload the four files to your PS Vita to the following locations:
 
 | File                  | Vita Folder            |
@@ -35,6 +37,8 @@ ur0:tai/QuickMenuReborn.suprx
 ```
 
 Then reboot the PS Vita.
+
+<!-- INSTALL-END -->
 
 ## Attributions
 
