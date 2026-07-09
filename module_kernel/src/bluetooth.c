@@ -99,9 +99,6 @@ int kvqmbt_disconnect_device(unsigned int mac0, unsigned int mac1) {
 /**
  * Get all currently paired bluetooth devices.
  *
- * TODO:
- * - Is 8 actually the max number of devices?
- *
  * @param info User-space pointer to an array of VqmbtDeviceInfo records.
  * @param info_size Capacity of the user array, in records.
  * @return Number of records written on success, or a negative error code on failure.

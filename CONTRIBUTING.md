@@ -24,7 +24,8 @@ This project's [Makefile](Makefile) is designed to quickly deploy new developmen
 
 ### vitacompanion
 
-[vitacompanion](https://github.com/devnoname120/vitacompanion) provides an always-on FTP server that this project uses to:
+[vitacompanion](https://github.com/devnoname120/vitacompanion) provides an always-on command and FTP server that this project
+uses to:
 
 - Upload new builds to the PS Vita
 - Download logs and screenshots from the PS Vita
@@ -60,12 +61,6 @@ For more commands, run:
 ```bash
 make help
 ```
-
-> [!NOTE]
-> If you get **Access failed: 550 Invalid directory** I've opened a bug report for it here:
-> https://github.com/devnoname120/vitacompanion/issues/20
->
-> The current solution is to build 7a9a1a44c648bf995bfbd11c00fd3616dcc6bd7c yourself.
 
 ### Cat-A-Log
 

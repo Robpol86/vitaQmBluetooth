@@ -182,13 +182,6 @@ static void handle_event_dropped(void) {
 /**
  * Handler for one event. Called once per bluetooth event.
  *
- * TODO:
- * - Test with MacBook
- * - Test with iPhone
- * - Test with ds3
- * - Test with ds4
- * - single airpod switching to other one
- *
  * @param event Event details.
  */
 static void handle_event(const SceBtEvent* event) {
@@ -275,7 +268,7 @@ static void handle_event(const SceBtEvent* event) {
             break;
 
         case VQMBT_SCE_BT_EVENT_ADD_REMOVE_CONNECTING_DEVICE:
-            LOG_DEBUG(0, INDENT "Device added/removed/connecting");  // TODO relabel?
+            LOG_DEBUG(0, INDENT "Device added/removed/connecting");
             umod_cb_emit_event(&(VqmbtEvent){
                 .id = VQMBT_EVENT_DEVICE_ADDED_REMOVED_CONNECTING,
                 .mac0 = event->mac0,
