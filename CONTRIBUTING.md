@@ -33,14 +33,14 @@ This project's [Makefile](Makefile) is designed to quickly deploy new developmen
 To install vitacompanion on the PS Vita:
 
 1. Download **vitacompanion.suprx** from: https://github.com/devnoname120/vitacompanion/releases/latest
-1. Upload the file to the PS Vita into the directory: **ur0:tai/**
-1. Add this to **ur0:tai/config.txt**:
+2. Upload the file to the PS Vita into the directory: **ur0:tai/**
+3. Add this to **ur0:tai/config.txt**:
     ```text
     *main
     ur0:tai/vitacompanion.suprx
     ```
-1. Reboot the PS Vita
-1. Get the PS Vita's IP address: Settings > Network > Internet Connection Status
+4. Reboot the PS Vita
+5. Get the PS Vita's IP address: Settings > Network > Internet Connection Status
 
 #### Verify
 
@@ -75,19 +75,19 @@ terminal.
 To install Cat-A-Log on the PS Vita:
 
 1. Download **catlog.suprx** and **catlog.skprx** from: https://github.com/isage/catlog/releases/latest
-1. Upload both files to the PS Vita into the directory: **ur0:tai/**
-1. Add this to **ur0:tai/config.txt**:
+2. Upload both files to the PS Vita into the directory: **ur0:tai/**
+3. Add this to **ur0:tai/config.txt**:
     ```text
     *KERNEL
     ur0:tai/catlog.skprx
     *NPXS10015
     ur0:tai/catlog.suprx
     ```
-1. Reboot the PS Vita
-1. Get your computer's IP address, then input it in: Settings > Network > Cat Log > Log host
+4. Reboot the PS Vita
+5. Get your computer's IP address, then input it in: Settings > Network > Cat Log > Log host
     1. Set **Log port** to: 10224
-    1. Then return to main Settings menu
-1. In your local terminal run `make recv-logs`, you should instantly see a lot of logs appear
+    2. Then return to main Settings menu
+6. In your local terminal run `make recv-logs`, you should instantly see a lot of logs appear
 
 > [!TIP]
 > If you don't see any logs, try rebooting the PS Vita.
@@ -105,11 +105,16 @@ After you've setup **vitacompanion** and **Cat-A-Log** try deploying this projec
     *main
     ur0:tai/QuickMenuReborn.suprx
     ```
-1. Run this command:
+2. Run this command:
     ```bash
     make PSVITA_IP=192.168.0.100 deploy-init deploy reboot recv-logs
     ```
 
 ## Releases
 
-TODO
+These are the steps a maintainer will take to make a new release.
+
+1. Create a new pull request with the following changes:
+    1. Finalize the [CHANGELOG.md](CHANGELOG.md) file and resetting the **Unreleased** section to "N/A".
+    2. Set the new version in the top [`CMakeLists.txt`](CMakeLists.txt) file.
+2. TODO
