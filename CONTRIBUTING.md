@@ -24,7 +24,8 @@ This project's [Makefile](Makefile) is designed to quickly deploy new developmen
 
 ### vitacompanion
 
-[vitacompanion](https://github.com/devnoname120/vitacompanion) provides an always-on FTP server that this project uses to:
+[vitacompanion](https://github.com/devnoname120/vitacompanion) provides an always-on command and FTP server that this project
+uses to:
 
 - Upload new builds to the PS Vita
 - Download logs and screenshots from the PS Vita
