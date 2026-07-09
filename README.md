@@ -14,31 +14,27 @@ plugin got me to finally ditch my wired headphones for my PS Vita when I'm on a 
 
 ## Install
 
-TODO
+Download the files for the latest version from the releases page: https://github.com/Robpol86/vitaQmBluetooth/releases/latest
 
-Copy from local to dev vita:
+Upload the four files to your PS Vita to the following locations:
 
-```bash
-cp ./redist/quickmenureborn/* /Volumes/BLUEVITA/downloads/
-cp ./build-debug/module_*/vitaQmBluetooth.s?prx /Volumes/BLUEVITA/downloads/
+| File                  | Vita Folder            |
+| --------------------- | ---------------------- |
+| vitaQmBluetooth.skprx | `ur0:tai/`             |
+| QuickMenuReborn.suprx | `ur0:tai/`             |
+| vitaQmBluetooth.suprx | `ur0:QuickMenuReborn/` |
+| qmr_plugin.rco        | `ur0:QuickMenuReborn/` |
+
+Then add this to your `ur0:tai/config.txt` file:
+
+```
+*KERNEL
+ur0:tai/vitaQmBluetooth.skprx
+*main
+ur0:tai/QuickMenuReborn.suprx
 ```
 
-Unmount, then in VitaShell:
-
-1. Move to `ur0:tai/`
-    1. `ux0:downloads/vitaQmBluetooth.skprx`
-    1. `ux0:downloads/QuickMenuReborn.suprx`
-1. Move to `ur0:QuickMenuReborn/` (mkdir)
-    1. `ux0:downloads/qmr_plugin.rco`
-    1. `ux0:downloads/vitaQmBluetooth.suprx`
-1. Append to `ur0:tai/config.txt`
-    1.  ```
-        *KERNEL
-        ur0:tai/vitaQmBluetooth.skprx
-        *main
-        ur0:tai/QuickMenuReborn.suprx
-        ```
-1. Reboot
+Then reboot the PS Vita.
 
 ## Attributions
 
