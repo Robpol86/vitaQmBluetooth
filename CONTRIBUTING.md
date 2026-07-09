@@ -15,7 +15,7 @@ about that go here: https://vitasdk.org/
 
 Once you have that installed you can reference the [GitHub Actions YAML files](./.github/) to see what you need to build the
 project on macOS or Linux. If you're using Windows it's
-[reccommended to use WSL](https://learn.microsoft.com/en-us/windows/wsl/install).
+[recommended to use WSL](https://learn.microsoft.com/en-us/windows/wsl/install).
 
 ## Setup Development PS Vita
 
