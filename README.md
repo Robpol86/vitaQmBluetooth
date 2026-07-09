@@ -25,7 +25,7 @@ Upload the four files to your PS Vita to the following locations:
 | vitaQmBluetooth.suprx | `ur0:QuickMenuReborn/` |
 | qmr_plugin.rco        | `ur0:QuickMenuReborn/` |
 
-Then add this to your `ur0:tai/config.txt` file:
+Then add this to your taiHEN config file (typically `ur0:tai/config.txt`):
 
 ```
 *KERNEL
