@@ -5,28 +5,17 @@ the steps needed to get a [hacked retail PS Vita](https://vita.hacks.guide/) rea
 
 ## Bug Reports
 
-TODO
-
-## Pull Requests
-
-TODO
+To report bugs simply open a new GitHub Issue for this project. It's most helpful if you include steps to reproduce the issue
+and if you can attach some screenshots to it.
 
 ## Setup Local Development Environment
 
 This project is built using the Vita SDK. You must have it installed before developing for this project. For more information
 about that go here: https://vitasdk.org/
 
-### macOS
-
-TODO
-
-### Linux
-
-TODO
-
-### Windows
-
-TODO Use WSL
+Once you have that installed you can reference the [GitHub Actions YAML files](./.github/) to see what you need to build the
+project on macOS or Linux. If you're using Windows it's
+[reccommended to use WSL](https://learn.microsoft.com/en-us/windows/wsl/install).
 
 ## Setup Development PS Vita
 
