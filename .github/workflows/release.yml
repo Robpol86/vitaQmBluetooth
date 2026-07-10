@@ -1,15 +1,32 @@
 name: Release
+run-name: "${{ format('{0} [{1}]', inputs.release_version, github.ref_name) }}"
+
+concurrency:
+  cancel-in-progress: true
+  group: release
 
 on:
-  release:
-    types: [published]
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: Version (e.g. 1.2.3)
+        required: true
+        type: string
 
 jobs:
 
   Assert:
     # TODOs:
-    # - Assert release title "v0.0.0 [2026-07-09]" matches CHANGELOG section "[0.4.0] - 2026-01-30" (simple grep)
-    # - Assert version in release title matches version in /CMakeLists.txt
+    # - Assert release_version matches /^v?[0-9]+[.][0-9]+[.][0-9]+$/ and save sanitized (sans ^v) to workflow variable
+    # - Save generated release title to another workflow variable
+    # - Assert release_version "0.0.0" matches the first CHANGELOG section "[0.4.0] - 2026-01-30" (simple grep)
+    # - Assert CHANGELOG Unreleased section is N/A
+    # - Assert release_version matches version in /CMakeLists.txt
+    # - Assert workflow commit is in main branch
+    # - Assert workflow commit has CI run with release artifacts, download them and re-upload them here for subsequent job
+    # - Upload redist assets as workflow artifacts
+    # - Isolate install section from README between anchors into temporary file, upload as workflow artifact
+    # - Isolate relevant section from CHANGELOG into temporary file, upload as workflow artifact
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -17,22 +34,11 @@ jobs:
       - name: TODO
         run: echo TODO
 
-  Upload:
+  Release:
     # TODOs:
-    # - Download release artifacts from CI job matching tag's git commit, error if not found
-    # - Upload to release that triggered this workflow
+    # - Download artifacts from workflow
+    # - Create release with all files and body
     needs: Assert
-    runs-on: ubuntu-latest
-    steps:
-      - name: TODO
-        run: echo TODO
-
-  Edit:
-    # TODOs:
-    # - Isolate install section from README between anchors into temporary file
-    # - Isolate relevant section from CHANGELOG into temporary file
-    # - Append both to bottom of existing release body
-    needs: Upload
     runs-on: ubuntu-latest
     steps:
       - name: TODO
