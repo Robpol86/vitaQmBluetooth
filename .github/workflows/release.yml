@@ -16,21 +16,16 @@ on:
 jobs:
 
   Version:
-    # TODOs:
-    # + Assert release_version matches /^v?[0-9]+[.][0-9]+[.][0-9]+$/
-    # + Save sanitized (sans ^v, 0.001.1 -> 0.1.1) to workflow variable
-    # + Save generated release title to another workflow variable
-    # - Assert new version is consecutive increment of last version in CMakeLists.txt (awk decrement + match)
     runs-on: ubuntu-latest
     steps:
-      - name: Validate version
-        id: validate-version
+      - name: Validate input
+        id: validate-input
         env:
           INPUT_VERSION: "${{ inputs.release_version }}"
         run: |
           set -euxo pipefail
           if [[ ! "$INPUT_VERSION" =~ ^v?([0-9]+)[.]([0-9]+)[.]([0-9]+)$ ]]; then
-            echo "Invalid version: $INPUT_VERSION"
+            echo "::error::Invalid version: $INPUT_VERSION"
             exit 1
           fi
           awk -v MAJOR="${BASH_REMATCH[1]}" -v MINOR="${BASH_REMATCH[2]}" -v PATCH="${BASH_REMATCH[3]}" '
@@ -45,16 +40,17 @@ jobs:
           echo "TITLE=v$VERSION [$(date +%Y-%m-%d)]" |tee -a "$GITHUB_OUTPUT"
       - name: Checkout
         uses: actions/checkout@v6
-      - name: Validate consecutive version
+      - name: Validate version
         run: |
           set -euxo pipefail
-          [[ "$VERSION" =~ ^v?([0-9]+)[.]([0-9]+)[.]([0-9]+)$ ]]
-          awk \
-            -v MAJOR="${BASH_REMATCH[1]}" -v MINOR="${BASH_REMATCH[2]}" -v PATCH="${BASH_REMATCH[3]}" \
-            -f consecutive-check.awk < ./CMakeLists.txt
+          old_version="$(grep -Pom1 "VERSION \K[0-9.]+(?=.+Version automatically set by release.yml)" CMakeLists.txt)"
+          if ! dpkg --compare-versions "$INPUT_VERSION" gt "$old_version"; then
+            echo "::error::New version $INPUT_VERSION must be greater than older version $old_version"
+            exit 1
+          fi
     outputs:
       TITLE: "${{ steps.generate-title.outputs.TITLE }}"
-      VERSION: "${{ steps.validate-version.outputs.VERSION }}"
+      VERSION: "${{ steps.validate-input.outputs.VERSION }}"
 
   Bump:
     # - Generate new changelog in place and upload as artifact
