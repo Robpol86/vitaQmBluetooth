@@ -57,12 +57,13 @@ jobs:
       VERSION: "${{ steps.validate-input.outputs.VERSION }}"
 
   Bump:
-    # - Generate new changelog in place and upload as artifact
+    # - Generate new changelog section and upload as artifact
+    # - Prepend new changelog section to CHANGELOG.md
     # - Set new version in /CMakeLists.txt
-    # - Commit and push
-    # - Wait for CI to build artifacts (assert)
-    # - Download them and re-upload them here for subsequent job
-    # - Upload redist assets as workflow artifacts
+    # - Commit changes to both files and push
+    # - Wait for CI to build artifacts
+    # - Download release artifacts (2 files) and re-upload them here for subsequent job
+    # - Upload redist assets (2 files) as workflow artifacts
     needs: Validate
     runs-on: ubuntu-latest
     steps:
@@ -74,7 +75,7 @@ jobs:
   Release:
     # TODOs:
     # - Isolate install section from README between anchors into temporary file, upload as workflow artifact
-    # - Download artifacts from workflow
+    # - Download the four artifacts from workflow
     # - Create release with all files and body
     needs: Bump
     runs-on: ubuntu-latest
