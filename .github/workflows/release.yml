@@ -48,7 +48,30 @@ jobs:
       - name: Validate consecutive version
         run: |
           set -euxo pipefail
-          echo TODO
+          [[ "$VERSION" =~ ^v?([0-9]+)[.]([0-9]+)[.]([0-9]+)$ ]]
+          awk -v MAJOR="${BASH_REMATCH[1]}" -v MINOR="${BASH_REMATCH[2]}" -v PATCH="${BASH_REMATCH[3]}" '
+            # Skip irrelevant files.
+            !/Version automatically set by release.yml/ {
+              next;
+            }
+
+            # Match major.
+            # TODO
+
+            # Match minor.
+            # TODO
+
+            # Match patch.
+            # TODO
+
+            END {
+              if (!matched) {
+                printf("Version %d.%d.%d is not consecutive\n", MAJOR, MINOR, PATCH);
+                exit(1);
+              }
+            }
+
+          ' < ./CMakeLists.txt
     outputs:
       TITLE: "${{ steps.generate-title.outputs.TITLE }}"
       VERSION: "${{ steps.validate-version.outputs.VERSION }}"
