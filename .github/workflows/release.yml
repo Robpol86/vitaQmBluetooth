@@ -17,16 +17,29 @@ jobs:
 
   Version:
     # TODOs:
-    # - Assert release_version matches /^v?[0-9]+[.][0-9]+[.][0-9]+$/
+    # + Assert release_version matches /^v?[0-9]+[.][0-9]+[.][0-9]+$/
     # - Assert new version is consecutive increment of last version in CMakeLists.txt
     # - Save sanitized (sans ^v, 0.001.1 -> 0.1.1) to workflow variable
     # - Save generated release title to another workflow variable
     runs-on: ubuntu-latest
     steps:
+      - name: Validate version
+        id: version
+        env:
+          INPUT_VERSION: "${{ inputs.release_version }}"
+        run: |
+          set -euxo pipefail
+          if [[ ! "$INPUT_VERSION" =~ ^v?[0-9]+[.][0-9]+[.][0-9]+$ ]]; then
+            echo "Invalid version: $INPUT_VERSION"
+            exit 1
+          fi
+          echo "OUTPUT_VERSION=$INPUT_VERSION" |tee -a "$GITHUB_OUTPUT"  # TODO sanitize
       - name: Checkout
         uses: actions/checkout@v6
       - name: TODO
         run: echo TODO
+    outputs:
+      VERSION: "${{ steps.version.outputs.OUTPUT_VERSION }}"
 
   Bump:
     # - Generate new changelog in place and upload as artifact
