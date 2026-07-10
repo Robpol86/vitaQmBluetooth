@@ -15,7 +15,7 @@ on:
 
 jobs:
 
-  Version:
+  Validate:
     runs-on: ubuntu-latest
     steps:
       - name: Validate input
@@ -59,7 +59,7 @@ jobs:
     # - Wait for CI to build artifacts (assert)
     # - Download them and re-upload them here for subsequent job
     # - Upload redist assets as workflow artifacts
-    needs: Version
+    needs: Validate
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
