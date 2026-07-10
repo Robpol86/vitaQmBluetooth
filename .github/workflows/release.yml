@@ -18,28 +18,40 @@ jobs:
   Version:
     # TODOs:
     # + Assert release_version matches /^v?[0-9]+[.][0-9]+[.][0-9]+$/
-    # - Assert new version is consecutive increment of last version in CMakeLists.txt
-    # - Save sanitized (sans ^v, 0.001.1 -> 0.1.1) to workflow variable
-    # - Save generated release title to another workflow variable
+    # + Save sanitized (sans ^v, 0.001.1 -> 0.1.1) to workflow variable
+    # + Save generated release title to another workflow variable
+    # - Assert new version is consecutive increment of last version in CMakeLists.txt (awk decrement + match)
     runs-on: ubuntu-latest
     steps:
       - name: Validate version
-        id: version
+        id: validate-version
         env:
           INPUT_VERSION: "${{ inputs.release_version }}"
         run: |
           set -euxo pipefail
-          if [[ ! "$INPUT_VERSION" =~ ^v?[0-9]+[.][0-9]+[.][0-9]+$ ]]; then
+          if [[ ! "$INPUT_VERSION" =~ ^v?([0-9]+)[.]([0-9]+)[.]([0-9]+)$ ]]; then
             echo "Invalid version: $INPUT_VERSION"
             exit 1
           fi
-          echo "OUTPUT_VERSION=$INPUT_VERSION" |tee -a "$GITHUB_OUTPUT"  # TODO sanitize
+          awk -v MAJOR="${BASH_REMATCH[1]}" -v MINOR="${BASH_REMATCH[2]}" -v PATCH="${BASH_REMATCH[3]}" '
+            BEGIN {
+              printf("VERSION=%d.%d.%d\n", int(MAJOR), int(MINOR), int(PATCH))
+            }
+          ' |tee -a "$GITHUB_OUTPUT" |tee -a "$GITHUB_ENV"
+      - name: Generate title
+        id: generate-title
+        run: |
+          set -euxo pipefail
+          echo "TITLE=v$VERSION [$(date +%Y-%m-%d)]" |tee -a "$GITHUB_OUTPUT"
       - name: Checkout
         uses: actions/checkout@v6
-      - name: TODO
-        run: echo TODO
+      - name: Validate consecutive version
+        run: |
+          set -euxo pipefail
+          echo TODO
     outputs:
-      VERSION: "${{ steps.version.outputs.OUTPUT_VERSION }}"
+      TITLE: "${{ steps.generate-title.outputs.TITLE }}"
+      VERSION: "${{ steps.validate-version.outputs.VERSION }}"
 
   Bump:
     # - Generate new changelog in place and upload as artifact
