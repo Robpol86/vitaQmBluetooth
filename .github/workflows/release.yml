@@ -49,36 +49,9 @@ jobs:
         run: |
           set -euxo pipefail
           [[ "$VERSION" =~ ^v?([0-9]+)[.]([0-9]+)[.]([0-9]+)$ ]]
-          awk -v MAJOR="${BASH_REMATCH[1]}" -v MINOR="${BASH_REMATCH[2]}" -v PATCH="${BASH_REMATCH[3]}" '
-            # Skip irrelevant files.
-            !/Version automatically set by release.yml/ {
-              next;
-            }
-
-            {
-              line_found = 1;
-            }
-
-            # Match major.
-            # TODO
-
-            # Match minor.
-            # TODO
-
-            # Match patch.
-            # TODO
-
-            END {
-              if (!line_found) {
-                print("Line not found in CMakeLists.txt");
-                exit(1);
-              }
-              if (!matched) {
-                printf("Version %d.%d.%d is not consecutive\n", MAJOR, MINOR, PATCH);
-                exit(1);
-              }
-            }
-          ' < ./CMakeLists.txt
+          awk \
+            -v MAJOR="${BASH_REMATCH[1]}" -v MINOR="${BASH_REMATCH[2]}" -v PATCH="${BASH_REMATCH[3]}" \
+            -f consecutive-check.awk < ./CMakeLists.txt
     outputs:
       TITLE: "${{ steps.generate-title.outputs.TITLE }}"
       VERSION: "${{ steps.validate-version.outputs.VERSION }}"
