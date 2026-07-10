@@ -1,0 +1,42 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+
+  Assert:
+    # TODOs:
+    # - Assert release title "v0.0.0 [2026-07-09]" matches CHANGELOG section "[0.4.0] - 2026-01-30" (simple grep)
+    # - Assert version in release title matches version in /CMakeLists.txt
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: TODO
+        run: echo TODO
+
+  Upload:
+    # TODOs:
+    # - Download release artifacts from CI job matching tag's git commit, error if not found
+    # - Upload to release that triggered this workflow
+    needs: Assert
+    runs-on: ubuntu-latest
+    steps:
+      - name: TODO
+        run: echo TODO
+
+  Edit:
+    # TODOs:
+    # - Isolate install section from README between anchors into temporary file
+    # - Isolate relevant section from CHANGELOG into temporary file
+    # - Append both to bottom of existing release body
+    needs: Upload
+    runs-on: ubuntu-latest
+    steps:
+      - name: TODO
+        run: echo TODO
+
+# TODOs:
+# - Revisit CONTRIBUTING.md release instructions.
