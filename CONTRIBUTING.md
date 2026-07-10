@@ -115,7 +115,7 @@ These are the steps a maintainer will take to make a new release.
 2. After merging the PR manually draft a new release in: https://github.com/Robpol86/vitaQmBluetooth/releases
     1. Set a new tag using the `vX.X.X` convention.
     2. Set the release title using the `vX.X.X [YYYY-MM-DD]` convention.
-    3. Leave release body empty (anything written will be prepended in final body).
+    3. For the body leave it blank or put a note "Release Pending" (anything written will be clobbered).
 3. Click "Publish release".
     1. https://github.com/Robpol86/vitaQmBluetooth/actions/workflows/release.yml will automatically run.
     2. The release workflow will edit the body and upload assets to the release you've just created.
