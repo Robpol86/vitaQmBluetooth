@@ -15,19 +15,18 @@ on:
 
 jobs:
 
-  Assert:
+  Bump:
     # TODOs:
     # - Assert release_version matches /^v?[0-9]+[.][0-9]+[.][0-9]+$/
+    # - Assert new version is consecutive increment of last version in CHANGELOG.md
     # - Save sanitized (sans ^v, 0.001.1 -> 0.1.1) to workflow variable
     # - Save generated release title to another workflow variable
-    # - Assert release_version "0.0.0" matches the first CHANGELOG section "[0.4.0] - 2026-01-30" (simple grep)
-    # - Assert CHANGELOG Unreleased section is N/A
-    # - Assert release_version matches version in /CMakeLists.txt
-    # - Assert workflow commit is in main branch
-    # - Assert workflow commit has CI run with release artifacts, download them and re-upload them here for subsequent job
+    # - Generate new changelog in place and upload as artifact
+    # - Set new version in /CMakeLists.txt
+    # - Commit and push
+    # - Wait for CI to build artifacts (assert)
+    # - Download them and re-upload them here for subsequent job
     # - Upload redist assets as workflow artifacts
-    # - Isolate install section from README between anchors into temporary file, upload as workflow artifact
-    # - Isolate relevant section from CHANGELOG into temporary file, upload as workflow artifact
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -37,9 +36,10 @@ jobs:
 
   Release:
     # TODOs:
+    # - Isolate install section from README between anchors into temporary file, upload as workflow artifact
     # - Download artifacts from workflow
     # - Create release with all files and body
-    needs: Assert
+    needs: Bump
     runs-on: ubuntu-latest
     steps:
       - name: TODO
