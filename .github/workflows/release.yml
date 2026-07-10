@@ -17,7 +17,8 @@ jobs:
 
   Assert:
     # TODOs:
-    # - Assert release_version matches /^v?[0-9]+[.][0-9]+[.][0-9]+$/ and save sanitized (sans ^v) to workflow variable
+    # - Assert release_version matches /^v?[0-9]+[.][0-9]+[.][0-9]+$/
+    # - Save sanitized (sans ^v, 0.001.1 -> 0.1.1) to workflow variable
     # - Save generated release title to another workflow variable
     # - Assert release_version "0.0.0" matches the first CHANGELOG section "[0.4.0] - 2026-01-30" (simple grep)
     # - Assert CHANGELOG Unreleased section is N/A
