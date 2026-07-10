@@ -15,18 +15,27 @@ on:
 
 jobs:
 
-  Bump:
+  Version:
     # TODOs:
     # - Assert release_version matches /^v?[0-9]+[.][0-9]+[.][0-9]+$/
-    # - Assert new version is consecutive increment of last version in CHANGELOG.md
+    # - Assert new version is consecutive increment of last version in CMakeLists.txt
     # - Save sanitized (sans ^v, 0.001.1 -> 0.1.1) to workflow variable
     # - Save generated release title to another workflow variable
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: TODO
+        run: echo TODO
+
+  Bump:
     # - Generate new changelog in place and upload as artifact
     # - Set new version in /CMakeLists.txt
     # - Commit and push
     # - Wait for CI to build artifacts (assert)
     # - Download them and re-upload them here for subsequent job
     # - Upload redist assets as workflow artifacts
+    needs: Version
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
