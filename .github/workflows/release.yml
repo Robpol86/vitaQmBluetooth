@@ -44,8 +44,8 @@ jobs:
         run: |
           set -euxo pipefail
           old_version="$(grep -Pom1 "VERSION \K[0-9.]+(?=.+Version automatically set by release.yml)" CMakeLists.txt)"
-          if ! dpkg --compare-versions "$INPUT_VERSION" gt "$old_version"; then
-            echo "::error::New version $INPUT_VERSION must be greater than older version $old_version"
+          if ! dpkg --compare-versions "$VERSION" gt "$old_version"; then
+            echo "::error::New version $VERSION must be greater than older version $old_version"
             exit 1
           fi
     outputs:
