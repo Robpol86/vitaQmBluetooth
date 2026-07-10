@@ -55,6 +55,10 @@ jobs:
               next;
             }
 
+            {
+              line_found = 1;
+            }
+
             # Match major.
             # TODO
 
@@ -65,12 +69,15 @@ jobs:
             # TODO
 
             END {
+              if (!line_found) {
+                print("Line not found in CMakeLists.txt");
+                exit(1);
+              }
               if (!matched) {
                 printf("Version %d.%d.%d is not consecutive\n", MAJOR, MINOR, PATCH);
                 exit(1);
               }
             }
-
           ' < ./CMakeLists.txt
     outputs:
       TITLE: "${{ steps.generate-title.outputs.TITLE }}"
