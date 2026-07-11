@@ -14,9 +14,7 @@ on:
         type: string
 
 env:
-  EXPECTED_FILES: |
-    cl_section.md
-    install.md
+  RELEASE_FILES: |
     release/module_kernel/vitaQmBluetooth.skprx
     release/module_user/vitaQmBluetooth.suprx
     redist/quickmenureborn/QuickMenuReborn.suprx
@@ -106,19 +104,24 @@ jobs:
           run-id: ${{ steps.get-run-id.outputs.RUN_ID }}
           github-token: "${{ secrets.GHA_SECRET_TOKEN }}"  # TODO remove
       - name: Validate all files
+        id: validate-all-files
+        env:
+          EXPECTED_FILES: |
+            cl_section.md
+            install.md
+            ${{ env.RELEASE_FILES }}
         run: |
           set -euxo pipefail
-          printenv EXPECTED_FILES |xargs ls -lah
+          printenv RELEASE_FILES |xargs ls -lah
+          echo "EXPECTED_FILES=$EXPECTED_FILES" |tee -a "$GITHUB_OUTPUT"
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
         with:
           name: collected
           if-no-files-found: error
-          path: ${{ env.EXPECTED_FILES }}
+          path: ${{ steps.validate-all-files.outputs.EXPECTED_FILES }}
 
   Release:
-    # TODOs:
-    # - Don't include md files in release assets
     needs: Collect
     runs-on: ubuntu-latest
     env:
@@ -145,7 +148,7 @@ jobs:
         with:
           name: "${{ steps.prepare.outputs.TITLE }}"
           body_path: release_body.md
-          files: ${{ env.EXPECTED_FILES }}
+          files: ${{ env.RELEASE_FILES }}
           tag_name: "${{ env.NEW_TAG }}"
           target_commitish: "${{ github.sha }}"
           fail_on_unmatched_files: true
