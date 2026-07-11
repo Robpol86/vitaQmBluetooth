@@ -74,6 +74,7 @@ jobs:
         uses: dawidd6/action-download-artifact@9040eab09d96393e2844b217e7cf2849cb145e8c
         with:
           commit: "${{ github.sha }}"
+          github_token: "${{ secrets.GHA_SECRET_TOKEN }}"  # TODO remove
           name: release
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
