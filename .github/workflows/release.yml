@@ -22,6 +22,13 @@ jobs:
     runs-on: ubuntu-latest
     env:
       INPUT_VERSION: "${{ inputs.release_version }}"
+      EXPECTED_FILES: >-
+        cl_section.md
+        install.md
+        release/module_kernel/vitaQmBluetooth.skprx
+        release/module_user/vitaQmBluetooth.suprx
+        redist/quickmenureborn/QuickMenuReborn.suprx
+        redist/quickmenureborn/qmr_plugin.rco
     steps:
       - name: Validate input
         id: validate-input
@@ -77,25 +84,16 @@ jobs:
           path: release
           run-id: 29155421107  # TODO use github-script to determine this
           github-token: "${{ secrets.GHA_SECRET_TOKEN }}"  # TODO remove
-      # - name: Download artifacts
-      #   uses: dawidd6/action-download-artifact@9040eab09d96393e2844b217e7cf2849cb145e8c
-      #   with:
-      #     run_id: 29155421107  # TODO commit: "${{ github.sha }}"
-      #     github_token: "${{ secrets.GHA_SECRET_TOKEN }}"  # TODO remove
-      #     check_artifacts: true  # TODO remove?
-      #     name: release
-      - name: Upload artifacts  # TODO fail if one of these files is missing
+      - name: Validate all files
+        run: |
+          set -euxo pipefail
+          ls -lah ${{ env.EXPECTED_FILES }}
+      - name: Upload artifacts
         uses: actions/upload-artifact@v7
         with:
           name: collected
           if-no-files-found: error
-          path: |
-            cl_section.md
-            install.md
-            release/module_kernel/vitaQmBluetooth.skprx
-            release/module_user/vitaQmBluetooth.suprx
-            redist/quickmenureborn/QuickMenuReborn.suprx
-            redist/quickmenureborn/qmr_plugin.rco
+          path: ${{ env.EXPECTED_FILES }}
 
   Release:
     # TODOs:
