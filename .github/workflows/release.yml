@@ -126,10 +126,24 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: collected
+      - name: Prepare
+        id: prepare
+        env:
+          GIT_TAG: "v${{ inputs.release_version }}"
+        run: |
+          set -euxo pipefail
+          echo "TITLE=$GIT_TAG [$(date +%Y-%m-%d)]" |tee -a "$GITHUB_OUTPUT"
+          {
+            echo "## Changelog"
+            cat cl_section.md
+            echo "## Install"
+            cat install.md
+          } |tee release_body.md
       - name: TODO
         run: |
           set -euxo pipefail
           find . -type f
+          cat release_body.md
 
 # TODOs:
 # - Revisit CONTRIBUTING.md release instructions.
