@@ -118,9 +118,8 @@ jobs:
 
   Release:
     # TODOs:
-    # - Download the four+2 artifacts from workflow
-    # - Create release with all files and body
     # - If releasing from non-main: prerelease
+    # - Don't include md files in release assets
     needs: Collect
     runs-on: ubuntu-latest
     env:
