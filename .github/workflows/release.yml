@@ -144,6 +144,12 @@ jobs:
           set -euxo pipefail
           find . -type f
           cat release_body.md
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: release_body
+          if-no-files-found: error
+          path: release_body.md
 
 # TODOs:
 # - Revisit CONTRIBUTING.md release instructions.
