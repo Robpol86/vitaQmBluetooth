@@ -71,12 +71,19 @@ jobs:
             in_section { print }
           ' README.md |tee install.md
       - name: Download artifacts
-        uses: dawidd6/action-download-artifact@9040eab09d96393e2844b217e7cf2849cb145e8c
+        uses: actions/download-artifact@v8
         with:
-          commit: "${{ github.sha }}"
-          github_token: "${{ secrets.GHA_SECRET_TOKEN }}"  # TODO remove
           name: release
-      - name: Upload artifacts
+          run-id: 29155421107  # TODO use github-script to determine this
+          github-token: "${{ secrets.GHA_SECRET_TOKEN }}"  # TODO remove
+      # - name: Download artifacts
+      #   uses: dawidd6/action-download-artifact@9040eab09d96393e2844b217e7cf2849cb145e8c
+      #   with:
+      #     run_id: 29155421107  # TODO commit: "${{ github.sha }}"
+      #     github_token: "${{ secrets.GHA_SECRET_TOKEN }}"  # TODO remove
+      #     check_artifacts: true  # TODO remove?
+      #     name: release
+      - name: Upload artifacts  # TODO fail if one of these files is missing
         uses: actions/upload-artifact@v7
         with:
           name: collected
@@ -84,8 +91,8 @@ jobs:
           path: |
             cl_section.md
             install.md
-            release/vitaQmBluetooth.skprx
-            release/vitaQmBluetooth.suprx
+            release/module_kernel/vitaQmBluetooth.skprx
+            release/module_user/vitaQmBluetooth.suprx
             redist/quickmenureborn/QuickMenuReborn.suprx
             redist/quickmenureborn/qmr_plugin.rco
 
