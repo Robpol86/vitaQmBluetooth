@@ -118,7 +118,6 @@ jobs:
 
   Release:
     # TODOs:
-    # - If releasing from non-main: prerelease
     # - Don't include md files in release assets
     needs: Collect
     runs-on: ubuntu-latest
@@ -150,6 +149,7 @@ jobs:
           tag_name: "${{ env.NEW_TAG }}"
           target_commitish: "${{ github.sha }}"
           fail_on_unmatched_files: true
+          prerelease: ${{ github.ref_name != 'main' }}
           token: "${{ secrets.GHA_SECRET_TOKEN }}"  # TODO remove
 
 # TODOs:
