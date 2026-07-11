@@ -77,12 +77,32 @@ jobs:
             $0 ~ end_marker { in_section=0 }
             in_section { print }
           ' README.md |tee install.md
+      - name: Get run-id of commit
+        id: get-run-id
+        env:
+          TOKEN: "${{ secrets.GHA_SECRET_TOKEN }}"  # TODO remove
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const { data } = await github.rest.actions.listWorkflowRuns({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: "ci.yml",
+              status: "success",
+              head_sha: context.sha,
+            });
+            if (!data.workflow_runs.length) {
+              core.setFailed(`No successful ci.yml run found for ${context.sha}`);
+              return;
+            }
+            const run = data.workflow_runs[0];
+            core.setOutput("RUN_ID", run.id);
       - name: Download artifacts
         uses: actions/download-artifact@v8
         with:
           name: release
           path: release
-          run-id: 29155421107  # TODO use github-script to determine this
+          run-id: ${{ steps.get-run-id.outputs.RUN_ID }}
           github-token: "${{ secrets.GHA_SECRET_TOKEN }}"  # TODO remove
       - name: Validate all files
         run: |
