@@ -13,6 +13,15 @@ on:
         required: true
         type: string
 
+env:
+  EXPECTED_FILES: |
+    cl_section.md
+    install.md
+    release/module_kernel/vitaQmBluetooth.skprx
+    release/module_user/vitaQmBluetooth.suprx
+    redist/quickmenureborn/QuickMenuReborn.suprx
+    redist/quickmenureborn/qmr_plugin.rco
+
 jobs:
 
   Collect:
@@ -22,13 +31,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       INPUT_VERSION: "${{ inputs.release_version }}"
-      EXPECTED_FILES: |
-        cl_section.md
-        install.md
-        release/module_kernel/vitaQmBluetooth.skprx
-        release/module_user/vitaQmBluetooth.suprx
-        redist/quickmenureborn/QuickMenuReborn.suprx
-        redist/quickmenureborn/qmr_plugin.rco
     steps:
       - name: Validate input
         id: validate-input
@@ -121,6 +123,8 @@ jobs:
     # - If releasing from non-main: prerelease
     needs: Collect
     runs-on: ubuntu-latest
+    env:
+      NEW_TAG: "v${{ inputs.release_version }}"
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v8
@@ -128,22 +132,61 @@ jobs:
           name: collected
       - name: Prepare
         id: prepare
-        env:
-          GIT_TAG: "v${{ inputs.release_version }}"
         run: |
           set -euxo pipefail
-          echo "TITLE=$GIT_TAG [$(date +%Y-%m-%d)]" |tee -a "$GITHUB_OUTPUT"
+          echo "TITLE=$NEW_TAG [$(date +%Y-%m-%d)]" |tee -a "$GITHUB_OUTPUT"
           {
             echo "## Changelog"
             cat cl_section.md
+            echo
             echo "## Install"
             cat install.md
           } |tee release_body.md
-      - name: TODO
-        run: |
-          set -euxo pipefail
-          find . -type f
-          cat release_body.md
+      - name: Create Release
+        id: create-release
+        uses: actions/github-script@v9
+        env:
+          RELEASE_TITLE: "${{ steps.prepare.outputs.TITLE }}"
+        with:
+          script: |
+            const fs = require("fs");
+            const { data: release } = await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: process.env.NEW_TAG,
+              target_commitish: context.sha,
+              name: process.env.RELEASE_TITLE,
+              body: fs.readFileSync("release_body.md"),
+            });
+            core.setOutput("RELEASE_ID", release.id);
+            core.info(`Created release: ${release.html_url}`);
+      # - name: Upload release assets
+      #   uses: actions/github-script@v9
+      #   env:
+      #     RELEASE_TITLE: "${{ inputs.release_title }}"
+      #     RELEASE_BODY: "${{ needs.Bump.outputs.GIT_LOG }}"
+      #     NEW_TAG: "${{ needs.Bump.outputs.NEW_TAG }}"
+      #     NEW_COMMIT: "${{ needs.Bump.outputs.NEW_COMMIT }}"
+      #   with:
+      #     script: |
+      #       const fs = require("fs");
+      #       const assetPath = "html.tar.gz";
+      #       if (!fs.existsSync(assetPath)) {
+      #         core.setFailed(`Asset not found: ${assetPath}`);
+      #         return;
+      #       }
+      #       await github.rest.repos.uploadReleaseAsset({
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         release_id: release.id,
+      #         name: assetPath,
+      #         data: fs.readFileSync(assetPath),
+      #         headers: {
+      #           "content-type": "application/gzip",
+      #           "content-length": fs.statSync(assetPath).size,
+      #         },
+      #       });
+      #       core.info(`Uploaded ${assetPath}`);
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
         with:
