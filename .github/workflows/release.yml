@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       INPUT_VERSION: "${{ inputs.release_version }}"
-      EXPECTED_FILES: >-
+      EXPECTED_FILES: |
         cl_section.md
         install.md
         release/module_kernel/vitaQmBluetooth.skprx
@@ -87,7 +87,7 @@ jobs:
       - name: Validate all files
         run: |
           set -euxo pipefail
-          ls -lah ${{ env.EXPECTED_FILES }}
+          printenv EXPECTED_FILES |xargs ls -lah
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
         with:
