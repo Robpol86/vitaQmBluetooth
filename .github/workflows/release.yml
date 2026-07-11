@@ -126,6 +126,9 @@ jobs:
           path: ${{ steps.validate-all-files.outputs.EXPECTED_FILES }}
 
   Release:
+    #
+    # TODO describe
+    #
     needs: Collect
     runs-on: ubuntu-latest
     env:
