@@ -44,7 +44,12 @@ jobs:
             echo "::error::Version mismatch (cl): '$INPUT_VERSION' not in '$top_section'" >&2
             exit 1
           fi
-          echo TODO cl_section.md
+          awk -v top_section="$top_section" '
+            BEGIN { in_section=0 }
+            $0 == top_section { in_section=1; next }
+            /^## \[/ { in_section=0 }
+            in_section { print }
+          ' CHANGELOG.md |tee cl_section.md
       - name: Verify version in CMakeLists.txt
         run: |
           set -euxo pipefail
@@ -59,7 +64,12 @@ jobs:
       - name: Get install section
         run: |
           set -euxo pipefail
-          echo TODO install.md
+          awk -v begin_marker="INSTALL-BEGIN" -v end_marker="INSTALL-END" '
+            BEGIN { in_section=0 }
+            $0 ~ begin_marker { in_section=1; next }
+            $0 ~ end_marker { in_section=0 }
+            in_section { print }
+          ' README.md |tee install.md
       - name: Get release artifacts
         run: |
           set -euxo pipefail
