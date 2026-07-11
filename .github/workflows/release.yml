@@ -70,14 +70,23 @@ jobs:
             $0 ~ end_marker { in_section=0 }
             in_section { print }
           ' README.md |tee install.md
-      - name: Get release artifacts
-        run: |
-          set -euxo pipefail
-          echo TODO download-artifact commit sha
+      - name: Download artifacts
+        uses: dawidd6/action-download-artifact@9040eab09d96393e2844b217e7cf2849cb145e8c
+        with:
+          commit: "${{ github.sha }}"
+          name: release
       - name: Upload artifacts
-        run: |
-          set -euxo pipefail
-          echo TODO upload cl_section.md, install.md, skprx, suprx, redist/suprx, redist/rco
+        uses: actions/upload-artifact@v7
+        with:
+          name: collected
+          if-no-files-found: error
+          path: |
+            cl_section.md
+            install.md
+            release/vitaQmBluetooth.skprx
+            release/vitaQmBluetooth.suprx
+            redist/quickmenureborn/QuickMenuReborn.suprx
+            redist/quickmenureborn/qmr_plugin.rco
 
   Release:
     # TODOs:
