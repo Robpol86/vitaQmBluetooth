@@ -74,6 +74,7 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: release
+          path: release
           run-id: 29155421107  # TODO use github-script to determine this
           github-token: "${{ secrets.GHA_SECRET_TOKEN }}"  # TODO remove
       # - name: Download artifacts
