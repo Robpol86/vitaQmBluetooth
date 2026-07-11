@@ -28,7 +28,7 @@ jobs:
         run: |
           set -euxo pipefail
           if [[ ! "$INPUT_VERSION" =~ ^v?([0-9]+)[.]([0-9]+)[.]([0-9]+)$ ]]; then
-            echo "::error::Invalid version: $INPUT_VERSION"
+            echo "::error::Invalid version: $INPUT_VERSION" >&2
             exit 1
           fi
           awk -v MAJOR="${BASH_REMATCH[1]}" -v MINOR="${BASH_REMATCH[2]}" -v PATCH="${BASH_REMATCH[3]}" '
@@ -49,11 +49,11 @@ jobs:
           set -euxo pipefail
           old_version="$(grep -Pom1 "VERSION \K[0-9.]+(?=.+Version automatically set by release.yml)" CMakeLists.txt)"
           if [[ ! "$old_version" =~ ^[0-9]+[.][0-9]+[.][0-9]+$ ]]; then
-            echo "::error::Invalid old_version: $old_version"
+            echo "::error::Invalid old_version: $old_version" >&2
             exit 1
           fi
           if ! dpkg --compare-versions "$VERSION" gt "$old_version"; then
-            echo "::error::New version $VERSION must be greater than older version $old_version"
+            echo "::error::New version $VERSION must be greater than older version $old_version" >&2
             exit 1
           fi
           echo "OLD_VERSION=$old_version" |tee -a "$GITHUB_OUTPUT"
@@ -72,23 +72,48 @@ jobs:
       DATE: "${{ needs.Validate.outputs.DATE }}"
       NEW_VERSION: "${{ needs.Validate.outputs.NEW_VERSION }}"
       OLD_VERSION: "${{ needs.Validate.outputs.OLD_VERSION }}"
+      NEW_TAG: "v${{ needs.Validate.outputs.NEW_VERSION }}"
+      OLD_TAG: "v${{ needs.Validate.outputs.OLD_VERSION }}"
     steps:
-      - name: Validate
-        run: |
-          set -euxo pipefail
-          test -n DATE
-          test -n NEW_VERSION
-          test -n OLD_VERSION
       - name: Checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0  # for git log
-      - name: TODO
+      - name: Validate
         run: |
           set -euxo pipefail
-          printenv DATE
-          printenv NEW_VERSION
-          printenv OLD_VERSION
+          if git tag |grep -q "$NEW_TAG"; then
+            echo "::error::Tag $NEW_TAG already exists" >&2
+            exit 1
+          fi
+          if ! git tag |grep -q "$OLD_TAG"; then
+            echo "::warning::Old tag $OLD_TAG not found, initial commit" >&2
+          fi
+      - name: Git Log
+        id: git_log
+        run: |
+          set -euxo pipefail
+          # TODO if no last_tag: Initial Commit
+          {
+            echo "GIT_LOG<<EOFEOFEOF"
+            git log --pretty="* %h %s" "$OLD_TAG..HEAD" |tee cl_body.md
+            echo EOFEOFEOF
+          } |tee -a "$GITHUB_OUTPUT"
+      - name: Generate Changelog Entry
+        env:
+          TITLE: "[${{ env.NEW_VERSION }}] - ${{ env.DATE }}"
+        run: |
+          set -euxo pipefail
+          test -n "$TITLE"
+          {
+            echo "## [$NEW_VERSION]"
+            echo
+            echo "$TITLE"
+            echo
+            cat cl_body.md
+            echo
+          } |tee cl_entry.md
+
 
   Bump:
     # - Prepend new changelog section to CHANGELOG.md
