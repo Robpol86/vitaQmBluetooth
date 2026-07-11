@@ -44,6 +44,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
       - name: Validate version
+        id: validate-version
         run: |
           set -euxo pipefail
           old_version="$(grep -Pom1 "VERSION \K[0-9.]+(?=.+Version automatically set by release.yml)" CMakeLists.txt)"
@@ -54,10 +55,12 @@ jobs:
           if ! dpkg --compare-versions "$VERSION" gt "$old_version"; then
             echo "::error::New version $VERSION must be greater than older version $old_version"
             exit 1
+          echo "OLD_VERSION=$old_version" |tee -a "$GITHUB_OUTPUT"
           fi
     outputs:
       DATE: "${{ steps.save-date.outputs.DATE }}"
-      VERSION: "${{ steps.validate-input.outputs.VERSION }}"
+      NEW_VERSION: "${{ steps.validate-input.outputs.VERSION }}"
+      OLD_VERSION: "${{ steps.validate-version.outputs.OLD_VERSION }}"
 
   Changelog:
     #
@@ -67,12 +70,19 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DATE: "${{ needs.Validate.outputs.DATE }}"
-      VERSION: "${{ needs.Validate.outputs.VERSION }}"
+      NEW_VERSION: "${{ needs.Validate.outputs.NEW_VERSION }}"
+      OLD_VERSION: "${{ needs.Validate.outputs.OLD_VERSION }}"
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0  # for git log
       - name: TODO
-        run: echo TODO
+        run: |
+          set -euxo pipefail
+          printenv DATE
+          printenv NEW_VERSION
+          printenv OLD_VERSION
 
   Bump:
     # - Prepend new changelog section to CHANGELOG.md
@@ -85,7 +95,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DATE: "${{ needs.Validate.outputs.DATE }}"
-      VERSION: "${{ needs.Validate.outputs.VERSION }}"
+      NEW_VERSION: "${{ needs.Validate.outputs.NEW_VERSION }}"
     steps:
       - name: Checkout
         uses: actions/checkout@v6
