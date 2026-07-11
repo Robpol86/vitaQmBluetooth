@@ -151,6 +151,7 @@ jobs:
           tag_name: "${{ env.NEW_TAG }}"
           target_commitish: "${{ github.sha }}"
           fail_on_unmatched_files: true
+          token: "${{ secrets.GHA_SECRET_TOKEN }}"  # TODO remove
 
 # TODOs:
 # - Revisit CONTRIBUTING.md release instructions.
