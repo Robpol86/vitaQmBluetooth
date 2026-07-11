@@ -55,8 +55,8 @@ jobs:
           if ! dpkg --compare-versions "$VERSION" gt "$old_version"; then
             echo "::error::New version $VERSION must be greater than older version $old_version"
             exit 1
-          echo "OLD_VERSION=$old_version" |tee -a "$GITHUB_OUTPUT"
           fi
+          echo "OLD_VERSION=$old_version" |tee -a "$GITHUB_OUTPUT"
     outputs:
       DATE: "${{ steps.save-date.outputs.DATE }}"
       NEW_VERSION: "${{ steps.validate-input.outputs.VERSION }}"
@@ -73,6 +73,12 @@ jobs:
       NEW_VERSION: "${{ needs.Validate.outputs.NEW_VERSION }}"
       OLD_VERSION: "${{ needs.Validate.outputs.OLD_VERSION }}"
     steps:
+      - name: Validate
+        run: |
+          set -euxo pipefail
+          test -n DATE
+          test -n NEW_VERSION
+          test -n OLD_VERSION
       - name: Checkout
         uses: actions/checkout@v6
         with:
