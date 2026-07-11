@@ -160,33 +160,27 @@ jobs:
             });
             core.setOutput("RELEASE_ID", release.id);
             core.info(`Created release: ${release.html_url}`);
-      # - name: Upload release assets
-      #   uses: actions/github-script@v9
-      #   env:
-      #     RELEASE_TITLE: "${{ inputs.release_title }}"
-      #     RELEASE_BODY: "${{ needs.Bump.outputs.GIT_LOG }}"
-      #     NEW_TAG: "${{ needs.Bump.outputs.NEW_TAG }}"
-      #     NEW_COMMIT: "${{ needs.Bump.outputs.NEW_COMMIT }}"
-      #   with:
-      #     script: |
-      #       const fs = require("fs");
-      #       const assetPath = "html.tar.gz";
-      #       if (!fs.existsSync(assetPath)) {
-      #         core.setFailed(`Asset not found: ${assetPath}`);
-      #         return;
-      #       }
-      #       await github.rest.repos.uploadReleaseAsset({
-      #         owner: context.repo.owner,
-      #         repo: context.repo.repo,
-      #         release_id: release.id,
-      #         name: assetPath,
-      #         data: fs.readFileSync(assetPath),
-      #         headers: {
-      #           "content-type": "application/gzip",
-      #           "content-length": fs.statSync(assetPath).size,
-      #         },
-      #       });
-      #       core.info(`Uploaded ${assetPath}`);
+      - name: Upload release assets
+        uses: actions/github-script@v9
+        env:
+          RELEASE_ID: "${{ steps.create-release.outputs.RELEASE_ID }}"
+        with:
+          script: |
+            const fs = require("fs");
+            const files = process.env.EXPECTED_FILES.split("\n")
+              .map(line => line.trim())
+              .filter(Boolean);
+            for (const file of files) {
+              const name = path.basename(file);
+              await github.rest.repos.uploadReleaseAsset({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: process.env.RELEASE_ID,
+                name,
+                data: fs.readFileSync(file),
+              });
+              core.info(`Uploaded ${name}`);
+            }
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
         with:
