@@ -118,11 +118,18 @@ jobs:
     # TODOs:
     # - Download the four+2 artifacts from workflow
     # - Create release with all files and body
+    # - If releasing from non-main: prerelease
     needs: Collect
     runs-on: ubuntu-latest
     steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: collected
       - name: TODO
-        run: echo TODO
+        run: |
+          set -euxo pipefail
+          find . -type f
 
 # TODOs:
 # - Revisit CONTRIBUTING.md release instructions.
