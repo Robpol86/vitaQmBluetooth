@@ -112,8 +112,12 @@ jobs:
             ${{ env.RELEASE_FILES }}
         run: |
           set -euxo pipefail
-          printenv RELEASE_FILES |xargs ls -lah
-          echo "EXPECTED_FILES=$EXPECTED_FILES" |tee -a "$GITHUB_OUTPUT"
+          printenv EXPECTED_FILES |xargs ls -lah
+          {
+            echo 'EXPECTED_FILES<<EOF'
+            echo "$EXPECTED_FILES"
+            echo EOF
+          } |tee -a "$GITHUB_OUTPUT"
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
         with:
