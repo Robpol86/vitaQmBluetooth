@@ -114,7 +114,7 @@ These are the steps a maintainer will take to make a new release.
     2. Set the new version in the main [`CMakeLists.txt`](CMakeLists.txt#L28) file.
 2. After merging the PR, run the release workflow:
     1. https://github.com/Robpol86/vitaQmBluetooth/actions/workflows/release.yml
-    1. Click on the **Run workflow** dropdown in the blue bar
+    1. Click on the **Run workflow** dropdown in the blue bar.
     1. Leave the branch as `main`, set the new version using the `X.X.X` convention, then click on the green **Run workflow**
        button.
 3. Wait for workflow to run, then check the Releases page.
