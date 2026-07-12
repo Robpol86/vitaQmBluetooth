@@ -39,7 +39,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0  # for git log  # TODO remove?
+          fetch-tags: true
       - name: Verify tag does not exist
         run: |
           set -euxo pipefail
@@ -173,6 +173,5 @@ jobs:
 
 # TODOs:
 # - Revisit CONTRIBUTING.md release instructions.
-# - Test re-releasing same tag
 # - Test missing release and expected files.
 # - Test preprelease
