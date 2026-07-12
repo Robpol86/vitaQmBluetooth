@@ -170,3 +170,4 @@ jobs:
 # - Test re-releasing same tag
 # - Test missing release and expected files.
 # - Test preprelease
+# - DATE: do not run `date`, get from changelog top_section
