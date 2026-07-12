@@ -14,6 +14,7 @@ on:
         type: string
 
 env:
+  NEW_TAG: "v${{ inputs.release_version }}"
   RELEASE_FILES: |
     release/module_kernel/vitaQmBluetooth.skprx
     release/module_user/vitaQmBluetooth.suprx
@@ -37,6 +38,15 @@ jobs:
           fi
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0  # for git log  # TODO remove?
+      - name: Verify tag does not exist
+        run: |
+          set -euxo pipefail
+          if git tag |grep -q "$NEW_TAG"; then
+            echo "::error::Tag $NEW_TAG already exists" >&2
+            exit 1
+          fi
       - name: Get changelog section
         run: |
           set -euxo pipefail
@@ -125,8 +135,6 @@ jobs:
   Release:
     needs: Collect
     runs-on: ubuntu-latest
-    env:
-      NEW_TAG: "v${{ inputs.release_version }}"
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v8
@@ -150,9 +158,10 @@ jobs:
           name: "${{ steps.prepare.outputs.TITLE }}"
           body_path: release_body.md
           files: ${{ env.RELEASE_FILES }}
+          fail_on_unmatched_files: true
+          overwrite_files: false
           tag_name: "${{ env.NEW_TAG }}"
           target_commitish: "${{ github.sha }}"
-          fail_on_unmatched_files: true
           prerelease: ${{ github.ref_name != 'main' }}
           token: "${{ secrets.GHA_SECRET_TOKEN }}"  # TODO remove
 
@@ -160,3 +169,4 @@ jobs:
 # - Revisit CONTRIBUTING.md release instructions.
 # - Test re-releasing same tag
 # - Test missing release and expected files.
+# - Test preprelease
