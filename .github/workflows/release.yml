@@ -1,3 +1,6 @@
+# Required permmissions:
+# - Repo settings > Actions > General > Workflow permissions: Read and write permissions
+
 name: Release
 run-name: "${{ format('{0} [{1}]', inputs.release_version, github.ref_name) }}"
 
@@ -114,6 +117,7 @@ jobs:
           name: release
           path: release
           run-id: ${{ steps.get-run-id.outputs.RUN_ID }}
+          github-token: "${{ github.token }}"
       - name: Validate all files
         id: validate-all-files
         env:
