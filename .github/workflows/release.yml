@@ -173,5 +173,4 @@ jobs:
 
 # TODOs:
 # - Revisit CONTRIBUTING.md release instructions.
-# - Test missing release and expected files.
 # - Test preprelease
