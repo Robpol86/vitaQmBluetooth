@@ -1,9 +1,11 @@
 name: Release
 run-name: "${{ format('{0} [{1}]', inputs.release_version, github.ref_name) }}"
 
+
 concurrency:
   cancel-in-progress: true
   group: release
+
 
 on:
   workflow_dispatch:
@@ -13,6 +15,7 @@ on:
         required: true
         type: string
 
+
 env:
   NEW_TAG: "v${{ inputs.release_version }}"
   RELEASE_FILES: |
@@ -20,6 +23,7 @@ env:
     release/module_user/vitaQmBluetooth.suprx
     redist/quickmenureborn/QuickMenuReborn.suprx
     redist/quickmenureborn/qmr_plugin.rco
+
 
 jobs:
 
