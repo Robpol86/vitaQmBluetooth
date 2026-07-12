@@ -23,9 +23,6 @@ env:
 jobs:
 
   Collect:
-    #
-    # Isolate the changelog section and install section into their own files.
-    #
     runs-on: ubuntu-latest
     env:
       INPUT_VERSION: "${{ inputs.release_version }}"
@@ -51,11 +48,11 @@ jobs:
             echo "::error::Version mismatch (cl): '$INPUT_VERSION' not in '$top_section'" >&2
             exit 1
           fi
-          awk -v top_section="$top_section" '
-            BEGIN { in_section=0 }
-            $0 == top_section { in_section=1; next }
-            /^## \[/ { in_section=0 }
-            in_section { print }
+          awk -v begin_marker="$top_section" '
+            $0 == begin_marker { begin_marker_found=1; in_section=1; next }
+            /^## \[/ { end_marker_found=1; in_section=0 }
+            in_section { something_was_printed=1; print }
+            END { if (!begin_marker_found || !end_marker_found || !something_was_printed) exit 1 }
           ' CHANGELOG.md |tee cl_section.md
       - name: Verify version in CMakeLists.txt
         run: |
@@ -72,10 +69,10 @@ jobs:
         run: |
           set -euxo pipefail
           awk -v begin_marker="INSTALL-BEGIN" -v end_marker="INSTALL-END" '
-            BEGIN { in_section=0 }
-            $0 ~ begin_marker { in_section=1; next }
-            $0 ~ end_marker { in_section=0 }
-            in_section { print }
+            $0 ~ begin_marker { begin_marker_found=1; in_section=1; next }
+            $0 ~ end_marker { end_marker_found=1; in_section=0 }
+            in_section { something_was_printed=1; print }
+            END { if (!begin_marker_found || !end_marker_found || !something_was_printed) exit 1 }
           ' README.md |tee install.md
       - name: Get run-id of commit
         id: get-run-id
@@ -126,9 +123,6 @@ jobs:
           path: ${{ steps.validate-all-files.outputs.EXPECTED_FILES }}
 
   Release:
-    #
-    # TODO describe
-    #
     needs: Collect
     runs-on: ubuntu-latest
     env:
@@ -164,3 +158,5 @@ jobs:
 
 # TODOs:
 # - Revisit CONTRIBUTING.md release instructions.
+# - Test re-releasing same tag
+# - Test missing release and expected files.
