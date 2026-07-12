@@ -90,7 +90,6 @@ jobs:
         id: get-run-id
         uses: actions/github-script@v9
         with:
-          github-token: "${{ secrets.GHA_SECRET_TOKEN }}"  # TODO remove
           script: |
             const { data } = await github.rest.actions.listWorkflowRuns({
               owner: context.repo.owner,
@@ -111,7 +110,6 @@ jobs:
           name: release
           path: release
           run-id: ${{ steps.get-run-id.outputs.RUN_ID }}
-          github-token: "${{ secrets.GHA_SECRET_TOKEN }}"  # TODO remove
       - name: Validate all files
         id: validate-all-files
         env:
@@ -169,4 +167,3 @@ jobs:
           tag_name: "${{ env.NEW_TAG }}"
           target_commitish: "${{ github.sha }}"
           prerelease: ${{ github.ref_name != 'main' }}
-          token: "${{ secrets.GHA_SECRET_TOKEN }}"  # TODO remove
