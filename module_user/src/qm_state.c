@@ -251,6 +251,9 @@ static void transition_state_error(bool* changed, const int idx, const int error
         case VQMBT_ERROR_KERNEL_SIDE_BUSY:
             sceClibSnprintf(qm_button->error_message, sizeof(qm_button->error_message), "%s", "Busy (Settings opened?)");
             break;
+        case VQMBT_ERROR_KERNEL_SIDE_ALREADY_CONNECTED:
+            sceClibSnprintf(qm_button->error_message, sizeof(qm_button->error_message), "%s", "Already connected");
+            break;
         default:
             sceClibSnprintf(qm_button->error_message, sizeof(qm_button->error_message), "0x%08X", error);
             break;

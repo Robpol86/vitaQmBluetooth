@@ -38,6 +38,7 @@ typedef enum VqmbtError : int {
     VQMBT_ERROR_CB_OVERFLOW,
     VQMBT_ERROR_NOT_READY,
     VQMBT_ERROR_GENERAL_FAILURE,
+    VQMBT_ERROR_KERNEL_SIDE_ALREADY_CONNECTED,
 } VqmbtError;
 
 // Device info.
