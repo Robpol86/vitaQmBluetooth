@@ -2,7 +2,11 @@ name: Minor Checks
 
 on:
   pull_request:
+    paths: &paths
+      - CONTRIBUTING.md
+      - CMakeLists.txt
   push:
+    paths: *paths
 
 jobs:
   Main:
