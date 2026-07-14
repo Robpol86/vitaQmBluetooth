@@ -39,7 +39,10 @@ endif()
 
 # Iterate unit test (test_*.c) files.
 set(TEST_TARGETS "")
-set(TEST_ENVIRONMENT "ASAN_OPTIONS=strict_string_checks=1:detect_stack_use_after_return=1")
+set(TEST_ENVIRONMENT
+  "ASAN_OPTIONS=strict_string_checks=1:detect_stack_use_after_return=1"
+  "UBSAN_OPTIONS=print_stacktrace=1:halt_on_error=1"
+)
 file(GLOB_RECURSE TEST_SRC_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/module_*/test_*.c")
 foreach(test_src_file_abs ${TEST_SRC_FILES})
 
