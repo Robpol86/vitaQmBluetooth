@@ -111,7 +111,7 @@ These are the steps a maintainer will take to make a new release.
 
 1. Create a new pull request with the following changes:
     1. Finalize the [CHANGELOG.md](CHANGELOG.md) file and resetting the **Unreleased** section to "N/A".
-    2. Set the new version in the main [`CMakeLists.txt`](CMakeLists.txt#L28) file.
+    2. Set the new version in the main [`CMakeLists.txt`](CMakeLists.txt#L28) file. <!-- MINOR-YML -->
 2. After merging the PR, run the release workflow:
     1. https://github.com/Robpol86/vitaQmBluetooth/actions/workflows/release.yml
     1. Click on the **Run workflow** dropdown in the blue bar.
