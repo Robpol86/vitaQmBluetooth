@@ -51,6 +51,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
         if (0) ksceKernelPrintf(fmt msg, ##__VA_ARGS__); \
     } while (0)
 
-#include <log.h>  // Bring in LOG_DEBUG, LOG_ERROR, and other common macros.
+#include <vqmbt/log.h>  // Bring in LOG_DEBUG, LOG_ERROR, and other common macros.
 
 #endif  // LOG_H_MODULE
