@@ -25,9 +25,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2kern/kernel/sysmem/uid_puid.h>
 #include <psp2kern/kernel/threadmgr.h>
 #include <stdatomic.h>
+#include <vqmbt.h>
 
 #include "log.h"
-#include "vqmbt.h"
 
 #define RING_BUFFER_SIZE 16
 

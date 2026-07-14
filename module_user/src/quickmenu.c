@@ -38,12 +38,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <quickmenureborn/c_types.h>
 #include <quickmenureborn/qm_reborn.h>
 #include <stdbool.h>
+#include <vqmbt.h>
 
 #include "kmod_event.h"
 #include "log.h"
 #include "qm_ids.h"
 #include "qm_state.h"
-#include "vqmbt.h"
 
 #define PREFIX "VqmbtEvent: "
 #define INDENT "            "

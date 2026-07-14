@@ -24,9 +24,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2/kernel/error.h>
 #include <psp2/kernel/threadmgr.h>
 #include <stdbool.h>
+#include <vqmbt.h>
 
 #include "log.h"
-#include "vqmbt.h"
 
 #define THREAD_PRIORITY 0x96 /* Higher value = lower priority. */
 #define THREAD_STACK_SIZE 0x4000

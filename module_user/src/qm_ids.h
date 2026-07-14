@@ -22,7 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef QM_IDS_H
 #define QM_IDS_H
 
-#include "vqmbt.h"
+#include <vqmbt.h>
 
 // Widget IDs (prefixed because they must be unique across all plugins).
 #define QM_ID_SEPARATOR MODULE_NAME "Separator"

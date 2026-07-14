@@ -22,7 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef UMOD_CALLBACK_H
 #define UMOD_CALLBACK_H
 
-#include "vqmbt.h"
+#include <vqmbt.h>
 
 int umod_cb_emit_event(const VqmbtEvent* event);
 int umod_cb_start(void);
