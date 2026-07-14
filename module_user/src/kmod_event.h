@@ -22,7 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #ifndef KMOD_EVENT_H
 #define KMOD_EVENT_H
 
-#include <vqmbt.h>
+#include <vqmbt/vqmbt.h>
 
 typedef void (*KmeCallback)(void);
 typedef void (*KmeCallbackEvent)(const VqmbtEvent* event);

@@ -27,7 +27,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2kern/kernel/threadmgr.h>
 #include <sce_const.h>
 #include <stdbool.h>
-#include <vqmbt.h>
+#include <vqmbt/vqmbt.h>
 
 #include "log.h"
 

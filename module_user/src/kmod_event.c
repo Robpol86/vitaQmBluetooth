@@ -24,7 +24,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2/kernel/error.h>
 #include <psp2/kernel/threadmgr.h>
 #include <stdbool.h>
-#include <vqmbt.h>
+#include <vqmbt/vqmbt.h>
 
 #include "log.h"
 

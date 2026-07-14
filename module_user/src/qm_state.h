@@ -23,7 +23,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #define QM_STATE_H
 
 #include <stdbool.h>
-#include <vqmbt.h>
+#include <vqmbt/vqmbt.h>
 
 // UI request.
 typedef enum QmsRequestId : unsigned int {

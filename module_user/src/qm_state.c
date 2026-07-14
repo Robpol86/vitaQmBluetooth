@@ -27,7 +27,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <psp2/kernel/threadmgr/thread.h>
 #include <quickmenureborn/c_types.h>
 #include <quickmenureborn/qm_reborn.h>
-#include <vqmbt.h>
+#include <vqmbt/vqmbt.h>
 
 #include "log.h"
 #include "qm_ids.h"
