@@ -59,12 +59,14 @@ foreach(test_src_file_abs ${TEST_SRC_FILES})
   endif()
   target_include_directories("${test_name}" PRIVATE "${fff_SOURCE_DIR}")
   target_compile_options("${test_name}" PRIVATE "-idirafter" "$ENV{VITASDK}/arm-vita-eabi/include")
+  target_compile_options("${test_name}" PRIVATE -fsanitize=address,undefined -fno-omit-frame-pointer)
   target_link_libraries("${test_name}" PRIVATE cmocka::cmocka)
   add_test(NAME "${test_name}" COMMAND "${test_name}")
 
   # Add test coverage flags/options.
   append_coverage_compiler_flags_to_target("${test_name}")
   target_link_options("${test_name}" PRIVATE --coverage)
+  target_link_options("${test_name}" PRIVATE -fsanitize=address,undefined)
   list(APPEND TEST_TARGETS "${test_name}")
 
 endforeach()
