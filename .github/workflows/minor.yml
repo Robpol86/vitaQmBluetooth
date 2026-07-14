@@ -3,6 +3,7 @@ name: Minor Checks
 on:
   pull_request:
     paths: &paths
+      - .github/**
       - CONTRIBUTING.md
       - CMakeLists.txt
   push:
