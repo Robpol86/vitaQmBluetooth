@@ -25,7 +25,6 @@ if(NOT UNIT_TESTING AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   endif()
 endif()
 
-# TODO remove
 project(vitaQmBluetooth VERSION 1.0.0 LANGUAGES C)
 
 # Set compiler options.
