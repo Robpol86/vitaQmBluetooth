@@ -119,7 +119,9 @@ all: $(DEBUG_TARGETS) $(RELEASE_TARGETS) test lint
 clean: _HELP = Remove build files
 clean:
 	rm -rfv CMakeCache.txt CMakeFiles/
+ifneq ($(wildcard build-*),)
 	find build-*/ -mindepth 1 -maxdepth 1 ! -iname _deps -exec rm -rfv {} \;
+endif
 
 .PHONY: distclean
 distclean: _HELP = Remove build, temporary, and cached files
