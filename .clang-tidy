@@ -17,7 +17,6 @@ Checks: >
   -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,
   -cppcoreguidelines-avoid-magic-numbers,
   -cppcoreguidelines-avoid-non-const-global-variables,
-  -cppcoreguidelines-init-variables,
   -cppcoreguidelines-macro-to-enum,
   -cppcoreguidelines-narrowing-conversions,
   -misc-include-cleaner,
