@@ -95,8 +95,8 @@ LINT_FORMAT_FILES_TESTS = $(filter $(LINT_FORMAT_EXTS),$(BUILD_TEST_FILES))
 .PHONY: lint
 lint: _HELP = Run linters
 lint: build-debug/compile_commands.json build-test/compile_commands.json
-	clang-tidy -p build-debug $(LINT_FORMAT_FILES_SRC)
-	clang-tidy -p build-test $(LINT_FORMAT_FILES_TESTS)
+	clang-tidy --quiet -p build-debug $(LINT_FORMAT_FILES_SRC)
+	clang-tidy --quiet -p build-test $(LINT_FORMAT_FILES_TESTS)
 	clang-format --dry-run --Werror $(LINT_FORMAT_FILES_SRC) $(LINT_FORMAT_FILES_TESTS)
 
 .PHONY: format

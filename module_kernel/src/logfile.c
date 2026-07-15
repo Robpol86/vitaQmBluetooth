@@ -66,7 +66,9 @@ void logfile_init(void) {
  * @param ... Arguments for the format specifiers.
  */
 void logfile_write_line(int y, int m, int d, const char* line, ...) {
-    if (!is_initialized) return;
+    if (!is_initialized) {
+        return;
+    }
     int ret;
 
     // Determine filename.
