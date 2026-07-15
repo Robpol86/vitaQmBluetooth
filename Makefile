@@ -89,8 +89,8 @@ build-test/compile_commands.json: EXTRA_CMAKE_ARGS = -DCMAKE_C_COMPILER=clang -D
 
 BUILD_TEST_FILES = $(wildcard tests/* tests/*/* tests/*/*/* tests/*/*/*/*)
 LINT_FORMAT_EXTS := %.c %.cpp %.h %.h.in
-LINT_FORMAT_FILES_SRC := $(filter $(LINT_FORMAT_EXTS),$(BUILD_SRC_FILES))
-LINT_FORMAT_FILES_TESTS := $(filter $(LINT_FORMAT_EXTS),$(BUILD_TEST_FILES))
+LINT_FORMAT_FILES_SRC = $(filter $(LINT_FORMAT_EXTS),$(BUILD_SRC_FILES))
+LINT_FORMAT_FILES_TESTS = $(filter $(LINT_FORMAT_EXTS),$(BUILD_TEST_FILES))
 
 .PHONY: lint
 lint: _HELP = Run linters
