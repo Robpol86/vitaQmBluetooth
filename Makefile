@@ -1,5 +1,5 @@
-.DEFAULT_GOAL = help
-PROJECT_NAME = vitaQmBluetooth
+.DEFAULT_GOAL := help
+PROJECT_NAME := vitaQmBluetooth
 
 ## Build
 
@@ -9,12 +9,13 @@ build-%/compile_commands.json: EXTRA_CMAKE_ARGS ?=
 build-%/compile_commands.json: CMakeLists.txt $(wildcard */CMakeLists.txt cmake/*.cmake)
 	cmake -B $(FIRST_DIR) -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) $(EXTRA_CMAKE_ARGS)
 
-DEBUG_TARGETS = build-debug/module_user/$(PROJECT_NAME).suprx build-debug/module_kernel/$(PROJECT_NAME).skprx
-RELEASE_TARGETS = build-release/module_user/$(PROJECT_NAME).suprx build-release/module_kernel/$(PROJECT_NAME).skprx
+DEBUG_TARGETS := build-debug/module_user/$(PROJECT_NAME).suprx build-debug/module_kernel/$(PROJECT_NAME).skprx
+RELEASE_TARGETS := build-release/module_user/$(PROJECT_NAME).suprx build-release/module_kernel/$(PROJECT_NAME).skprx
+BUILD_SRC_FILES = $(wildcard include/* module_*/* module_*/*/* module_*/*/*/* module_*/*/*/*/*)
 
 $(DEBUG_TARGETS): build-debug/compile_commands.json
 $(RELEASE_TARGETS): build-release/compile_commands.json
-$(DEBUG_TARGETS) $(RELEASE_TARGETS): $(wildcard include/* module_*/* module_*/*/* module_*/*/*/* module_*/*/*/*/*)
+$(DEBUG_TARGETS) $(RELEASE_TARGETS): $(BUILD_SRC_FILES)
 	cmake --build $(firstword $(subst /, ,$@))
 
 .PHONY: build
@@ -86,19 +87,22 @@ recv-logs:
 
 build-test/compile_commands.json: EXTRA_CMAKE_ARGS = -DCMAKE_C_COMPILER=clang -DUNIT_TESTING=ON
 
-FIND_RELEVANT = -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in'
+BUILD_TEST_FILES = $(wildcard tests/* tests/*/* tests/*/*/* tests/*/*/*/*)
+LINT_FORMAT_EXTS := %.c %.cpp %.h %.h.in
+LINT_FORMAT_FILES_SRC = $(filter $(LINT_FORMAT_EXTS),$(BUILD_SRC_FILES))
+LINT_FORMAT_FILES_TESTS = $(filter $(LINT_FORMAT_EXTS),$(BUILD_TEST_FILES))
 
 .PHONY: lint
 lint: _HELP = Run linters
 lint: build-debug/compile_commands.json build-test/compile_commands.json
-	find include module_*/src \( $(FIND_RELEVANT) \) -exec clang-tidy -p build-debug {} +
-	find tests \( $(FIND_RELEVANT) \) -exec clang-tidy -p build-test {} +
-	find include module_*/src tests \( $(FIND_RELEVANT) \) -exec clang-format --dry-run --Werror {} +
+	clang-tidy -p build-debug $(LINT_FORMAT_FILES_SRC)
+	clang-tidy -p build-test $(LINT_FORMAT_FILES_TESTS)
+	clang-format --dry-run --Werror $(LINT_FORMAT_FILES_SRC) $(LINT_FORMAT_FILES_TESTS)
 
 .PHONY: format
 format: _HELP = Apply format/lint fixes
 format:
-	find include module_*/src tests \( $(FIND_RELEVANT) \) -exec clang-format -i {} +
+	clang-format -i $(LINT_FORMAT_FILES_SRC) $(LINT_FORMAT_FILES_TESTS)
 
 .PHONY: test
 test: _HELP = Run unit tests
