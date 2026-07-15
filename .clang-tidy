@@ -1,23 +1,26 @@
 Checks: >
   -*,
   bugprone-*,
+  cert-*,
   clang-analyzer-*,
+  concurrency-*,
+  linuxkernel-*,
+  misc-*,
+  mpi-*,
+  openmp-*,
+  performance-*,
   portability-*,
   readability-*,
   -bugprone-easily-swappable-parameters,
-  -bugprone-macro-parentheses,
   -bugprone-narrowing-conversions,
-  -bugprone-reserved-identifier,
-  -clang-analyzer-deadcode.DeadStores,
   -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,
-  -clang-analyzer-unix.Malloc,
-  -clang-analyzer-unix.MallocSizeof,
-  -readability-braces-around-statements,
+  -misc-include-cleaner,
+  -misc-no-recursion,
+  -misc-redundant-expression,
+  -misc-use-internal-linkage,
+  -performance-no-int-to-ptr,
   -readability-identifier-length,
-  -readability-isolate-declaration,
   -readability-magic-numbers,
-  -readability-non-const-parameter,
-  -readability-use-concise-preprocessor-directives,
 CheckOptions:
   readability-function-cognitive-complexity.IgnoreMacros: true
   readability-function-cognitive-complexity.Threshold: 25
@@ -25,5 +28,5 @@ CheckOptions:
   readability-identifier-naming.EnumConstantCase: UPPER_CASE
   readability-identifier-naming.FunctionCase: lower_case
 ExcludeHeaderFilterRegex: '.*/build-[^/]+/.*|.*/vendor/.*'
-HeaderFilterRegex: '.*'
+FormatStyle: file
 WarningsAsErrors: '*'
