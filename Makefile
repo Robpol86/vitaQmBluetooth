@@ -11,7 +11,7 @@ build-%/compile_commands.json: CMakeLists.txt $(wildcard */CMakeLists.txt cmake/
 
 DEBUG_TARGETS := build-debug/module_user/$(PROJECT_NAME).suprx build-debug/module_kernel/$(PROJECT_NAME).skprx
 RELEASE_TARGETS := build-release/module_user/$(PROJECT_NAME).suprx build-release/module_kernel/$(PROJECT_NAME).skprx
-BUILD_SRC_FILES := $(wildcard include/* module_*/* module_*/*/* module_*/*/*/* module_*/*/*/*/*)
+BUILD_SRC_FILES = $(wildcard include/* module_*/* module_*/*/* module_*/*/*/* module_*/*/*/*/*)
 
 $(DEBUG_TARGETS): build-debug/compile_commands.json
 $(RELEASE_TARGETS): build-release/compile_commands.json
@@ -87,7 +87,7 @@ recv-logs:
 
 build-test/compile_commands.json: EXTRA_CMAKE_ARGS = -DCMAKE_C_COMPILER=clang -DUNIT_TESTING=ON
 
-BUILD_TEST_FILES := $(wildcard tests/* tests/*/* tests/*/*/* tests/*/*/*/*)
+BUILD_TEST_FILES = $(wildcard tests/* tests/*/* tests/*/*/* tests/*/*/*/*)
 LINT_FORMAT_EXTS := %.c %.cpp %.h %.h.in
 LINT_FORMAT_FILES_SRC := $(filter $(LINT_FORMAT_EXTS),$(BUILD_SRC_FILES))
 LINT_FORMAT_FILES_TESTS := $(filter $(LINT_FORMAT_EXTS),$(BUILD_TEST_FILES))
