@@ -1,5 +1,5 @@
-.DEFAULT_GOAL = help
-PROJECT_NAME = vitaQmBluetooth
+.DEFAULT_GOAL := help
+PROJECT_NAME := vitaQmBluetooth
 
 ## Build
 
@@ -9,8 +9,8 @@ build-%/compile_commands.json: EXTRA_CMAKE_ARGS ?=
 build-%/compile_commands.json: CMakeLists.txt $(wildcard */CMakeLists.txt cmake/*.cmake)
 	cmake -B $(FIRST_DIR) -DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE) $(EXTRA_CMAKE_ARGS)
 
-DEBUG_TARGETS = build-debug/module_user/$(PROJECT_NAME).suprx build-debug/module_kernel/$(PROJECT_NAME).skprx
-RELEASE_TARGETS = build-release/module_user/$(PROJECT_NAME).suprx build-release/module_kernel/$(PROJECT_NAME).skprx
+DEBUG_TARGETS := build-debug/module_user/$(PROJECT_NAME).suprx build-debug/module_kernel/$(PROJECT_NAME).skprx
+RELEASE_TARGETS := build-release/module_user/$(PROJECT_NAME).suprx build-release/module_kernel/$(PROJECT_NAME).skprx
 
 $(DEBUG_TARGETS): build-debug/compile_commands.json
 $(RELEASE_TARGETS): build-release/compile_commands.json
@@ -86,7 +86,7 @@ recv-logs:
 
 build-test/compile_commands.json: EXTRA_CMAKE_ARGS = -DCMAKE_C_COMPILER=clang -DUNIT_TESTING=ON
 
-FIND_RELEVANT = -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in'
+FIND_RELEVANT := -name '*.c' -o -name '*.cpp' -o -name '*.h' -o -name '*.h.in'
 
 .PHONY: lint
 lint: _HELP = Run linters
