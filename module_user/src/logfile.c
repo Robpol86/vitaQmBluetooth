@@ -34,7 +34,7 @@ static bool is_initialized = false;
  */
 void logfile_init(void) {
 #ifndef NDEBUG
-    int ret;
+    int ret = 0;
 
     // Create log directories.
     ret = sceIoMkdir(LOGFILE_DIR_PARENT, 0777);
@@ -65,8 +65,10 @@ void logfile_init(void) {
  * @param ... Arguments for the format specifiers.
  */
 void logfile_write_line(int y, int m, int d, const char* line, ...) {
-    if (!is_initialized) return;
-    int ret;
+    if (!is_initialized) {
+        return;
+    }
+    int ret = 0;
 
     // Determine filename.
     char log_file_path[256];
